@@ -1,0 +1,28 @@
+# Simple Properties for a game
+
+# Common
+debug:true
+fullscreen:false
+music:1.0
+sound:1.0
+sound3D:true
+logging:true
+textspeed:2
+
+gui.path:de/radicalfish/testdata/simple.xml
+
+# Graphics
+effects:true
+animations:true
+shaders:true
+postprocessing:true
+
+# Debug Details
+debug.texture.count:true
+debug.fps.graph:true
+debug.fps.graph.sample:200
+debug.sprite.rectangle:false
+
+# Other
+startup.vsync:true
+startup.smoothdelta:true
