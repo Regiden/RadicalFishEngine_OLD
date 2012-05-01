@@ -2,11 +2,19 @@ package de.radicalfish.test;
 import java.net.URL;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.ResourceLoader;
 import de.matthiasmann.twl.ActionMap;
+import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
+import de.matthiasmann.twl.ColumnLayout;
+import de.matthiasmann.twl.ColumnLayout.Row;
+import de.matthiasmann.twl.Dimension;
 import de.matthiasmann.twl.GUI;
+import de.matthiasmann.twl.Label;
+import de.matthiasmann.twl.ResizableFrame;
+import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.renderer.Renderer;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.theme.ThemeManager;
@@ -19,6 +27,7 @@ import de.radicalfish.extern.TWLRootPane;
 
 public class DebugGameState extends TWLGameState {
 	
+	private Image image;
 	private TWLRootPane root;
 	private GUI gui;
 	
@@ -31,12 +40,24 @@ public class DebugGameState extends TWLGameState {
 	public void init(GameContext context, World world) throws SlickException {
 		initGUI(context);
 		buildGUI(context);
+		
+		image = new Image("de/radicalfish/testdata/TESTBLOCK.png", false, Image.FILTER_NEAREST);
 	}
 	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
 		updateGUI();
 		
 	}
 	public void render(GameContext context, World world, Graphics g) throws SlickException {
+		image.draw(10, 10);
+		GL11.glPushMatrix();
+		g.scale(2, 2);
+		GL11.glPushMatrix();
+		image.draw(20, 20);
+		GL11.glPopMatrix();
+		image.draw(40, 40);
+		GL11.glPopMatrix();
+		image.draw(60, 60);
+		
 		gui.draw();
 	}
 	
@@ -68,17 +89,36 @@ public class DebugGameState extends TWLGameState {
 	}
 	private void buildGUI(GameContext context) {
 		
-		Button button = new Button("test");
-		root.add(button);
+		ResizableFrame frame = new ResizableFrame();
+		frame.setTheme("/resizableframe-title");
+		frame.setTitle("Options");
+		frame.setPosition(800, 0);
+		// frame.setResizableAxis(ResizableAxis.NONE);
 		
-		button.setTooltipContent("Temp Data ist Temp");
-		button.adjustSize();
-		button.setPosition(100, 100);
-		button.addCallback(new Runnable() {
-			public void run() {
-				System.out.println("print");
-			}
-		});
+		
+		Button button = new Button("Temp");
+		Label label1 = new Label("Label ");
+		ToggleButton checkbox1 = new ToggleButton();
+		checkbox1.setTheme("/checkbox");
+		Label label2 = new Label("Label 2  ");
+		ToggleButton checkbox2 = new ToggleButton();
+		checkbox2.setTheme("checkbox");
+		
+		//checkbox1.setAlignment(Alignment.RIGHT);
+		
+		ColumnLayout layout = new ColumnLayout();
+		layout.setDefaultGap(new Dimension(3, 5));
+		layout.setTheme("");
+		
+		Row row = layout.addRow("Name", "Value");
+		row.add(label1).add(checkbox1);
+		row = layout.addRow("Name", "Value");
+		row.add(label2).add(checkbox2);
+		
+		
+		frame.add(layout);
+		frame.adjustSize();
+		root.add(frame);
 		
 	}
 	private void initGUI(GameContext context) throws SlickException {

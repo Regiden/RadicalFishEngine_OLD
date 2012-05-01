@@ -27,67 +27,71 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.test;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import de.radicalfish.GameState;
-import de.radicalfish.World;
-import de.radicalfish.context.GameContext;
-import de.radicalfish.context.GameDelta;
-import de.radicalfish.extern.Easing;
-import de.radicalfish.extern.SimpleFX;
+package de.radicalfish.twl;
 
-public class TestGameState extends GameState {
+import de.matthiasmann.twl.PropertySheet.PropertyEditor;
+import de.matthiasmann.twl.PropertySheet.PropertyEditorFactory;
+import de.matthiasmann.twl.ToggleButton;
+import de.matthiasmann.twl.Widget;
+import de.matthiasmann.twl.model.Property;
+
+public class TWLPropertyFactory {
 	
-	public MoveTester dude;
-	private Image image;
-	private SimpleFX effect, effect2;
+	 public static PropertyEditorFactory<Boolean> createBooleanFactory() {
+		 return new BooleanEditorFactory();
+	 }
 	
-	public TestGameState(GameContext context, World world, int id) {
-		super(context, world, id);
-	}
-	
-	// GAME METHODS
+	// INTERN CLASSES
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void init(GameContext context, World world) throws SlickException {
-		image = new Image("de/radicalfish/testdata/TESTBLOCK.png");
+	static class BooleanEditor implements PropertyEditor, Runnable {
 		
-		effect = new SimpleFX(30, 400, 3 * 1000, Easing.LINEAR);
-		effect2 = new SimpleFX(30, 400, 3 * 1000, Easing.LINEAR);
+		private final ToggleButton checkBox;
+		private final Property<Boolean> property;
+		
+		public BooleanEditor(Property<Boolean> property) {
+			this.property = property;
+			checkBox = new ToggleButton();
+			checkBox.setTheme("checkbox");
+			checkBox.addCallback(this);
+			resetValue();
+		}
+		
+		public void run() {
+			if(!property.isReadOnly()) {
+                try {
+                    property.setPropertyValue(checkBox.isActive());
+                } catch (IllegalArgumentException ex) {
+                	property.setPropertyValue(false);
+                }
+            }
+		}
+		
+		@Override
+		public Widget getWidget() {
+			return checkBox;
+		}
+		@Override
+		public void valueChanged() {
+			 resetValue();
+		}
+		
+		@Override
+		public void preDestroy() {
+			checkBox.removeCallback(this);
+		}
+		
+		@Override
+		public void setSelected(boolean selected) {
+			
+		}
+		private void resetValue() {
+			checkBox.setText(null);
+		}
+		
 	}
-	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
-		Input in = context.getContainer().getInput();
-		
-		GameDelta deltor = context.getGameSpeed();
-		
-		if (in.isKeyPressed(Input.KEY_A)) {
-			deltor.slowDown(0.5f, 2000, Easing.LINEAR);
+	static class BooleanEditorFactory implements PropertyEditorFactory<Boolean> {
+		public PropertyEditor createEditor(Property<Boolean> property) {
+			return new BooleanEditor(property);
 		}
-		if (in.isKeyPressed(Input.KEY_D)) {
-			deltor.slowDown(1.0f, 2000, Easing.LINEAR);
-		}
-		if (in.isKeyPressed(Input.KEY_RIGHT)) {
-			context.getGame().enterState(100);
-		}
-		
-		effect.update(delta.getNormalDelta());
-		if (effect.finished()) {
-			effect.flip();
-			effect.restart();
-		}
-		
-		effect2.update(delta.getDelta());
-		if (effect2.finished()) {
-			effect2.flip();
-			effect2.restart();
-		}
-		
 	}
-	public void render(GameContext context, World world, Graphics g) throws SlickException {
-		image.draw(effect.getValue(), 50);
-		image.draw(effect2.getValue(), 100);
-	}
-	
 }

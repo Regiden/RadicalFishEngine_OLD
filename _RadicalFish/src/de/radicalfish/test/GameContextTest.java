@@ -123,9 +123,9 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 			System.out.println(settings);
 		}
 		
-		
-		addState(new TestGameState(this, world, 0));
 		addState(new DebugGameState(this, world, 100));
+		addState(new TestGameState(this, world, 0));
+		
 	}
 	
 	protected void preUpdateState(GameContainer container, int delta) throws SlickException {
