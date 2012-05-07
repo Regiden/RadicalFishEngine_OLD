@@ -28,86 +28,275 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.debug;
+import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.ColumnLayout;
+import de.matthiasmann.twl.ColumnLayout.Columns;
 import de.matthiasmann.twl.ColumnLayout.Row;
+import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ResizableFrame;
-import de.matthiasmann.twl.ScrollPane;
-import de.matthiasmann.twl.ScrollPane.Fixed;
+import de.matthiasmann.twl.Scrollbar;
+import de.matthiasmann.twl.Scrollbar.Orientation;
 import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.Widget;
 import de.radicalfish.context.Settings;
-import de.radicalfish.extern.TWLRootPane;
 
 /**
- * Panel for manipulating default settings from {@link Settings}.
+ * TWL Panel for manipulating default settings from {@link Settings}. A <code>hslider</code>-, <code>checkbox</code>- and
+ * a <code>fixedlabel</code>(a label with a minWidth) theme must be implemented if a custom theme is uses. The
+ * OptionsPanel runs with default values for the sliders which are:
+ * 
+ * <pre>
+ * Music Volume: 0 - 100 (mapped from the settings by <code>settings.getMusicVolume() * 100</code>)
+ * Sound Volume  - // -
+ * TextSpeed: 0 - 10
+ * </pre>
+ * 
+ * Use the <code>setMusicVolumeRange()</code>, <code>setSoundVolumeRange</code> and <code>setTextSpeedRange</code>
+ * methods to apply your own. <code>appendWidget()</code> can be used to add custom widgets under the normal owns.
  * 
  * @author Stefan Lange
- * @version 0.0.0
+ * @version 1.0.0
  * @since 01.05.2012
  */
 public class OptionsPanel extends ResizableFrame {
 	
-	private static final String NAME = "name", VALUE = "value";
+	// the column names
+	private static final String NAME = "name", VALUE = "value", SEP = "SEP", LABEL = "label";
 	
-	private Settings context;
+	private Settings settings;
+	
+	private Columns checkBoxColumns, seperatorColumns, sliderColumns;
+	private ColumnLayout layout;
+	
+	private ToggleButton fullscreen, debug, log, sound3D, vsync, smoothDelta;
+	private Scrollbar musicVolume, soundVolume, textSpeed;
+	
+	private int extraWidgetsCount;
 	
 	/**
 	 * Creates a new OptionsPanel
 	 * 
-	 * @param context
+	 * @param settings
 	 *            the context of the game
-	 * @param root
-	 *            the panel where the optionPanel should be added
 	 */
-	public OptionsPanel(Settings context, TWLRootPane root) {
-		this.context = context;
-		createPanel(root);
+	public OptionsPanel(Settings settings) {
+		this.settings = settings;
+		extraWidgetsCount = 0;
+		createPanel();
+	}
+	
+	// METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Sets the range of the music volume slider.
+	 * 
+	 * @param min
+	 *            the min value
+	 * @param max
+	 *            the max value
+	 */
+	public void setMusicVolumeRange(int min, int max) {
+		musicVolume.setMinMaxValue(min, max);
+	}
+	/**
+	 * Sets the range of the sound volume slider.
+	 * 
+	 * @param min
+	 *            the min value
+	 * @param max
+	 *            the max value
+	 */
+	public void setSoundVolumeRange(int min, int max) {
+		soundVolume.setMinMaxValue(min, max);
+	}
+	/**
+	 * Sets the range of the text speed slider.
+	 * 
+	 * @param min
+	 *            the min value
+	 * @param max
+	 *            the max value
+	 */
+	public void setTextSpeedRange(int min, int max) {
+		textSpeed.setMinMaxValue(min, max);
+	}
+	/**
+	 * Adds a custom widget to the OptionsPanel
+	 * 
+	 * @param name
+	 *            the name of the label next to the widget
+	 * @param widget
+	 *            the widget to add
+	 * @param alignment
+	 *            the Alignment to use
+	 */
+	public void appendWidget(String name, Widget widget, Alignment alignment) {
+		if (widget == null) {
+			throw new NullPointerException("Widget is null!");
+		}
+		if (extraWidgetsCount == 0) {
+			addSeparator();
+		}
+		extraWidgetsCount++;
+		
+		Label label = new Label(name);
+		label.setTooltipContent(widget.getTooltipContent());
+		
+		Row row = layout.addRow(checkBoxColumns);
+		row.add(label, Alignment.LEFT).add(widget);
+		layout.setWidgetAlignment(widget, alignment);
+		
 	}
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private void createPanel(TWLRootPane root) {
-		setTheme("/resizableframe-title");
+	private void createPanel() {
+		setTheme("resizableframe-title");
 		setTitle("Options");
 		setPosition(800, 0);
-		setResizableAxis(ResizableAxis.NONE);
-		
+		setResizableAxis(ResizableAxis.HORIZONTAL);
 		addCloseCallback(new Runnable() {
 			public void run() {
 				setVisible(false);
 			}
 		});
 		
-		ScrollPane scroll = new ScrollPane();
-		scroll.setFixed(Fixed.HORIZONTAL);
+		layout = new ColumnLayout();
+		layout.addDefaultGaps();
 		
-		ColumnLayout layout = new ColumnLayout();
-		layout.setTheme("");
+		sliderColumns = layout.getColumns(NAME, VALUE, LABEL);
+		checkBoxColumns = layout.getColumns(NAME, VALUE);
+		seperatorColumns = layout.getColumns(SEP);
 		
-		// Widgets
-		addButtons(layout);
 		
-		add(scroll);
-		adjustSize();
-		root.add(this);
+		addCheckboxes();
+		addSeparator();
+		addSliders();
+		addSeparator();
+		addTextSpeed();
+		
+		add(layout);
 	}
-	private void addButtons(ColumnLayout layout) {
-		addCheckBoxRow(layout, "Debug", context.isDebugging());
-		addCheckBoxRow(layout, "Log", context.isLogging());
-		addCheckBoxRow(layout, "Fullscreen", context.isFullscreen());
-		addCheckBoxRow(layout, "3D Sound", context.is3DSound());
-		
+	private void addSeparator() {
+		Row row = layout.addRow(seperatorColumns);
+		Widget w = new Widget();
+		w.setTheme("hseparator");
+		row.add(w);
 	}
 	
-	private void addCheckBoxRow(ColumnLayout layout, String label, boolean value) {
-		ToggleButton checkBox = new ToggleButton();
+	private void addTextSpeed() {
+		final Label value = new Label("" + settings.getTextSpeed());
+		value.setTheme("fixedlabel");
+		
+		textSpeed = new Scrollbar(Orientation.HORIZONTAL);
+		textSpeed.setTheme("hslider");
+		textSpeed.setMinMaxValue(0, 10);
+		textSpeed.setPageSize(1);
+		textSpeed.addCallback(new Runnable() {
+			public void run() {
+				settings.setTextSpeed(textSpeed.getValue());
+				value.setText("" + textSpeed.getValue());
+			}
+		});
+		textSpeed.setValue(settings.getTextSpeed());
+		
+		Row row = layout.addRow(sliderColumns);
+		row.addLabel("Text Speed: ").add(textSpeed, Alignment.FILL).add(value, Alignment.CENTER);
+		
+	}
+	private void addSliders() {
+		final Label value = new Label("" + (int)(settings.getMusicVolume() * 100));
+		value.setTheme("fixedlabel");
+		musicVolume = new Scrollbar(Orientation.HORIZONTAL);
+		musicVolume.setTheme("hslider");
+		musicVolume.addCallback(new Runnable() {
+			public void run() {
+				settings.setMusicVolume(musicVolume.getValue() / 100f);
+				value.setText("" + musicVolume.getValue());
+			}
+		});
+		musicVolume.setValue((int) (settings.getMusicVolume() * 100));
+		Row row = layout.addRow(sliderColumns);
+		row.addLabel("Music Volume: ").add(musicVolume, Alignment.FILL).add(value, Alignment.CENTER);
+		
+		final Label value2 = new Label("" + (int)(settings.getMusicVolume() * 100));
+		value2.setTheme("fixedlabel");
+		soundVolume = new Scrollbar(Orientation.HORIZONTAL);
+		soundVolume.setTheme("hslider");
+		soundVolume.addCallback(new Runnable() {
+			public void run() {
+				settings.setSoundVolume(soundVolume.getValue() / 100f);
+				value2.setText("" + soundVolume.getValue());
+			}
+		});
+		soundVolume.setValue((int) (settings.getSoundVolume() * 100));
+		row = layout.addRow(sliderColumns);
+		row.addLabel("Sound Volume: ").add(soundVolume, Alignment.FILL).add(value2, Alignment.CENTER);
+		
+	}
+	private void addCheckboxes() {
+		fullscreen = new ToggleButton();
+		Runnable callback = new Runnable() {
+			public void run() {
+				settings.setFullscreen(fullscreen.isActive());
+			}
+		};
+		fullscreen.addCallback(callback);
+		addCheckBoxRow(fullscreen, "Fullscreen: ", "Toggles fullscreen (duh)", settings.isFullscreen());
+		
+		debug = new ToggleButton();
+		callback = new Runnable() {
+			public void run() {
+				settings.setDebugging(debug.isActive());
+			}
+		};
+		debug.addCallback(callback);
+		addCheckBoxRow(debug, "Debug: ", "Needs a restart (too disable all debug tools)", settings.isDebugging());
+		
+		log = new ToggleButton();
+		callback = new Runnable() {
+			public void run() {
+				settings.setLogging(log.isActive());
+			}
+		};
+		log.addCallback(callback);
+		addCheckBoxRow(log, "Log: ", "Logs outputs", settings.isLogging());
+		
+		sound3D = new ToggleButton();
+		callback = new Runnable() {
+			public void run() {
+				settings.set3DSound(sound3D.isActive());
+			}
+		};
+		sound3D.addCallback(callback);
+		addCheckBoxRow(sound3D, "3D Sound: ", "Use 3D sound", settings.is3DSound());
+		
+		vsync = new ToggleButton();
+		callback = new Runnable() {
+			public void run() {
+				settings.setVSync(vsync.isActive());
+			}
+		};
+		vsync.addCallback(callback);
+		addCheckBoxRow(vsync, "VSync: ", "Tries to sync with the display refresh rate", settings.isVSync());
+		
+		smoothDelta = new ToggleButton();
+		callback = new Runnable() {
+			public void run() {
+				settings.setSmoothDelta(smoothDelta.isActive());
+			}
+		};
+		smoothDelta.addCallback(callback);
+		addCheckBoxRow(smoothDelta, "Smooth Delta: ", "Smooths the delta values", settings.isSmoothDelta());
+		
+	}
+	private void addCheckBoxRow(ToggleButton checkBox, String label, String tooltip, boolean value) {
 		checkBox.setTheme("checkbox");
 		checkBox.setActive(value);
-		addRow(layout, label, checkBox);
-	}
-	private void addRow(ColumnLayout layout, String label, Widget widget) {
-		Row row = layout.addRow(NAME, VALUE);
-		row.addLabel(label).add(widget);
+		checkBox.setTooltipContent(tooltip);
+		
+		Row row = layout.addRow(checkBoxColumns);
+		row.addLabel(label).add(checkBox, Alignment.CENTER);
 	}
 	
 }

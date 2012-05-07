@@ -430,7 +430,28 @@
         <theme name="label" ref="label"/>
     </theme>
 
-    <theme name="hscrollbar" ref="-defaults" allowWildcard="true">
+    <theme name="hscrollbar2" ref="-defaults" allowWildcard="true">
+        <param name="background"><image>scrollbar.background</image></param>
+        <theme name="leftbutton" ref="-defaults">
+            <param name=""><image>hscrollbar.leftbutton.*</image></param>
+            <param name="minWidth"><int>16</int></param>
+            <param name="minHeight"><int>0</int></param>
+        </theme>
+        <theme name="rightbutton" ref="-defaults">
+            <param name=""><image>hscrollbar.rightbutton.*</image></param>
+            <param name="minWidth"><int>16</int></param>
+        </theme>
+        <theme name="thumb" ref="-defaults">
+        <param name="minWidth"><int>16</int></param>
+            <param name=""><image>scrollbar.thumb.*</image></param>
+           	
+        </theme>
+        <param name="scaleThumb"><bool>false</bool></param>
+        <param name="minWidth"><int>48</int></param>
+        <param name="minHeight"><int>16</int></param>
+    </theme>
+    
+     <theme name="hscrollbar" ref="-defaults" allowWildcard="true">
         <param name="background"><image>scrollbar.background</image></param>
         <theme name="leftbutton" ref="-defaults">
             <param name=""><image>hscrollbar.leftbutton.*</image></param>
@@ -465,6 +486,8 @@
         <param name="minWidth"><int>16</int></param>
         <param name="minHeight"><int>48</int></param>
     </theme>
+
+	
 
     <fontDef name="listbox-display" filename="font.fnt" color="black">
         <fontParam if="selected" color="white"/>

@@ -57,7 +57,7 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	
 	private int textSpeed;
 	private float musicVolume, soundVolume;
-	private boolean debug, logging, fullscreen, sound3D;
+	private boolean debug, logging, fullscreen, sound3D, vsync, smoothDelta;
 	private boolean postprocessing, animations, effects, shaders;
 	private static boolean shaderSupported, fboSupported;
 	
@@ -90,10 +90,13 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		Logger.none("\tDebug:        " + debug);
 		Logger.none("\tLogging:      " + logging);
 		Logger.none("\tFullscreen:   " + fullscreen);
+		Logger.none("\t3D Sound:     " + sound3D);
+		Logger.none("\tVsync:        " + vsync);
+		Logger.none("\tSmooth Delta: " + smoothDelta);
 		Logger.none("\tText Speed:   " + textSpeed);
 		Logger.none("\tMusic Volume: " + musicVolume);
 		Logger.none("\tSound Volume: " + soundVolume);
-		Logger.none("\t3D Sound:     " + sound3D);
+		
 		Logger.none("Graphics:");
 		Logger.none("\tSupport Shader: " + shaderSupported);
 		Logger.none("\tSupport FBO:    " + fboSupported);
@@ -167,6 +170,8 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		debug = properties.getProperty("debug", "false").equals("true");
 		logging = properties.getProperty("logging", "false").equals("true");
 		logging = properties.getProperty("sound3D", "false").equals("true");
+		vsync = properties.getProperty("vsync", "false").equals("true");
+		smoothDelta = properties.getProperty("smoothdelta", "false").equals("true");
 		
 		musicVolume = castToFloat(properties.getProperty("music", "1.0"), 1.0f);
 		soundVolume = castToFloat(properties.getProperty("sound", "1.0"), 1.0f);
@@ -198,10 +203,10 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		
 		for (String s : list) {
 			length = longestKey - s.length();
-			Logger.none("\t" + s + ": " + fillUp(length) + properties.getProperty(s));
+			Logger.none("\t" + s + ": " + fillEmptySpace(length) + properties.getProperty(s));
 		}
 	}
-	private String fillUp(int length) {
+	private String fillEmptySpace(int length) {
 		String s = "";
 		for (int i = 0; i < length; i++) {
 			s += " ";
@@ -295,13 +300,13 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	public float getProperty(String key, float defaultValue) {
 		try {
 			return Float.valueOf(properties.getProperty(key));
-		} catch(NumberFormatException e) {}
+		} catch (NumberFormatException e) {}
 		return defaultValue;
 	}
 	public int getProperty(String key, int defaultValue) {
 		try {
 			return Integer.valueOf(properties.getProperty(key));
-		} catch(NumberFormatException e) {}
+		} catch (NumberFormatException e) {}
 		return defaultValue;
 	}
 	
@@ -310,9 +315,6 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	}
 	public float getMusicVolume() {
 		return musicVolume;
-	}
-	public boolean is3DSound() {
-		return sound3D;
 	}
 	
 	public int getTextSpeed() {
@@ -328,8 +330,49 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	public boolean isFullscreen() {
 		return fullscreen;
 	}
+	public boolean is3DSound() {
+		return sound3D;
+	}
+	public boolean isVSync() {
+		return vsync;
+	}
+	public boolean isSmoothDelta() {
+		return smoothDelta;
+	}
 	
 	// SETTER SETTINGS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public void setFullscreen(boolean value) {
+		fullscreen = value;
+	}
+	public void setDebugging(boolean value) {
+		debug = value;
+	}
+	public void setLogging(boolean value) {
+		logging = value;
+	}
+	public void setVSync(boolean value) {
+		vsync = value;
+	}
+	public void setSmoothDelta(boolean value) {
+		smoothDelta = value;
+	}
 	
+	public void set3DSound(boolean value) {
+		sound3D = value;
+	}
+	public void setMusicVolume(float value) {
+		musicVolume = value;
+	}
+	public void setSoundVolume(float value) {
+		soundVolume = value;
+	}
+	
+	public void setTextSpeed(int value) {
+		textSpeed = value;
+	}
+	
+	public void setProperty(String key, String value) {
+		properties.setProperty(key, value);
+	}
 }

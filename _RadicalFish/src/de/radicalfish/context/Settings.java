@@ -30,8 +30,6 @@
 package de.radicalfish.context;
 import org.newdawn.slick.SlickException;
 
-// TODO add setter
-
 /**
  * small interfaces for some simple settings.
  * 
@@ -86,6 +84,18 @@ public interface Settings {
 	 */
 	public boolean isFullscreen();
 	/**
+	 * @return true if the game should use 3D sound.
+	 */
+	public boolean is3DSound();
+	/**
+	 * @return true if the game should sync the frame rate at the monitor frame rate
+	 */
+	public boolean isVSync();
+	/**
+	 * @return true if the deltas should be smoothed (A Slick2D Feature, works best with vsync enabled);
+	 */
+	public boolean isSmoothDelta();
+	/**
 	 * @return the volume of the sound.
 	 */
 	public float getSoundVolume();
@@ -93,10 +103,6 @@ public interface Settings {
 	 * @return the volume of the music.
 	 */
 	public float getMusicVolume();
-	/**
-	 * @return true if the game should use 3D sound.
-	 */
-	public boolean is3DSound();
 	/**
 	 * @return the speed of the text.
 	 */
@@ -124,5 +130,58 @@ public interface Settings {
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	
+	/**
+	 * @param value
+	 *            true for fullscreen, false otherwise
+	 */
+	public void setFullscreen(boolean value);
+	/**
+	 * @param value
+	 *            true for global debugging, false otherwise (ideally it disables all sub debugging)
+	 */
+	public void setDebugging(boolean value);
+	/**
+	 * @param value
+	 *            true if the game should log (to a file or whatever)
+	 */
+	public void setLogging(boolean value);
+	/**
+	 * @param value
+	 *            true if the game should use 3Dsound (ignore if not wanted)
+	 */
+	public void set3DSound(boolean value);
+	/**
+	 * @param value
+	 *            true if the game should use vertical synchronization
+	 */
+	public void setVSync(boolean value);
+	/**
+	 * @param value
+	 *            true if the game should smooth the deltas
+	 */
+	public void setSmoothDelta(boolean value);
+	/**
+	 * @param value
+	 *            the volume of the sound (range should be 0.0 - 1.0)
+	 */
+	public void setSoundVolume(float value);
+	/**
+	 * @param value
+	 *            the volume of the music (range should be 0.0 - 1.0)
+	 */
+	public void setMusicVolume(float value);
+	/**
+	 * @param value
+	 *            the speed of the text
+	 */
+	public void setTextSpeed(int value);
+	/**
+	 * Adds a property dynamically to the settings.
+	 * 
+	 * @param key
+	 *            the key of the property
+	 * @param value
+	 *            the value of the property
+	 */
+	public void setProperty(String key, String value);
 }

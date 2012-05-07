@@ -93,8 +93,9 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		
 		AppGameContainer app = new AppGameContainer(new GameContextTest(), width, height, false);
 		
-		app.setVSync(settings.getProperty("startup.vsync", "false").equals("true"));
-		app.setSmoothDeltas(settings.getProperty("startup.smoothdelta", "false").equals("true"));
+		app.setVSync(settings.isVSync());
+		app.setSmoothDeltas(settings.isSmoothDelta());
+		app.setMinimumLogicUpdateInterval(0);
 		app.setForceExit(false);
 		app.setMouseGrabbed(!settings.isDebugging());
 		app.setShowFPS(false);
@@ -117,7 +118,7 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		container.setFullscreen(settings.isFullscreen());
 		container.setDefaultFont(defaultFont);
 		
-		checkGraphicCapabilities();
+		checkGraphicsCapabilities();
 		
 		if (settings.isLogging()) {
 			System.out.println(settings);
@@ -130,6 +131,7 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	
 	protected void preUpdateState(GameContainer container, int delta) throws SlickException {
 		gameSpeed.update(this, world, delta);
+		updateSettings(container);
 	}
 	protected void postUpdateState(GameContainer container, int delta) throws SlickException {
 		lastDelta = delta;
@@ -148,7 +150,21 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private void checkGraphicCapabilities() {
+	private void updateSettings(GameContainer container) throws SlickException {
+		if(container.isFullscreen() != settings.isFullscreen()) {
+			container.setFullscreen(settings.isFullscreen());
+		}
+		
+		if(settings.isVSync()) {
+			container.setSmoothDeltas(false);
+		}
+		if(container.isVSyncRequested() != settings.isVSync()) {
+			container.setVSync(settings.isVSync());
+		}
+		container.setSmoothDeltas(settings.isSmoothDelta());
+		
+	}
+	private void checkGraphicsCapabilities() {
 		ContextCapabilities c = GLContext.getCapabilities();
 		settings.getGraphicDetails().setFBOSupported(c.GL_EXT_framebuffer_object);
 		settings.getGraphicDetails().setShaderSupported(c.GL_ARB_shader_objects && c.GL_ARB_vertex_shader && c.GL_ARB_fragment_shader);

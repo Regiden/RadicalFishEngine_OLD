@@ -3,18 +3,11 @@ import java.net.URL;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.ResourceLoader;
 import de.matthiasmann.twl.ActionMap;
-import de.matthiasmann.twl.Alignment;
-import de.matthiasmann.twl.Button;
-import de.matthiasmann.twl.ColumnLayout;
-import de.matthiasmann.twl.ColumnLayout.Row;
-import de.matthiasmann.twl.Dimension;
 import de.matthiasmann.twl.GUI;
-import de.matthiasmann.twl.Label;
-import de.matthiasmann.twl.ResizableFrame;
-import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.renderer.Renderer;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.theme.ThemeManager;
@@ -22,6 +15,8 @@ import de.radicalfish.TWLGameState;
 import de.radicalfish.World;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.debug.OptionsPanel;
+import de.radicalfish.debug.ToolBox;
 import de.radicalfish.extern.TWLInputForwarder;
 import de.radicalfish.extern.TWLRootPane;
 
@@ -45,7 +40,9 @@ public class DebugGameState extends TWLGameState {
 	}
 	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
 		updateGUI();
-		
+		if(context.getInput().isKeyPressed(Input.KEY_A)) {
+			System.out.println("super");
+		}
 	}
 	public void render(GameContext context, World world, Graphics g) throws SlickException {
 		image.draw(10, 10);
@@ -88,37 +85,28 @@ public class DebugGameState extends TWLGameState {
 		
 	}
 	private void buildGUI(GameContext context) {
+		final OptionsPanel options = new OptionsPanel(context.getSettings());
 		
-		ResizableFrame frame = new ResizableFrame();
-		frame.setTheme("/resizableframe-title");
-		frame.setTitle("Options");
-		frame.setPosition(800, 0);
-		// frame.setResizableAxis(ResizableAxis.NONE);
+		ToolBox toolbox = new ToolBox();
+		toolbox.setCanAcceptKeyboardFocus(false);
+		toolbox.addTool("Options", "The default options used by the Settings class!", options);
 		
+		// seperate funtions
+		toolbox.addSeparator();
 		
-		Button button = new Button("Temp");
-		Label label1 = new Label("Label ");
-		ToggleButton checkbox1 = new ToggleButton();
-		checkbox1.setTheme("/checkbox");
-		Label label2 = new Label("Label 2  ");
-		ToggleButton checkbox2 = new ToggleButton();
-		checkbox2.setTheme("checkbox");
+		toolbox.addButton("Adjust", "Adjusts the size of all panels!", new Runnable() {
+			public void run() {
+				options.adjustSize();
+			}
+		});
+		toolbox.addButton("Close All", "Closes all open Panels", new Runnable() {
+			public void run() {
+				options.setVisible(false);
+			}
+		});
 		
-		//checkbox1.setAlignment(Alignment.RIGHT);
-		
-		ColumnLayout layout = new ColumnLayout();
-		layout.setDefaultGap(new Dimension(3, 5));
-		layout.setTheme("");
-		
-		Row row = layout.addRow("Name", "Value");
-		row.add(label1).add(checkbox1);
-		row = layout.addRow("Name", "Value");
-		row.add(label2).add(checkbox2);
-		
-		
-		frame.add(layout);
-		frame.adjustSize();
-		root.add(frame);
+		root.add(options);
+		root.add(toolbox);
 		
 	}
 	private void initGUI(GameContext context) throws SlickException {
