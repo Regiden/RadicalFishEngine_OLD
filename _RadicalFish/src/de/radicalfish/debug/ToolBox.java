@@ -28,32 +28,59 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.debug;
-import de.matthiasmann.twl.BoxLayout;
-import de.matthiasmann.twl.BoxLayout.Direction;
+import java.util.ArrayList;
 import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
+import de.matthiasmann.twl.ColumnLayout;
+import de.matthiasmann.twl.ColumnLayout.Row;
 import de.matthiasmann.twl.ResizableFrame;
 import de.matthiasmann.twl.Widget;
 
 /**
- * Small Tool bar with buttons opening some default debug tools
+ * Small Tool bar with buttons opening some default debug tools. A call to <code>createToolBox()</code> must used to
+ * make all added buttons visible! The themes used for this GUI are:
+ * 
+ * <p>
+ * <li>buttonBox: the box which display all buttons.</li>
+ * <li>empty: used for the filler and should have it's maxWidth and maxHeight set to a high value</li>
+ * <li>toolboxseparator: used as the vertical separator. this should have a minHeight set to a value you like and a
+ * max/minWidth of 1 (or another desired value</li>
+ * <li>button: I simple button</li>
+ * 
+ * <pre> </pre>
  * 
  * @author Stefan Lange
- * @version 0.0.0
+ * @version 1.0.0
  * @since 07.05.2012
  */
 public class ToolBox extends ResizableFrame {
 	
-	private BoxLayout buttonbox;
+	private ColumnLayout layout;
 	
-	public ToolBox() {
+	private ArrayList<WidgetWithAlginment> preWidgets;
+	
+	private int containerWidth, containerHeight;
+	private boolean created;
+	
+	/**
+	 * Creates a tool box.
+	 * 
+	 * @param containerWidth
+	 *            used the make the tool box as wide as the container width
+	 * @param gameHeight
+	 *            used to set the position to the bottom of the container
+	 */
+	public ToolBox(int containerWidth, int containerHeight) {
+		this.containerWidth = containerWidth;
+		this.containerHeight = containerHeight;
+		created = false;
 		createPanel();
 	}
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Adds a new tool to the tool box. The tool gets a button to hide/show if pressed.
+	 * Adds a new button to the tool box. The tool gets a button to hide/show if pressed.
 	 * 
 	 * @param name
 	 *            the name of the button
@@ -62,7 +89,7 @@ public class ToolBox extends ResizableFrame {
 	 * @param tool
 	 *            the tool to add
 	 */
-	public void addTool(String name, String tooltip, final Widget tool) {
+	public void addButton(String name, String tooltip, final Widget tool) {
 		addButton(name, null, new Runnable() {
 			public void run() {
 				tool.setVisible(!tool.isVisible());
@@ -72,7 +99,7 @@ public class ToolBox extends ResizableFrame {
 		
 	}
 	/**
-	 * Adds a new tool to the tool box with a custom callback.
+	 * Adds a new button to the tool box with a custom callback.
 	 * 
 	 * @param name
 	 *            the name of the button
@@ -86,20 +113,17 @@ public class ToolBox extends ResizableFrame {
 		button.addCallback(callback);
 		button.setCanAcceptKeyboardFocus(false);
 		button.setTooltipContent(tooltip);
-		button.setAlignment(Alignment.FILL);
-		buttonbox.add(button);
-		invalidateLayout();
+		
+		preWidgets.add(new WidgetWithAlginment(button, Alignment.LEFT));
 	}
-	
-	// TODO change box layout to colum layout!
 	/**
 	 * Fills up space buttons after be right handled.
 	 */
 	public void addFiller() {
 		Widget w = new Widget();
 		w.setTheme("empty");
-		buttonbox.add(w);
-		invalidateLayout();
+		
+		preWidgets.add(new WidgetWithAlginment(w, Alignment.FILL));
 	}
 	/**
 	 * Adds a vertical separator right to the last added button.
@@ -107,8 +131,52 @@ public class ToolBox extends ResizableFrame {
 	public void addSeparator() {
 		Widget w = new Widget();
 		w.setTheme("toolboxseperator");
-		buttonbox.add(w);
+		preWidgets.add(new WidgetWithAlginment(w, Alignment.CENTER));
+		
+	}
+	
+	/**
+	 * Adds a custom widget too the tool box like a small edit field or something.
+	 * 
+	 * @param widget
+	 *            the widget to add
+	 * @param alignment
+	 *            the alignment to use
+	 */
+	public void addCustomWidget(Widget widget, Alignment alignment) {
+		if(widget == null || alignment == null) {
+			throw new NullPointerException("The widget or alginment is null");
+		}
+		preWidgets.add(new WidgetWithAlginment(widget, alignment));
+	}
+	
+	/**
+	 * adds all the buttons, separator and fillers to the toolbox. Must be called in order to make them visible!
+	 */
+	public void createToolbox() {
+		if (created) {
+			throw new IllegalAccessError("tool box alread created!");
+		}
+		String[] columns = new String[preWidgets.size()];
+		for (int i = 0; i < columns.length; i++) {
+			columns[i] = "" + (i + 1);
+		}
+		Row row = layout.addRow(columns);
+		
+		for (WidgetWithAlginment w : preWidgets) {
+			row.add(w.widget, w.alignment);
+		}
+		created = true;
+		
 		invalidateLayout();
+		
+	}
+	
+	// OVERRIDE
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	@Override
+	public void add(Widget child) {
+		throw new UnsupportedOperationException("Use addButton or addCustomWidget!");
 	}
 	
 	// INTERN
@@ -116,11 +184,29 @@ public class ToolBox extends ResizableFrame {
 	private void createPanel() {
 		setTheme("");
 		
-		buttonbox = new BoxLayout(Direction.HORIZONTAL);
-		buttonbox.setTheme("buttonBox");
-		setPosition(0, 800);
-		setSize(800, 0);
+		layout = new ColumnLayout();
+		layout.setTheme("buttonBox");
 		
-		add(buttonbox);
+		setPosition(0, containerHeight);
+		setSize(containerWidth, 0);
+		
+		super.add(layout);
+		
+		
+		preWidgets = new ArrayList<WidgetWithAlginment>();
+		
+	}
+	
+	// PRIVATE CLASSES
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private static class WidgetWithAlginment {
+		Widget widget;
+		Alignment alignment;
+		
+		public WidgetWithAlginment(Widget widget, Alignment alignment) {
+			this.widget = widget;
+			this.alignment = alignment;
+		}
+		
 	}
 }

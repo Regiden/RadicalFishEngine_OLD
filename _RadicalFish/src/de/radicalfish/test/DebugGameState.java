@@ -2,12 +2,14 @@ package de.radicalfish.test;
 import java.net.URL;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.ResourceLoader;
 import de.matthiasmann.twl.ActionMap;
+import de.matthiasmann.twl.Alignment;
+import de.matthiasmann.twl.FPSCounter;
 import de.matthiasmann.twl.GUI;
+import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.renderer.Renderer;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.theme.ThemeManager;
@@ -22,7 +24,6 @@ import de.radicalfish.extern.TWLRootPane;
 
 public class DebugGameState extends TWLGameState {
 	
-	private Image image;
 	private TWLRootPane root;
 	private GUI gui;
 	
@@ -35,27 +36,33 @@ public class DebugGameState extends TWLGameState {
 	public void init(GameContext context, World world) throws SlickException {
 		initGUI(context);
 		buildGUI(context);
-		
-		image = new Image("de/radicalfish/testdata/TESTBLOCK.png", false, Image.FILTER_NEAREST);
 	}
 	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
 		updateGUI();
-		if(context.getInput().isKeyPressed(Input.KEY_A)) {
-			System.out.println("super");
+		
+		if (context.getInput().isKeyPressed(Input.KEY_TAB)) {
+			root.setVisible(!root.isVisible());
 		}
+		
 	}
 	public void render(GameContext context, World world, Graphics g) throws SlickException {
-		image.draw(10, 10);
-		GL11.glPushMatrix();
-		g.scale(2, 2);
-		GL11.glPushMatrix();
-		image.draw(20, 20);
-		GL11.glPopMatrix();
-		image.draw(40, 40);
-		GL11.glPopMatrix();
-		image.draw(60, 60);
-		
 		gui.draw();
+	}
+	
+	// METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @param visible
+	 *            the visibility of the debug view
+	 */
+	public void setVisible(boolean visible) {
+		root.setVisible(visible);
+	}
+	/**
+	 * @return true if the debug view is visible.
+	 */
+	public boolean isVisible() {
+		return root.isVisible();
 	}
 	
 	// CALLBACKS
@@ -63,14 +70,11 @@ public class DebugGameState extends TWLGameState {
 	public void keyboardFocusLost() {
 		
 	}
-	
 	public void layoutRootPane() {
 		super.layoutRootPane();
 	}
-	@Override
 	public void keyPressed(int key, char c) {
-		System.out.println(key);
-		System.out.println(root.hasKeyboardFocus());
+		
 	}
 	
 	// INTERN
@@ -84,14 +88,23 @@ public class DebugGameState extends TWLGameState {
 		gui.setCursor();
 		
 	}
-	private void buildGUI(GameContext context) {
+	private void buildGUI(final GameContext context) {
 		final OptionsPanel options = new OptionsPanel(context.getSettings());
 		
-		ToolBox toolbox = new ToolBox();
+		ToolBox toolbox = new ToolBox(context.getContainerWidth(), context.getContainerHeight());
 		toolbox.setCanAcceptKeyboardFocus(false);
-		toolbox.addTool("Options", "The default options used by the Settings class!", options);
 		
-		// seperate funtions
+		toolbox.addButton("Options", "The default options used by the Settings class!", options);
+
+		toolbox.addFiller();
+		toolbox.addSeparator();
+		{
+			Label fps = new Label("FPS:");
+			FPSCounter fpsCounter = new FPSCounter();
+			
+			toolbox.addCustomWidget(fps, Alignment.CENTER);
+			toolbox.addCustomWidget(fpsCounter, Alignment.CENTER);
+		}
 		toolbox.addSeparator();
 		
 		toolbox.addButton("Adjust", "Adjusts the size of all panels!", new Runnable() {
@@ -104,6 +117,13 @@ public class DebugGameState extends TWLGameState {
 				options.setVisible(false);
 			}
 		});
+		toolbox.addButton("Exit", "Exits the game", new Runnable() {
+			public void run() {
+				context.getContainer().exit();
+			}
+		});
+		
+		toolbox.createToolbox();
 		
 		root.add(options);
 		root.add(toolbox);

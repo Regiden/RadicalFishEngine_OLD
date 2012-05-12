@@ -3,17 +3,24 @@
 <themes>
     <images file="gui.png">
         <area name="white" xywh="53,1,1,1"/>
+        <area name="black" xywh="1,1,1,1"/>
+    
         <area name="pixel.separator" xywh="3,2,1,1"/>
         <area name="pixel.toolbox" xywh="3,2,1,1" inset="-2,0,-4,0"/>
+        <area name="cursor.cross" xywh="78,28,7,7"/>
+    
         <area name="box.high" xywh="14,1,12,12" splitx="L4,R4" splity="T4,B4"/>
         <area name="box.down" xywh="27,1,12,12" splitx="L4,R4" splity="T4,B4"/>
-        <area name="box.embedded" xywh="40,1,12,12" splitx="L4,R4" splity="T4,B4" tint="#FFFFFF"/>
+        <area name="box.embedded" xywh="40,1,12,12" splitx="L4,R4" splity="T4,B4"/>
+        <area name="textarea" xywh="72,69,12,12" splitx="L4,R4" splity="T4,B4"/>
         <area name="box.border.normal" xywh="1,1,12,12" splitx="L4,R4" splity="T4,B4"/>
+        <area name="box.border.bottom" xywh="3,1,8,10" splitx="L2,R2" splity="T4,B2"/>
         <area name="box.border.bottomleft" xywh="3,1,10,10" splitx="L2,R4" splity="T4,B2"/>
+        <area name="box.border.down" xywh="71,49,12,12" splitx="L5,R5" splity="T5,B5"/>
+    
     
     
         <area name="box.border.high" xywh="77,1,12,12" splitx="L5,R5" splity="T5,B5"/>
-        <area name="box.border.high2" xywh="77,14,12,12" splitx="L3,R3" splity="T3,B3"/>
         <area name="box.border.shadow" xywh="14,48,13,13" splitx="L4,R5" splity="T4,B5"/>
     
         <area name="icon.arrow.left" xywh="67,35,4,7" center="true"/>
@@ -122,6 +129,8 @@
         </select>
     
         <area name="hscrollbar" xywh="66,7,8,6" splitx="L3,R3" splity="T1,B1" tiled="true" inset="15,0"/>
+    
+        <area name="hscrollbar.intern" xywh="72,62,8,6" splitx="L3,R3" splity="T1,B1" tiled="true" inset="15,0"/>
         <select name="hscrollbar.leftbutton">
             <composed if="armed">
                 <alias ref="box.border.normal"/>
@@ -144,6 +153,8 @@
         </select>
     
         <area name="vscrollbar" xywh="59,1,6,8" splitx="L1,R1" splity="T3,B3" tiled="true" inset="0,15"/>
+    
+        <area name="vscrollbar.intern" xywh="78,36,6,8" splitx="L1,R1" splity="T3,B3" tiled="true" inset="0,15"/>
         <select name="vscrollbar.upbutton">
             <composed if="armed">
                 <alias ref="box.border.normal"/>
@@ -170,6 +181,22 @@
         <area name="slider.vthumb" xywh="34,56,9,5" splitx="L4,R4"/>
     
     
+        <alias name="listbox.background" ref="black" tint="#88FFFFFF"/>
+        <select name="listbox.select">
+            <alias ref="listbox.background" if="selected"/>
+            <alias ref="none"/>
+        </select>
+        <select name="combobox.background">
+            <composed if="comboboxKeyboardFocus | hasOpenPopups">
+                <alias ref="box.border.normal" tint="#FFFFFF" inset="0,0,0,15"/>
+                <alias ref="listbox.background" inset="2,2,2,17" tint="#BBFFFFFF"/>
+            </composed>
+            <alias ref="box.down" inset="0,0,0,16"/>
+        </select>
+    
+    
+    
+    
     
     
     
@@ -194,7 +221,8 @@
         <cursor name="cursor.finger" hotSpotX="5" hotSpotY="1" xywh="47,0,17,22"/>
     </images>
 
-    <fontDef name="normal" filename="font3.fnt" color="#FFFFFF" default="true">
+
+    <fontDef name="normal" filename="font3.fnt" color="#FFFFFF" default="true" offsetX="0">
         <fontParam if="error" color="red"/>
         <fontParam if="warning" color="orange"/>
         <fontParam if="textSelection" color="#FFFFFF"/>
@@ -293,6 +321,13 @@
         <param name="minWidth"><int>22</int></param>
         <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
     </theme>
+
+
+    <theme name="fpslabel" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>normal</font></param>
+        <param name="minWidth"><int>31</int></param>
+        <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+    </theme>
     <theme name="tooltipwindow" ref="-defaults">
         <param name="background"><image>box.border.shadow</image></param>
         <param name="border"><border>2,3,4,5</border></param>
@@ -370,9 +405,25 @@
         <param name="background"><image>box.border.normal</image></param>
         <param name="hasCloseButton"><bool>false</bool></param>
         <param name="titleAreaBottom"><int>0</int></param>
-        <param name="border"><border>3,4,2,2</border></param>
+        <param name="border"><border>3,4,4,3</border></param>
     </theme>
-    <theme name="toolbox" ref="resizableframe"/>
+
+    <theme name="valueadjuster" ref="-defaults">
+        <param name="width"><int>100</int></param>
+        <param name="displayPrefix"><string/></param>
+        <theme name="valueDisplay" ref="button"/>
+        <theme name="valueEdit" ref="editfield"/>
+        <theme name="decButton" ref="button">
+            <param name="text"><string>-</string></param>
+            <param name="minWidth"><int>20</int></param>
+        </theme>
+        <theme name="incButton" ref="button">
+            <param name="text"><string>+</string></param>
+            <param name="minWidth"><int>20</int></param>
+        </theme>
+        <param name="useMouseWheel"><bool>true</bool></param>
+    </theme>
+
 
     <theme name="hscrollbar" ref="-defaults">
         <param name="background"><image>hscrollbar</image></param>
@@ -441,14 +492,141 @@
         <theme name="upbutton" ref="-defaults"/>
         <theme name="downbutton" ref="-defaults"/>
     </theme>
+    <theme name="listbox" ref="-defaults">
+        <param name="background"><image>box.border.normal</image></param>
+        <param name="border"><border>2</border></param>
+        <param name="cellHeight"><int>font.lineHeight + 4</int></param>
+        <param name="cellWidth"><int>-1</int></param>
+        <param name="rowMajor"><bool>true</bool></param>
+        <param name="fixedCellWidth"><bool>false</bool></param>
+        <param name="fixedCellHeight"><bool>false</bool></param>
+        <param name="minDisplayedRows"><int>1</int></param>
+        <param name="minWidth"><int>100</int></param>
+        <theme name="display" ref="label">
+            <param name="border"><border>0,2,0,0</border></param>
+            <param name="background"><image>listbox.select</image></param>
+        </theme>
+        <theme name="vscrollbar" ref="vscrollbar">
+            <param name="background"><image>vscrollbar.intern</image></param>
+        </theme>
+    
+    </theme>
+
+    <theme name="combobox" ref="-defaults">
+        <param name="border"><border>0,3,0,0</border></param>
+        <param name="background"><image>combobox.background</image></param>
+        <param name="minWidth"><int>120</int></param>
+        <theme name="button" ref="-defaults">
+            <param name="background"><image>vscrollbar.downbutton</image></param>
+            <param name="minWidth"><int>16</int></param>
+            <param name="minHeight"><int>16</int></param>
+        </theme>
+        <theme name="display" ref="label">
+            <param name="border"><border>3,1,3,3</border></param>
+        </theme>
+    </theme>
+    <theme name="comboboxPopup" ref="-defaults">
+        <theme name="listbox" ref="listbox">
+            <param name="border"><border>2</border></param>
+        </theme>
+    </theme>
+    <theme name="scrollpane" ref="-defaults">
+        <param name="background"><image>box.embedded</image></param>
+        <param name="border"><border>3</border></param>
+        <param name="autoScrollArea"><int>1</int></param>
+        <param name="minWidth"><int>100</int></param>
+        <param name="minHeight"><int>100</int></param>
+        <param name="maxWidth"><int>32767</int></param>
+        <param name="maxHeight"><int>32767</int></param>
+        <param name="autoScrollSpeed"><int>10</int></param>
+        <param name="scrollbarsAlwaysVisible"><bool>false</bool></param>
+        <param name="hasDragButton"><bool>true</bool></param>
+    
+        <theme name="vscrollbar" ref="vscrollbar">
+            <param name="background"><image>vscrollbar.intern</image></param>
+        </theme>
+        <theme name="hscrollbar" ref="hscrollbar">
+            <param name="background"><image>hscrollbar.intern</image></param>
+        </theme>
+    
+        <theme name="dragButton" ref="button">
+            <param name="minWidth"><int>16</int></param>
+            <param name="minHeight"><int>16</int></param>
+            <param name="text"><string>+</string></param>
+        </theme>
+    </theme>
+    <theme name="textarea" ref="-defaults">
+        <param name="border"><border>3,1,4,4</border></param>
+        <param name="fonts">
+            <map>
+                <param name="font"><font>normal</font></param>
+            </map>
+        </param>
+        <param name="classes">
+            <map>
+            </map>
+        </param>
+        <param name="images">
+            <map>
+            </map>
+        </param>
+    </theme>
+
+
+    <theme name="colorselector" ref="-defaults">
+        <param name="border"><border>0</border></param>
+        <theme name="colorarea1d" ref="-defaults">
+            <param name="cursor"><image>pixel.separator</image></param>
+            <param name="minHeight"><int>0</int></param>
+            <param name="minWidth"><int>34</int></param>
+            <param name="background"><image>box.border.normal</image></param>
+            <param name="border"><border>1</border></param>
+        </theme>
+        <theme name="colorarea2d" ref="-defaults">
+            <param name="minWidth"><int>130</int></param>
+            <param name="minHeight"><int>130</int></param>
+            <param name="border"><border>1</border></param>
+            <param name="background"><image>box.border.normal</image></param>
+            <param name="cursor"><image>cursor.cross</image></param>
+        </theme>
+        <theme name="previewLabel" ref="label"/>
+        <theme name="preview" ref="-defaults">
+            <param name="background"><image>box.border.normal</image></param>
+            <theme name="colorarea" ref="-defaults">
+                <param name="background"><image>white</image></param>
+            </theme>
+            <param name="border"><border>1</border></param>
+            <param name="minWidth"><int>66</int></param>
+            <param name="minHeight"><int>66</int></param>
+        </theme>
+        <theme name="hexColorEditField" ref="editfield">
+            <param name="tooltip"><string>Current color in ARGB hex format</string></param>
+        </theme>
+    </theme>
+    <theme name="fpscounter" ref="label">
+    </theme>
+    <theme name="chatdemo" ref="-defaults">
+        <theme name="chatframe" ref="resizableframe-title">
+            <theme name="content" ref="-defaults"/>
+        </theme>
+    </theme>
+
+
+
+
+
 
     <theme name="columnlayout" ref="-defaults">
     </theme>
+    <theme name="boxlayout" ref="-defaults">
+        <param name="spacing"><int>0</int></param>
+        <param name="alignment"><enum type="alignment">LEFT</enum></param>
+        <param name="defaultGap"><dimension>0,0</dimension></param>
+    </theme>
+
     <theme name="buttonBox" ref="resizableframe">
-        <param name="spacing"><int>5</int></param>
-        <param name="alignment"><enum type="alignment">CENTER</enum></param>
-        <param name="border"><border>4,2,2,4</border></param>
-        <param name="background"><image>box.border.bottomleft</image></param>
+        <param name="border"><border>4,2,2,0</border></param>
+        <param name="background"><image>box.border.bottom</image></param>
     </theme>
 
 

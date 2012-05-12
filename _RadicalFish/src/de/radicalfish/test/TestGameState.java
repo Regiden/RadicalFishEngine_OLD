@@ -28,6 +28,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.test;
+import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -68,9 +70,6 @@ public class TestGameState extends GameState {
 		if (in.isKeyPressed(Input.KEY_D)) {
 			deltor.slowDown(1.0f, 2000, Easing.LINEAR);
 		}
-		if (in.isKeyPressed(Input.KEY_RIGHT)) {
-			context.getGame().enterState(100);
-		}
 		
 		effect.update(delta.getNormalDelta());
 		if (effect.finished()) {
@@ -86,8 +85,26 @@ public class TestGameState extends GameState {
 		
 	}
 	public void render(GameContext context, World world, Graphics g) throws SlickException {
+		
+		g.setColor(Color.green.darker().darker());
+		g.fillRect(0, 0, context.getContainerWidth(), context.getContainerHeight());
+		
 		image.draw(effect.getValue(), 50);
 		image.draw(effect2.getValue(), 100);
+		
+		image.draw(20, 20);
+		GL11.glPushMatrix();
+		g.scale(2, 2);
+		GL11.glPushMatrix();
+		image.draw(20, 20);
+		GL11.glPopMatrix();
+		image.draw(40, 40);
+		GL11.glPopMatrix();
+		image.draw(60, 60);
+		
 	}
+	
+	// TESTS METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	
 }

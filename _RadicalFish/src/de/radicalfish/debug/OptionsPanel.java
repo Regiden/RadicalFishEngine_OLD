@@ -59,7 +59,7 @@ import de.radicalfish.context.Settings;
  * @since 01.05.2012
  */
 public class OptionsPanel extends ResizableFrame {
-	
+
 	// the column names
 	private static final String NAME = "name", VALUE = "value", SEP = "SEP", LABEL = "label";
 	
@@ -171,7 +171,7 @@ public class OptionsPanel extends ResizableFrame {
 		
 		addCheckboxes();
 		addSeparator();
-		addSliders();
+		addMusicSliders();
 		addSeparator();
 		addTextSpeed();
 		
@@ -199,12 +199,13 @@ public class OptionsPanel extends ResizableFrame {
 			}
 		});
 		textSpeed.setValue(settings.getTextSpeed());
+		textSpeed.setStepSize(1);
 		
 		Row row = layout.addRow(sliderColumns);
 		row.addLabel("Text Speed: ").add(textSpeed, Alignment.FILL).add(value, Alignment.CENTER);
 		
 	}
-	private void addSliders() {
+	private void addMusicSliders() {
 		final Label value = new Label("" + (int)(settings.getMusicVolume() * 100));
 		value.setTheme("fixedlabel");
 		musicVolume = new Scrollbar(Orientation.HORIZONTAL);

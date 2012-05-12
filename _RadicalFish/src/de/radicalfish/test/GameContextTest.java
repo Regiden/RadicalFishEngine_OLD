@@ -65,9 +65,13 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	private StyledFont defaultFont;
 	private World world;
 	
+	private DebugGameState debug;
+	
 	private static int gameScale = 2;
 	private static int gameWidth = 320, gameHeight = 240;
-	private int maxTextureSize = 1024, lastDelta = 0;
+	private int maxTextureSize = 1024;
+	private boolean canDebug;
+	
 	private final int[][] widths = new int[][] { { 3, 3, 5, 7, 5, 7, 7, 3, 4, 4, 5, 5, 4, 5, 3, 5 },
 			{ 5, 3, 5, 5, 5, 5, 5, 5, 5, 5, 3, 4, 5, 5, 5, 5 }, { 7, 5, 5, 5, 5, 5, 5, 5, 5, 3, 5, 5, 5, 7, 6, 5 },
 			{ 5, 5, 5, 5, 5, 5, 5, 7, 5, 5, 5, 4, 5, 4, 5, 5 } };
@@ -95,7 +99,6 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		
 		app.setVSync(settings.isVSync());
 		app.setSmoothDeltas(settings.isSmoothDelta());
-		app.setMinimumLogicUpdateInterval(0);
 		app.setForceExit(false);
 		app.setMouseGrabbed(!settings.isDebugging());
 		app.setShowFPS(false);
@@ -124,41 +127,54 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 			System.out.println(settings);
 		}
 		
-		addState(new DebugGameState(this, world, 100));
-		addState(new TestGameState(this, world, 0));
+		canDebug = settings.isDebugging();
+		
+		if(canDebug) {
+			debug = new DebugGameState(this, world, 0);
+			debug.init(this, world);
+		}
+		
+		addState(new TestGameState(this, world, 1));
 		
 	}
 	
 	protected void preUpdateState(GameContainer container, int delta) throws SlickException {
 		gameSpeed.update(this, world, delta);
-		updateSettings(container);
 	}
 	protected void postUpdateState(GameContainer container, int delta) throws SlickException {
-		lastDelta = delta;
+		updateDebug();
+		updateSettings(container);
 	}
 	
 	protected void preRenderState(GameContainer container, Graphics g) throws SlickException {
 		g.setFont(defaultFont);
 	}
 	protected void postRenderState(GameContainer container, Graphics g) throws SlickException {
-		g.resetTransform();
-		
-		g.drawString("FPS:   " + container.getFPS(), 5, 5);
-		g.drawString("DELTA: " + lastDelta, 5, 17);
-		
+		renderDebug(g);
 	}
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private void updateDebug() throws SlickException {
+		if (canDebug) {
+			debug.update(this, world, getGameSpeed());
+		}
+		
+	}
+	private void renderDebug(Graphics g) throws SlickException {
+		if (canDebug) {
+			debug.render(this, world, g);
+		}
+	}
 	private void updateSettings(GameContainer container) throws SlickException {
-		if(container.isFullscreen() != settings.isFullscreen()) {
+		if (container.isFullscreen() != settings.isFullscreen()) {
 			container.setFullscreen(settings.isFullscreen());
 		}
 		
-		if(settings.isVSync()) {
+		if (settings.isVSync()) {
 			container.setSmoothDeltas(false);
 		}
-		if(container.isVSyncRequested() != settings.isVSync()) {
+		if (container.isVSyncRequested() != settings.isVSync()) {
 			container.setVSync(settings.isVSync());
 		}
 		container.setSmoothDeltas(settings.isSmoothDelta());
