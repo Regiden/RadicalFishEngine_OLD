@@ -39,7 +39,7 @@
             <alias ref="box.high" border="3,4,4,5"/>
         </select>
         <area name="edit.cursor" xywh="55,2,3,10" inset="0,1"/>
-        <alias name="edit.selection" ref="white" tint="#80000000" inset="0,1"/>
+        <alias name="edit.selection" ref="white" tint="#80000000"/>
         <animation name="edit.cursor.animation" timeSource="hover">
             <frame duration="500" ref="edit.cursor"/>
             <frame duration="500" ref="none"/>
@@ -119,18 +119,37 @@
             </select>
             <alias ref="none"/>
         </grid>
-        <select name="valueadjuster.hthumb">
+        <select name="scroller.hthumb">
             <alias ref="box.border.normal" if="armed | pressed" inset="1,0"/>
             <alias ref="box.border.high" inset="1,0"/>
         </select>
-        <select name="valueadjuster.vthumb">
+        <select name="scroller.vthumb">
             <alias ref="box.border.normal" if="armed | pressed" inset="0,1"/>
             <alias ref="box.border.high" inset="0,1"/>
         </select>
+        <grid name="hscrollbar" weightsX="0,1,0" weightsY="0,1,0" inset="15,0">
+            <area xywh="66,7,3,1"/>
+            <area xywh="69,7,2,1"/>
+            <area xywh="71,7,3,1"/>
+            <area xywh="66,8,3,4"/>
+            <area xywh="90,1,16,16" tiled="true"/>
+            <area xywh="71,8,3,4"/>
+            <area xywh="66,12,3,1"/>
+            <area xywh="69,12,2,1"/>
+            <area xywh="71,12,3,1"/>
+        </grid>
+        <grid name="hscrollbar.intern" weightsX="0,1,0" weightsY="0,1,0" inset="15,0">
+            <area xywh="72,62,3,1"/>
+            <area xywh="75,62,2,1"/>
+            <area xywh="77,62,3,1"/>
+            <area xywh="72,63,3,4"/>
+            <area xywh="90,1,16,16" tiled="true"/>
+            <area xywh="77,63,3,4"/>
+            <area xywh="72,67,3,1"/>
+            <area xywh="75,67,2,1"/>
+            <area xywh="77,67,3,1"/>
+        </grid>
     
-        <area name="hscrollbar" xywh="66,7,8,6" splitx="L3,R3" splity="T1,B1" tiled="true" inset="15,0"/>
-    
-        <area name="hscrollbar.intern" xywh="72,62,8,6" splitx="L3,R3" splity="T1,B1" tiled="true" inset="15,0"/>
         <select name="hscrollbar.leftbutton">
             <composed if="armed">
                 <alias ref="box.border.normal"/>
@@ -151,10 +170,28 @@
                 <alias ref="icon.arrow.right"/>
             </composed>
         </select>
-    
-        <area name="vscrollbar" xywh="59,1,6,8" splitx="L1,R1" splity="T3,B3" tiled="true" inset="0,15"/>
-    
-        <area name="vscrollbar.intern" xywh="78,36,6,8" splitx="L1,R1" splity="T3,B3" tiled="true" inset="0,15"/>
+        <grid name="vscrollbar" weightsX="0,1,0" weightsY="0,1,0" inset="0,15">
+            <area xywh="59,1,1,3"/>
+            <area xywh="60,1,4,3"/>
+            <area xywh="64,1,1,3"/>
+            <area xywh="59,4,1,2"/>
+            <area xywh="90,1,16,16" tiled="true"/>
+            <area xywh="64,4,1,2"/>
+            <area xywh="59,6,1,3"/>
+            <area xywh="60,6,4,3"/>
+            <area xywh="64,6,1,3"/>
+        </grid>
+        <grid name="vscrollbar.intern" weightsX="0,1,0" weightsY="0,1,0" inset="0,15">
+            <area xywh="78,36,1,3"/>
+            <area xywh="79,36,4,3"/>
+            <area xywh="83,36,1,3"/>
+            <area xywh="78,39,1,2"/>
+            <area xywh="90,1,16,16" tiled="true"/>
+            <area xywh="83,39,1,2"/>
+            <area xywh="78,41,1,3"/>
+            <area xywh="79,41,4,3"/>
+            <area xywh="83,41,1,3"/>
+        </grid>
         <select name="vscrollbar.upbutton">
             <composed if="armed">
                 <alias ref="box.border.normal"/>
@@ -182,6 +219,19 @@
     
     
         <alias name="listbox.background" ref="black" tint="#88FFFFFF"/>
+        <alias name="progressbar.bar" ref="white" tint="#77FFFFFF"/>
+        <grid name="progressbar" weightsX="0,1,0" weightsY="0,1,0">
+            <area xywh="85,35,2,2"/>
+            <area xywh="87,35,8,2"/>
+            <area xywh="95,35,2,2"/>
+            <area xywh="85,37,2,8"/>
+            <area xywh="85,48,8,8" tiled="true"/>
+            <area xywh="95,37,2,8"/>
+            <area xywh="85,45,2,2"/>
+            <area xywh="87,45,8,2"/>
+            <area xywh="95,45,2,2"/>
+        </grid>
+    
         <select name="listbox.select">
             <alias ref="listbox.background" if="selected"/>
             <alias ref="none"/>
@@ -232,6 +282,14 @@
         <fontParam if="selected" offsetX="0" offsetY="1"/>
         <fontParam if="pressed" offsetX="0" offsetY="1"/>
     </fontDef>
+    <fontDef name="link" filename="font3.fnt" color="#517EDA" underlineOffset="3">
+        <fontParam if="hover" color="#2553B0"/>
+    </fontDef>
+    <fontDef name="error" filename="font3.fnt" color="#FF3535">
+    </fontDef>
+    <fontDef name="green" filename="font3.fnt" color="#15A32E">
+    </fontDef>
+
 
 
     <inputMapDef name="-defaultInputMap">
@@ -356,7 +414,15 @@
         <param name="columns"><int>20</int></param>
         <param name="passwordChar"><int>42</int></param>
         <param name="mouseCursor"><cursor>cursor.text</cursor></param>
+        <param name="maxWidth"><int>32767</int></param>
     </theme>
+    <theme name="editfield-embedded" ref="editfield">
+        <param name="background"><image>none</image></param>
+        <param name="border"><border>0</border></param>
+        <param name="textAlignment"><enum type="alignment">TOPLEFT</enum></param>
+    </theme>
+
+
     <theme name="checkbox" ref="-defaults">
         <param name="background"><image>checkbox.background</image></param>
         <param name="border"><border>4,3</border></param>
@@ -442,7 +508,7 @@
             <param name="minHeight"><int>16</int></param>
         </theme>
         <theme name="thumb" ref="-defaults">
-            <param name="background"><image>valueadjuster.hthumb</image></param>
+            <param name="background"><image>scroller.hthumb</image></param>
         </theme>
     </theme>
     <theme name="vscrollbar" ref="-defaults">
@@ -460,7 +526,7 @@
             <param name="minHeight"><int>16</int></param>
         </theme>
         <theme name="thumb" ref="-defaults">
-            <param name="background"><image>valueadjuster.vthumb</image></param>
+            <param name="background"><image>scroller.vthumb</image></param>
         </theme>
         <param name="scaleThumb"><bool>true</bool></param>
     </theme>
@@ -492,6 +558,16 @@
         <theme name="upbutton" ref="-defaults"/>
         <theme name="downbutton" ref="-defaults"/>
     </theme>
+    <theme name="progressbar" ref="-defaults">
+        <param name="minWidth"><int>100</int></param>
+        <param name="minHeight"><int>13</int></param>
+        <param name="maxWidth"><int>32767</int></param>
+        <param name="background"><image>progressbar</image></param>
+        <param name="progressImage"><image>progressbar.bar</image></param>
+        <param name="border"><border>2</border></param>
+        <param name="maxHeight"><int>16</int></param>
+    </theme>
+
     <theme name="listbox" ref="-defaults">
         <param name="background"><image>box.border.normal</image></param>
         <param name="border"><border>2</border></param>
@@ -559,7 +635,10 @@
         <param name="border"><border>3,1,4,4</border></param>
         <param name="fonts">
             <map>
-                <param name="font"><font>normal</font></param>
+                <param name="default"><font>normal</font></param>
+                <param name="link"><font>link</font></param>
+                <param name="error"><font>error</font></param>
+                <param name="success"><font>green</font></param>
             </map>
         </param>
         <param name="classes">
@@ -570,6 +649,7 @@
             <map>
             </map>
         </param>
+        <param name="mouseCursor.link"><cursor>cursor.finger</cursor></param>
     </theme>
 
 
@@ -618,6 +698,16 @@
 
     <theme name="columnlayout" ref="-defaults">
     </theme>
+    <theme name="optionsdialog" ref="-defaults"/>
+
+    <theme name="devconsole-frame" ref="resizableframe-title">
+        <param name="minWidth"><int>200</int></param>
+        <param name="minHeight"><int>150</int></param>
+    </theme>
+    <theme name="devconsole" ref="-defaults">
+        <param name="border"><border>2</border></param>
+    </theme>
+
     <theme name="boxlayout" ref="-defaults">
         <param name="spacing"><int>0</int></param>
         <param name="alignment"><enum type="alignment">LEFT</enum></param>

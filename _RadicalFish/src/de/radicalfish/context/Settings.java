@@ -28,6 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.context;
+import java.util.Properties;
 import org.newdawn.slick.SlickException;
 
 /**
@@ -86,7 +87,7 @@ public interface Settings {
 	/**
 	 * @return true if the game should use 3D sound.
 	 */
-	public boolean is3DSound();
+	public boolean isSound3D();
 	/**
 	 * @return true if the game should sync the frame rate at the monitor frame rate
 	 */
@@ -127,6 +128,10 @@ public interface Settings {
 	 * @return the property associated with the key casted to float or the default if the key does not exist.
 	 */
 	public float getProperty(String key, float defaultValue);
+	/**
+	 * @return all properties set in settings.
+	 */
+	public Properties getProperties();
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -149,7 +154,7 @@ public interface Settings {
 	 * @param value
 	 *            true if the game should use 3Dsound (ignore if not wanted)
 	 */
-	public void set3DSound(boolean value);
+	public void setSound3D(boolean value);
 	/**
 	 * @param value
 	 *            true if the game should use vertical synchronization

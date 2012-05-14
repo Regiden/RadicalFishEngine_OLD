@@ -17,8 +17,11 @@ import de.radicalfish.TWLGameState;
 import de.radicalfish.World;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.debug.DevConsole;
 import de.radicalfish.debug.OptionsPanel;
 import de.radicalfish.debug.ToolBox;
+import de.radicalfish.debug.parser.PropertyInputParser;
+import de.radicalfish.debug.parser.URLInputParser;
 import de.radicalfish.extern.TWLInputForwarder;
 import de.radicalfish.extern.TWLRootPane;
 
@@ -90,12 +93,14 @@ public class DebugGameState extends TWLGameState {
 	}
 	private void buildGUI(final GameContext context) {
 		final OptionsPanel options = new OptionsPanel(context.getSettings());
+		final DevConsole console = new DevConsole();
 		
 		ToolBox toolbox = new ToolBox(context.getContainerWidth(), context.getContainerHeight());
 		toolbox.setCanAcceptKeyboardFocus(false);
 		
-		toolbox.addButton("Options", "The default options used by the Settings class!", options);
-
+		toolbox.addButton("Options", options);
+		toolbox.addButton("Console", console);
+		
 		toolbox.addFiller();
 		toolbox.addSeparator();
 		{
@@ -107,26 +112,35 @@ public class DebugGameState extends TWLGameState {
 		}
 		toolbox.addSeparator();
 		
-		toolbox.addButton("Adjust", "Adjusts the size of all panels!", new Runnable() {
+		toolbox.addButton("Adjust", new Runnable() {
 			public void run() {
 				options.adjustSize();
+				console.adjustSize();
 			}
 		});
-		toolbox.addButton("Close All", "Closes all open Panels", new Runnable() {
+		toolbox.addButton("Close All", new Runnable() {
 			public void run() {
 				options.setVisible(false);
+				console.setVisible(false);
 			}
 		});
-		toolbox.addButton("Exit", "Exits the game", new Runnable() {
+		toolbox.addButton("Exit", new Runnable() {
 			public void run() {
 				context.getContainer().exit();
 			}
 		});
 		
 		toolbox.createToolbox();
+		options.setVisible(false);
+		
+		console.addInputParser(new URLInputParser());
+		console.addInputParser(new PropertyInputParser(context.getSettings()));
+		
 		
 		root.add(options);
 		root.add(toolbox);
+		root.add(console);
+		
 		
 	}
 	private void initGUI(GameContext context) throws SlickException {

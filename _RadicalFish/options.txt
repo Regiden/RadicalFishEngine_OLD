@@ -26,4 +26,3 @@ debug.texture.count:true
 debug.fps.graph:true
 debug.fps.graph.sample:200
 debug.sprite.rectangle:false
-debug.test.long.value=32423432432

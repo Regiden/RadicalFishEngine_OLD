@@ -84,13 +84,11 @@ public class ToolBox extends ResizableFrame {
 	 * 
 	 * @param name
 	 *            the name of the button
-	 * @param tooltip
-	 *            can be null
 	 * @param tool
 	 *            the tool to add
 	 */
-	public void addButton(String name, String tooltip, final Widget tool) {
-		addButton(name, null, new Runnable() {
+	public void addButton(String name, final Widget tool) {
+		addButton(name, new Runnable() {
 			public void run() {
 				tool.setVisible(!tool.isVisible());
 				tool.requestKeyboardFocus();
@@ -103,16 +101,13 @@ public class ToolBox extends ResizableFrame {
 	 * 
 	 * @param name
 	 *            the name of the button
-	 * @param tooltip
-	 *            can be null
 	 * @param callback
 	 *            the call back to attach to the button
 	 */
-	public void addButton(String name, String tooltip, Runnable callback) {
+	public void addButton(String name, Runnable callback) {
 		Button button = new Button(name);
 		button.addCallback(callback);
 		button.setCanAcceptKeyboardFocus(false);
-		button.setTooltipContent(tooltip);
 		
 		preWidgets.add(new WidgetWithAlginment(button, Alignment.LEFT));
 	}
@@ -144,7 +139,7 @@ public class ToolBox extends ResizableFrame {
 	 *            the alignment to use
 	 */
 	public void addCustomWidget(Widget widget, Alignment alignment) {
-		if(widget == null || alignment == null) {
+		if (widget == null || alignment == null) {
 			throw new NullPointerException("The widget or alginment is null");
 		}
 		preWidgets.add(new WidgetWithAlginment(widget, alignment));
@@ -191,7 +186,6 @@ public class ToolBox extends ResizableFrame {
 		setSize(containerWidth, 0);
 		
 		super.add(layout);
-		
 		
 		preWidgets = new ArrayList<WidgetWithAlginment>();
 		

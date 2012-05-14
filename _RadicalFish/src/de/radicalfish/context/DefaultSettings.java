@@ -36,7 +36,7 @@ import java.util.Properties;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
-import de.radicalfish.util.Logger;
+import de.radicalfish.debug.Logger;
 
 /**
  * Simple implementation of {@link Settings} and {@link GraphicDetails}. Loads settings via {@link Properties}.
@@ -258,22 +258,28 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	public void setUseShader(boolean value) {
 		if (isShaderSupported()) {
 			shaders = value;
+			setProperty("shaders", "" + value);
 		} else {
 			shaders = false;
+			setProperty("shaders", "" + false);
 		}
 	};
 	public void setUsePostProcessing(boolean value) {
 		if (isFBOSupported()) {
 			postprocessing = value;
+			setProperty("postprocessing", "" + value);
 		} else {
 			postprocessing = false;
+			setProperty("postprocessing", "" + false);
 		}
 	}
 	public void setUseAnimations(boolean value) {
 		animations = value;
+		setProperty("animations", "" + value);
 	}
 	public void setUseEffects(boolean value) {
 		effects = value;
+		setProperty("effects", "" + value);
 	}
 	
 	// GETTER SETTINGS
@@ -330,7 +336,7 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	public boolean isFullscreen() {
 		return fullscreen;
 	}
-	public boolean is3DSound() {
+	public boolean isSound3D() {
 		return sound3D;
 	}
 	public boolean isVSync() {
@@ -340,36 +346,49 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		return smoothDelta;
 	}
 	
+	public Properties getProperties() {
+		return properties;
+	}
+	
 	// SETTER SETTINGS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void setFullscreen(boolean value) {
 		fullscreen = value;
+		setProperty("fullscreen", "" + value);
 	}
 	public void setDebugging(boolean value) {
 		debug = value;
+		setProperty("debug", "" + value);
 	}
 	public void setLogging(boolean value) {
 		logging = value;
+		setProperty("logging", "" + value);
 	}
 	public void setVSync(boolean value) {
 		vsync = value;
+		setProperty("vsync", "" + value);
 	}
 	public void setSmoothDelta(boolean value) {
 		smoothDelta = value;
+		setProperty("smoothdelta", "" + value);
 	}
 	
-	public void set3DSound(boolean value) {
+	public void setSound3D(boolean value) {
 		sound3D = value;
+		setProperty("sound3D", "" + value);
 	}
 	public void setMusicVolume(float value) {
 		musicVolume = value;
+		setProperty("music", "" + value);
 	}
 	public void setSoundVolume(float value) {
 		soundVolume = value;
+		setProperty("sound", "" + value);
 	}
 	
 	public void setTextSpeed(int value) {
 		textSpeed = value;
+		setProperty("textspeed", "" + value);
 	}
 	
 	public void setProperty(String key, String value) {

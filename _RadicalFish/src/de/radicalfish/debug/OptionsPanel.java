@@ -32,6 +32,7 @@ import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.ColumnLayout;
 import de.matthiasmann.twl.ColumnLayout.Columns;
 import de.matthiasmann.twl.ColumnLayout.Row;
+import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ResizableFrame;
 import de.matthiasmann.twl.Scrollbar;
@@ -148,8 +149,28 @@ public class OptionsPanel extends ResizableFrame {
 		
 	}
 	
+	// OVERRIDE
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	@Override
+	protected void paintWidget(GUI gui) {
+		checkValues();
+		super.paintWidget(gui);
+	}
+	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private void checkValues() {
+		fullscreen.setActive(settings.isFullscreen());
+		log.setActive(settings.isLogging());
+		debug.setActive(settings.isDebugging());
+		sound3D.setActive(settings.isSound3D());
+		vsync.setActive(settings.isVSync());
+		smoothDelta.setActive(settings.isSmoothDelta());
+		
+		musicVolume.setValue((int)(settings.getMusicVolume() * 100));
+		soundVolume.setValue((int)(settings.getSoundVolume() * 100));
+		textSpeed.setValue(settings.getTextSpeed());
+	}
 	private void createPanel() {
 		setTheme("resizableframe-title");
 		setTitle("Options");
@@ -266,11 +287,11 @@ public class OptionsPanel extends ResizableFrame {
 		sound3D = new ToggleButton();
 		callback = new Runnable() {
 			public void run() {
-				settings.set3DSound(sound3D.isActive());
+				settings.setSound3D(sound3D.isActive());
 			}
 		};
 		sound3D.addCallback(callback);
-		addCheckBoxRow(sound3D, "3D Sound: ", "Use 3D sound", settings.is3DSound());
+		addCheckBoxRow(sound3D, "3D Sound: ", "Use 3D sound", settings.isSound3D());
 		
 		vsync = new ToggleButton();
 		callback = new Runnable() {
