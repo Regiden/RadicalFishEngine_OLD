@@ -13,7 +13,6 @@ smoothdelta:true
 
 
 gui.path:de/radicalfish/testdata/gui/RadicalFish.xml
-#gui.path:de/radicalfish/testdata/simple.xml
 
 # Graphics
 effects:true
@@ -24,5 +23,5 @@ postprocessing:true
 # Debug Details
 debug.texture.count:true
 debug.fps.graph:true
-debug.fps.graph.sample:200
+debug.fps.graph.samples:200
 debug.sprite.rectangle:false

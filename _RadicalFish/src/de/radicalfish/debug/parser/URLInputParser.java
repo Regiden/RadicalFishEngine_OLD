@@ -30,17 +30,18 @@
 package de.radicalfish.debug.parser;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
-import de.radicalfish.debug.DevConsole;
+import de.radicalfish.debug.DeveloperConsole;
 import de.radicalfish.debug.InputParser;
 
 /**
- * URL parser for the {@link DevConsole}. the parser uses the key word <b>url</b>. The URL must fit the common url
+ * URL parser for the {@link DeveloperConsole}. the parser uses the key word <b>url</b>. The URL must fit the common url
  * style. supported protocolls are:
  * <p>
  * <li>http/https (e.g. http://radicalfish.de</li>
  * <li>www (e.g. www.radicalfish.de)</li>
  * <li>ftp (e.g. ftp://files.com</li>
  * <li>file (e.g. file://path/to/file</li>
+ * 
  * <pre></pre>
  * 
  * @author Stefan Lange
@@ -50,29 +51,44 @@ import de.radicalfish.debug.InputParser;
 public class URLInputParser implements InputParser {
 	
 	private static Pattern split = Pattern.compile(" ");
-	
 	private static Pattern url = Pattern.compile("\\b(https?://|ftp://|file://|www)[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
+	
+	private static ArrayList<String> keys = new ArrayList<String>();
+	static {
+		keys.add("url");
+	}
+	
+	private ArrayList<String> compList = new ArrayList<String>();
 	
 	// INTERFACE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public String parseInput(String message) {
+	public String parseInput(String message, DeveloperConsole console) {
 		if (message.startsWith("url")) {
 			String pair[] = split.split(message);
 			if (pair.length == 2) {
 				if (url.matcher(pair[1]).matches()) {
 					return makeLingMessage(pair[1]);
 				} else {
-					return makeErrorMessage("Invalid URL format: " + pair[1] + " !");
+					return makeErrorMessage("Invalid URL format: " + pair[1]);
 				}
 				
 			} else {
-				return makeErrorMessage("Invalid parameter length. Use the format: \"url someurl \" !");
+				return makeErrorMessage("Invalid parameter length. Use the format: \"url someurl\"");
 			}
 		}
 		return message;
 	}
-	public ArrayList<String> getAutoCompletionContent() {
-		return null;
+	public ArrayList<String> getAutoCompletionContent(String input) {
+		compList.clear();
+		if ("url".regionMatches(0, input, 0, input.length())) {
+			compList.add("url");
+		}
+		
+		if (!compList.isEmpty()) {
+			return compList;
+		} else {
+			return null;
+		}
 	}
 	
 	// INTERN

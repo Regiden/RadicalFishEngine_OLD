@@ -73,8 +73,9 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	public void loadSettings(String path) throws SlickException {
 		loadProperties(path);
 		
+		Logger.setLogging(logging);
 		Log.setVerbose(logging);
-		Log.setLogSystem(new Logger(logging));
+		Log.setLogSystem(new Logger());
 	}
 	public void saveSettings(String path) {
 		
@@ -108,7 +109,8 @@ public class DefaultSettings implements Settings, GraphicDetails {
 			Logger.none("Others:");
 			printAllUncommonProperties();
 		}
-		return "------------------------ Settings ------------------------";
+		Logger.none("------------------------ Settings ------------------------");
+		return "";
 	}
 	
 	// PRIVATE
@@ -363,6 +365,8 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	public void setLogging(boolean value) {
 		logging = value;
 		setProperty("logging", "" + value);
+		Logger.setLogging(logging);
+		Log.setVerbose(logging);
 	}
 	public void setVSync(boolean value) {
 		vsync = value;

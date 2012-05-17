@@ -28,6 +28,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.debug;
+import java.util.Properties;
+import org.newdawn.slick.SlickException;
 import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.ColumnLayout;
 import de.matthiasmann.twl.ColumnLayout.Columns;
@@ -39,12 +41,12 @@ import de.matthiasmann.twl.Scrollbar;
 import de.matthiasmann.twl.Scrollbar.Orientation;
 import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.Widget;
+import de.radicalfish.context.GraphicDetails;
 import de.radicalfish.context.Settings;
 
 /**
- * TWL Panel for manipulating default settings from {@link Settings}. A <code>hslider</code>-, <code>checkbox</code>- and
- * a <code>fixedlabel</code>(a label with a minWidth) theme must be implemented if a custom theme is uses. The
- * OptionsPanel runs with default values for the sliders which are:
+ * TWL Panel for manipulating default settings from {@link Settings}. The OptionsPanel runs with default values for the
+ * sliders which are:
  * 
  * <pre>
  * Music Volume: 0 - 100 (mapped from the settings by <code>settings.getMusicVolume() * 100</code>)
@@ -60,7 +62,7 @@ import de.radicalfish.context.Settings;
  * @since 01.05.2012
  */
 public class OptionsPanel extends ResizableFrame {
-
+	
 	// the column names
 	private static final String NAME = "name", VALUE = "value", SEP = "SEP", LABEL = "label";
 	
@@ -84,6 +86,77 @@ public class OptionsPanel extends ResizableFrame {
 		this.settings = settings;
 		extraWidgetsCount = 0;
 		createPanel();
+	}
+	// test
+	public OptionsPanel() {
+		settings = new Settings() {
+			public void setVSync(boolean value) {}
+			public void setTextSpeed(int value) {}
+			public void setSoundVolume(float value) {}
+			public void setSound3D(boolean value) {}
+			public void setSmoothDelta(boolean value) {}
+			public void setProperty(String key, String value) {}
+			public void setMusicVolume(float value) {}
+			public void setLogging(boolean value) {}
+			public void setFullscreen(boolean value) {}
+			public void setDebugging(boolean value) {}
+			public void saveSettings(String path) throws SlickException {}
+			public void loadSettings(String path) throws SlickException {}
+			public boolean isVSync() {
+				return false;
+			}
+			public boolean isSound3D() {
+				return false;
+			}
+			public boolean isSmoothDelta() {
+				return false;
+			}
+			public boolean isLogging() {
+				return false;
+			}
+			public boolean isFullscreen() {
+				return false;
+			}
+			public boolean isDebugging() {
+				return false;
+			}
+			public String getUserPath() {
+				return null;
+			}
+			public int getTextSpeed() {
+				return 0;
+			}
+			public OperatingSystem getSystem() {
+				return null;
+			}
+			public float getSoundVolume() {
+				return 0;
+			}
+			public float getProperty(String key, float defaultValue) {
+				return 0;
+			}
+			public int getProperty(String key, int defaultValue) {
+				return 0;
+			}
+			public boolean getProperty(String key, boolean defaultValue) {
+				return false;
+			}
+			public String getProperty(String key, String defaultValue) {
+				return null;
+			}
+			public Properties getProperties() {
+				return null;
+			}
+			public float getMusicVolume() {
+				return 0;
+			}
+			public GraphicDetails getGraphicDetails() {
+				return null;
+			}
+			public String getGamePath() {
+				return null;
+			}
+		};
 	}
 	
 	// METHODS
@@ -167,8 +240,8 @@ public class OptionsPanel extends ResizableFrame {
 		vsync.setActive(settings.isVSync());
 		smoothDelta.setActive(settings.isSmoothDelta());
 		
-		musicVolume.setValue((int)(settings.getMusicVolume() * 100));
-		soundVolume.setValue((int)(settings.getSoundVolume() * 100));
+		musicVolume.setValue((int) (settings.getMusicVolume() * 100));
+		soundVolume.setValue((int) (settings.getSoundVolume() * 100));
 		textSpeed.setValue(settings.getTextSpeed());
 	}
 	private void createPanel() {
@@ -188,7 +261,6 @@ public class OptionsPanel extends ResizableFrame {
 		sliderColumns = layout.getColumns(NAME, VALUE, LABEL);
 		checkBoxColumns = layout.getColumns(NAME, VALUE);
 		seperatorColumns = layout.getColumns(SEP);
-		
 		
 		addCheckboxes();
 		addSeparator();
@@ -227,7 +299,7 @@ public class OptionsPanel extends ResizableFrame {
 		
 	}
 	private void addMusicSliders() {
-		final Label value = new Label("" + (int)(settings.getMusicVolume() * 100));
+		final Label value = new Label("" + (int) (settings.getMusicVolume() * 100));
 		value.setTheme("fixedlabel");
 		musicVolume = new Scrollbar(Orientation.HORIZONTAL);
 		musicVolume.setTheme("hslider");
@@ -241,7 +313,7 @@ public class OptionsPanel extends ResizableFrame {
 		Row row = layout.addRow(sliderColumns);
 		row.addLabel("Music Volume: ").add(musicVolume, Alignment.FILL).add(value, Alignment.CENTER);
 		
-		final Label value2 = new Label("" + (int)(settings.getMusicVolume() * 100));
+		final Label value2 = new Label("" + (int) (settings.getMusicVolume() * 100));
 		value2.setTheme("fixedlabel");
 		soundVolume = new Scrollbar(Orientation.HORIZONTAL);
 		soundVolume.setTheme("hslider");

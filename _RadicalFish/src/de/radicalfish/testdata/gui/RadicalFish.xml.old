@@ -6,6 +6,7 @@
         <area name="black" xywh="1,1,1,1"/>
     
         <area name="pixel.separator" xywh="3,2,1,1"/>
+    
         <area name="pixel.toolbox" xywh="3,2,1,1" inset="-2,0,-4,0"/>
         <area name="cursor.cross" xywh="78,28,7,7"/>
     
@@ -212,6 +213,23 @@
                 <alias ref="icon.arrow.down"/>
             </composed>
         </select>
+        <composed name="columnHeader">
+            <alias ref="box.high" inset="-3,0"/>
+            <grid weightsX="1,0" weightsY="1">
+                <alias ref="none"/>
+                <select>
+                    <alias ref="icon.arrow.up" if="sortAscending" inset="0,3,0,0"/>
+                    <alias ref="icon.arrow.down" if="sortDescending" inset="0,3,0,0"/>
+                </select>
+            </grid>
+        </composed>
+        <alias name="table.row.background" ref="edit.selection" if="rowSelected"/>
+        <alias name="table.row.overlay" ref="none"/>
+        <alias name="table.row.dropmarker" ref="pixel.separator"/>
+    
+    
+    
+    
         <area name="hslider" xywh="28,48,7,3" splitx="L3,R3" inset="7,0,6,0"/>
         <area name="vslider" xywh="36,48,3,7" inset="0,6,0,7" splity="T3,B3"/>
         <area name="slider.hthumb" xywh="28,52,5,9" splity="T4,B4"/>
@@ -285,7 +303,7 @@
     <fontDef name="link" filename="font3.fnt" color="#517EDA" underlineOffset="3">
         <fontParam if="hover" color="#2553B0"/>
     </fontDef>
-    <fontDef name="error" filename="font3.fnt" color="#B00000">
+    <fontDef name="error" filename="font3.fnt" color="#FF3535">
     </fontDef>
     <fontDef name="green" filename="font3.fnt" color="#15A32E">
     </fontDef>
@@ -338,12 +356,18 @@
         <param name="background"><image>box.border.normal</image></param>
         <param name="border"><border>1,2,3,4</border></param>
     </theme>
+
     <theme name="empty" ref="-defaults">
         <param name="minWidth"><int>1</int></param>
         <param name="maxWidth"><int>32767</int></param>
         <param name="minHeight"><int>1</int></param>
         <param name="maxHeight"><int>32767</int></param>
     </theme>
+    <theme name="hfiller" ref="-defaults">
+        <param name="minWidth"><int>1</int></param>
+        <param name="maxWidth"><int>32767</int></param>
+    </theme>
+
     <theme name="hseparator" ref="-defaults">
         <param name="background"><image>pixel.separator</image></param>
         <param name="maxHeight"><int>1</int></param>
@@ -358,6 +382,7 @@
         <param name="minHeight"><int>1</int></param>
         <param name="maxHeight"><int>32767</int></param>
     </theme>
+
     <theme name="toolboxseperator" ref="-defaults">
         <param name="minHeight"><int>19</int></param>
         <param name="maxHeight"><int>32767</int></param>
@@ -410,12 +435,20 @@
         <param name="border"><border>4,3</border></param>
         <param name="cursor"><image>edit.cursor.animation</image></param>
         <param name="selection"><image>edit.selection</image></param>
-        <param name="autocompletion-height"><int>128</int></param>
+        <param name="autocompletion-height"><int>80</int></param>
         <param name="columns"><int>20</int></param>
         <param name="passwordChar"><int>42</int></param>
         <param name="mouseCursor"><cursor>cursor.text</cursor></param>
         <param name="maxWidth"><int>32767</int></param>
     </theme>
+    <theme name="logfield" ref="editfield">
+        <param name="border"><border>0</border></param>
+        <param name="background"><image>none</image></param>
+        <theme name="renderer" ref="-defaults">
+            <param name="textAlignment"><enum type="alignment">TOPLEFT</enum></param>
+        </theme>
+    </theme>
+
     <theme name="editfield-embedded" ref="editfield">
         <param name="background"><image>none</image></param>
         <param name="border"><border>0</border></param>
@@ -475,7 +508,6 @@
     </theme>
 
     <theme name="valueadjuster" ref="-defaults">
-        <param name="width"><int>100</int></param>
         <param name="displayPrefix"><string/></param>
         <theme name="valueDisplay" ref="button"/>
         <theme name="valueEdit" ref="editfield"/>
@@ -488,6 +520,8 @@
             <param name="minWidth"><int>20</int></param>
         </theme>
         <param name="useMouseWheel"><bool>true</bool></param>
+        <param name="width"><int>100</int></param>
+        <param name="maxWidth"><int>32767</int></param>
     </theme>
 
 
@@ -540,6 +574,7 @@
             <param name="background"><image>slider.hthumb</image></param>
             <param name="maxWidth"><int>5</int></param>
             <param name="minHeight"><int>16</int></param>
+            <param name="border"><border>0,4,0,5</border></param>
         </theme>
         <theme name="leftbutton" ref="-defaults"/>
         <theme name="rightbutton" ref="-defaults"/>
@@ -567,6 +602,8 @@
         <param name="border"><border>2</border></param>
         <param name="maxHeight"><int>16</int></param>
     </theme>
+
+
 
     <theme name="listbox" ref="-defaults">
         <param name="background"><image>box.border.normal</image></param>
@@ -615,8 +652,8 @@
         <param name="maxWidth"><int>32767</int></param>
         <param name="maxHeight"><int>32767</int></param>
         <param name="autoScrollSpeed"><int>10</int></param>
-        <param name="scrollbarsAlwaysVisible"><bool>false</bool></param>
-        <param name="hasDragButton"><bool>true</bool></param>
+        <param name="scrollbarsAlwaysVisible"><bool>true</bool></param>
+        <param name="hasDragButton"><bool>false</bool></param>
     
         <theme name="vscrollbar" ref="vscrollbar">
             <param name="background"><image>vscrollbar.intern</image></param>
@@ -631,6 +668,11 @@
             <param name="text"><string>+</string></param>
         </theme>
     </theme>
+    <theme name="scrollpane-noalways" ref="scrollpane">
+        <param name="scrollbarsAlwaysVisible"><bool>false</bool></param>
+    </theme>
+
+
     <theme name="textarea" ref="-defaults">
         <param name="border"><border>3,1,4,4</border></param>
         <param name="fonts">
@@ -647,10 +689,52 @@
         </param>
         <param name="images">
             <map>
+                <param name="separator"><image>pixel.separator</image></param>
             </map>
         </param>
         <param name="mouseCursor.link"><cursor>cursor.finger</cursor></param>
     </theme>
+    <theme name="treecellrenderer" ref="-defaults">
+        <param name="treeIndent"><int>15</int></param>
+        <param name="treeButtonSize"><dimension>14,11</dimension></param>
+    </theme>
+    <theme name="table" ref="-defaults">
+    
+        <theme name="stringcellrenderer" ref="-defaults">
+            <param name="border"><border>0,3,0,0</border></param>
+            <param name="font"><font>normal</font></param>
+        </theme>
+        <theme name="ComboBoxCellRenderer" ref="-defaults">
+            <param name="comboBoxHeight"><int>18</int></param>
+        </theme>
+        <theme name="TreeLeafCellRenderer" ref="treecellrenderer"/>
+        <theme name="columnHeader" ref="button">
+            <param name="background"><image>columnHeader</image></param>
+            <param name="font"><font>normal</font></param>
+        </theme>
+        <param name="ensureColumnHeaderMinWidth"><bool>true</bool></param>
+        <param name="columnDividerDragableDistance"><int>3</int></param>
+    
+    
+        <param name="rowHeight"><int>font.lineHeight + 6</int></param>
+        <param name="columnHeaderWidth"><int>200</int></param>
+        <param name="columnHeaderHeight"><int>20</int></param>
+        <param name="columnDivider"><image>none</image></param>
+        <param name="row"><image>table.row.*</image></param>
+        <param name="minWidth"><int>326</int></param>
+        <param name="minHeight"><int>200</int></param>
+    
+    
+    
+    </theme>
+    <theme name="colorarea" ref="-defaults">
+        <param name="border"><border>2</border></param>
+        <param name="background"><image>box.embedded</image></param>
+        <param name="minWidth"><int>200</int></param>
+        <param name="minHeight"><int>16</int></param>
+        <param name="maxWidth"><int>32767</int></param>
+    </theme>
+
 
 
     <theme name="colorselector" ref="-defaults">
@@ -683,13 +767,26 @@
             <param name="tooltip"><string>Current color in ARGB hex format</string></param>
         </theme>
     </theme>
-    <theme name="fpscounter" ref="label">
-    </theme>
-    <theme name="chatdemo" ref="-defaults">
-        <theme name="chatframe" ref="resizableframe-title">
-            <theme name="content" ref="-defaults"/>
+    <theme name="editfieldautocompletionwindow" ref="-defaults">
+        <theme name="listbox" ref="listbox">
         </theme>
     </theme>
+    <theme name="fpscounter" ref="label">
+    </theme>
+    <theme name="graph" ref="-defaults">
+        <param name="background"><image>box.embedded</image></param>
+        <param name="border"><border>2,3</border></param>
+        <param name="lineStyles">
+            <map>
+            </map>
+        </param>
+        <param name="sizeMultipleX"><int>1</int></param>
+        <param name="sizeMultipleY"><int>1</int></param>
+        <theme name="grapharea" ref="-defaults"/>
+        <param name="minWidth"><int>100</int></param>
+        <param name="minHeight"><int>100</int></param>
+    </theme>
+
 
 
 
@@ -698,13 +795,18 @@
 
     <theme name="columnlayout" ref="-defaults">
     </theme>
+
     <theme name="optionsdialog" ref="-defaults"/>
 
     <theme name="devconsole-frame" ref="resizableframe-title">
         <param name="minWidth"><int>200</int></param>
         <param name="minHeight"><int>150</int></param>
     </theme>
+
     <theme name="devconsole" ref="-defaults">
+        <param name="border"><border>2</border></param>
+    </theme>
+    <theme name="logconsole" ref="devconsole">
         <param name="border"><border>2</border></param>
     </theme>
 

@@ -32,11 +32,11 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
 import de.radicalfish.context.Settings;
-import de.radicalfish.debug.DevConsole;
+import de.radicalfish.debug.DeveloperConsole;
 import de.radicalfish.debug.InputParser;
 
 /**
- * Property parser for the {@link DevConsole}. To change a property use this pattern:
+ * Property parser for the {@link DeveloperConsole}. To change a property use this pattern:
  * 
  * <pre>
  * set name.of.property value
@@ -57,44 +57,67 @@ public class PropertyInputParser implements InputParser {
 	private static Pattern split = Pattern.compile(" ");
 	
 	private Settings settings;
-	private ArrayList<String> keys;
+	private ArrayList<String> keys, compList;
 	
 	public PropertyInputParser(Settings settings) {
 		this.settings = settings;
 		
 		keys = new ArrayList<String>();
+		compList = new ArrayList<String>();
 		Enumeration<Object> e = settings.getProperties().keys();
 		
 		while (e.hasMoreElements()) {
 			keys.add(e.nextElement().toString());
 		}
+		
+		// add extras
+		keys.add("log");
+		keys.add("debugging");
 	}
 	
 	// INTERFACE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public String parseInput(String message) {
+	public String parseInput(String message, DeveloperConsole console) {
 		if (message.startsWith("set")) {
 			String pair[] = split.split(message);
 			if (pair.length == 3) {
 				String temp = checkDefaultSettings(pair[1], pair[2]);
 				
 				if (temp.equals("")) {
+					
 					if (settings.getProperties().containsKey(pair[1])) {
 						settings.setProperty(pair[1], pair[2]);
+						return makeSuccessMessage(pair[1], "" + pair[2]);
 					} else {
-						makeErrorMessage("Could not found property: " + pair[1] + " !");
+						return makeErrorMessage("No such Property: " + pair[1]);
 					}
 				} else {
 					return temp;
 				}
 			} else {
-				return makeErrorMessage("Invalid parameter length. Use the format: \"set propertyname value\" !");
+				return makeErrorMessage("Invalid parameter length. Use the format: \"set propertyname value\"");
 			}
 		}
 		return message;
 	}
-	public ArrayList<String> getAutoCompletionContent() {
-		return keys;
+	public ArrayList<String> getAutoCompletionContent(String input) {
+		compList.clear();
+		if ("set".regionMatches(true, 0, input, 0, input.length())) {
+			compList.add("set");
+			return compList;
+		}
+		if (input.startsWith("set ")) {
+			input = input.replace("set ", "");
+			for (String temp : keys) {
+				if (temp.regionMatches(0, input, 0, input.length())) {
+					compList.add("set " + temp);
+				}
+			}
+			if (!compList.isEmpty()) {
+				return compList;
+			}
+		}
+		return null;
 	}
 	
 	// INTERN
@@ -183,13 +206,10 @@ public class PropertyInputParser implements InputParser {
 	private String makeSuccessMessage(String prop, String value) {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("Set '");
-		sb.append(prop);
-		// sb.append("<p style=\"font:success\" >").append(prop).append("</p>");
-		sb.append("' to ");
-		sb.append(value);
-		sb.append("!");
-		// sb.append("<p style=\"font:success\" >").append(value).append("</p>");
+		sb.append("Assigned '");
+		sb.append("<span style=\"font:success\" >").append(prop).append("</span>");
+		sb.append("' with '");
+		sb.append("<span style=\"font:success\" >").append(value).append("</span>'");
 		
 		return sb.toString();
 	}

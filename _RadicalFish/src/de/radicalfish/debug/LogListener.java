@@ -28,35 +28,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.debug;
-import java.util.ArrayList;
+import java.util.List;
+import de.radicalfish.debug.Logger.LOGTYPE;
 
 /**
- * Callback for user-based handling of console input. a Parser should always start with a keyword!
+ * Can be attached to a logger to keep track of logs.
  * 
  * @author Stefan Lange
  * @version 1.0.0
- * @since 14.05.2012
+ * @since 15.05.2012
  */
-public interface InputParser {
+public interface LogListener {
 	
 	/**
-	 * Get's called when hitting the submit button or pressing return/enter on the edit field. Use this message to
-	 * proceed the input with your own parser.
+	 * Gets called when the logger logged something.
 	 * 
-	 * @param message
-	 *            the input of the text field
-	 * @param console
-	 *            the console from which the message comes
-	 * @return the message to show on the text area or <code>message</code> to forward the input to the
-	 *         {@link DeveloperConsole} parser.
+	 * @param log
+	 *            the complete log
+	 * @param lastAdded
+	 *            the last added line
+	 * @param type
+	 *            the type of the log
 	 */
-	public String parseInput(String message, DeveloperConsole console);
-	
-	/**
-	 * @param input
-	 *            the current typed input
-	 * @return a list of possible commands for auto completion. can be null
-	 */
-	public ArrayList<String> getAutoCompletionContent(String input);
+	public void logChanged(List<String> log, String lastAdded, LOGTYPE type);
 	
 }

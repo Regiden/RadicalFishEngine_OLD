@@ -48,7 +48,7 @@ public class ColorUtil {
 	 * <pre>
 	 * float[0] = hue 
 	 * float[1] = saturation 
-	 * float[2] = value
+	 * float[2] = lightness
 	 * </pre>
 	 * 
 	 * @param r
@@ -77,7 +77,7 @@ public class ColorUtil {
 	 * <pre>
 	 * float[0] = hue 
 	 * float[1] = saturation 
-	 * float[2] = value
+	 * float[2] = lightness
 	 * </pre>
 	 * 
 	 * @param color
@@ -87,7 +87,7 @@ public class ColorUtil {
 	public static float[] convertRGBToHSL(Color color) {
 		return convertRGBToHSL(color.r, color.g, color.b);
 	}
-
+	
 	/**
 	 * Transforms a HSL to RGB.
 	 * 
@@ -100,9 +100,11 @@ public class ColorUtil {
 	 * saturation range = 0 - 100
 	 * lightness range = 0 - 100
 	 * </pre>
+	 * @param ref
+	 *            the reference to set the value. if null a new color object is returned
 	 * @return a new Color object holding the rgb values. alpha is set to 1.0f
 	 */
-	public static Color toRGB(float[] color) {
+	public static Color toRGB(float[] color, Color ref) {
 		float hue = color[0] / 360f;
 		float saturation = color[1] / 100f;
 		float lightness = color[2] / 100f;
@@ -120,11 +122,15 @@ public class ColorUtil {
 			r = g = b = lightness;
 		}
 		
-		System.out.println(r);
-		System.out.println(g);
-		System.out.println(b);
+		if(ref == null) {
+			return new Color(r, g, b, 1.0f);
+		} else {
+			ref.r = r;
+			ref.g = g;
+			ref.b = b;
+			return ref;
+		}
 		
-		return new Color(r, g, b, 1.0f);
 	}
 	
 	// INTERN

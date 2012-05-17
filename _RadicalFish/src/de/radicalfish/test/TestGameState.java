@@ -38,6 +38,7 @@ import de.radicalfish.GameState;
 import de.radicalfish.World;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.debug.Logger;
 import de.radicalfish.extern.Easing;
 import de.radicalfish.extern.SimpleFX;
 
@@ -65,6 +66,7 @@ public class TestGameState extends GameState {
 		GameDelta deltor = context.getGameSpeed();
 		
 		if (in.isKeyPressed(Input.KEY_A)) {
+			Logger.none("test");
 			deltor.slowDown(0.5f, 2000, Easing.LINEAR);
 		}
 		if (in.isKeyPressed(Input.KEY_D)) {

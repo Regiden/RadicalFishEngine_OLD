@@ -27,36 +27,63 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.debug;
-import java.util.ArrayList;
+package de.radicalfish.test;
+import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.BasicGame;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.opengl.shader.ShaderProgram;
 
-/**
- * Callback for user-based handling of console input. a Parser should always start with a keyword!
- * 
- * @author Stefan Lange
- * @version 1.0.0
- * @since 14.05.2012
- */
-public interface InputParser {
+public class GrayShaderTest extends BasicGame {
 	
-	/**
-	 * Get's called when hitting the submit button or pressing return/enter on the edit field. Use this message to
-	 * proceed the input with your own parser.
-	 * 
-	 * @param message
-	 *            the input of the text field
-	 * @param console
-	 *            the console from which the message comes
-	 * @return the message to show on the text area or <code>message</code> to forward the input to the
-	 *         {@link DeveloperConsole} parser.
-	 */
-	public String parseInput(String message, DeveloperConsole console);
+	private ShaderProgram gray;
+	private String PATH = "de/radicalfish/testdata/";
 	
-	/**
-	 * @param input
-	 *            the current typed input
-	 * @return a list of possible commands for auto completion. can be null
-	 */
-	public ArrayList<String> getAutoCompletionContent(String input);
+	private Image image;
 	
+	private float scale = 1.0f;
+	
+	public GrayShaderTest() {
+		super("Shader Test");
+	}
+	public static void main(String[] args) throws SlickException {
+		AppGameContainer app = new AppGameContainer(new GrayShaderTest());
+		app.start();
+	}
+	
+	public void init(GameContainer container) throws SlickException {
+		gray = ShaderProgram.loadProgram(PATH + "shader/simple.vert", PATH + "shader/gray.frag");
+		image = new Image(PATH + "scene.png", false, Image.FILTER_NEAREST);
+	}
+	public void update(GameContainer container, int delta) throws SlickException {
+		if(container.getInput().isKeyDown(Input.KEY_DOWN)) {
+			scale -= 0.0005f * delta;
+		}
+		if(container.getInput().isKeyDown(Input.KEY_UP)) {
+			scale += 0.0005f * delta;
+		}
+		
+		if(scale < 0) {
+			scale = 0;
+		}
+		if(scale > 1) {
+			scale = 1;
+		}
+	}
+	public void render(GameContainer container, Graphics g) throws SlickException {
+		g.scale(2, 2);
+		
+		gray.bind();
+		gray.setUniform1f("scale", scale);
+		
+		image.draw(0, 0);
+		
+		ShaderProgram.unbind();
+		
+		g.resetTransform();
+		g.drawString("Scale: " + scale, 10, 20);
+	}
 }

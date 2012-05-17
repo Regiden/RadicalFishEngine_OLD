@@ -17,7 +17,10 @@ import de.radicalfish.TWLGameState;
 import de.radicalfish.World;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.debug.DevConsole;
+import de.radicalfish.debug.ColorSelector;
+import de.radicalfish.debug.DeveloperConsole;
+import de.radicalfish.debug.LogConsole;
+import de.radicalfish.debug.Logger;
 import de.radicalfish.debug.OptionsPanel;
 import de.radicalfish.debug.ToolBox;
 import de.radicalfish.debug.parser.PropertyInputParser;
@@ -39,6 +42,7 @@ public class DebugGameState extends TWLGameState {
 	public void init(GameContext context, World world) throws SlickException {
 		initGUI(context);
 		buildGUI(context);
+		updateGUI();
 	}
 	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
 		updateGUI();
@@ -89,17 +93,20 @@ public class DebugGameState extends TWLGameState {
 		gui.invokeRunables();
 		gui.validateLayout();
 		gui.setCursor();
-		
 	}
 	private void buildGUI(final GameContext context) {
 		final OptionsPanel options = new OptionsPanel(context.getSettings());
-		final DevConsole console = new DevConsole();
+		final DeveloperConsole console = new DeveloperConsole();
+		final LogConsole log = new LogConsole();
+		final ColorSelector colorarea = new ColorSelector();
 		
 		ToolBox toolbox = new ToolBox(context.getContainerWidth(), context.getContainerHeight());
 		toolbox.setCanAcceptKeyboardFocus(false);
 		
 		toolbox.addButton("Options", options);
 		toolbox.addButton("Console", console);
+		toolbox.addButton(" Log ", log);
+		toolbox.addButton(" Color ", colorarea);
 		
 		toolbox.addFiller();
 		toolbox.addSeparator();
@@ -116,12 +123,16 @@ public class DebugGameState extends TWLGameState {
 			public void run() {
 				options.adjustSize();
 				console.adjustSize();
+				log.adjustSize();
+				colorarea.adjustSize();
 			}
 		});
 		toolbox.addButton("Close All", new Runnable() {
 			public void run() {
 				options.setVisible(false);
 				console.setVisible(false);
+				log.setVisible(false);
+				colorarea.setVisible(false);
 			}
 		});
 		toolbox.addButton("Exit", new Runnable() {
@@ -132,14 +143,21 @@ public class DebugGameState extends TWLGameState {
 		
 		toolbox.createToolbox();
 		options.setVisible(false);
+		log.setVisible(false);
+		colorarea.setVisible(false);
+		console.setVisible(false);
 		
 		console.addInputParser(new URLInputParser());
 		console.addInputParser(new PropertyInputParser(context.getSettings()));
+		
+		Logger.addLogListener(log);
 		
 		
 		root.add(options);
 		root.add(toolbox);
 		root.add(console);
+		root.add(log);
+		root.add(colorarea);
 		
 		
 	}
@@ -157,6 +175,8 @@ public class DebugGameState extends TWLGameState {
 			
 			Renderer renderer = new LWJGLRenderer();
 			ThemeManager theme = loadTheme(renderer, context);
+			
+			
 			
 			gui = new GUI(root, renderer);
 			gui.setTheme("");

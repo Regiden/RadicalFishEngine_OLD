@@ -101,7 +101,8 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		app.setSmoothDeltas(settings.isSmoothDelta());
 		app.setForceExit(false);
 		app.setMouseGrabbed(!settings.isDebugging());
-		app.setShowFPS(false);
+		//app.setShowFPS(false);
+		app.setAlwaysRender(settings.isDebugging());
 		
 		app.start();
 		
