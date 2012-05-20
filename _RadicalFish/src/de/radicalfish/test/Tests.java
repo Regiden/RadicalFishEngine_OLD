@@ -28,61 +28,42 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.test;
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.opengl.shader.ShaderProgram;
 
-public class GrayShaderTest extends BasicGame {
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+public class Tests {
 	
-	private ShaderProgram gray;
-	private String PATH = "de/radicalfish/testdata/";
+	public Tests() {
+		JFrame frame = new JFrame();
+		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		BorderLayout layout = new BorderLayout();
+		frame.setLayout(layout);
+		
+		
+		frame.add(bla(), BorderLayout.NORTH);
+		frame.add(bla(), BorderLayout.SOUTH);
+		frame.add(bla(), BorderLayout.CENTER);
+		
+		frame.pack();
+		frame.setVisible(true);
+		
+	}
+	private JScrollPane bla() {
+		JTextArea a = new JTextArea();
+		JScrollPane pane = new JScrollPane(a);
+		pane.setPreferredSize(new Dimension(100, 100));
+		return pane;
+	}
 	
-	private Image image;
 	
-	private float scale = 1.0f;
+	public static void main(String[] args) {
+		new Tests();
+	}
 	
-	public GrayShaderTest() {
-		super("Shader Test");
-	}
-	public static void main(String[] args) throws SlickException {	
-		AppGameContainer app = new AppGameContainer(new GrayShaderTest());
-		app.start();
-	}
-	public void init(GameContainer container) throws SlickException {
-		gray = ShaderProgram.loadProgram(PATH + "shader/simple.vert", PATH + "shader/gray.frag");
-		image = new Image(PATH + "scene.png", false, Image.FILTER_NEAREST);
-	}
-	public void update(GameContainer container, int delta) throws SlickException {
-		if (container.getInput().isKeyDown(Input.KEY_DOWN)) {
-			scale -= 0.0005f * delta;
-		}
-		if (container.getInput().isKeyDown(Input.KEY_UP)) {
-			scale += 0.0005f * delta;
-		}
-		
-		if (scale < 0) {
-			scale = 0;
-		}
-		if (scale > 1) {
-			scale = 1;
-		}
-	}
-	public void render(GameContainer container, Graphics g) throws SlickException {
-		g.scale(2, 2);
-		
-		gray.bind();
-		gray.setUniform1f("scale", scale);
-		
-		image.draw(0, 0);
-		
-		ShaderProgram.unbind();
-		
-		g.resetTransform();
-		g.drawString("Scale: " + scale, 10, 20);
-	}
 }

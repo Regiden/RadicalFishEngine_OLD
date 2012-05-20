@@ -204,7 +204,7 @@ public class LogConsole extends ResizableFrame implements LogListener {
 		public void setText(String text, boolean preformatted) {
 			Style style = EMPTY_STYLE;
 			if (preformatted) {
-				style = style.with(StyleAttribute.PREFORMATTED, Boolean.TRUE);
+				style = style.with(StyleAttribute.PREFORMATTED, Boolean.TRUE).with(StyleAttribute.TAB_SIZE, 3);
 			}
 			element = new TextElement(style, text);
 			

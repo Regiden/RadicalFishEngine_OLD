@@ -7,6 +7,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.ResourceLoader;
 import de.matthiasmann.twl.ActionMap;
 import de.matthiasmann.twl.Alignment;
+import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.FPSCounter;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.Label;
@@ -17,16 +18,16 @@ import de.radicalfish.TWLGameState;
 import de.radicalfish.World;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.debug.ColorSelector;
 import de.radicalfish.debug.DeveloperConsole;
 import de.radicalfish.debug.LogConsole;
 import de.radicalfish.debug.Logger;
 import de.radicalfish.debug.OptionsPanel;
+import de.radicalfish.debug.TWLInputForwarder;
+import de.radicalfish.debug.TWLRootPane;
+import de.radicalfish.debug.ToneEditor;
 import de.radicalfish.debug.ToolBox;
 import de.radicalfish.debug.parser.PropertyInputParser;
 import de.radicalfish.debug.parser.URLInputParser;
-import de.radicalfish.extern.TWLInputForwarder;
-import de.radicalfish.extern.TWLRootPane;
 
 public class DebugGameState extends TWLGameState {
 	
@@ -47,13 +48,24 @@ public class DebugGameState extends TWLGameState {
 	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
 		updateGUI();
 		
-		if (context.getInput().isKeyPressed(Input.KEY_TAB)) {
+		if (context.getInput().isKeyPressed(Input.KEY_BACKSLASH)) {
 			root.setVisible(!root.isVisible());
+			if (root.isVisible()) {
+				if (root.getCurrentFocusOwner() != null) {
+					root.getCurrentFocusOwner().requestKeyboardFocus();
+				}
+			}
 		}
 		
 	}
 	public void render(GameContext context, World world, Graphics g) throws SlickException {
 		gui.draw();
+	}
+	
+	@Override
+	public void keyPressed(int key, char c) {
+		
+		super.keyPressed(key, c);
 	}
 	
 	// METHODS
@@ -72,18 +84,6 @@ public class DebugGameState extends TWLGameState {
 		return root.isVisible();
 	}
 	
-	// CALLBACKS
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void keyboardFocusLost() {
-		
-	}
-	public void layoutRootPane() {
-		super.layoutRootPane();
-	}
-	public void keyPressed(int key, char c) {
-		
-	}
-	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	private void updateGUI() {
@@ -98,7 +98,7 @@ public class DebugGameState extends TWLGameState {
 		final OptionsPanel options = new OptionsPanel(context.getSettings());
 		final DeveloperConsole console = new DeveloperConsole();
 		final LogConsole log = new LogConsole();
-		final ColorSelector colorarea = new ColorSelector();
+		final ToneEditor toneeditor = new ToneEditor();
 		
 		ToolBox toolbox = new ToolBox(context.getContainerWidth(), context.getContainerHeight());
 		toolbox.setCanAcceptKeyboardFocus(false);
@@ -106,7 +106,7 @@ public class DebugGameState extends TWLGameState {
 		toolbox.addButton("Options", options);
 		toolbox.addButton("Console", console);
 		toolbox.addButton(" Log ", log);
-		toolbox.addButton(" Color ", colorarea);
+		toolbox.addButton(" Tone ", toneeditor);
 		
 		toolbox.addFiller();
 		toolbox.addSeparator();
@@ -124,7 +124,7 @@ public class DebugGameState extends TWLGameState {
 				options.adjustSize();
 				console.adjustSize();
 				log.adjustSize();
-				colorarea.adjustSize();
+				toneeditor.adjustSize();
 			}
 		});
 		toolbox.addButton("Close All", new Runnable() {
@@ -132,7 +132,7 @@ public class DebugGameState extends TWLGameState {
 				options.setVisible(false);
 				console.setVisible(false);
 				log.setVisible(false);
-				colorarea.setVisible(false);
+				toneeditor.setVisible(false);
 			}
 		});
 		toolbox.addButton("Exit", new Runnable() {
@@ -144,7 +144,7 @@ public class DebugGameState extends TWLGameState {
 		toolbox.createToolbox();
 		options.setVisible(false);
 		log.setVisible(false);
-		colorarea.setVisible(false);
+		toneeditor.setVisible(false);
 		console.setVisible(false);
 		
 		console.addInputParser(new URLInputParser());
@@ -152,19 +152,21 @@ public class DebugGameState extends TWLGameState {
 		
 		Logger.addLogListener(log);
 		
-		
 		root.add(options);
 		root.add(toolbox);
 		root.add(console);
 		root.add(log);
-		root.add(colorarea);
+		root.add(toneeditor);
 		
+		root.registerWidgetForVisible(console, Event.KEY_C);
+		root.registerWidgetForVisible(options, Event.KEY_O);
+		root.registerWidgetForVisible(log, Event.KEY_L);
+		root.registerWidgetForVisible(toneeditor, Event.KEY_T);
 		
 	}
 	private void initGUI(GameContext context) throws SlickException {
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		try {
-			
 			root = new TWLRootPane(this);
 			root.setTheme("");
 			
@@ -175,8 +177,6 @@ public class DebugGameState extends TWLGameState {
 			
 			Renderer renderer = new LWJGLRenderer();
 			ThemeManager theme = loadTheme(renderer, context);
-			
-			
 			
 			gui = new GUI(root, renderer);
 			gui.setTheme("");

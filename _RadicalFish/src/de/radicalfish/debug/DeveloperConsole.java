@@ -28,11 +28,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.debug;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.lwjgl.Sys;
-import org.newdawn.slick.opengl.InternalTextureLoader;
 import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
@@ -52,18 +50,12 @@ import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
  * A Console for changing values and executing methods. Every input will be logged if parsed. If not nothing will be
  * displayed. You can add {@link InputParser} to the DevConsole to parse the input and make something out of it. The
  * DevConsole itself supports some small methods too which will be always checked before anything else:
- * <p>
- * <li>gc - runs the garbage collector</li>
- * <li>flushlog - deletes all content from the developer console</li>
- * <li>print - prints a text to the developer console. format: print sometext</li>
- * <li>texturecount - shows the texture count (excluding the textures used by TWL)</li>
- * <pre></pre>
  * 
  * @author Stefan Lange
- * @version 0.5.0
+ * @version 0.0.0
  * @since 14.05.2012
  */
-public class DeveloperConsole extends ResizableFrame {
+public class DeveloperConsole extends ResizableFrame implements LogListener {
 	
 	public static int MAX_AUTOCOMPLETION_RESULTS = 50;
 	
@@ -77,8 +69,11 @@ public class DeveloperConsole extends ResizableFrame {
 	
 	private ArrayList<InputParser> callbacks;
 	
+	private boolean logToConsole;
+	
 	public DeveloperConsole() {
 		callbacks = new ArrayList<InputParser>();
+		logToConsole = true;
 		createPanel();
 	}
 	
@@ -113,8 +108,15 @@ public class DeveloperConsole extends ResizableFrame {
 	 * Removes all text from the console.
 	 */
 	public void flushConsole() {
-		lineBuffer.delete(0, lineBuffer.length());
 		textAreaModel.setHtml("");
+	}
+	
+	// INTERFACE
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public void logChanged(java.util.List<String> log, String lastAdded, Logger.LOGTYPE type) {
+		if(logToConsole) {
+			// TODO
+		}
 	}
 	
 	// INTERN
@@ -216,6 +218,16 @@ public class DeveloperConsole extends ResizableFrame {
 		}
 	}
 	
+	// SETTER & GETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @param value
+	 *            true if normal logging should be displayed on the console.
+	 */
+	public void setLogToConsole(boolean value) {
+		logToConsole = value;
+	}
+	
 	// PRIVATE CLASSES
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	private class AutoCompleteMerger implements AutoCompletionDataSource {
@@ -246,10 +258,11 @@ public class DeveloperConsole extends ResizableFrame {
 		}
 		
 	}
-	protected static class ConsoleInputParser implements InputParser {
+	private static class ConsoleInputParser implements InputParser {
 		
 		private ArrayList<String> keys, compList;
-		private String keywords[] = new String[] { "flushlog", "gc", "print", "texturecount" };
+		
+		private String keywords[] = new String[] { "flushlog", "gc", "print" };
 		
 		public ConsoleInputParser() {
 			keys = new ArrayList<String>();
@@ -260,14 +273,14 @@ public class DeveloperConsole extends ResizableFrame {
 		}
 		
 		public String parseInput(String message, DeveloperConsole console) {
-			Method method;
 			for (String key : keys) {
 				if (message.startsWith(key)) {
-					try {
-						method = this.getClass().getMethod(key, String.class, DeveloperConsole.class);
-						return method.invoke(this, message, console).toString();
-					} catch (Exception e) {
-						return makeErrorMessage("Could not invoke mehod! Method must be public!");
+					if (key.equals("gc")) {
+						return gc();
+					} else if (key.equals("flushlog")) {
+						return flushlog(console);
+					} else if (key.equals("print")) {
+						return print(message);
 					}
 				}
 			}
@@ -287,25 +300,18 @@ public class DeveloperConsole extends ResizableFrame {
 			}
 		}
 		
-		public String gc(String input, DeveloperConsole console) {
+		private String gc() {
 			System.gc();
 			return "invoked <span style=\"font:success\" >garbage collector</span>!";
 		}
-		public String flushlog(String input, DeveloperConsole console) {
+		private String flushlog(DeveloperConsole console) {
 			console.flushConsole();
 			return "";
 		}
-		public String print(String input, DeveloperConsole console) {
+		private String print(String input) {
 			return "<div style=\"word-wrap: break-word;\">" + input.substring(6)
 					+ "</div><img src=\"separator\" alt=\":)\" style=\"margin: 3px; width: 100%; height: 100%;\" />";
 		}
-		public String texturecount(String input, DeveloperConsole console) {
-			return "Texture Count: <span style=\"font:success\" >" + InternalTextureLoader.getTextureCount() + "</span>";
-		}
 		
-		private String makeErrorMessage(String error) {
-			return "<div style=\"font:error\" >" + error + "</div>";
-		}
 	}
-	
 }

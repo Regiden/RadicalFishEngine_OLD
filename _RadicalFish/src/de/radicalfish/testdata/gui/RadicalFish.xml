@@ -30,6 +30,10 @@
         <area name="icon.arrow.down" xywh="67,14,7,4" center="true"/>
         <area name="icon.close" xywh="66,19,10,9" center="true"/>
         <area name="icon.close2" xywh="77,14,12,11" center="true"/>
+        <area name="border.white" xywh="90,18,3,3" splitx="L1,R1" splity="T1,B1" nocenter="true"/>
+        <alias name="border.slider" ref="border.white" if="keyboardFocus | pressed" inset="-1"/>
+    
+    
     
     
     
@@ -230,10 +234,10 @@
     
     
     
-        <area name="hslider" xywh="28,48,7,3" splitx="L3,R3" inset="7,0,6,0"/>
-        <area name="vslider" xywh="36,48,3,7" inset="0,6,0,7" splity="T3,B3"/>
-        <area name="slider.hthumb" xywh="28,52,5,9" splity="T4,B4"/>
-        <area name="slider.vthumb" xywh="34,56,9,5" splitx="L4,R4"/>
+        <area name="hslider" xywh="28,48,7,3" splitx="L3,R3" inset="7,0,6,0" splity="T1,B1"/>
+        <area name="vslider" xywh="36,48,3,7" inset="0,6,0,7" splity="T3,B3" splitx="L2,R2"/>
+        <area name="slider.hthumb" xywh="28,52,5,9" splity="T4,B4" splitx="L2,R2"/>
+        <area name="slider.vthumb" xywh="34,56,9,5" splitx="L4,R4" splity="T2,B2"/>
     
     
         <alias name="listbox.background" ref="black" tint="#88FFFFFF"/>
@@ -431,7 +435,9 @@
     </theme>
     <theme name="editfield" ref="-defaults">
         <param name="background"><image>box.embedded</image></param>
-        <theme name="renderer" ref="-defaults"/>
+        <theme name="renderer" ref="-defaults">
+            <param name="textAlignment"><enum type="alignment">TOPLEFT</enum></param>
+        </theme>
         <param name="border"><border>4,3</border></param>
         <param name="cursor"><image>edit.cursor.animation</image></param>
         <param name="selection"><image>edit.selection</image></param>
@@ -568,12 +574,14 @@
         <param name="background"><image>hslider</image></param>
         <param name="scaleThumb"><bool>false</bool></param>
         <param name="maxWidth"><int>32767</int></param>
-        <param name="minHeight"><int>2</int></param>
+        <param name="minHeight"><int>20</int></param>
         <param name="minWidth"><int>100</int></param>
         <theme name="thumb" ref="-defaults">
             <param name="background"><image>slider.hthumb</image></param>
             <param name="maxWidth"><int>5</int></param>
             <param name="minHeight"><int>16</int></param>
+            <param name="border"><border>4,0</border></param>
+            <param name="overlay"><image>border.slider</image></param>
         </theme>
         <theme name="leftbutton" ref="-defaults"/>
         <theme name="rightbutton" ref="-defaults"/>
@@ -582,12 +590,13 @@
         <param name="background"><image>vslider</image></param>
         <param name="scaleThumb"><bool>false</bool></param>
         <param name="minHeight"><int>100</int></param>
-        <param name="minWidth"><int>2</int></param>
+        <param name="minWidth"><int>20</int></param>
         <param name="maxHeight"><int>32767</int></param>
         <theme name="thumb" ref="-defaults">
             <param name="background"><image>slider.vthumb</image></param>
             <param name="minWidth"><int>16</int></param>
             <param name="maxHeight"><int>5</int></param>
+            <param name="border"><border>0,4</border></param>
         </theme>
         <theme name="upbutton" ref="-defaults"/>
         <theme name="downbutton" ref="-defaults"/>
@@ -666,6 +675,8 @@
             <param name="minHeight"><int>16</int></param>
             <param name="text"><string>+</string></param>
         </theme>
+        <theme name="editfield" ref="editfield-embedded">
+        </theme>
     </theme>
     <theme name="scrollpane-noalways" ref="scrollpane">
         <param name="scrollbarsAlwaysVisible"><bool>false</bool></param>
@@ -730,7 +741,7 @@
         <param name="border"><border>2</border></param>
         <param name="background"><image>box.embedded</image></param>
         <param name="minWidth"><int>200</int></param>
-        <param name="minHeight"><int>16</int></param>
+        <param name="minHeight"><int>20</int></param>
         <param name="maxWidth"><int>32767</int></param>
     </theme>
 
@@ -794,6 +805,8 @@
 
     <theme name="columnlayout" ref="-defaults">
     </theme>
+    <theme name="borderlayout" ref="-defaults"/>
+
 
     <theme name="optionsdialog" ref="-defaults"/>
 

@@ -136,7 +136,6 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		}
 		
 		addState(new TestGameState(this, world, 1));
-		
 	}
 	
 	protected void preUpdateState(GameContainer container, int delta) throws SlickException {
@@ -193,7 +192,10 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 			error = true;
 		}
 		if (!settings.getGraphicDetails().isFBOSupported()) {
-			Sys.alert("ERROR", "Your system does not support FBO's Please update your Driver!");
+			Sys.alert("ERROR", "Your system does not support FBOs. Please update your Driver!");
+		}
+		if (!settings.getGraphicDetails().isShaderSupported()) {
+			Sys.alert("ERROR", "Your system does not support Shader. Please update your Driver!");
 		}
 		
 		if (error) {

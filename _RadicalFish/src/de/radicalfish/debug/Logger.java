@@ -95,19 +95,13 @@ public class Logger implements LogSystem {
 		}
 	}
 	
-	
 	public int getMaxLogLines() {
 		return maxLogLines;
 	}
-	/**
-	 * @param lines
-	 *            max number of lines
-	 * @return a String containing the log with a max of <code>lines</code>.
-	 */
-	public static String getLogAsString(int lines) {
+	public static String getLogAsString(int maxLines) {
 		StringBuilder sb = new StringBuilder();
 		
-		int min = LOG.size() - lines;
+		int min = LOG.size() - maxLines;
 		if (min < 0)
 			min = 0;
 		for (int i = min; i < LOG.size(); i++)
@@ -115,8 +109,6 @@ public class Logger implements LogSystem {
 		
 		return sb.toString();
 	}
-	
-	
 	
 	public static void setMaxLogLines(int value) {
 		maxLogLines = value;
