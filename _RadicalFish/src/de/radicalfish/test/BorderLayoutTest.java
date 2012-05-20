@@ -99,7 +99,7 @@ public class BorderLayoutTest extends DesktopArea {
 		BorderLayout l = new BorderLayout(5, 5);
 		l.add(makeScrollPaneWithEditField(), Location.NORTH);
 		l.add(makeScrollPaneWithEditField(), Location.SOUTH);
-		l.add(makeScrollPaneWithEditField(), Location.EAST);
+		// l.add(makeScrollPaneWithEditField(), Location.EAST);
 		l.add(makeScrollPaneWithEditField(), Location.WEST);
 		l.add(makeScrollPaneWithEditField(), Location.CENTER);
 		

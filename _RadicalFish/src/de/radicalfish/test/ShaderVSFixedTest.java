@@ -60,7 +60,7 @@ public class ShaderVSFixedTest extends BasicGame {
 	
 	public void init(GameContainer container) throws SlickException {
 		sprite = new Image(path + "TESTBLOCK.png");
-		flatShader = ShaderProgram.loadProgram(path + "shader/simple.vert", path + "shader/simple.frag");
+		flatShader = ShaderProgram.loadProgram(path + "shader/simple.vert", path + "shader/gray.frag");
 	}
 	public void update(GameContainer container, int delta) throws SlickException {
 		runs++;

@@ -250,6 +250,7 @@ public class RPGMakerToneArea extends Widget {
 		if (target >= 0.9f) {
 			ratio = lerp(ratio, 0, toneModel.getChromaOvershoot());
 		}
+		
 		r = getRangedValue(lerp(r, target, ratio), toneModel.getRedOvershoot());
 		g = getRangedValue(lerp(g, target, ratio), toneModel.getGreenOvershoot());
 		b = getRangedValue(lerp(b, target, ratio), toneModel.getBlueOvershoot());
@@ -257,6 +258,7 @@ public class RPGMakerToneArea extends Widget {
 		r = Math.min(toneModel.getRed(), r);
 		g = Math.min(toneModel.getGreen(), g);
 		b = Math.min(toneModel.getBlue(), b);
+		
 		return toRGBChroma(r, g, b, a);
 	}
 	private int toRGBChroma(float r, float g, float b, float a) {
