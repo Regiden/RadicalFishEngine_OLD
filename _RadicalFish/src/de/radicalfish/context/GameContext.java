@@ -85,7 +85,7 @@ public interface GameContext {
 	/**
 	 * @return a implementation of the GameSpeed interface.
 	 */
-	public GameDelta getGameSpeed();
+	public GameDelta getGameDelta();
 	/**
 	 * @return the variables shared across the game.
 	 */

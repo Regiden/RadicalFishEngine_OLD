@@ -34,7 +34,10 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.opengl.shader.ShaderProgram;
 import org.newdawn.slick.util.ResourceLoader;
+import de.matthiasmann.twl.BorderLayout;
+import de.matthiasmann.twl.BorderLayout.Location;
 import de.matthiasmann.twl.DesktopArea;
 import de.matthiasmann.twl.EditField;
 import de.matthiasmann.twl.GUI;
@@ -43,17 +46,19 @@ import de.matthiasmann.twl.ScrollPane;
 import de.matthiasmann.twl.renderer.Renderer;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.theme.ThemeManager;
-import de.radicalfish.debug.BorderLayout;
-import de.radicalfish.debug.BorderLayout.Location;
 
 public class BorderLayoutTest extends DesktopArea {
+	
+	static ShaderProgram prog;
 	
 	public static void main(String[] args) {
 		try {
 			Display.setDisplayMode(new DisplayMode(800, 600));
-			Display.create();
+			Display.setResizable(true);
 			Display.setTitle("TWL Slider Demo");
 			Display.setVSyncEnabled(true);
+			Display.create();
+			
 			
 			LWJGLRenderer renderer = new LWJGLRenderer();
 			BorderLayoutTest sliders = new BorderLayoutTest();
@@ -62,12 +67,19 @@ public class BorderLayoutTest extends DesktopArea {
 			ThemeManager theme = loadTheme(renderer, "de/radicalfish/testdata/gui/RadicalFish.xml");
 			gui.applyTheme(theme);
 			
+			prog = ShaderProgram.loadProgram("de/radicalfish/testdata/shader/simple.vert", "de/radicalfish/testdata/shader/simple.frag");
+			
 			while (!Display.isCloseRequested()) {
 				GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 				
 				gui.update();
 				Display.update();
 				reduceInputLag();
+				
+				if(Display.wasResized()) {
+					GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+					renderer.setViewport(0, 0, Display.getWidth(), Display.getHeight());
+				}
 			}
 			
 			gui.destroy();
@@ -96,15 +108,19 @@ public class BorderLayoutTest extends DesktopArea {
 		frame.setTheme("resizableframe-title");
 		frame.setTitle("");
 		
-		BorderLayout l = new BorderLayout(5, 5);
+		ScrollPane p = makeScrollPaneWithEditField();
+		
+		BorderLayout l = new BorderLayout();
 		l.add(makeScrollPaneWithEditField(), Location.NORTH);
 		l.add(makeScrollPaneWithEditField(), Location.SOUTH);
-		// l.add(makeScrollPaneWithEditField(), Location.EAST);
-		l.add(makeScrollPaneWithEditField(), Location.WEST);
+		l.add(makeScrollPaneWithEditField(), Location.EAST);
+		l.add(p, Location.WEST);
 		l.add(makeScrollPaneWithEditField(), Location.CENTER);
 		
+	
 		frame.add(l);
-		// frame.setSize(400, 500);
+		
+		
 		
 		add(frame);
 		

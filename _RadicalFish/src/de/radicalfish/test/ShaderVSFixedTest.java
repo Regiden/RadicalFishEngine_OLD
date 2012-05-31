@@ -79,7 +79,7 @@ public class ShaderVSFixedTest extends BasicGame {
 		for (int i = 0; i < 10; i++) {
 			sprite.draw(60 + (i * 20), 60 + (20 * i));
 		}
-		ShaderProgram.unbind();
+		ShaderProgram.unbindAll();
 		
 		timeShaderTotal += System.nanoTime() - localTime;
 		timeShaderAvg = timeShaderTotal / runs;

@@ -49,6 +49,7 @@ import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.context.GameVariables;
 import de.radicalfish.context.Settings;
+import de.radicalfish.debug.Logger;
 import de.radicalfish.text.FontRenderer;
 import de.radicalfish.text.FontSheet;
 import de.radicalfish.text.SpriteFont;
@@ -71,6 +72,8 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	private static int gameWidth = 320, gameHeight = 240;
 	private int maxTextureSize = 1024;
 	private boolean canDebug;
+	
+	private int avgfps, avgdelta, runs;
 	
 	private final int[][] widths = new int[][] { { 3, 3, 5, 7, 5, 7, 7, 3, 4, 4, 5, 5, 4, 5, 3, 5 },
 			{ 5, 3, 5, 5, 5, 5, 5, 5, 5, 5, 3, 4, 5, 5, 5, 5 }, { 7, 5, 5, 5, 5, 5, 5, 5, 5, 3, 5, 5, 5, 7, 6, 5 },
@@ -101,10 +104,11 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		app.setSmoothDeltas(settings.isSmoothDelta());
 		app.setForceExit(false);
 		app.setMouseGrabbed(!settings.isDebugging());
-		//app.setShowFPS(false);
+		app.setShowFPS(false);
 		app.setAlwaysRender(settings.isDebugging());
 		
 		app.start();
+		
 		
 	}
 	
@@ -125,7 +129,7 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		checkGraphicsCapabilities();
 		
 		if (settings.isLogging()) {
-			System.out.println(settings);
+			Logger.none(settings.toString());
 		}
 		
 		canDebug = settings.isDebugging();
@@ -135,11 +139,22 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 			debug.init(this, world);
 		}
 		
-		addState(new TestGameState(this, world, 1));
+		TestGameState test = new TestGameState(this, world, 1);
+		
+		addState(test);
+		
+		debug.addPerformanceListener(test, "Test State", de.matthiasmann.twl.Color.LIGHTBLUE);
+		
+		
 	}
 	
 	protected void preUpdateState(GameContainer container, int delta) throws SlickException {
 		gameSpeed.update(this, world, delta);
+		
+		runs++;
+		avgfps += container.getFPS();
+		avgdelta += delta;
+		
 	}
 	protected void postUpdateState(GameContainer container, int delta) throws SlickException {
 		updateDebug();
@@ -151,13 +166,22 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	}
 	protected void postRenderState(GameContainer container, Graphics g) throws SlickException {
 		renderDebug(g);
+		
+	}
+	
+	// OVERRIDE
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	@Override
+	public boolean closeRequested() {
+		closeGame();
+		return super.closeRequested();
 	}
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	private void updateDebug() throws SlickException {
 		if (canDebug) {
-			debug.update(this, world, getGameSpeed());
+			debug.update(this, world, getGameDelta());
 		}
 		
 	}
@@ -202,6 +226,15 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 			container.exit();
 		}
 	}
+	private void closeGame() {
+		Logger.none("Exit Game:");
+		if(runs != 0) {
+			Logger.none("\tTotal Runs:   " + runs);
+			Logger.none("\tAverage FPS:   " + (avgfps / runs));
+			Logger.none("\tAverage Delta: " + (avgdelta / runs));
+		}
+		
+	}
 	
 	// GAME CONTEXT
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -232,7 +265,7 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	public Settings getSettings() {
 		return settings;
 	}
-	public GameDelta getGameSpeed() {
+	public GameDelta getGameDelta() {
 		return gameSpeed;
 	}
 	public GameVariables getGameVariables() {

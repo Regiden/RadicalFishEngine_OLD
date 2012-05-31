@@ -80,7 +80,7 @@ public class GrayShaderTest extends BasicGame {
 		
 		image.draw(0, 0);
 		
-		ShaderProgram.unbind();
+		ShaderProgram.unbindAll();
 		
 		g.resetTransform();
 		g.drawString("Scale: " + scale, 10, 20);

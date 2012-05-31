@@ -98,7 +98,7 @@ public abstract class GameState extends BasicGameState {
 		render(context, world, g);
 	}
 	public final void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-		update(context, world, context.getGameSpeed());
+		update(context, world, context.getGameDelta());
 	}
 	
 	// GETTER & SETTER

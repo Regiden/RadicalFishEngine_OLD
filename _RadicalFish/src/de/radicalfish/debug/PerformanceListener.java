@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, Stefan Lange
+ * Copyright (c) 2012, Stefan Lange
  * 
  * All rights reserved.
  * 
@@ -28,61 +28,20 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.debug;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map;
 
 /**
- * Can be attached to a debug utility and used to dynamically load methods. Can be used to add methods to a list / map
- * or just use <code>invokeMethod(Method method)</code>.
+ * An Interface which describes an object that can be monitored for performance. Here is one of the moments where
+ * multiple inheritance would be useful to have field you simply need to access. Here you need to store a value inside
+ * that object which gives back the measured time and name.
  * 
  * @author Stefan Lange
- * @version 1.0.0
- * @since 05.05.2012
+ * @version 0.5.0
+ * @since 24.05.2012
  */
-public interface MethodInvoker {
+public interface PerformanceListener {
 	
-	// METHODS
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Invokes the method.
-	 * 
-	 * @param name
-	 *            the name of the method (or shortcut)
+	 * @return the time the object took to update it's state. in microseconds
 	 */
-	public void invokeMethod(String name);
-	/**
-	 * Invokes a method.
-	 * 
-	 * @param method
-	 *            the method to invoke;
-	 */
-	public void invokeMethod(Method method);
-	/**
-	 * @param name
-	 *            the name or shortcut for the method (the method name could also be used)
-	 * @param method
-	 *            the method to add
-	 */
-	public void addMethod(String name, Method method);
-	/**
-	 * @param collection
-	 *            the collection of methods to add
-	 */
-	public void addMethods(Map<String, Method> collection);
-	
-	// GETTER
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * @return the method mapped by the name.
-	 */
-	public Method getMethod(String name);
-	/**
-	 * @return all methods in a list or all methods the game uses.
-	 */
-	public List<Method> getMethods();
-	/**
-	 * @return all names if the methods are in a map. Can be used for auto completion.
-	 */
-	public List<String> getMethodNames();
+	public long getMessuredTime();
 }

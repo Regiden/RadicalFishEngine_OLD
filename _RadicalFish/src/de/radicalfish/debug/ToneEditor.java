@@ -34,7 +34,6 @@ import de.matthiasmann.twl.ColumnLayout.Columns;
 import de.matthiasmann.twl.ColumnLayout.Row;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ResizableFrame;
-import de.matthiasmann.twl.Scrollbar;
 import de.matthiasmann.twl.Scrollbar.Orientation;
 import de.matthiasmann.twl.Widget;
 
@@ -117,7 +116,7 @@ public class ToneEditor extends ResizableFrame {
 				redLabel.setText("" + red.getValue());
 			}
 		});
-		initScrollbar(red);
+		initSlider(red);
 		final Label greenLabel = new Label("");
 		greenLabel.setTheme("fixedlabel");
 		green = new Slider(Orientation.HORIZONTAL);
@@ -132,7 +131,7 @@ public class ToneEditor extends ResizableFrame {
 				greenLabel.setText("" + green.getValue());
 			}
 		});
-		initScrollbar(green);
+		initSlider(green);
 		final Label blueLabel = new Label("");
 		blueLabel.setTheme("fixedlabel");
 		blue = new Slider(Orientation.HORIZONTAL);
@@ -147,7 +146,7 @@ public class ToneEditor extends ResizableFrame {
 				blueLabel.setText("" + blue.getValue());
 			}
 		});
-		initScrollbar(blue);
+		initSlider(blue);
 		final Label chromaLabel = new Label("");
 		chromaLabel.setTheme("fixedlabel");
 		chroma = new Slider(Orientation.HORIZONTAL);
@@ -162,7 +161,7 @@ public class ToneEditor extends ResizableFrame {
 				chromaLabel.setText("" + chroma.getValue());
 			}
 		});
-		initScrollbar(chroma);
+		initSlider(chroma);
 		
 		Row row = layout.addRow(sliderColumns);
 		row.addLabel("Red: ").add(red, Alignment.FILL).add(redLabel);
@@ -177,8 +176,7 @@ public class ToneEditor extends ResizableFrame {
 		row.add(chroma, Alignment.FILL);
 		
 	}
-	private void initScrollbar(Scrollbar bar) {
-		bar.setTheme("hslider");
+	private void initSlider(Slider bar) {
 		bar.setMinMaxValue(0, 200);
 		bar.setValue(100);
 		bar.setCanAcceptKeyboardFocus(true);

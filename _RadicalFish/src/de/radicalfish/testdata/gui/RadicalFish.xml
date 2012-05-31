@@ -2,18 +2,21 @@
 <!DOCTYPE themes PUBLIC "-//www.matthiasmann.de//TWL-Theme//EN" "http://hg.l33tlabs.org/twl/raw-file/tip/src/de/matthiasmann/twl/theme/theme.dtd">
 <themes>
     <images file="gui.png">
+        <area name="textarea" xywh="72,69,12,12" splitx="L4,R4" splity="T4,B4"/>
         <area name="white" xywh="53,1,1,1"/>
+    
         <area name="black" xywh="1,1,1,1"/>
     
         <area name="pixel.separator" xywh="3,2,1,1"/>
     
         <area name="pixel.toolbox" xywh="3,2,1,1" inset="-2,0,-4,0"/>
+        <area name="hsplitter" xywh="66,8,3,3" inset="2,0" splity="T1,B1"/>
+    
         <area name="cursor.cross" xywh="78,28,7,7"/>
     
         <area name="box.high" xywh="14,1,12,12" splitx="L4,R4" splity="T4,B4"/>
         <area name="box.down" xywh="27,1,12,12" splitx="L4,R4" splity="T4,B4"/>
         <area name="box.embedded" xywh="40,1,12,12" splitx="L4,R4" splity="T4,B4"/>
-        <area name="textarea" xywh="72,69,12,12" splitx="L4,R4" splity="T4,B4"/>
         <area name="box.border.normal" xywh="1,1,12,12" splitx="L4,R4" splity="T4,B4"/>
         <area name="box.border.bottom" xywh="3,1,8,10" splitx="L2,R2" splity="T4,B2"/>
         <area name="box.border.bottomleft" xywh="3,1,10,10" splitx="L2,R4" splity="T4,B2"/>
@@ -23,6 +26,9 @@
     
         <area name="box.border.high" xywh="77,1,12,12" splitx="L5,R5" splity="T5,B5"/>
         <area name="box.border.shadow" xywh="14,48,13,13" splitx="L4,R5" splity="T4,B5"/>
+        <area name="box.empty" xywh="90,23,6,6" splitx="L2,R2" splity="T2,B2"/>
+    
+    
     
         <area name="icon.arrow.left" xywh="67,35,4,7" center="true"/>
         <area name="icon.arrow.right" xywh="73,35,4,7" center="true"/>
@@ -82,7 +88,7 @@
         </select>
     
         <grid name="checkbox" weightsX="0,1" weightsY="1">
-            <select>
+            <select center="true">
                 <composed if="selected + armed">
                     <alias ref="checkbox.bg2"/>
                     <alias ref="checkbox.on"/>
@@ -265,6 +271,8 @@
             </composed>
             <alias ref="box.down" inset="0,0,0,16"/>
         </select>
+        <area name="pgrapharea.background" xywh="107,1,28,91" splitx="L21,R3" splity="T3,B73"/>
+    
     
     
     
@@ -367,6 +375,13 @@
         <param name="minHeight"><int>1</int></param>
         <param name="maxHeight"><int>32767</int></param>
     </theme>
+    <theme name="hspring" ref="-defaults">
+        <param name="minHeight"><int>1</int></param>
+        <param name="maxHeight"><int>1</int></param>
+        <param name="maxWidth"><int>32767</int></param>
+        <param name="minWidth"><int>1</int></param>
+    </theme>
+
     <theme name="hfiller" ref="-defaults">
         <param name="minWidth"><int>1</int></param>
         <param name="maxWidth"><int>32767</int></param>
@@ -405,9 +420,15 @@
 
     <theme name="fixedlabel" ref="-defaults" allowWildcard="true">
         <param name="font"><font>normal</font></param>
-        <param name="minWidth"><int>22</int></param>
+        <param name="minWidth"><int>30</int></param>
         <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
     </theme>
+    <theme name="fixedlabel2" ref="-defaults" allowWildcard="true">
+        <param name="font"><font>normal</font></param>
+        <param name="minWidth"><int>50</int></param>
+        <param name="textAlignment"><enum type="alignment">RIGHT</enum></param>
+    </theme>
+
 
 
     <theme name="fpslabel" ref="-defaults" allowWildcard="true">
@@ -463,8 +484,12 @@
 
 
     <theme name="checkbox" ref="-defaults">
-        <param name="background"><image>checkbox.background</image></param>
+        <param name="background"><image>checkbox</image></param>
         <param name="border"><border>4,3</border></param>
+        <param name="minWidth"><int>16</int></param>
+        <param name="minHeight"><int>16</int></param>
+        <param name="maxHeight"><int>16</int></param>
+        <param name="maxWidth"><int>32767</int></param>
     </theme>
     <theme name="radiobutton" ref="button">
         <param name="background"><image>radiobox</image></param>
@@ -681,6 +706,14 @@
     <theme name="scrollpane-noalways" ref="scrollpane">
         <param name="scrollbarsAlwaysVisible"><bool>false</bool></param>
     </theme>
+    <theme name="splitpane" ref="-defaults">
+        <theme name="splitterHorizontal" ref="-defaults">
+            <param name="background"><image>hsplitter</image></param>
+            <param name="border"><border>2</border></param>
+            <param name="mouseCursor"><cursor>arrow.left</cursor></param>
+        </theme>
+    </theme>
+
 
 
     <theme name="textarea" ref="-defaults">
@@ -796,6 +829,21 @@
         <param name="minWidth"><int>100</int></param>
         <param name="minHeight"><int>100</int></param>
     </theme>
+    <theme name="pgrapharea" ref="-defaults">
+        <param name="minWidth"><int>100</int></param>
+        <param name="minHeight"><int>100</int></param>
+        <param name="background"><image>pgrapharea.background</image></param>
+        <param name="border"><border>2,2,3,2</border></param>
+    </theme>
+    <theme name="colorarea-small" ref="-defaults">
+        <param name="minWidth"><int>16</int></param>
+        <param name="maxWidth"><int>16</int></param>
+        <param name="minHeight"><int>16</int></param>
+        <param name="maxHeight"><int>16</int></param>
+        <param name="background"><image>box.empty</image></param>
+    </theme>
+
+
 
 
 
@@ -805,7 +853,10 @@
 
     <theme name="columnlayout" ref="-defaults">
     </theme>
-    <theme name="borderlayout" ref="-defaults"/>
+    <theme name="borderlayout" ref="-defaults">
+        <param name="hgap"><int>5</int></param>
+        <param name="vgap"><int>5</int></param>
+    </theme>
 
 
     <theme name="optionsdialog" ref="-defaults"/>

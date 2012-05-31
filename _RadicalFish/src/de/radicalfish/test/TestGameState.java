@@ -39,14 +39,17 @@ import de.radicalfish.World;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.debug.Logger;
+import de.radicalfish.debug.PerformanceListener;
 import de.radicalfish.extern.Easing;
 import de.radicalfish.extern.SimpleFX;
 
-public class TestGameState extends GameState {
+public class TestGameState extends GameState implements PerformanceListener {
 	
 	public MoveTester dude;
 	private Image image;
 	private SimpleFX effect, effect2;
+	
+	private long utime, rtime;
 	
 	public TestGameState(GameContext context, World world, int id) {
 		super(context, world, id);
@@ -61,9 +64,10 @@ public class TestGameState extends GameState {
 		effect2 = new SimpleFX(30, 400, 3 * 1000, Easing.LINEAR);
 	}
 	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
+		long locTime = System.nanoTime();
 		Input in = context.getContainer().getInput();
 		
-		GameDelta deltor = context.getGameSpeed();
+		GameDelta deltor = context.getGameDelta();
 		
 		if (in.isKeyPressed(Input.KEY_A)) {
 			Logger.none("test");
@@ -85,8 +89,11 @@ public class TestGameState extends GameState {
 			effect2.restart();
 		}
 		
+		utime = (System.nanoTime() - locTime) / 1000;
+		
 	}
 	public void render(GameContext context, World world, Graphics g) throws SlickException {
+		long locTime = System.nanoTime();
 		
 		g.setColor(Color.green.darker().darker());
 		g.fillRect(0, 0, context.getContainerWidth(), context.getContainerHeight());
@@ -104,9 +111,15 @@ public class TestGameState extends GameState {
 		GL11.glPopMatrix();
 		image.draw(60, 60);
 		
+		rtime = (System.nanoTime() - locTime) / 1000;
+		
 	}
 	
-	// TESTS METHODS
+	// INTERFACE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	@Override
+	public long getMessuredTime() {
+		return (int) (utime + rtime);
+	}
 	
 }

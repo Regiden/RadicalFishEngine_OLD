@@ -35,7 +35,6 @@ import de.matthiasmann.twl.ColumnLayout.Row;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ResizableFrame;
-import de.matthiasmann.twl.Scrollbar;
 import de.matthiasmann.twl.Scrollbar.Orientation;
 import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.Widget;
@@ -70,7 +69,7 @@ public class OptionsPanel extends ResizableFrame {
 	private ColumnLayout layout;
 	
 	private ToggleButton fullscreen, debug, log, sound3D, vsync, smoothDelta;
-	private Scrollbar musicVolume, soundVolume, textSpeed;
+	private Slider musicVolume, soundVolume, textSpeed;
 	
 	private int extraWidgetsCount;
 	
@@ -209,8 +208,7 @@ public class OptionsPanel extends ResizableFrame {
 		final Label value = new Label("" + settings.getTextSpeed());
 		value.setTheme("fixedlabel");
 		
-		textSpeed = new Scrollbar(Orientation.HORIZONTAL);
-		textSpeed.setTheme("hslider");
+		textSpeed = new Slider(Orientation.HORIZONTAL);
 		textSpeed.setMinMaxValue(0, 10);
 		textSpeed.setPageSize(1);
 		textSpeed.addCallback(new Runnable() {
@@ -229,8 +227,7 @@ public class OptionsPanel extends ResizableFrame {
 	private void addMusicSliders() {
 		final Label value = new Label("" + (int)(settings.getMusicVolume() * 100));
 		value.setTheme("fixedlabel");
-		musicVolume = new Scrollbar(Orientation.HORIZONTAL);
-		musicVolume.setTheme("hslider");
+		musicVolume = new Slider(Orientation.HORIZONTAL);
 		musicVolume.addCallback(new Runnable() {
 			public void run() {
 				settings.setMusicVolume(musicVolume.getValue() / 100f);
@@ -243,8 +240,7 @@ public class OptionsPanel extends ResizableFrame {
 		
 		final Label value2 = new Label("" + (int)(settings.getMusicVolume() * 100));
 		value2.setTheme("fixedlabel");
-		soundVolume = new Scrollbar(Orientation.HORIZONTAL);
-		soundVolume.setTheme("hslider");
+		soundVolume = new Slider(Orientation.HORIZONTAL);
 		soundVolume.addCallback(new Runnable() {
 			public void run() {
 				settings.setSoundVolume(soundVolume.getValue() / 100f);

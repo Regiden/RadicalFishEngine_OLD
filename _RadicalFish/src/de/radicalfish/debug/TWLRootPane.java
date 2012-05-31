@@ -28,11 +28,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.debug;
-import java.util.ArrayList;
 import de.matthiasmann.twl.ActionMap;
 import de.matthiasmann.twl.DesktopArea;
 import de.matthiasmann.twl.Event;
-import de.matthiasmann.twl.Event.Type;
 import de.matthiasmann.twl.Widget;
 import de.radicalfish.TWLGameState;
 
@@ -46,7 +44,6 @@ public class TWLRootPane extends DesktopArea {
 	
 	private TWLGameState state;
 	
-	private ArrayList<WidgetKeyPair> widgetkeys;
 	private Widget currentChildInFocus;
 	
 	private int oldMouseX;
@@ -68,22 +65,7 @@ public class TWLRootPane extends DesktopArea {
 		
 		setCanAcceptKeyboardFocus(true);
 		
-		widgetkeys = new ArrayList<TWLRootPane.WidgetKeyPair>();
 		
-	}
-	
-	// METHODS
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * Registers a widget which can be opened with the specific key, when this panels is visible.
-	 * 
-	 * @param widget
-	 *            the widget to make visible
-	 * @param key
-	 *            the key for the widget (as set in {@link Event})
-	 */
-	public void registerWidgetForVisible(Widget widget, int key) {
-		widgetkeys.add(new WidgetKeyPair(widget, key));
 	}
 	
 	// OVERRIDES
@@ -144,15 +126,6 @@ public class TWLRootPane extends DesktopArea {
 			oldMouseY = evt.getMouseY();
 		}
 		
-		if (isVisible() && evt.getModifiers() == Event.MODIFIER_LALT && (evt.getType() == Type.KEY_PRESSED || evt.getType() == Type.KEY_RELEASED)) {
-			for (WidgetKeyPair temp : widgetkeys) {
-				if (evt.getKeyCode() == temp.key) {
-					temp.widget.setVisible(true);
-					temp.widget.requestKeyboardFocus();
-				}
-			}
-		}
-		
 		return true;
 	}
 	@Override
@@ -170,17 +143,5 @@ public class TWLRootPane extends DesktopArea {
 		return currentChildInFocus;
 	}
 	
-	// PRIVATE CLASSES
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private static class WidgetKeyPair {
-		Widget widget;
-		int key;
-		
-		public WidgetKeyPair(Widget widget, int key) {
-			this.widget = widget;
-			this.key = key;
-		}
-		
-	}
 	
 }

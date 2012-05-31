@@ -7,7 +7,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.ResourceLoader;
 import de.matthiasmann.twl.ActionMap;
 import de.matthiasmann.twl.Alignment;
-import de.matthiasmann.twl.Event;
+import de.matthiasmann.twl.Color;
 import de.matthiasmann.twl.FPSCounter;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.Label;
@@ -22,6 +22,8 @@ import de.radicalfish.debug.DeveloperConsole;
 import de.radicalfish.debug.LogConsole;
 import de.radicalfish.debug.Logger;
 import de.radicalfish.debug.OptionsPanel;
+import de.radicalfish.debug.PerformanceGraph;
+import de.radicalfish.debug.PerformanceListener;
 import de.radicalfish.debug.TWLInputForwarder;
 import de.radicalfish.debug.TWLRootPane;
 import de.radicalfish.debug.ToneEditor;
@@ -29,10 +31,14 @@ import de.radicalfish.debug.ToolBox;
 import de.radicalfish.debug.parser.PropertyInputParser;
 import de.radicalfish.debug.parser.URLInputParser;
 
-public class DebugGameState extends TWLGameState {
+public class DebugGameState extends TWLGameState implements PerformanceListener {
 	
 	private TWLRootPane root;
 	private GUI gui;
+	
+	private PerformanceGraph graph;
+	
+	private int delta;
 	
 	public DebugGameState(GameContext context, World world, int id) {
 		super(context, world, id);
@@ -43,10 +49,13 @@ public class DebugGameState extends TWLGameState {
 	public void init(GameContext context, World world) throws SlickException {
 		initGUI(context);
 		buildGUI(context);
-		updateGUI();
+		updateGUI(context);
 	}
 	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
-		updateGUI();
+		this.delta = delta.getNormalDelta();
+		
+		graph.setFPS(context.getContainer().getFPS());
+		graph.setDelta(this.delta);
 		
 		if (context.getInput().isKeyPressed(Input.KEY_BACKSLASH)) {
 			root.setVisible(!root.isVisible());
@@ -59,6 +68,7 @@ public class DebugGameState extends TWLGameState {
 		
 	}
 	public void render(GameContext context, World world, Graphics g) throws SlickException {
+		updateGUI(context);
 		gui.draw();
 	}
 	
@@ -84,9 +94,19 @@ public class DebugGameState extends TWLGameState {
 		return root.isVisible();
 	}
 	
+	public void addPerformanceListener(PerformanceListener listener, String name, Color color) {
+		graph.addPerformanceListener(listener, name, color);
+	}
+	
+	// INTERFACE
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public long getMessuredTime() {
+		return delta * 1000;
+	}
+	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private void updateGUI() {
+	private void updateGUI(GameContext context) {
 		gui.setSize();
 		gui.handleTooltips();
 		gui.updateTimers();
@@ -99,6 +119,7 @@ public class DebugGameState extends TWLGameState {
 		final DeveloperConsole console = new DeveloperConsole();
 		final LogConsole log = new LogConsole();
 		final ToneEditor toneeditor = new ToneEditor();
+		graph = new PerformanceGraph();
 		
 		ToolBox toolbox = new ToolBox(context.getContainerWidth(), context.getContainerHeight());
 		toolbox.setCanAcceptKeyboardFocus(false);
@@ -107,6 +128,7 @@ public class DebugGameState extends TWLGameState {
 		toolbox.addButton("Console", console);
 		toolbox.addButton(" Log ", log);
 		toolbox.addButton(" Tone ", toneeditor);
+		toolbox.addButton("Performance", graph);
 		
 		toolbox.addFiller();
 		toolbox.addSeparator();
@@ -125,6 +147,7 @@ public class DebugGameState extends TWLGameState {
 				console.adjustSize();
 				log.adjustSize();
 				toneeditor.adjustSize();
+				graph.adjustSize();
 			}
 		});
 		toolbox.addButton("Close All", new Runnable() {
@@ -133,6 +156,7 @@ public class DebugGameState extends TWLGameState {
 				console.setVisible(false);
 				log.setVisible(false);
 				toneeditor.setVisible(false);
+				graph.setVisible(false);
 			}
 		});
 		toolbox.addButton("Exit", new Runnable() {
@@ -146,6 +170,7 @@ public class DebugGameState extends TWLGameState {
 		log.setVisible(false);
 		toneeditor.setVisible(false);
 		console.setVisible(false);
+		graph.setVisible(false);
 		
 		console.addInputParser(new URLInputParser());
 		console.addInputParser(new PropertyInputParser(context.getSettings()));
@@ -157,13 +182,12 @@ public class DebugGameState extends TWLGameState {
 		root.add(console);
 		root.add(log);
 		root.add(toneeditor);
+		root.add(graph);
 		
-		root.registerWidgetForVisible(console, Event.KEY_C);
-		root.registerWidgetForVisible(options, Event.KEY_O);
-		root.registerWidgetForVisible(log, Event.KEY_L);
-		root.registerWidgetForVisible(toneeditor, Event.KEY_T);
 		
+		graph.addPerformanceListener(this, "Total Time", Color.ORANGE);
 	}
+	
 	private void initGUI(GameContext context) throws SlickException {
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		try {
