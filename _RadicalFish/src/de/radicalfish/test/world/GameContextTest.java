@@ -170,7 +170,6 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		}
 		
 		debug.addPerformanceListener(test, "Test State", de.matthiasmann.twl.Color.LIGHTBLUE);
-		
 	}
 	
 	protected void preUpdateState(GameContainer container, int delta) throws SlickException {
