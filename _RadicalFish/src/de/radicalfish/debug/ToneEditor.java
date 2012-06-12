@@ -36,6 +36,7 @@ import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ResizableFrame;
 import de.matthiasmann.twl.Scrollbar.Orientation;
 import de.matthiasmann.twl.Widget;
+import de.radicalfish.effects.ToneModel;
 
 /**
  * A simple color edtior which uses a {@link RPGMakerToneArea} as color area and 4 sliders for red, green, blue and
@@ -55,12 +56,15 @@ public class ToneEditor extends ResizableFrame {
 	private RPGMakerToneArea colorarea;
 	
 	public ToneEditor() {
-		createPanel();
+		createPanel(new ToneModel());
+	}
+	public ToneEditor(ToneModel toneModel) {
+		createPanel(toneModel);
 	}
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private void createPanel() {
+	private void createPanel(ToneModel model) {
 		setTheme("resizableframe-title");
 		setTitle("Tone Editor");
 		setPosition(800, 260);
@@ -77,7 +81,7 @@ public class ToneEditor extends ResizableFrame {
 		sliderColumns = layout.getColumns(NAME, VALUE, LABEL);
 		seperatorColumns = layout.getColumns(SEP);
 		
-		createColorArea(layout);
+		createColorArea(layout, model);
 		Row row = layout.addRow(seperatorColumns);
 		row.add(new Label("Color: "), Alignment.FILL);
 		addSeparator(layout);
@@ -92,8 +96,8 @@ public class ToneEditor extends ResizableFrame {
 		row.add(w);
 	}
 	
-	private void createColorArea(ColumnLayout layout) {
-		colorarea = new RPGMakerToneArea();
+	private void createColorArea(ColumnLayout layout, ToneModel model) {
+		colorarea = new RPGMakerToneArea(model);
 		
 		Row row = layout.addRow(seperatorColumns);
 		row.add(new Label("Tone Preview: "), Alignment.FILL);

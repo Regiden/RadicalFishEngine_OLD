@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, Stefan Lange
+ * Copyright (c) 2012, Stefan Lange
  * 
  * All rights reserved.
  * 
@@ -27,33 +27,51 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.util;
+package de.radicalfish.effects;
+
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.opengl.shader.ShaderProgram;
+import de.radicalfish.context.GameContext;
 
 /**
- * Contains operations for 2D arrays.
+ * A simple effect which use the <code>getGameTone</code> method from the {@link GameContext} to manipulate the tone of
+ * the scene. This is a nice effect to make the scene look like it is afternoon or night. the files for the shader can be
+ * found under;
+ * <p>
+ * <code>de/radicalfish/assests/shader</code>.
  * 
  * @author Stefan Lange
- * @version 0.1.0
- * @since 26.04.2012
+ * @version 0.0.0
+ * @since 07.06.2012
  */
-public final class Arrays2D {
-	private Arrays2D() {}
+public class ToneShaderEffect implements PostProcessingEffect {
 	
+	private ShaderProgram toneShader;
+	
+	public ToneShaderEffect() throws SlickException {
+		toneShader = ShaderProgram.loadProgram("de/radicalfish/assets/shader/simple.vert", "de/radicalfish/assets/shader/toner.frag");
+	}
+	
+	// INTERFACE
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public void begin(GameContext context, Graphics g) {
+		toneShader.bind();
+		ToneModel t = context.getGameTone();
+		toneShader.setUniform4f("rgbc", t.getRed(), t.getGreen(), t.getBlue(), t.getChroma());
+		toneShader.setUniform4f("rgbcOver", t.getRedOvershoot(), t.getGreenOvershoot(), t.getBlueOvershoot(), t.getChromaOvershoot());
+	}
+	public void end(GameContext context, Graphics g) {
+		toneShader.unbind();
+	}
+	
+	// GETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * @param array
-	 *            the array to copy
-	 * @return a copy of the int array
+	 * @return the shader use fot the toning.
 	 */
-	public static int[][] copyIntArray(int array[][]) {
-		int tiles[][] = new int[array.length][array[0].length];
-		
-		for (int x = 0; x < tiles.length; x++) {
-			for (int y = 0; y < tiles[0].length; y++) {
-				tiles[x][y] = array[x][y];
-			}
-		}
-		
-		return tiles;
+	public ShaderProgram getShader() {
+		return toneShader;
 	}
 	
 }

@@ -35,6 +35,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.world.World;
 
 /**
  * A better implementation of a game state which includes a world object and a game context.

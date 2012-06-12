@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, Stefan Lange
+ * Copyright (c) 2012, Stefan Lange
  * 
  * All rights reserved.
  * 
@@ -27,33 +27,25 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.util;
+package de.radicalfish.test.world;
+import de.radicalfish.world.Camera;
+import de.radicalfish.world.World;
 
-/**
- * Contains operations for 2D arrays.
- * 
- * @author Stefan Lange
- * @version 0.1.0
- * @since 26.04.2012
- */
-public final class Arrays2D {
-	private Arrays2D() {}
+public class TestWorld implements World{
 	
-	/**
-	 * @param array
-	 *            the array to copy
-	 * @return a copy of the int array
-	 */
-	public static int[][] copyIntArray(int array[][]) {
-		int tiles[][] = new int[array.length][array[0].length];
+	private Camera camera;
+	
+	public TestWorld() {
 		
-		for (int x = 0; x < tiles.length; x++) {
-			for (int y = 0; y < tiles[0].length; y++) {
-				tiles[x][y] = array[x][y];
-			}
-		}
-		
-		return tiles;
+	}
+	
+	// INTERFACE
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public Camera getCamera() {
+		return camera;
+	}
+	public int getTileSize() {
+		return 16;
 	}
 	
 }

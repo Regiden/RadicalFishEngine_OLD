@@ -27,8 +27,9 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.test;
+package de.radicalfish.test.world;
 import java.io.File;
+import java.util.Arrays;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.ContextCapabilities;
@@ -41,20 +42,28 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-import de.radicalfish.World;
 import de.radicalfish.context.DefaultGameDelta;
 import de.radicalfish.context.DefaultGameVariables;
 import de.radicalfish.context.DefaultSettings;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.context.GameVariables;
+import de.radicalfish.context.Resources;
 import de.radicalfish.context.Settings;
+import de.radicalfish.debug.DebugHook;
+import de.radicalfish.debug.LWJGLDebugUtil;
 import de.radicalfish.debug.Logger;
+import de.radicalfish.effects.FBOPostProcesser;
+import de.radicalfish.effects.PostProcesser;
+import de.radicalfish.effects.ToneModel;
+import de.radicalfish.effects.ToneShaderEffect;
 import de.radicalfish.text.FontRenderer;
 import de.radicalfish.text.FontSheet;
 import de.radicalfish.text.SpriteFont;
 import de.radicalfish.text.SpriteFontRenderer;
 import de.radicalfish.text.StyledFont;
+import de.radicalfish.world.Animator;
+import de.radicalfish.world.World;
 
 public class GameContextTest extends StateBasedGame implements GameContext {
 	
@@ -65,6 +74,11 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	private GameDelta gameSpeed;
 	private StyledFont defaultFont;
 	private World world;
+	private Resources res;
+	
+	private ToneModel gameTone;
+	private PostProcesser postProcess;
+	private ToneShaderEffect postEffect;
 	
 	private DebugGameState debug;
 	
@@ -96,6 +110,7 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 			System.exit(0);
 		}
 		
+		Logger.none("------------------------ Slick2D ------------------------");
 		int width = gameWidth * gameScale, height = gameHeight * gameScale;
 		
 		AppGameContainer app = new AppGameContainer(new GameContextTest(), width, height, false);
@@ -126,25 +141,35 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		container.setFullscreen(settings.isFullscreen());
 		container.setDefaultFont(defaultFont);
 		
-		checkGraphicsCapabilities();
+		res = new Resources();
 		
+		checkGraphicsCapabilities();
 		if (settings.isLogging()) {
-			Logger.none(settings.toString());
+			Logger.none("------------------------ OpenGL Information ------------------------");
+			LWJGLDebugUtil.printInformationToLog();
+			Logger.none("------------------------ Settings ------------------------");
+			settings.printSettings();
+			Logger.none("------------------------ GAME ------------------------");
 		}
 		
-		canDebug = settings.isDebugging();
+		gameTone = new ToneModel();
+		postProcess = new FBOPostProcesser(this);
+		postEffect = new ToneShaderEffect();
+		postProcess.setEffect(postEffect);
 		
+		Animator ani = new Animator();
+		ani.loadAnimations(this, "de/radicalfish/assets/ani.xml", Arrays.asList(new String[] {"idle"}));
+		
+		TestGameState test = new TestGameState(this, world, 1);
+		addState(test);
+		
+		canDebug = settings.isDebugging();
 		if(canDebug) {
 			debug = new DebugGameState(this, world, 0);
 			debug.init(this, world);
 		}
 		
-		TestGameState test = new TestGameState(this, world, 1);
-		
-		addState(test);
-		
 		debug.addPerformanceListener(test, "Test State", de.matthiasmann.twl.Color.LIGHTBLUE);
-		
 		
 	}
 	
@@ -163,8 +188,14 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	
 	protected void preRenderState(GameContainer container, Graphics g) throws SlickException {
 		g.setFont(defaultFont);
+		postProcess.bind(this, g);
+		g.clear();
 	}
 	protected void postRenderState(GameContainer container, Graphics g) throws SlickException {
+		postProcess.unbind(this, g);
+		
+		postProcess.renderScene(this, g);
+		
 		renderDebug(g);
 		
 	}
@@ -251,7 +282,7 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		return container.getWidth();
 	}
 	public int getContainerHeight() {
-		return container.getWidth();
+		return container.getHeight();
 	}
 	public StateBasedGame getGame() {
 		return this;
@@ -271,10 +302,23 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	public GameVariables getGameVariables() {
 		return variables;
 	}
+	public ToneModel getGameTone() {
+		return gameTone;
+	}
+	public PostProcesser getPostProcesser() {
+		return postProcess;
+	}
 	public FontRenderer getFontRenderer() {
 		return fontRenderer;
 	}
 	public Font getDefaultFont() {
 		return defaultFont;
 	}
+	public Resources getResources() {
+		return res;
+	}
+	public DebugHook getDebugHook() {
+		return debug;
+	}
+
 }

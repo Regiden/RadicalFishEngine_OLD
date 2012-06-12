@@ -32,7 +32,7 @@ import java.util.Random;
 import org.newdawn.slick.util.FastTrig;
 
 /**
- * Math class which hopefully replaces {@link Math}.
+ * Some functions helpful add-ons to the Math class.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -78,8 +78,8 @@ public final class FastMath {
 		if (value < 0) {
 			temp = true;
 		}
-		int full = (int) abs(value);
-		float past = abs(value) - full;
+		int full = (int) Math.abs(value);
+		float past = Math.abs(value) - full;
 		
 		if (past < 0.5) {
 			past = full;
@@ -91,26 +91,6 @@ public final class FastMath {
 		}
 		
 		return past;
-	}
-	/**
-	 * @param value
-	 *            teh value to round
-	 * @return the rounded value like the Math class would do it.
-	 */
-	public static int mathRound(float value) {
-		return (int)Math.floor(value + 0.5f);
-	}
-	/**
-	 * @return the max value of x and y
-	 */
-	public static int max(int x, int y) {
-		return (x >= y) ? x : y;
-	}
-	/**
-	 * @return the min value of x and y
-	 */
-	public static int min(int x, int y) {
-		return (x <= y) ? x : y;
 	}
 	/**
 	 * @return a random number between start and end
@@ -144,31 +124,14 @@ public final class FastMath {
 		return SEED;
 	}
 	/**
-	 * @param value
-	 *            the value to check
-	 * @return the absolute value of the given one
+	 * Get the sine of an angle
+	 * 
+	 * @param radians
+	 *            The angle
+	 * @return The sine of the angle
 	 */
-	public static int abs(int value) {
-		return (value < 0) ? -value : value;
-	}
-	/**
-	 * @param value
-	 *            the value to check
-	 * @return the absolute value of the given one
-	 */
-	public static float abs(float value) {
-		return (value <= 0.0F) ? 0.0F - value : value;
-	}
-	/**
-	 * @param value
-	 *            an angle, in radians
-	 * @return the trigonometric sine of an angle
-	 */
-	public static float sin(float radians) {
-		return (float) Math.sin(radians);
-	}
 	public static float sinTrig(float radians) {
-		return (float)FastTrig.sin(radians);
+		return (float) FastTrig.sin(radians);
 	}
 	
 }

@@ -27,33 +27,26 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.util;
+package de.radicalfish.world;
 
 /**
- * Contains operations for 2D arrays.
+ * Describes a world the game plays in.
  * 
  * @author Stefan Lange
- * @version 0.1.0
- * @since 26.04.2012
+ * @version 0.0.0
+ * @since 11.03.2012
  */
-public final class Arrays2D {
-	private Arrays2D() {}
+public interface World {
+	
+	// GETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return the camera in use. Should never be null!
+	 */
+	public Camera getCamera();
 	
 	/**
-	 * @param array
-	 *            the array to copy
-	 * @return a copy of the int array
+	 * @return the size of a tile. can be ignored if the game does not requires tiles.
 	 */
-	public static int[][] copyIntArray(int array[][]) {
-		int tiles[][] = new int[array.length][array[0].length];
-		
-		for (int x = 0; x < tiles.length; x++) {
-			for (int y = 0; y < tiles[0].length; y++) {
-				tiles[x][y] = array[x][y];
-			}
-		}
-		
-		return tiles;
-	}
-	
+	public int getTileSize();
 }

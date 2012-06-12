@@ -57,6 +57,10 @@ public interface Settings {
 	 * Saves the settings.
 	 */
 	public void saveSettings(String path) throws SlickException;
+	/**
+	 * Can be used to print out the settings.
+	 */
+	public void printSettings();
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

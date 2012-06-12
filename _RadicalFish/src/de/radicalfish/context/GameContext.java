@@ -32,6 +32,9 @@ import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.state.StateBasedGame;
+import de.radicalfish.debug.DebugHook;
+import de.radicalfish.effects.PostProcesser;
+import de.radicalfish.effects.ToneModel;
 import de.radicalfish.text.FontRenderer;
 
 /**
@@ -45,7 +48,6 @@ public interface GameContext {
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	
 	/**
 	 * @return the base scale of the game.
 	 */
@@ -91,6 +93,14 @@ public interface GameContext {
 	 */
 	public GameVariables getGameVariables();
 	/**
+	 * @return a tone model to use for the game if any.
+	 */
+	public ToneModel getGameTone();
+	/**
+	 * @return the post processer used fot this can if any.
+	 */
+	public PostProcesser getPostProcesser();
+	/**
 	 * @return the font renderer to use.
 	 */
 	public FontRenderer getFontRenderer();
@@ -98,4 +108,12 @@ public interface GameContext {
 	 * @return the default font to use.
 	 */
 	public Font getDefaultFont();
+	/**
+	 * @return the resource manager for the game. can be null if not needed.
+	 */
+	public Resources getResources();
+	/**
+	 * @return the debug hook is any.
+	 */
+	public DebugHook getDebugHook();
 }

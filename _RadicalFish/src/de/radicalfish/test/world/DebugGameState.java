@@ -1,4 +1,4 @@
-package de.radicalfish.test;
+package de.radicalfish.test.world;
 import java.net.URL;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Graphics;
@@ -14,28 +14,26 @@ import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.renderer.Renderer;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.theme.ThemeManager;
-import de.radicalfish.TWLGameState;
-import de.radicalfish.World;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.debug.DebugHook;
 import de.radicalfish.debug.DeveloperConsole;
-import de.radicalfish.debug.LogConsole;
-import de.radicalfish.debug.Logger;
 import de.radicalfish.debug.OptionsPanel;
 import de.radicalfish.debug.PerformanceGraph;
 import de.radicalfish.debug.PerformanceListener;
+import de.radicalfish.debug.TWLGameState;
 import de.radicalfish.debug.TWLInputForwarder;
 import de.radicalfish.debug.TWLRootPane;
 import de.radicalfish.debug.ToneEditor;
 import de.radicalfish.debug.ToolBox;
 import de.radicalfish.debug.parser.PropertyInputParser;
 import de.radicalfish.debug.parser.URLInputParser;
+import de.radicalfish.world.World;
 
-public class DebugGameState extends TWLGameState implements PerformanceListener {
+public class DebugGameState extends TWLGameState implements PerformanceListener, DebugHook {
 	
 	private TWLRootPane root;
 	private GUI gui;
-	
 	private PerformanceGraph graph;
 	
 	private int delta;
@@ -78,28 +76,18 @@ public class DebugGameState extends TWLGameState implements PerformanceListener 
 		super.keyPressed(key, c);
 	}
 	
-	// METHODS
+	// INTERFACE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * @param visible
-	 *            the visibility of the debug view
-	 */
-	public void setVisible(boolean visible) {
-		root.setVisible(visible);
-	}
-	/**
-	 * @return true if the debug view is visible.
-	 */
 	public boolean isVisible() {
 		return root.isVisible();
 	}
-	
+	public void setVisible(boolean visible) {
+		root.setVisible(visible);
+	}
 	public void addPerformanceListener(PerformanceListener listener, String name, Color color) {
 		graph.addPerformanceListener(listener, name, color);
 	}
 	
-	// INTERFACE
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public long getMessuredTime() {
 		return delta * 1000;
 	}
@@ -117,8 +105,7 @@ public class DebugGameState extends TWLGameState implements PerformanceListener 
 	private void buildGUI(final GameContext context) {
 		final OptionsPanel options = new OptionsPanel(context.getSettings());
 		final DeveloperConsole console = new DeveloperConsole();
-		final LogConsole log = new LogConsole();
-		final ToneEditor toneeditor = new ToneEditor();
+		final ToneEditor toneeditor = new ToneEditor(context.getGameTone());
 		graph = new PerformanceGraph();
 		
 		ToolBox toolbox = new ToolBox(context.getContainerWidth(), context.getContainerHeight());
@@ -126,7 +113,6 @@ public class DebugGameState extends TWLGameState implements PerformanceListener 
 		
 		toolbox.addButton("Options", options);
 		toolbox.addButton("Console", console);
-		toolbox.addButton(" Log ", log);
 		toolbox.addButton(" Tone ", toneeditor);
 		toolbox.addButton("Performance", graph);
 		
@@ -145,7 +131,6 @@ public class DebugGameState extends TWLGameState implements PerformanceListener 
 			public void run() {
 				options.adjustSize();
 				console.adjustSize();
-				log.adjustSize();
 				toneeditor.adjustSize();
 				graph.adjustSize();
 			}
@@ -154,7 +139,6 @@ public class DebugGameState extends TWLGameState implements PerformanceListener 
 			public void run() {
 				options.setVisible(false);
 				console.setVisible(false);
-				log.setVisible(false);
 				toneeditor.setVisible(false);
 				graph.setVisible(false);
 			}
@@ -167,7 +151,6 @@ public class DebugGameState extends TWLGameState implements PerformanceListener 
 		
 		toolbox.createToolbox();
 		options.setVisible(false);
-		log.setVisible(false);
 		toneeditor.setVisible(false);
 		console.setVisible(false);
 		graph.setVisible(false);
@@ -175,15 +158,11 @@ public class DebugGameState extends TWLGameState implements PerformanceListener 
 		console.addInputParser(new URLInputParser());
 		console.addInputParser(new PropertyInputParser(context.getSettings()));
 		
-		Logger.addLogListener(log);
-		
 		root.add(options);
 		root.add(toolbox);
 		root.add(console);
-		root.add(log);
 		root.add(toneeditor);
 		root.add(graph);
-		
 		
 		graph.addPerformanceListener(this, "Total Time", Color.ORANGE);
 	}

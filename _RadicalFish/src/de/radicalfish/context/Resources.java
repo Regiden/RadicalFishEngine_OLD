@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.util;
+package de.radicalfish.context;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -47,41 +47,30 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * This class is responsible for the image loading in any way. Best use this to load all the data in one step and use
- * the get methods to obtain a reference to an image or a sound file. Music files are not included as well as animations
- * (Music = only one channel, pulling a new file means deleting the old | Animations: have a SpriteSheet as backend
- * which can be loaded trough this loader)
- * 
+ * This class can be used as a loader for resources to keep memory in check. all getter will just return references to
+ * Images, SpriteSheets or Animations. The C'Tor supports a base path which will be added <b>before</b> the name of the
+ * file to make access easier to write.
  * 
  * @author Stefan Lange
  * @version 1.0.0
  * @since 16.11.2011
  */
-public final class Resources {
-	
-	/**
-	 * The singleton instance of this class.
-	 */
-	public static final Resources INSTANCE = new Resources();
+public class Resources {
 	
 	private HashMap<String, Image> images;
 	private HashMap<String, SpriteSheet> sheets;
 	private HashMap<String, Sound> sounds;
 	
-	private boolean initiated = false;
+	private String basePath;
 	
-	// PRIVATE C'TOR AND INIT
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private Resources() {
+	public Resources() {
+		this("");
 	}
-	private void init() {
-		if (initiated)
-			return;
+	public Resources(String basePath) {
+		this.basePath = basePath;
 		images = new HashMap<String, Image>();
 		sheets = new HashMap<String, SpriteSheet>();
 		sounds = new HashMap<String, Sound>();
-		
-		initiated = true;
 	}
 	
 	// METHODS
@@ -93,9 +82,9 @@ public final class Resources {
 	 *            the path to the xml file
 	 * @param deffered
 	 *            true if the resources should be loaded deferred
+	 * @throws SlickException 
 	 */
-	public void LoadAll(String filePath, boolean deffered) {
-		init();
+	public void LoadAll(String filePath, boolean deffered) throws SlickException {
 		if (deffered)
 			LoadingList.setDeferredLoading(true);
 		
@@ -110,7 +99,7 @@ public final class Resources {
 				}
 			});
 			
-			Document doc = builder.parse(ResourceLoader.getResourceAsStream(filePath));
+			Document doc = builder.parse(ResourceLoader.getResourceAsStream(basePath + filePath));
 			Element docElement = doc.getDocumentElement();
 			Element images = (Element) docElement.getElementsByTagName("images").item(0);
 			Element sheets = (Element) docElement.getElementsByTagName("spritesheets").item(0);
@@ -141,7 +130,7 @@ public final class Resources {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new SlickException(e.getMessage(), e.getCause());
 		}
 		
 	}
@@ -158,10 +147,9 @@ public final class Resources {
 	 * @throws SlickException
 	 */
 	public Image loadImage(String key, String path) throws SlickException {
-		init();
 		if (images.containsKey(key))
 			return images.get(key);
-		Image image = new Image(path, false, Image.FILTER_NEAREST);
+		Image image = new Image(basePath + path, false, Image.FILTER_NEAREST);
 		images.put(key, image);
 		return image;
 	}
@@ -177,32 +165,11 @@ public final class Resources {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends Image> T loadImageAs(String key, Image image) {
-		init();
 		if (images.containsKey(key))
 			return (T) images.get(key); // need SuppressWarnings (it is save due to the extends but java does not see
 										// this at runtime ;)
 		images.put(key, image);
 		return (T) image; // same as above :)
-	}
-	/**
-	 * @param key
-	 *            the key of the image
-	 * @return a reference of the image specified by <code>key</code> or null if the key does not exists in the map
-	 */
-	public Image getImage(String key) {
-		init();
-		return images.get(key);
-	}
-	/**
-	 * @param key
-	 *            the key of the image
-	 * @return a reference of the image (casted to left handed type) specified by <code>key</code> or null if the key
-	 *         does not exists in the map
-	 */
-	@SuppressWarnings("unchecked")
-	public <T extends Image> T getImageAs(String key) {
-		init();
-		return (T) images.get(key);
 	}
 	/**
 	 * Deletes an image from the map an frees all native resources.
@@ -225,7 +192,6 @@ public final class Resources {
 	 * @throws SlickException
 	 */
 	public void destroyImage(String key, boolean freeResources) throws SlickException {
-		init();
 		if (!images.containsKey(key))
 			return;
 		
@@ -251,22 +217,11 @@ public final class Resources {
 	 * @throws SlickException
 	 */
 	public SpriteSheet loadSpriteSheet(String key, String path, int tileWidth, int tileHeight) throws SlickException {
-		init();
 		if (sheets.containsKey(key))
 			return sheets.get(key);
-		SpriteSheet sheet = new SpriteSheet(path, tileWidth, tileHeight);
+		SpriteSheet sheet = new SpriteSheet(basePath + path, tileWidth, tileHeight);
 		sheets.put(key, sheet);
 		return sheet;
-	}
-	/**
-	 * @param key
-	 *            the key of the spritesheet
-	 * @return a reference of the spritesheet specified by <code>key</code> or null if the key does not exists in the
-	 *         map
-	 */
-	public SpriteSheet getSpriteSheet(String key) {
-		init();
-		return sheets.get(key);
 	}
 	/**
 	 * Deletes a spritesheet from the map an frees all native resources.
@@ -289,7 +244,6 @@ public final class Resources {
 	 * @throws SlickException
 	 */
 	public void destroySpriteSheet(String key, boolean freeResources) throws SlickException {
-		init();
 		if (!sheets.containsKey(key))
 			return;
 		
@@ -312,21 +266,11 @@ public final class Resources {
 	 *             if the map already contains an sound with <code>key</code> or sound loading failed
 	 */
 	public Sound loadSound(String key, String path) throws SlickException {
-		init();
 		if (sounds.containsKey(key))
 			return sounds.get(key);
-		Sound sound = new Sound(path);
+		Sound sound = new Sound(basePath + path);
 		sounds.put(key, sound);
 		return sound;
-	}
-	/**
-	 * @param key
-	 *            the key of the sound
-	 * @return a reference of the sound specified by <code>key</code> or null if the key does not exists in the map
-	 */
-	public Sound getSound(String key) {
-		init();
-		return sounds.get(key);
 	}
 	/**
 	 * Deletes a sound from the map.
@@ -335,9 +279,57 @@ public final class Resources {
 	 *            he key of the sound
 	 */
 	public void destorySound(String key) {
-		init();
 		if (!sounds.containsKey(key))
 			return;
 		sounds.remove(key);
 	}
+	
+	public boolean containsImage(String key) {
+		return images.containsKey(key);
+	}
+	public boolean containsSpriteSheet(String key) {
+		return images.containsKey(key);
+	}
+	public boolean containsSound(String key) {
+		return sounds.containsKey(key);
+	}
+	
+	// GETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @param key
+	 *            the key of the image
+	 * @return a reference of the image specified by <code>key</code> or null if the key does not exists in the map
+	 */
+	public Image getImage(String key) {
+		return images.get(key);
+	}
+	/**
+	 * @param key
+	 *            the key of the image
+	 * @return a reference of the image (casted to left handed type) specified by <code>key</code> or null if the key
+	 *         does not exists in the map
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends Image> T getImageAs(String key) {
+		return (T) images.get(key);
+	}
+	/**
+	 * @param key
+	 *            the key of the spritesheet
+	 * @return a reference of the spritesheet specified by <code>key</code> or null if the key does not exists in the
+	 *         map
+	 */
+	public SpriteSheet getSpriteSheet(String key) {
+		return sheets.get(key);
+	}
+	/**
+	 * @param key
+	 *            the key of the sound
+	 * @return a reference of the sound specified by <code>key</code> or null if the key does not exists in the map
+	 */
+	public Sound getSound(String key) {
+		return sounds.get(key);
+	}
+	
 }

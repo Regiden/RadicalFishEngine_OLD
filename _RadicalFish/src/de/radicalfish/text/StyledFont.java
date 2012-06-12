@@ -29,6 +29,7 @@
  */
 package de.radicalfish.text;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
@@ -40,7 +41,7 @@ import org.newdawn.slick.SlickException;
  * @version 1.0.0
  * @since 15.04.2012
  */
-public interface StyledFont extends org.newdawn.slick.Font {
+public interface StyledFont extends Font {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

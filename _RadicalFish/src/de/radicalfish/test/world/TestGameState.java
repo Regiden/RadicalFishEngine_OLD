@@ -27,26 +27,26 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.test;
+package de.radicalfish.test.world;
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import de.radicalfish.GameState;
-import de.radicalfish.World;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.debug.Logger;
 import de.radicalfish.debug.PerformanceListener;
 import de.radicalfish.extern.Easing;
 import de.radicalfish.extern.SimpleFX;
+import de.radicalfish.test.MoveTester;
+import de.radicalfish.world.World;
 
 public class TestGameState extends GameState implements PerformanceListener {
 	
 	public MoveTester dude;
-	private Image image;
+	private Image image, scene;
 	private SimpleFX effect, effect2;
 	
 	private long utime, rtime;
@@ -59,8 +59,9 @@ public class TestGameState extends GameState implements PerformanceListener {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void init(GameContext context, World world) throws SlickException {
 		image = new Image("de/radicalfish/testdata/TESTBLOCK.png");
+		scene = new Image("de/radicalfish/testdata/scene.png", false, Image.FILTER_NEAREST);
 		
-		effect = new SimpleFX(30, 400, 3 * 1000, Easing.LINEAR);
+		effect = new SimpleFX(30, 400, 3 * 1000, Easing.QUAD_IN_OUT);
 		effect2 = new SimpleFX(30, 400, 3 * 1000, Easing.LINEAR);
 	}
 	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
@@ -95,8 +96,9 @@ public class TestGameState extends GameState implements PerformanceListener {
 	public void render(GameContext context, World world, Graphics g) throws SlickException {
 		long locTime = System.nanoTime();
 		
-		g.setColor(Color.green.darker().darker());
-		g.fillRect(0, 0, context.getContainerWidth(), context.getContainerHeight());
+		g.scale(2, 2);
+		scene.draw();
+		g.resetTransform();
 		
 		image.draw(effect.getValue(), 50);
 		image.draw(effect2.getValue(), 100);

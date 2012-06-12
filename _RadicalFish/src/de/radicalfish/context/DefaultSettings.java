@@ -80,9 +80,7 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	public void saveSettings(String path) {
 		
 	}
-	
-	public String toString() {
-		Logger.none("------------------------ Settings ------------------------");
+	public void printSettings() {
 		Logger.none("Operating System: " + system);
 		Logger.none("Game Path:        " + gamePath);
 		Logger.none("User Path:        " + userPath);
@@ -109,8 +107,6 @@ public class DefaultSettings implements Settings, GraphicDetails {
 			Logger.none("Others:");
 			printAllUncommonProperties();
 		}
-		Logger.none("------------------------ Settings ------------------------");
-		return "";
 	}
 	
 	// PRIVATE

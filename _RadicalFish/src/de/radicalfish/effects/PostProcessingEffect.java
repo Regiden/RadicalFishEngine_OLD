@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, Stefan Lange
+ * Copyright (c) 2012, Stefan Lange
  * 
  * All rights reserved.
  * 
@@ -27,33 +27,32 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.util;
+package de.radicalfish.effects;
+import org.newdawn.slick.Graphics;
+import de.radicalfish.context.GameContext;
 
 /**
- * Contains operations for 2D arrays.
+ * A PostProcessing Effect which can be added to the {@link PostProcesser}. This is just a small interface and all your effects
+ * should be managed by yourself and just implement this interface to make life easy for a {@link PostProcesser}.
  * 
  * @author Stefan Lange
- * @version 0.1.0
- * @since 26.04.2012
+ * @version 1.0.0
+ * @since 07.06.2012
  */
-public final class Arrays2D {
-	private Arrays2D() {}
+public interface PostProcessingEffect {
 	
+	// METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * @param array
-	 *            the array to copy
-	 * @return a copy of the int array
+	 * Starts this effect.
 	 */
-	public static int[][] copyIntArray(int array[][]) {
-		int tiles[][] = new int[array.length][array[0].length];
-		
-		for (int x = 0; x < tiles.length; x++) {
-			for (int y = 0; y < tiles[0].length; y++) {
-				tiles[x][y] = array[x][y];
-			}
-		}
-		
-		return tiles;
-	}
+	public void begin(GameContext context, Graphics g);
+	/**
+	 * Ends this effect.
+	 */
+	public void end(GameContext context, Graphics g);
+	
+	
+	
 	
 }

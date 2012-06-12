@@ -32,7 +32,7 @@ import de.matthiasmann.twl.ActionMap;
 import de.matthiasmann.twl.DesktopArea;
 import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.Widget;
-import de.radicalfish.TWLGameState;
+import de.radicalfish.debug.TWLGameState;
 
 /**
  * RootPane for all game states.
@@ -80,9 +80,7 @@ public class TWLRootPane extends DesktopArea {
     protected boolean handleEvent(Event evt) {
         if (super.handleEvent(evt)) {
             return true;
-            
         }
-       
         
         switch (evt.getType()) {
             case KEY_PRESSED:

@@ -48,6 +48,8 @@ public class FBO {
 	private int width, height;
 	private int pushAttrib = GL_VIEWPORT_BIT | GL_TRANSFORM_BIT | GL_COLOR_BUFFER_BIT;
 	
+	private boolean inUse = false;
+	
 	public static final int NO_BITS = 0;
 	
 	public FBO(Texture texture) throws SlickException {
@@ -153,6 +155,8 @@ public class FBO {
 	    glLoadIdentity();
 		
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
+		
+		inUse = true;
 	}
 	
 	/**
@@ -170,14 +174,22 @@ public class FBO {
 		glPopMatrix();
 		if (pushAttrib != NO_BITS) 
 			glPopAttrib();
+		
+		inUse = false;
 	}
 	
-		
 	/**
 	 * @see org.newdawn.slick.Graphics#destroy()
 	 */
 	public void release() {
 		glDeleteFramebuffersEXT(id);
 		id = 0;
+	}
+
+	/**
+	 * @return true if the FBO is currently bing used.
+	 */
+	public boolean isInUse() {
+		return inUse;
 	}
 }

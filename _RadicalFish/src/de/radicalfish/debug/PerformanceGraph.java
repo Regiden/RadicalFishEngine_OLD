@@ -46,7 +46,6 @@ import de.matthiasmann.twl.ResizableFrame;
 import de.matthiasmann.twl.ScrollPane;
 import de.matthiasmann.twl.SplitPane;
 import de.matthiasmann.twl.SplitPane.Direction;
-import de.matthiasmann.twl.TextWidget;
 import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
@@ -94,13 +93,6 @@ public class PerformanceGraph extends ResizableFrame {
 		
 		listeners.add(model);
 		list.addCheckBox(name, color, model.checkbox, model.lastTime);
-	}
-	
-	// OVERRIDE
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	@Override
-	protected void paintWidget(GUI gui) {
-		super.paintWidget(gui);
 	}
 	
 	// INTERN
@@ -178,7 +170,7 @@ public class PerformanceGraph extends ResizableFrame {
 	
 	// INTERN CLASSES
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private class PGraphArea extends TextWidget {
+	private class PGraphArea extends Widget {
 		private LWJGLRenderer renderer;
 		
 		@Override

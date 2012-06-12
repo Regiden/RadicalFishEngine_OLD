@@ -29,8 +29,8 @@
  */
 package de.radicalfish.context;
 import org.newdawn.slick.SlickException;
-import de.radicalfish.World;
 import de.radicalfish.extern.Easing;
+import de.radicalfish.world.World;
 
 /**
  * Interface which should handle manipulating delta by a speed value. Useful for slow down effects.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, Stefan Lange
+ * Copyright (c) 2012, Stefan Lange
  * 
  * All rights reserved.
  * 
@@ -27,18 +27,58 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish;
+package de.radicalfish.util;
 
+import java.util.ArrayList;
+import java.util.EmptyStackException;
 
 /**
- * Describes a world the game plays in. This class will grow when needed. The idea is to have a non-static way of
- * holding entities across states. The same goes for maps. One state is for playing a map which can be loaded in another
- * and set to the world as current map.
+ * A stack which uses an ArrayList to hold values.
  * 
  * @author Stefan Lange
  * @version 0.0.0
- * @since 11.03.2012
+ * @since 11.06.2012
  */
-public interface World {
+public class ArrayStack<T> {
+	
+	private ArrayList<T> list;
+	
+	public ArrayStack() {
+		this(10);
+	}
+	public ArrayStack(int size) {
+		list = new ArrayList<T>();
+	}
+	
+	// STACK METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public T push(T element) {
+		list.add(element);
+		return element;
+	}
+	public T pop() {
+		int len = list.size();
+		if (len == 0)
+			throw new EmptyStackException();
+		return list.remove(len - 1);
+	}
+	
+	/**
+	 * @return the top most element. Does not remove the element.
+	 * @throws EmptyStackException
+	 */
+	public T peek() throws EmptyStackException {
+		int len = list.size();
+		if (len == 0)
+			throw new EmptyStackException();
+		list.get(len - 1);
+		return list.get(len - 1);
+	}
+	
+	// METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public boolean isEmpty() {
+		return list.isEmpty();
+	}
 	
 }

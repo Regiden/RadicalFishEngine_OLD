@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, Stefan Lange
+ * Copyright (c) 2012, Stefan Lange
  * 
  * All rights reserved.
  * 
@@ -27,33 +27,30 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.util;
+package de.radicalfish.debug;
+import de.matthiasmann.twl.Color;
 
 /**
- * Contains operations for 2D arrays.
+ * class which can be passed in a GameContext as general hook to the debugging tools
  * 
  * @author Stefan Lange
- * @version 0.1.0
- * @since 26.04.2012
+ * @version 1.0.0
+ * @since 03.06.2012
  */
-public final class Arrays2D {
-	private Arrays2D() {}
+public interface DebugHook {
 	
 	/**
-	 * @param array
-	 *            the array to copy
-	 * @return a copy of the int array
+	 * Adds an Performance Listener to the Performance graph if used.
 	 */
-	public static int[][] copyIntArray(int array[][]) {
-		int tiles[][] = new int[array.length][array[0].length];
-		
-		for (int x = 0; x < tiles.length; x++) {
-			for (int y = 0; y < tiles[0].length; y++) {
-				tiles[x][y] = array[x][y];
-			}
-		}
-		
-		return tiles;
-	}
+	public void addPerformanceListener(PerformanceListener listener, String name, Color color);
+	/**
+	 * @return true if the debug overlay is currently rendered
+	 */
+	public boolean isVisible();
+	/**
+	 * @param visible
+	 *            true if the debug overlay should be rendered.
+	 */
+	public void setVisible(boolean visible);
 	
 }

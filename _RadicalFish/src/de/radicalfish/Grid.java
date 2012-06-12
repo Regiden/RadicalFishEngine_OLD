@@ -1,3 +1,4 @@
+package de.radicalfish;
 /*
  * Copyright (c) 2011, Stefan Lange
  * 
@@ -27,33 +28,85 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.util;
+
+import java.io.Serializable;
+import de.radicalfish.util.FastMath;
 
 /**
- * Contains operations for 2D arrays.
+ * A single grid with a x and y position.
  * 
  * @author Stefan Lange
- * @version 0.1.0
- * @since 26.04.2012
+ * @version 1.0.0
+ * @since 03.11.2011
  */
-public final class Arrays2D {
-	private Arrays2D() {}
+public class Grid implements Serializable {
+	private static final long serialVersionUID = 1L;
 	
+	public int x, y;
+	
+	// C'Tors
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * @param array
-	 *            the array to copy
-	 * @return a copy of the int array
+	 * Creates a new Grid at 0, 0.
 	 */
-	public static int[][] copyIntArray(int array[][]) {
-		int tiles[][] = new int[array.length][array[0].length];
-		
-		for (int x = 0; x < tiles.length; x++) {
-			for (int y = 0; y < tiles[0].length; y++) {
-				tiles[x][y] = array[x][y];
-			}
-		}
-		
-		return tiles;
+	public Grid() {
+		this(0, 0);
+	}
+	/**
+	 * Creates a new Grid at <code>x</code>, <code>y</code>.
+	 * 
+	 * @param x
+	 *            the x position
+	 * @param y
+	 *            the y position
+	 */
+	public Grid(int x, int y) {
+		set(x, y);
 	}
 	
+	// METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return true if the positions are equal.
+	 */
+	public boolean equals(Grid grid) {
+		return grid.x == this.x && grid.y == this.y;
+	}
+	/**
+	 * @return a copy of this grid
+	 */
+	public Grid copy() {
+		return new Grid(x, y);
+	}
+	
+	public String toString() {
+		return "(Grid: " + x + ", " + y + ")";
+	}
+	
+	// SETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Sets the grid to a new position.
+	 * 
+	 * @param x
+	 *            the new x grid.
+	 * @param y
+	 *            the new y grid
+	 */
+	public void set(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+	/**
+	 * Sets the grid to a new position. the position gets rounded.
+	 * 
+	 * @param x
+	 *            the new x grid.
+	 * @param y
+	 *            the new y grid
+	 */
+	public void set(float x, float y) {
+		this.x = FastMath.round(x);
+		this.y = FastMath.round(y);
+	}
 }

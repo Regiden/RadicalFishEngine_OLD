@@ -21,7 +21,5 @@ shaders:true
 postprocessing:true
 
 # Debug Details
-debug.texture.count:true
-debug.fps.graph:true
-debug.fps.graph.samples:200
+debug.xml.animations:true
 debug.sprite.rectangle:false

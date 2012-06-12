@@ -34,6 +34,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.PixelFormat;
 import org.newdawn.slick.opengl.shader.ShaderProgram;
 import org.newdawn.slick.util.ResourceLoader;
 import de.matthiasmann.twl.BorderLayout;
@@ -50,14 +51,20 @@ import de.matthiasmann.twl.theme.ThemeManager;
 public class BorderLayoutTest extends DesktopArea {
 	
 	static ShaderProgram prog;
+	static PixelFormat pixelFormat;
 	
 	public static void main(String[] args) {
 		try {
+			
+			
+			
 			Display.setDisplayMode(new DisplayMode(800, 600));
 			Display.setResizable(true);
-			Display.setTitle("TWL Slider Demo");
+			//Display.setTitle("TWL Slider Demo");
 			Display.setVSyncEnabled(true);
-			Display.create();
+			
+	pixelFormat = new PixelFormat(8, 0, 8);
+	Display.create(pixelFormat);
 			
 			
 			LWJGLRenderer renderer = new LWJGLRenderer();

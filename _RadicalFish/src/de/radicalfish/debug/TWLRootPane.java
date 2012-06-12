@@ -32,7 +32,6 @@ import de.matthiasmann.twl.ActionMap;
 import de.matthiasmann.twl.DesktopArea;
 import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.Widget;
-import de.radicalfish.TWLGameState;
 
 /**
  * RootPane for a TWL game state. It forwards input events which where not handled by the UI to the game state.

@@ -30,8 +30,8 @@
 package de.radicalfish.effects;
 
 /**
- * This a color model for toning. Instead of just using red, green and blue this model uses overshoot value for each
- * color. This can be used to flood a image or whatever with a ceratin color. There is also a chroma value. This value
+ * This is a color model for toning. Instead of just using red, green and blue this model uses overshoot value for each
+ * color. This can be used to flood a image or whatever with a certain color. There is also a chroma value. This value
  * should make the area grayer the smaller the value is. Chroma has an overshoot value too which should make the overall
  * color brighter. This feature can be used for shader to manipulate the screen tone or the tone of an image. Every
  * value has a range of 0.0 - 1.0. There will be no Exception if a setter detects a value out of range. instead it sets

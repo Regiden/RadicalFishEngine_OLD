@@ -29,9 +29,9 @@
  */
 package de.radicalfish.context;
 import org.newdawn.slick.SlickException;
-import de.radicalfish.World;
 import de.radicalfish.extern.Easing;
 import de.radicalfish.extern.SimpleFX;
+import de.radicalfish.world.World;
 
 /**
  * An Implementation of the {@link GameDelta} interface which supports easing to a target speed.
