@@ -28,8 +28,41 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.util;
+import org.lwjgl.opengl.GL11;
 
 public class Utils {
+	
+	private static int pushCount = 0;
+	
+	/**
+	 * Simply calls GL11.pushMatrix(), but saves the amount of pushes you made.
+	 */
+	public static void pushMatrix() {
+		GL11.glPushMatrix();
+		pushCount++;
+	}
+	/**
+	 * Simply calls GL11.popMatrix(), decreases the push count by 1.
+	 */
+	public static void popMatrix() {
+		GL11.glPopMatrix();
+		pushCount--;
+	}
+	/**
+	 * Resets the stack by call popMatrix as long as <code>getPushCount</code> return a value > 0
+	 */
+	public static void resetMatrixStack() {
+		while(getPushCount() > 0) {
+			popMatrix();
+		}
+	}
+	
+	/**
+	 * @return the depth of the push stack.
+	 */
+	public static int getPushCount() {
+		return pushCount;
+	}
 	
 	/**
 	 * Check is the object is null and if so throws an NPE.
@@ -41,28 +74,29 @@ public class Utils {
 	}
 	
 	/**
-	 * Formats the given <code>time</code> to a string based on it's size. 
-	 * If the size of the time is to larger it will be push into the next time unit. ns -> us -> ms
-	 * e.g.
+	 * Formats the given <code>time</code> to a string based on it's size. If the size of the time is to larger it will
+	 * be push into the next time unit. ns -> us -> ms e.g.
+	 * 
 	 * <pre>
 	 *  1.) time = 123456789 nano seconds
 	 *  2.) time /= 1000
 	 *  3.) check if time is still to large and repeat second step
 	 *  return as string
-	 *  </pre>
+	 * </pre>
+	 * 
 	 * @param time
 	 * @return
 	 */
-	public static String formatTime (long time) {
+	public static String formatTime(long time) {
 		int steps = 0;
-		while(time >= 1000) {
+		while (time >= 1000) {
 			time /= 1000;
 			steps++;
 		}
 		return time + getTimeUnit(steps);
 	}
 	private static String getTimeUnit(int steps) {
-		switch(steps) {
+		switch (steps) {
 			case 0:
 				return "ns";
 			case 1:
@@ -73,8 +107,8 @@ public class Utils {
 				return "s";
 			case 4:
 				return "m";
-			case 5: 
-			return "h";
+			case 5:
+				return "h";
 			case 6:
 				return "days";
 			case 7:
