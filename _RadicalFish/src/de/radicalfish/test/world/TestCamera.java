@@ -66,25 +66,25 @@ public class TestCamera implements Camera {
 	// INTERFACE - GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public Vector2f getCurrent() {
-		return null;
+		return currentPosition;
 	}
 	public float getCurrentX() {
-		return 0;
+		return currentPosition.x;
 	}
 	public float getCurrentY() {
-		return 0;
+		return currentPosition.y;
 	}
 	public Vector2f getTarget() {
-		return null;
+		return targetPosition;
 	}
 	public float getTargetX() {
-		return 0;
+		return targetPosition.x;
 	}
 	public float getTargetY() {
-		return 0;
+		return targetPosition.y;
 	}
 	public float getSpeed() {
-		return 0;
+		return normalSpeed;
 	}
 	
 	// INTERFACE - SETTER

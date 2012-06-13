@@ -36,7 +36,7 @@ public class TestWorld implements World{
 	private Camera camera;
 	
 	public TestWorld() {
-		
+		camera = new TestCamera();
 	}
 	
 	// INTERFACE
