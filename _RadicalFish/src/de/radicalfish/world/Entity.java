@@ -33,10 +33,12 @@ import java.util.Locale;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import de.radicalfish.Grid;
 import de.radicalfish.Rectangle2D;
 import de.radicalfish.context.GameContext;
+import de.radicalfish.context.GameDelta;
 
 /**
  * An abstract basic Entity holding some default fields. Most field are public to ensure fast usage in sub-classes an
@@ -44,8 +46,10 @@ import de.radicalfish.context.GameContext;
  * <p>
  * it uses an offset position to set a real bounding box around the part of the entity that should be check.
  * <p>
- * For collision the method <code>getBounds</code> should be uses. best case it returns the position plus the offset and
- * the correct width and height to make collision as tight as possible.
+ * For collision the method <code>getBounds</code> should be used. You can use the method
+ * <code>calculateCollsionBox</code> to automatically make a the rectangle based on the postion, offset and the
+ * width/height.
+ * Updates on the Animator and the flash effect will be made with the modified delta value.
  * 
  * 
  * @author Stefan Lange
@@ -56,7 +60,7 @@ public abstract class Entity implements Serializable {
 	
 	private static final long serialVersionUID = 100L;
 	
-	// used for collision
+	private static Image MISSINGSPRITE;
 	private static final Rectangle2D BOUNDS = new Rectangle2D();
 	
 	private Color flashColor = new Color(1f, 1f, 1f, 1f);
@@ -69,7 +73,7 @@ public abstract class Entity implements Serializable {
 	protected Vector2f offset = new Vector2f(); // starting from the top-left of the collision box
 	protected Vector2f offscreen = new Vector2f(200, 200);
 	
-	private Grid grid = new Grid();
+	protected Grid grid = new Grid();
 	
 	protected Animator animator = new Animator();
 	
@@ -93,37 +97,65 @@ public abstract class Entity implements Serializable {
 		}
 	}
 	
+	// STATIC METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return a default image with the size of 32x32. Useful for testing.
+	 * @throws SlickException
+	 */
+	public static Image getMissingImage() throws SlickException {
+		if (MISSINGSPRITE == null) {
+			MISSINGSPRITE = new Image("de/radicalfish/assests/missinsprite.png");
+		}
+		return MISSINGSPRITE;
+	}
+	/**
+	 * Checks if the given <code>image</code> is null and returns the missing image constant if so.
+	 * 
+	 * @param image
+	 *            the Image to test
+	 * @return the missing sprite if <code>image</code> is null, otherwise <code>image</code>.
+	 * @throws SlickException
+	 */
+	public static Image checkMissing(Image image) throws SlickException {
+		if (image == null) {
+			return getMissingImage();
+		} else {
+			return image;
+		}
+	}
+	
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Can be called by an entity system to load files and such. Also this should be used to load the animations into the animator via
-	 * <code>animator.loadAnimations()</code>.
+	 * Can be called by an entity system to load images and such. Also this should be used to load the animations into
+	 * the animator via <code>animator.loadAnimations()</code>.
 	 * 
 	 * @param context
 	 *            the context the game runs in
 	 * @param world
 	 *            the world in which the entity lives
 	 */
-	protected void init(GameContext context, World world) {}
+	public abstract void init(GameContext context, World world) throws SlickException;
 	/**
 	 * Updates the entity. this should be called instead of <code>doUpdate</code>. <code>doUpdate</code> gets called by
 	 * this method after automatically checking if the entity needs an update. If this is not wanted this method can be
-	 * ignored an the <code>doUpdate</code> method can be used directly.
-	 * This also updates the {@link Animator} used for this entity.
+	 * ignored an the <code>doUpdate</code> method can be used directly. This also updates the {@link Animator} used for
+	 * this entity.
 	 * 
 	 * @param context
 	 *            the context the game runs in
 	 * @param world
 	 *            the world in which the entity lives
 	 * @param delta
-	 *            the time since the last update.
+	 *            the {@link GameDelta} object containing the delta values.
 	 */
-	public final void update(GameContext context, World world, float delta) {
+	public final void update(GameContext context, World world, GameDelta delta) throws SlickException {
 		if (isActive()) {
 			old.set(position);
 			
-			animator.update(delta);
-			updateFlashTimer(delta);
+			animator.update(delta.getDelta());
+			updateFlashTimer(delta.getDelta());
 			doUpdate(context, world, delta);
 			
 			calculateScreenPosition(world.getCamera().getCurrent());
@@ -138,9 +170,9 @@ public abstract class Entity implements Serializable {
 	 * @param world
 	 *            the world in which the entity lives
 	 * @param delta
-	 *            the time since the last update.
+	 *            tthe {@link GameDelta} object containing the delta values.
 	 */
-	public abstract void doUpdate(GameContext context, World world, float delta);
+	public abstract void doUpdate(GameContext context, World world, GameDelta delta) throws SlickException;
 	/**
 	 * Renders the entity. this should be called instead of <code>doRender</code>. <code>doRender</code> gets called by
 	 * this method after automatically checking if the entity needs to render. If this is not wanted this method can be
@@ -153,7 +185,7 @@ public abstract class Entity implements Serializable {
 	 * @param g
 	 *            the graphics context to draw to
 	 */
-	public final void render(GameContext context, World world, Graphics g) {
+	public final void render(GameContext context, World world, Graphics g) throws SlickException {
 		if (isVisible()) {
 			// check if we out of screen, if so no need to render
 			if (!isOffscreen(context)) {
@@ -171,7 +203,7 @@ public abstract class Entity implements Serializable {
 	 * @param g
 	 *            the graphics context to draw to
 	 */
-	public abstract void doRender(GameContext context, World world, Graphics g);
+	public abstract void doRender(GameContext context, World world, Graphics g) throws SlickException;
 	/**
 	 * Can be called by an entity system if an entity is removed from the system and should release all it resources.
 	 * 
@@ -180,7 +212,7 @@ public abstract class Entity implements Serializable {
 	 * @param world
 	 *            the world in which the entity lives
 	 */
-	protected void destroy(GameContext context, World world) {}
+	protected void destroy(GameContext context, World world) throws SlickException {}
 	
 	// COLLISION
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -201,19 +233,11 @@ public abstract class Entity implements Serializable {
 	protected void onMapCollision(int tileID, int tileX, int tileY) {}
 	
 	/**
-	 * This should return the rectangle used to collision.
-	 * 
-	 * @param rect
-	 *            the {@link Rectangle2D} to put the bounds into
-	 * @return the <code>rect</code> it was not null or a new Rectangle if it was null.
-	 */
-	public abstract int getBounds(Rectangle2D rect);
-	/**
 	 * @return true if the point container/touches with this entity. Note this method uses the <code>getBounds()</code>
 	 *         method by default.
 	 */
 	public boolean touches(float x, float y) {
-		getBounds(BOUNDS);
+		getCollisionBox(BOUNDS);
 		return BOUNDS.contains(x, y) && !BOUNDS.isEmpty();
 	}
 	
@@ -238,8 +262,8 @@ public abstract class Entity implements Serializable {
 	 *            the current position of the camera in the world.
 	 */
 	protected void calculateScreenPosition(Vector2f cameraPosition) {
-		screen.x = (int) (Math.max(position.x - cameraPosition.x, 0));
-		screen.y = (int) (Math.max(position.y - cameraPosition.y, 0));
+		screen.x = (int) (position.x - cameraPosition.x);
+		screen.y = (int) (position.y - cameraPosition.y);
 	}
 	/**
 	 * Calculates the grid position of this entity.
@@ -249,6 +273,28 @@ public abstract class Entity implements Serializable {
 	 */
 	protected void calculateGridPosition(int tileSize) {
 		grid.set(position.x / tileSize, position.y / tileSize);
+	}
+	/**
+	 * Calculates the collision box by using the <code>getCollsionWidth()</code> and <code>getCollisionHeight</code>
+	 * methods. it also automatically adds the offset to the position. the result will be put into the collision box by
+	 * calling <code>setCollisionbox()</code>.
+	 * <p>
+	 * Calculation:
+	 * 
+	 * <pre>
+	 *  rect = (position.x + offset.x, position.y + offset.y, getCollisionWidth, getCollisionHeight)
+	 * </pre>
+	 * 
+	 * @param target
+	 *            a target if needed to save memory
+	 * @return <code>target</code> with the collsion values inside or a new Rectanlge2D if <code>target</code> is null.
+	 */
+	protected Rectangle2D calculateCollisionBox(Rectangle2D target) {
+		if (target == null) {
+			target = new Rectangle2D(0, 0, 0, 0);
+		}
+		target.setBounds(position.x + offset.x, position.y + offset.y, getCollisionWidth(), getCollisionHeight());
+		return target;
 	}
 	/**
 	 * Checks if the entity is off screen based on the off screen test ranges.
@@ -307,6 +353,22 @@ public abstract class Entity implements Serializable {
 	 */
 	public abstract int getLayer();
 	
+	/**
+	 * 
+	 * @param target
+	 *            the target rectangle to put the bounds into
+	 * @return the collision box used for collision.
+	 */
+	public abstract Rectangle2D getCollisionBox(Rectangle2D target);
+	/**
+	 * @return the width of the collision box.
+	 */
+	public abstract int getCollisionWidth();
+	/**
+	 * @return the height of the collision box.
+	 */
+	public abstract int getCollisionHeight();
+	
 	// GETTER POSITIONS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public Grid getGridPosition() {
@@ -321,6 +383,9 @@ public abstract class Entity implements Serializable {
 	public Vector2f getAcceleration() {
 		return acceleration;
 	}
+	/**
+	 * @return the offset used for collision.
+	 */
 	public Vector2f getOffset() {
 		return offset;
 	}
@@ -375,16 +440,16 @@ public abstract class Entity implements Serializable {
 		return old.y;
 	}
 	
-	public Animator getAnimator() {
-		return animator;
-	}
 	public float getYSortOffset() {
 		return ySortOffset;
 	}
 	
-	
 	// GETTER OTHERS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public Animator getAnimator() {
+		return animator;
+	}
+	
 	/**
 	 * @return default is the class name with lower-case characters.
 	 */

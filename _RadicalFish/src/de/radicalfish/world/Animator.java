@@ -28,8 +28,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.world;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.util.Log;
@@ -50,8 +52,10 @@ import de.radicalfish.util.Utils;
  * @version 0.5.0
  * @since 11.06.2012
  */
-public class Animator {
+public class Animator implements Serializable {
 	
+	private static final long serialVersionUID = 8460918241921046816L;
+
 	private static long time;
 	
 	private HashMap<String, Animation> animations;
@@ -278,6 +282,15 @@ public class Animator {
 	 */
 	public Animation getCurrentAnimation() {
 		return current;
+	}
+	/**
+	 * @return the current image (frame) in the current animation if any.
+	 */
+	public Image getCurrentImage() {
+		if(current != null) {
+			return current.getCurrentSprite();
+		}
+		return null;
 	}
 	
 }
