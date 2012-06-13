@@ -28,6 +28,7 @@ import de.radicalfish.debug.ToneEditor;
 import de.radicalfish.debug.ToolBox;
 import de.radicalfish.debug.parser.PropertyInputParser;
 import de.radicalfish.debug.parser.URLInputParser;
+import de.radicalfish.util.Utils;
 import de.radicalfish.world.World;
 
 public class DebugGameState extends TWLGameState implements PerformanceListener, DebugHook {
@@ -36,7 +37,8 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 	private GUI gui;
 	private PerformanceGraph graph;
 	
-	private int delta;
+	private boolean displayShortInfo = false;
+	private int delta = 0;
 	
 	public DebugGameState(GameContext context, World world, int id) {
 		super(context, world, id);
@@ -64,8 +66,14 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 			}
 		}
 		
+		if(context.getInput().isKeyPressed(Input.KEY_F2)) {
+			displayShortInfo = !displayShortInfo;
+		}
+		
 	}
 	public void render(GameContext context, World world, Graphics g) throws SlickException {
+		renderShortInfo(context, world, g);
+		
 		updateGUI(context);
 		gui.draw();
 	}
@@ -94,6 +102,17 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private void renderShortInfo(GameContext context, World world, Graphics g) {
+		if(displayShortInfo) {
+			Utils.pushMatrix();
+			
+			g.drawString("FPS: " + context.getContainer().getFPS(), 5, 5);
+			g.drawString("DELTA: " + delta, 5, 17);
+			
+			Utils.popMatrix();
+		}
+	}
+	
 	private void updateGUI(GameContext context) {
 		gui.setSize();
 		gui.handleTooltips();
