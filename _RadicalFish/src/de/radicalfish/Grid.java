@@ -40,7 +40,7 @@ import de.radicalfish.util.FastMath;
  * @since 03.11.2011
  */
 public class Grid implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 101L;
 	
 	public int x, y;
 	
