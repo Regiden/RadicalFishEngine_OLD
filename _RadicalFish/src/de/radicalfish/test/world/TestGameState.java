@@ -40,14 +40,13 @@ import de.radicalfish.debug.Logger;
 import de.radicalfish.debug.PerformanceListener;
 import de.radicalfish.extern.Easing;
 import de.radicalfish.extern.SimpleFX;
-import de.radicalfish.test.MoveTester;
 import de.radicalfish.world.World;
 
 public class TestGameState extends GameState implements PerformanceListener {
 	
-	public MoveTester dude;
 	private Image image, scene;
 	private SimpleFX effect, effect2;
+	private Player player;
 	
 	private long utime, rtime;
 	
@@ -63,12 +62,20 @@ public class TestGameState extends GameState implements PerformanceListener {
 		
 		effect = new SimpleFX(30, 400, 3 * 1000, Easing.QUAD_IN_OUT);
 		effect2 = new SimpleFX(30, 400, 3 * 1000, Easing.LINEAR);
+		
+		player = new Player();
+		player.init(context, world);
+		
+		
 	}
 	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
 		long locTime = System.nanoTime();
 		Input in = context.getContainer().getInput();
 		
 		GameDelta deltor = context.getGameDelta();
+		
+		player.update(context, world, delta);
+		
 		
 		if (in.isKeyPressed(Input.KEY_A)) {
 			Logger.none("test");
@@ -112,6 +119,10 @@ public class TestGameState extends GameState implements PerformanceListener {
 		image.draw(40, 40);
 		GL11.glPopMatrix();
 		image.draw(60, 60);
+		
+		player.render(context, world, g);
+		
+		image.draw(100, 100);
 		
 		rtime = (System.nanoTime() - locTime) / 1000;
 		

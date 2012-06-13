@@ -29,7 +29,6 @@
  */
 package de.radicalfish.test.world;
 import java.io.File;
-import java.util.Arrays;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.ContextCapabilities;
@@ -62,7 +61,6 @@ import de.radicalfish.text.FontSheet;
 import de.radicalfish.text.SpriteFont;
 import de.radicalfish.text.SpriteFontRenderer;
 import de.radicalfish.text.StyledFont;
-import de.radicalfish.world.Animator;
 import de.radicalfish.world.World;
 
 public class GameContextTest extends StateBasedGame implements GameContext {
@@ -141,7 +139,14 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		container.setFullscreen(settings.isFullscreen());
 		container.setDefaultFont(defaultFont);
 		
+		world = new TestWorld();
+		
 		res = new Resources();
+		
+		gameTone = new ToneModel();
+		postProcess = new FBOPostProcesser(this);
+		postEffect = new ToneShaderEffect();
+		postProcess.setEffect(postEffect);
 		
 		checkGraphicsCapabilities();
 		if (settings.isLogging()) {
@@ -152,14 +157,6 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 			Logger.none("------------------------ GAME ------------------------");
 		}
 		
-		gameTone = new ToneModel();
-		postProcess = new FBOPostProcesser(this);
-		postEffect = new ToneShaderEffect();
-		postProcess.setEffect(postEffect);
-		
-		Animator ani = new Animator();
-		ani.loadAnimations(this, "de/radicalfish/assets/ani.xml", Arrays.asList(new String[] {"idle"}));
-		
 		TestGameState test = new TestGameState(this, world, 1);
 		addState(test);
 		
@@ -167,9 +164,10 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		if(canDebug) {
 			debug = new DebugGameState(this, world, 0);
 			debug.init(this, world);
+			debug.setVisible(false);
+			debug.addPerformanceListener(test, "Test State", de.matthiasmann.twl.Color.LIGHTBLUE);
 		}
 		
-		debug.addPerformanceListener(test, "Test State", de.matthiasmann.twl.Color.LIGHTBLUE);
 	}
 	
 	protected void preUpdateState(GameContainer container, int delta) throws SlickException {
