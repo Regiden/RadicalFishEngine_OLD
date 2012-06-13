@@ -22,4 +22,4 @@ postprocessing:true
 
 # Debug Details
 debug.xml.animations:true
-debug.sprite.rectangle:false
+debug.sprite.rectangle:true
