@@ -28,41 +28,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.util;
-import org.lwjgl.opengl.GL11;
 
+/**
+ * Some Utilities for useful for developing.
+ * 
+ * @author Stefan Lange
+ * @version 0.2.0
+ * @since 15.06.2012
+ */
 public class Utils {
-	
-	private static int pushCount = 0;
-	
-	/**
-	 * Simply calls GL11.pushMatrix(), but saves the amount of pushes you made.
-	 */
-	public static void pushMatrix() {
-		GL11.glPushMatrix();
-		pushCount++;
-	}
-	/**
-	 * Simply calls GL11.popMatrix(), decreases the push count by 1.
-	 */
-	public static void popMatrix() {
-		GL11.glPopMatrix();
-		pushCount--;
-	}
-	/**
-	 * Resets the stack by call popMatrix as long as <code>getPushCount</code> return a value > 0
-	 */
-	public static void resetMatrixStack() {
-		while(getPushCount() > 0) {
-			popMatrix();
-		}
-	}
-	
-	/**
-	 * @return the depth of the push stack.
-	 */
-	public static int getPushCount() {
-		return pushCount;
-	}
 	
 	/**
 	 * Check is the object is null and if so throws an NPE.
