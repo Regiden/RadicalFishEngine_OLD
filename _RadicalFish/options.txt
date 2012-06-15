@@ -21,5 +21,7 @@ shaders:true
 postprocessing:true
 
 # Debug Details
+debug.map.checklayers:true
 debug.xml.animations:true
-debug.sprite.rectangle:true
+debug.sprite.rect.collision:true
+debug.sprite.rect.position:true

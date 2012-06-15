@@ -28,7 +28,7 @@ import de.radicalfish.debug.ToneEditor;
 import de.radicalfish.debug.ToolBox;
 import de.radicalfish.debug.parser.PropertyInputParser;
 import de.radicalfish.debug.parser.URLInputParser;
-import de.radicalfish.util.Utils;
+import de.radicalfish.util.GraphicUtils;
 import de.radicalfish.world.World;
 
 public class DebugGameState extends TWLGameState implements PerformanceListener, DebugHook {
@@ -104,12 +104,12 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	private void renderShortInfo(GameContext context, World world, Graphics g) {
 		if(displayShortInfo) {
-			Utils.pushMatrix();
+			GraphicUtils.pushMatrix();
 			
 			g.drawString("FPS: " + context.getContainer().getFPS(), 5, 5);
 			g.drawString("DELTA: " + delta, 5, 17);
 			
-			Utils.popMatrix();
+			GraphicUtils.popMatrix();
 		}
 	}
 	

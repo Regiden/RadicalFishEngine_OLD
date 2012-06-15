@@ -78,6 +78,7 @@ public abstract class Entity implements Serializable {
 	protected Animator animator = new Animator();
 	
 	protected String name = "base-entity";
+	protected int ID = -1;
 	
 	private float ySortOffset = 0;
 	
@@ -87,6 +88,7 @@ public abstract class Entity implements Serializable {
 	protected boolean active = true;
 	protected boolean visible = true;
 	protected boolean flash = false;
+	protected boolean alive = true;
 	
 	/**
 	 * Creates a new basic Entity.
@@ -456,6 +458,12 @@ public abstract class Entity implements Serializable {
 	public String getName() {
 		return name;
 	}
+	/**
+	 * @return the id of the entity if any, default is -1. 
+	 */
+	public int getID() {
+		return ID;
+	}
 	
 	public boolean isActive() {
 		return active;
@@ -465,6 +473,12 @@ public abstract class Entity implements Serializable {
 	}
 	public boolean isFlash() {
 		return flash;
+	}
+	/**
+	 * @return false indicates that the EntitySystem should remove this entity from the list!
+	 */
+	public boolean isAlive() {
+		return alive;
 	}
 	
 	// SETTER POSITIONS
@@ -554,6 +568,9 @@ public abstract class Entity implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public void setID(int id) {
+		ID = id;
+	}
 	
 	public void setActive(boolean active) {
 		this.active = active;
@@ -561,5 +578,7 @@ public abstract class Entity implements Serializable {
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
-	
+	public void setAlive(boolean alive) {
+		this.alive = alive;
+	}
 }

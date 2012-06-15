@@ -28,19 +28,94 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.test.world;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import de.radicalfish.Rectangle2D;
+import de.radicalfish.context.GameContext;
+import de.radicalfish.context.GameDelta;
+import de.radicalfish.context.Settings;
+import de.radicalfish.util.GraphicUtils;
+import de.radicalfish.util.Utils;
 import de.radicalfish.world.Camera;
+import de.radicalfish.world.Entity;
+import de.radicalfish.world.EntitySystem;
 import de.radicalfish.world.World;
 
 public class TestWorld implements World{
 	
+	private static Rectangle2D DEBUG_BOUNDS = new Rectangle2D();
+	
+	private HashMap<String, EntitySystem> systems;
+	private ArrayList<EntitySystem> backing;
+	
 	private Camera camera;
+	
 	
 	public TestWorld() {
 		camera = new TestCamera();
+		systems = new HashMap<String, EntitySystem>();
+		backing = new ArrayList<EntitySystem>();
 	}
 	
-	// INTERFACE
+	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public void update(GameContext context, GameDelta delta) throws SlickException {
+		for(EntitySystem es : backing) {
+			es.update(context, this, delta);
+		}
+		camera.update(context, this, delta);
+	}
+	public void render(GameContext context, Graphics g) throws SlickException {
+		debug_draw_sprite_rectangle(context.getSettings());
+	}
+
+	public void addEntitySystem(String name, EntitySystem system) throws SlickException {
+		Utils.notNull("name", name);
+		Utils.notNull("system", system);
+		if(systems.containsKey(name)) {
+			throw new SlickException("EntitySystem with the name: " + name + " already exists!");
+		}
+		systems.put(name, system);
+		backing.add(system);
+	}
+	public void removeEntitySystem(String name) throws SlickException {
+		Utils.notNull("name", name);
+		if(!systems.containsKey(name)) {
+			throw new SlickException("EntitySystem with the name: " + name + " does not exist");
+		}
+		backing.remove(systems.remove(name));
+	}
+	
+	// INTERN
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private void debug_draw_sprite_rectangle(Settings settings) throws SlickException {
+		// draw ALL  rectangles
+		if(settings.isDebugging() && settings.getProperty("debug.sprite.rect.collision", false)) {
+			GraphicUtils.pushMatrix();
+			GL11.glScalef(2, 2, 1);
+			for(EntitySystem es : backing) {
+				for(Entity e : es.getEntities()) {
+					GraphicUtils.drawRect(e.getCollisionBox(DEBUG_BOUNDS), Color.white, 0.5f);
+				}
+			}
+			GraphicUtils.popMatrix();
+		}
+	}
+	
+	// GETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public List<EntitySystem> getEntitySystems() {
+		return backing;
+	}
+	public EntitySystem getEntitySystem(String name) {
+		Utils.notNull("name", name);
+		return systems.get(name);
+	}
 	public Camera getCamera() {
 		return camera;
 	}

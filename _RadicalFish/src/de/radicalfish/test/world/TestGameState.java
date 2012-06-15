@@ -64,18 +64,18 @@ public class TestGameState extends GameState implements PerformanceListener {
 		effect2 = new SimpleFX(30, 400, 3 * 1000, Easing.LINEAR);
 		
 		player = new Player();
-		player.init(context, world);
 		
+		world.getEntitySystem("global").addEntity(player, context, world);
 		
 	}
 	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
+		world.update(context, delta);
+		
 		long locTime = System.nanoTime();
+		
 		Input in = context.getContainer().getInput();
 		
 		GameDelta deltor = context.getGameDelta();
-		
-		player.update(context, world, delta);
-		
 		
 		if (in.isKeyPressed(Input.KEY_A)) {
 			Logger.none("test");
@@ -121,6 +121,7 @@ public class TestGameState extends GameState implements PerformanceListener {
 		image.draw(60, 60);
 		
 		player.render(context, world, g);
+		world.render(context, g);
 		
 		image.draw(100, 100);
 		

@@ -31,6 +31,7 @@ package de.radicalfish.test.world;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Vector2f;
 import de.radicalfish.context.GameContext;
+import de.radicalfish.context.GameDelta;
 import de.radicalfish.world.Camera;
 import de.radicalfish.world.World;
 
@@ -50,7 +51,7 @@ public class TestCamera implements Camera {
 	
 	// INTERFACE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void update(GameContext context, World world, float delta) {
+	public void update(GameContext context, World world, GameDelta delta) {
 		
 	}
 	public void translate(GameContext context, World world, Graphics g) {

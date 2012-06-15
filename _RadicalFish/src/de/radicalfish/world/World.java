@@ -28,9 +28,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.world;
+import java.util.List;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import de.radicalfish.context.GameContext;
+import de.radicalfish.context.GameDelta;
 
 /**
- * Describes a world the game plays in.
+ * Describes a world the game plays in. A world will give the map the game currently plays on and all EntitySystems that
+ * are used by the game. A world will <b>not be automatically updated and rendered!</b>. You must call update and render
+ * somewhere on your own and also decided what would be rendered if you make a call. e.g. what should be rendered if
+ * you call render and so on.
  * 
  * @author Stefan Lange
  * @version 0.0.0
@@ -38,8 +46,53 @@ package de.radicalfish.world;
  */
 public interface World {
 	
+	// METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Updates the world. No parameter for World here since we call this on the world anyway.
+	 * 
+	 * @param context
+	 *            the context the game runs in
+	 * @param delta
+	 *            the {@link GameDelta} object holding the delta value
+	 */
+	public void update(GameContext context, GameDelta delta) throws SlickException;
+	/**
+	 * Renders the world. No parameter for World here since we call this on the world anyway.
+	 * 
+	 * @param context
+	 *            the context the game runs in
+	 * @param g
+	 *            the graphics context to draw to
+	 */
+	public void render(GameContext context, Graphics g) throws SlickException;
+	
+	/**
+	 * Adds an {@link EntitySystem} to the world.
+	 * 
+	 * @param name
+	 *            the name of the system
+	 * @throws SlickException
+	 */
+	public void addEntitySystem(String name, EntitySystem system) throws SlickException;
+	/**
+	 * Removes and {@link EntitySystem} for the world.
+	 * 
+	 * @param name
+	 *            the name of the system
+	 */
+	public void removeEntitySystem(String name) throws SlickException;
+	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return a list of all system in use.
+	 */
+	public List<EntitySystem> getEntitySystems();
+	/**
+	 * @return the EntitySystem defined by <code>name</code>.
+	 */
+	public EntitySystem getEntitySystem(String name);
 	/**
 	 * @return the camera in use. Should never be null!
 	 */

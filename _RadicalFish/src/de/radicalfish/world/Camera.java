@@ -31,6 +31,7 @@ package de.radicalfish.world;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Vector2f;
 import de.radicalfish.context.GameContext;
+import de.radicalfish.context.GameDelta;
 
 /**
  * A Interface for cameras with some default methods a camera should have.
@@ -51,9 +52,9 @@ public interface Camera {
 	 * @param world
 	 *            the world the game play in
 	 * @param delta
-	 *            the time since the last frame
+	 *            the {@link GameDelta} object holding the delta value.
 	 */
-	public void update(GameContext context, World world, float delta);
+	public void update(GameContext context, World world, GameDelta delta);
 	/**
 	 * Translate the context to the camera point if needed.
 	 * 

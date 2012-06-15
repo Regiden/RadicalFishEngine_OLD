@@ -28,7 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.test.world;
-
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -36,7 +35,7 @@ import org.newdawn.slick.SlickException;
 import de.radicalfish.Rectangle2D;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.util.Utils;
+import de.radicalfish.util.GraphicUtils;
 import de.radicalfish.world.Entity;
 import de.radicalfish.world.World;
 
@@ -56,6 +55,7 @@ public class Player extends Entity {
 		animator.loadAnimations(context, "de/radicalfish/assets/ani.xml", null);
 		setOffset(43, 48);
 		setOffScreenRanges(64, 90);
+		setID(0);
 	}
 	public void doUpdate(GameContext context, World world, GameDelta delta) throws SlickException {
 		handleInput(context.getInput(), delta.getDelta());
@@ -64,12 +64,12 @@ public class Player extends Entity {
 	public void doRender(GameContext context, World world, Graphics g) throws SlickException {
 		sprite = Entity.checkMissing(animator.getCurrentImage());
 		
-		Utils.pushMatrix();
+		GraphicUtils.pushMatrix();
 		g.scale(2, 2);
 		
 		sprite.draw(position.x, position.y);
 		
-		Utils.popMatrix();
+		GraphicUtils.popMatrix();
 	}
 	
 	// INTERN

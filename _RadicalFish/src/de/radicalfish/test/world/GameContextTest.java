@@ -41,6 +41,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import de.matthiasmann.twl.Color;
 import de.radicalfish.context.DefaultGameDelta;
 import de.radicalfish.context.DefaultGameVariables;
 import de.radicalfish.context.DefaultSettings;
@@ -140,6 +141,8 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		container.setDefaultFont(defaultFont);
 		
 		world = new TestWorld();
+		GlobalEntitySystem glo = new GlobalEntitySystem();
+		world.addEntitySystem("global", glo);
 		
 		res = new Resources();
 		
@@ -166,6 +169,7 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 			debug.init(this, world);
 			debug.setVisible(false);
 			debug.addPerformanceListener(test, "Test State", de.matthiasmann.twl.Color.LIGHTBLUE);
+			debug.addPerformanceListener(glo, "ES Global", Color.GREEN);
 		}
 		
 	}
