@@ -30,12 +30,11 @@
 package de.radicalfish;
 
 import java.io.Serializable;
-import org.newdawn.slick.geom.Rectangle;
 import de.radicalfish.util.FastMath;
 
 /**
- * A rectangle used for collision. This is a special implementation meant to be used for 2D games with a scale of two. If
- * you not using such a basic scale please use the {@link Rectangle} provided by Slick2D.
+ * A rectangle used for collision. This is a special implementation meant to be used for 2D games with a scale of two.
+ * If you not using such a basic scale please use the {@link Rectangle} provided by Slick2D.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -124,8 +123,8 @@ public class Rectangle2D implements Serializable {
 	 * Sets the position of the rectangle. the position gets rounded.
 	 */
 	public void setPosition(float x, float y) {
-		this.x = FastMath.round(x);
-		this.y = FastMath.round(y);
+		this.x = (int) x;
+		this.y = (int) y;
 	}
 	/**
 	 * Sets the size of the rectangle.
@@ -138,8 +137,8 @@ public class Rectangle2D implements Serializable {
 	 * Sets the size of the rectangle. the size gets rounded.
 	 */
 	public void setSize(float width, float height) {
-		this.width = FastMath.round(width);
-		this.height = FastMath.round(height);
+		this.width = (int) width;
+		this.height = (int) height;
 	}
 	
 	/**
@@ -152,7 +151,7 @@ public class Rectangle2D implements Serializable {
 	 * Sets the x position of the rectangle. the position gets rounded.
 	 */
 	public void setX(float x) {
-		this.x = FastMath.round(x);
+		this.x = (int) x;
 	}
 	/**
 	 * Sets the y position of the rectangle.
@@ -164,7 +163,7 @@ public class Rectangle2D implements Serializable {
 	 * Sets the y position of the rectangle. the position gets rounded.
 	 */
 	public void setY(float y) {
-		this.y = FastMath.round(y);
+		this.y = (int)y;
 	}
 	/**
 	 * Sets the width of the rectangle.
@@ -222,5 +221,7 @@ public class Rectangle2D implements Serializable {
 	public boolean isEmpty() {
 		return width <= 0 && height <= 0;
 	}
-	
+	public String toString() {
+		return "(rect:" +x + ", " +  y +", " + width + ", " + height + ")";
+	}
 }
