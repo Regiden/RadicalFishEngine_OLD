@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, Stefan Lange
+ * Copyright (c) 2012, Stefan Lange
  * 
  * All rights reserved.
  * 
@@ -27,33 +27,30 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.world.map;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
-import de.radicalfish.context.GameContext;
-import de.radicalfish.world.World;
+package de.radicalfish.test.collisionnew.blocks;
+import de.radicalfish.Grid;
+import de.radicalfish.Rectangle2D;
+import de.radicalfish.world.Entity;
+import de.radicalfish.world.map.Tile;
 
-/**
- * Various call backs for map rendering and loading.
- * 
- * @author Stefan Lange
- * @version 1.0.0
- * @since 17.11.2011
- */
-public interface MapListener {
+// if this is called there is a collision so just return true. and postion the entity.
+public class SolidBlock implements BlockCheck {
 	
-	/**
-	 * A maps can call this after rendering a layer. So you can render in between.
-	 * 
-	 * @param context
-	 *            the context the game runs int.
-	 * @param world
-	 *            the world the game plays in
-	 * @param g
-	 *            the Graphics context to draw to
-	 * @param layer
-	 *            the layer which was drawn
-	 * @throws SlickException
-	 */
-	public void onLayerComplete(GameContext context, World world, Graphics g, int layer) throws SlickException;
+	public boolean checkAndPosition(Tile[][] tiles, Entity entity, Rectangle2D tile, Grid position, int direction, int tileSize) {
+		tile.setPosition((position.x / tileSize) * tileSize, (position.y / tileSize) * tileSize);
+		
+		if (direction == 0) {
+			entity.setPositionX(tile.getRight() - entity.getOffsetX());
+		} else if (direction == 1) {
+			entity.setPositionX(tile.getX() - entity.getCollisionWidth() - entity.getOffsetX());
+		} else if (direction == 2) {
+			entity.setPositionY(tile.getBottom() - entity.getOffsetY());
+		} else if (direction == 3) {
+			entity.setPositionY(tile.getY() - entity.getCollisionHeight() -entity.getOffsetY());
+		}
+		
+		
+		return true;
+	}
+	
 }

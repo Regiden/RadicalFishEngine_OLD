@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, Stefan Lange
+ * Copyright (c) 2012, Stefan Lange
  * 
  * All rights reserved.
  * 
@@ -27,33 +27,46 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.world.map;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+package de.radicalfish.world;
 import de.radicalfish.context.GameContext;
-import de.radicalfish.world.World;
 
 /**
- * Various call backs for map rendering and loading.
+ * A collision manager is responsible
  * 
  * @author Stefan Lange
- * @version 1.0.0
- * @since 17.11.2011
+ * @version 0.0.0
+ * @since 16.06.2012
  */
-public interface MapListener {
+public interface CollisionManager {
 	
+	// METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * A maps can call this after rendering a layer. So you can render in between.
+	 * Checks he collision on the specific <code>entity</code>.
 	 * 
 	 * @param context
-	 *            the context the game runs int.
+	 *            the context the game runs in
 	 * @param world
-	 *            the world the game plays in
-	 * @param g
-	 *            the Graphics context to draw to
-	 * @param layer
-	 *            the layer which was drawn
-	 * @throws SlickException
+	 *            the world the game plays in. Use this to extract the information you manager needs for collision.
+	 * @param entity
+	 *            the entity to check
+	 * @return true if the entity collided.
 	 */
-	public void onLayerComplete(GameContext context, World world, Graphics g, int layer) throws SlickException;
+	public boolean checkCollision(GameContext context, World world, Entity entity);
+	/**
+	 * Checks he collision on the specific <code>entity</code>.
+	 * 
+	 * @param context
+	 *            the context the game runs in
+	 * @param world
+	 *            the world the game plays in. Use this to extract the information you manager needs for collision.
+	 * @param entity
+	 *            the entity to check
+	 * @param invokeCallbacks
+	 *            true if callbacks of the entity should be invoked.
+	 * @return true if the entity collided.
+	 */
+	public boolean checkCollision(GameContext context, World world, Entity entity, boolean invokeCallbacks);
+	
+	
 }

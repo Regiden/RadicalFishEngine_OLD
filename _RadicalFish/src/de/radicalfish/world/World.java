@@ -33,12 +33,13 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.world.map.Map;
 
 /**
  * Describes a world the game plays in. A world will give the map the game currently plays on and all EntitySystems that
  * are used by the game. A world will <b>not be automatically updated and rendered!</b>. You must call update and render
- * somewhere on your own and also decided what would be rendered if you make a call. e.g. what should be rendered if
- * you call render and so on.
+ * somewhere on your own and also decided what would be rendered if you make a call. e.g. what should be rendered if you
+ * call render and so on.
  * 
  * @author Stefan Lange
  * @version 0.0.0
@@ -48,6 +49,14 @@ public interface World {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Initiate this world.
+	 * 
+	 * @param context
+	 *            the context the game plays in
+	 * @throws SlickException 
+	 */
+	public void init(GameContext context) throws SlickException;
 	/**
 	 * Updates the world. No parameter for World here since we call this on the world anyway.
 	 * 
@@ -97,7 +106,10 @@ public interface World {
 	 * @return the camera in use. Should never be null!
 	 */
 	public Camera getCamera();
-	
+	/**
+	 * @return the map the world currently plays in.
+	 */
+	public Map getMap();
 	/**
 	 * @return the size of a tile. can be ignored if the game does not requires tiles.
 	 */

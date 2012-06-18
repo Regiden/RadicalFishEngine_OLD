@@ -32,10 +32,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import de.radicalfish.Rectangle2D;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.util.GraphicUtils;
+import de.radicalfish.util.FastMath;
 import de.radicalfish.world.Entity;
 import de.radicalfish.world.World;
 
@@ -44,8 +43,6 @@ public class Player extends Entity {
 	private static final long serialVersionUID = -1475660341697080622L;
 	
 	private Image sprite;
-	
-	private Rectangle2D collsionbox;
 	
 	private float friction = 100f / 1000f;
 	
@@ -60,16 +57,15 @@ public class Player extends Entity {
 	public void doUpdate(GameContext context, World world, GameDelta delta) throws SlickException {
 		handleInput(context.getInput(), delta.getDelta());
 		
+		position.x = FastMath.round(position.x);
+		position.y = FastMath.round(position.y);
+		
 	}
 	public void doRender(GameContext context, World world, Graphics g) throws SlickException {
 		sprite = Entity.checkMissing(animator.getCurrentImage());
-		
-		GraphicUtils.pushMatrix();
 		g.scale(2, 2);
-		
 		sprite.draw(position.x, position.y);
 		
-		GraphicUtils.popMatrix();
 	}
 	
 	// INTERN
@@ -89,11 +85,8 @@ public class Player extends Entity {
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public Rectangle2D getCollisionBox(Rectangle2D target) {
-		return calculateCollisionBox(collsionbox);
-	}
 	public int getCollisionWidth() {
-		return 11;
+		return 12;
 	}
 	public int getCollisionHeight() {
 		return 32;
@@ -103,7 +96,7 @@ public class Player extends Entity {
 		return true;
 	}
 	public int getLayer() {
-		return 3;
+		return 0;
 	}
 	
 }

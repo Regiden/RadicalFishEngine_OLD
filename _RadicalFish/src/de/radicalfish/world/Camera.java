@@ -104,6 +104,7 @@ public interface Camera {
 	 * @return the target y position of the camera.
 	 */
 	public float getTargetY();
+	
 	/**
 	 * @return the speed with which the camera moves.
 	 */

@@ -48,8 +48,7 @@ import de.radicalfish.context.GameDelta;
  * <p>
  * For collision the method <code>getBounds</code> should be used. You can use the method
  * <code>calculateCollsionBox</code> to automatically make a the rectangle based on the postion, offset and the
- * width/height.
- * Updates on the Animator and the flash effect will be made with the modified delta value.
+ * width/height. Updates on the Animator and the flash effect will be made with the modified delta value.
  * 
  * 
  * @author Stefan Lange
@@ -72,7 +71,9 @@ public abstract class Entity implements Serializable {
 	protected Vector2f screen = new Vector2f();
 	protected Vector2f offset = new Vector2f(); // starting from the top-left of the collision box
 	protected Vector2f offscreen = new Vector2f(200, 200);
+	protected Vector2f direction = new Vector2f(0, 0);
 	
+	protected Rectangle2D collisionbox = new Rectangle2D();
 	protected Grid grid = new Grid();
 	
 	protected Animator animator = new Animator();
@@ -107,7 +108,7 @@ public abstract class Entity implements Serializable {
 	 */
 	public static Image getMissingImage() throws SlickException {
 		if (MISSINGSPRITE == null) {
-			MISSINGSPRITE = new Image("de/radicalfish/assests/missinsprite.png");
+			MISSINGSPRITE = new Image("de/radicalfish/assets/missingsprite.png", false, Image.FILTER_NEAREST);
 		}
 		return MISSINGSPRITE;
 	}
@@ -143,7 +144,8 @@ public abstract class Entity implements Serializable {
 	 * Updates the entity. this should be called instead of <code>doUpdate</code>. <code>doUpdate</code> gets called by
 	 * this method after automatically checking if the entity needs an update. If this is not wanted this method can be
 	 * ignored an the <code>doUpdate</code> method can be used directly. This also updates the {@link Animator} used for
-	 * this entity.
+	 * this entity and the direction in which the entity moved. After an update a collision manager should check
+	 * collision on this entity. 
 	 * 
 	 * @param context
 	 *            the context the game runs in
@@ -162,6 +164,7 @@ public abstract class Entity implements Serializable {
 			
 			calculateScreenPosition(world.getCamera().getCurrent());
 			calculateGridPosition(world.getTileSize());
+			calculateDirection();
 		}
 	}
 	/**
@@ -219,12 +222,18 @@ public abstract class Entity implements Serializable {
 	// COLLISION
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
+	 * @return the collision box used for collision.
+	 */
+	public  Rectangle2D getCollisionBox() {
+		return collisionbox;
+	}
+	/**
 	 * Can be called from an entity system if an entity collides with another.
 	 * 
 	 * @param entity
 	 *            the entity this entity collided with if any.
 	 */
-	protected void onCollision(Entity entity) {}
+	public void onCollision(Entity entity) {}
 	/**
 	 * Can be called from an entity system if an entity collides with something on the map, like a solid block
 	 * 
@@ -232,18 +241,18 @@ public abstract class Entity implements Serializable {
 	 *            the id of the collision value. e.g. 0 means air while 1 means solid block and 2 water and so on
 	 * 
 	 */
-	protected void onMapCollision(int tileID, int tileX, int tileY) {}
+	public void onMapCollision(int tileID, int tileX, int tileY) {}
 	
 	/**
 	 * @return true if the point container/touches with this entity. Note this method uses the <code>getBounds()</code>
 	 *         method by default.
 	 */
 	public boolean touches(float x, float y) {
-		getCollisionBox(BOUNDS);
+		calculateCollisionBox(BOUNDS);
 		return BOUNDS.contains(x, y) && !BOUNDS.isEmpty();
 	}
 	
-	// PROTECTED
+	// OVERRIDE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
 	 * Renders the current sprite as flash effect. Note that isFlash must return true in order for this method to work.
@@ -251,7 +260,7 @@ public abstract class Entity implements Serializable {
 	 * @param image
 	 *            the sprite to render
 	 */
-	protected void renderFlash(Image image, float x, float y) {
+	public void renderFlash(Image image, float x, float y) {
 		if (isFlash()) {
 			flashColor.a = flashValue;
 			image.drawFlash(x, x, image.getWidth(), image.getHeight(), flashColor);
@@ -263,7 +272,7 @@ public abstract class Entity implements Serializable {
 	 * @param cameraPosition
 	 *            the current position of the camera in the world.
 	 */
-	protected void calculateScreenPosition(Vector2f cameraPosition) {
+	public void calculateScreenPosition(Vector2f cameraPosition) {
 		screen.x = (int) (position.x - cameraPosition.x);
 		screen.y = (int) (position.y - cameraPosition.y);
 	}
@@ -273,7 +282,7 @@ public abstract class Entity implements Serializable {
 	 * @param tileSize
 	 *            the size of one tile.
 	 */
-	protected void calculateGridPosition(int tileSize) {
+	public void calculateGridPosition(int tileSize) {
 		grid.set(position.x / tileSize, position.y / tileSize);
 	}
 	/**
@@ -291,7 +300,7 @@ public abstract class Entity implements Serializable {
 	 *            a target if needed to save memory
 	 * @return <code>target</code> with the collsion values inside or a new Rectanlge2D if <code>target</code> is null.
 	 */
-	protected Rectangle2D calculateCollisionBox(Rectangle2D target) {
+	public Rectangle2D calculateCollisionBox(Rectangle2D target) {
 		if (target == null) {
 			target = new Rectangle2D(0, 0, 0, 0);
 		}
@@ -299,11 +308,27 @@ public abstract class Entity implements Serializable {
 		return target;
 	}
 	/**
+	 * Calculates the direction in which the entity moved after an call to <code>update</code>. The direction is a
+	 * normalized vector with the following meaning:
+	 * <p>
+	 * <li>x = -1 / 1: left / right</li>
+	 * <li>y = -1 / 1: up / down</li>
+	 * <p>
+	 * 
+	 * if x or y in the direction vector is 0, no movement happend.
+	 * 
+	 */
+	public void calculateDirection() {
+		direction.x = position.x - old.x;
+		direction.y = position.y - old.y;
+		direction.normalise();
+	}
+	/**
 	 * Checks if the entity is off screen based on the off screen test ranges.
 	 * 
 	 * @return true if the entity is off screen.
 	 */
-	protected boolean isOffscreen(GameContext context) {
+	public boolean isOffscreen(GameContext context) {
 		return screen.x <= -offscreen.x || screen.x >= context.getGameWidth() + offscreen.x || screen.y <= -offscreen.y
 				|| screen.y >= context.getGameHeight() + offscreen.y;
 		
@@ -356,13 +381,6 @@ public abstract class Entity implements Serializable {
 	public abstract int getLayer();
 	
 	/**
-	 * 
-	 * @param target
-	 *            the target rectangle to put the bounds into
-	 * @return the collision box used for collision.
-	 */
-	public abstract Rectangle2D getCollisionBox(Rectangle2D target);
-	/**
 	 * @return the width of the collision box.
 	 */
 	public abstract int getCollisionWidth();
@@ -395,14 +413,26 @@ public abstract class Entity implements Serializable {
 		return screen;
 	}
 	/**
-	 * @return the position before the last update call. Meaning this position should always be one frame behind the
-	 *         current one.
+	 * @return the position set before <code>doUpdate</code> is called. Used for collision to detect the direction of
+	 *         collision.
 	 */
 	public Vector2f getOldPosition() {
 		return old;
 	}
 	public Vector2f getOffscreenRanges() {
 		return offscreen;
+	}
+	/**
+	 * The direction is a normalized vector with the following meaning:
+	 * <p>
+	 * <li>x = -1 / 1: left / right</li>
+	 * <li>y = -1 / 1: up / down</li>
+	 * <p>
+	 * 
+	 * if x or y in the direction vector is 0, no movement happend.
+	 */
+	public Vector2f getDirection() {
+		return direction;
 	}
 	
 	public float getPositionX() {
@@ -441,6 +471,12 @@ public abstract class Entity implements Serializable {
 	public float getOldPositionY() {
 		return old.y;
 	}
+	public float getDirectionX() {
+		return direction.x;
+	}
+	public float getDirectionY() {
+		return direction.y;
+	}
 	
 	public float getYSortOffset() {
 		return ySortOffset;
@@ -459,7 +495,7 @@ public abstract class Entity implements Serializable {
 		return name;
 	}
 	/**
-	 * @return the id of the entity if any, default is -1. 
+	 * @return the id of the entity if any, default is -1.
 	 */
 	public int getID() {
 		return ID;

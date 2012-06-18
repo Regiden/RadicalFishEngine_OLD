@@ -29,73 +29,68 @@
  */
 package de.radicalfish.test.world;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.geom.Vector2f;
-import radicalDude.hat.util.FastMath;
+import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.world.Camera;
+import de.radicalfish.util.FastMath;
+import de.radicalfish.world.Entity;
 import de.radicalfish.world.World;
 
-public class TestCamera implements Camera {
+public class Ball extends Entity {
 	
-	public Vector2f currentPosition;
-	public Vector2f targetPosition;
-	
-	public float normalSpeed;
-	
-	public TestCamera() {
-		currentPosition = new Vector2f();
-		targetPosition = new Vector2f();
-		
-		normalSpeed = 0.1f;
-	}
-	
-	// INTERFACE
+	private static final long serialVersionUID = -6833937654545650627L;
+
+	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void update(GameContext context, World world, GameDelta delta) {
+	public void init(GameContext context, World world) throws SlickException {
+		position.x = FastMath.random(0, context.getGameWidth() - 32);
+		position.x = FastMath.round(position.x);
+		position.y = 32;
+		velocity.y = 0.0f;
+		setOffset(0, 0);
+		setOffScreenRanges(64, 90);
+		setID(0);
+	}
+	public void doUpdate(GameContext context, World world, GameDelta delta) throws SlickException {
+		
+		velocity.y += 0.001f * delta.getDelta();
+		if(velocity.y > 0.6f) {
+			velocity.y = 0.6f;
+		}
+		
+		position.y += velocity.y * delta.getDelta();
+		position.y = FastMath.round(position.y);
+		
 		
 	}
-	public void translate(GameContext context, World world, Graphics g) {
-		
-	}
-	public void translateMap(GameContext context, World world, Graphics g) {
+	public void doRender(GameContext context, World world, Graphics g) throws SlickException {
 		g.scale(2, 2);
-		g.translate(-FastMath.round2Up(currentPosition.x % world.getTileSize()), -FastMath.round2Up(currentPosition.y % world.getTileSize()));
+		getMissingImage().draw(position.x, position.y);
 	}
 	
-	public void centerCurrent(World world, float x, float y) {}
-	public void centerTarget(World world, float x, float y, int time) {}
-	
-	// INTERFACE - GETTER
+	// CALLBACKS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public Vector2f getCurrent() {
-		return currentPosition;
-	}
-	public float getCurrentX() {
-		return currentPosition.x;
-	}
-	public float getCurrentY() {
-		return currentPosition.y;
-	}
-	public Vector2f getTarget() {
-		return targetPosition;
-	}
-	public float getTargetX() {
-		return targetPosition.x;
-	}
-	public float getTargetY() {
-		return targetPosition.y;
-	}
-	public float getSpeed() {
-		return normalSpeed;
+	@Override
+	public void onMapCollision(int tileID, int tileX, int tileY) {
+		if(direction.y > 0) {
+			velocity.y *= -0.7;
+			acceleration.y = 0;
+		}
 	}
 	
-	// INTERFACE - SETTER
+	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void setCurrent(World world, float x, float y) {}
-	public void setTarget(World world, float x, float y, int time) {}
-	
-	public void setSpeed(float speed) {
-		
+	public boolean canCollide() {
+		return true;
 	}
+	public int getLayer() {
+		return 0;
+	}
+	public int getCollisionWidth() {
+		return 32;
+	}
+	public int getCollisionHeight() {
+		return 32;
+	}
+	
 }

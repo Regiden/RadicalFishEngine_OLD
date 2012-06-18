@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.test.world;
+package de.radicalfish.test.collisionnew;
 import java.util.ArrayList;
 import java.util.List;
 import org.newdawn.slick.SlickException;
@@ -39,7 +39,14 @@ import de.radicalfish.world.Entity;
 import de.radicalfish.world.EntitySystem;
 import de.radicalfish.world.World;
 
-public class GlobalEntitySystem implements EntitySystem, PerformanceListener {
+/**
+ * And entity system which invokes the makes a call to the maps collision manager after an entity was updated.
+ * 
+ * @author Stefan Lange
+ * @version 0.0.0
+ * @since 16.06.2012
+ */
+public class MapEntitySystem implements EntitySystem, PerformanceListener {
 	
 	private ArrayList<Entity> entities;
 	private ArrayList<Entity> checkList;
@@ -47,7 +54,7 @@ public class GlobalEntitySystem implements EntitySystem, PerformanceListener {
 	
 	private long time;
 	
-	public GlobalEntitySystem() {
+	public MapEntitySystem() {
 		entities = new ArrayList<Entity>();
 		checkList = new ArrayList<Entity>();
 		nameList = new ArrayList<Entity>();
@@ -70,6 +77,7 @@ public class GlobalEntitySystem implements EntitySystem, PerformanceListener {
 			Entity e = entities.get(i);
 			if (e.isAlive()) {
 				e.update(context, world, delta);
+				world.getMap().getCollisionManager().checkCollision(context, world, e);
 				if (e.isAlive()) {
 					checkList.add(e);
 				}
@@ -108,12 +116,13 @@ public class GlobalEntitySystem implements EntitySystem, PerformanceListener {
 		throw new SlickException("No such Entity with ID: " + id);
 	}
 	
+	
+	
 	// PERFOMANCE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public long getMessuredTime() {
 		return time;
 	}
-	
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

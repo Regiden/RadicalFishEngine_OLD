@@ -33,6 +33,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.world.CollisionManager;
 import de.radicalfish.world.EntitySystem;
 import de.radicalfish.world.World;
 
@@ -97,6 +98,15 @@ public interface Map {
 	 */
 	public void destroy(GameContext context, World world);
 	
+	/**
+	 * Adds an {@link MapListener} to the map.
+	 */
+	public void addMapListener(MapListener listener);
+	/**
+	 * Removes and {@link MapListener} from the map.
+	 */
+	public void removeMapListener(MapListener listener);
+	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
@@ -143,6 +153,19 @@ public interface Map {
 	 */
 	public Layer getLayer(int layer);
 	
+	/**
+	 * @return the layer which contains the collision IDs for the map.
+	 */
+	public Layer getCollisionLayer();
+	/**
+	 * @return the collision tile at <code>x</code>, <code>y</code>.
+	 */
+	public Tile getCollisionTileAt(int x, int y);
+	/**
+	 * @return the collision manager used for collision in this map.
+	 */
+	public CollisionManager getCollisionManager();
+	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
@@ -157,6 +180,5 @@ public interface Map {
 	 * Dynamically changes a whole layer at the index <code>layer</code>.
 	 */
 	public void setLayer(Layer layer, int layerIndex);
-	
 	
 }

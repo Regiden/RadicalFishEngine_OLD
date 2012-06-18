@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, Stefan Lange
+ * Copyright (c) 2012, Stefan Lange
  * 
  * All rights reserved.
  * 
@@ -27,33 +27,39 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.world.map;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
-import de.radicalfish.context.GameContext;
-import de.radicalfish.world.World;
+package de.radicalfish.test.collisionnew.blocks;
+import de.radicalfish.Grid;
+import de.radicalfish.Rectangle2D;
+import de.radicalfish.test.collisionnew.TileCollisionManager;
+import de.radicalfish.world.Entity;
+import de.radicalfish.world.map.Tile;
 
 /**
- * Various call backs for map rendering and loading.
+ * Used in the {@link TileCollisionManager}.
  * 
  * @author Stefan Lange
- * @version 1.0.0
- * @since 17.11.2011
+ * @version 0.0.0
+ * @since 18.06.2012
  */
-public interface MapListener {
+public interface BlockCheck {
 	
 	/**
-	 * A maps can call this after rendering a layer. So you can render in between.
+	 * Called to check collision in a specific tile and position the entity if a collision was found.
 	 * 
-	 * @param context
-	 *            the context the game runs int.
-	 * @param world
-	 *            the world the game plays in
-	 * @param g
-	 *            the Graphics context to draw to
-	 * @param layer
-	 *            the layer which was drawn
-	 * @throws SlickException
+	 * @param tiles
+	 *            the tiles of the collision layer
+	 * @param entity
+	 *            the entity to check
+	 * @param tile
+	 *            the tile to check as rectangle. can be used to position the entity along the tile.
+	 * @param position
+	 *            the position at which the collision manager found the collision
+	 * @param direction
+	 *            the direction
+	 * @param tileSize
+	 *            the size if a tile
+	 * @return true if the entity really collides with the tile (e.g. for slopes your need extra checks
 	 */
-	public void onLayerComplete(GameContext context, World world, Graphics g, int layer) throws SlickException;
+	public boolean checkAndPosition(Tile[][] tiles, Entity entity, Rectangle2D tile, Grid position, int direction, int tileSize);
+	
 }

@@ -31,39 +31,38 @@ package de.radicalfish.test.world;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import de.radicalfish.Rectangle2D;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.context.Settings;
-import de.radicalfish.util.GraphicUtils;
+import de.radicalfish.test.collisionnew.DynamicTestMap;
 import de.radicalfish.util.Utils;
 import de.radicalfish.world.Camera;
-import de.radicalfish.world.Entity;
 import de.radicalfish.world.EntitySystem;
 import de.radicalfish.world.World;
+import de.radicalfish.world.map.Map;
 
-public class TestWorld implements World{
-	
-	private static Rectangle2D DEBUG_BOUNDS = new Rectangle2D();
+public class TestWorld implements World {
 	
 	private HashMap<String, EntitySystem> systems;
 	private ArrayList<EntitySystem> backing;
 	
 	private Camera camera;
+	private Map map;
 	
-	
-	public TestWorld() {
+	public TestWorld() throws SlickException {
 		camera = new TestCamera();
 		systems = new HashMap<String, EntitySystem>();
 		backing = new ArrayList<EntitySystem>();
+		
 	}
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public void init(GameContext context) throws SlickException {
+		map = new DynamicTestMap(25, 19, 16);
+		map.load(context, this, null);
+	};
 	public void update(GameContext context, GameDelta delta) throws SlickException {
 		for(EntitySystem es : backing) {
 			es.update(context, this, delta);
@@ -71,7 +70,7 @@ public class TestWorld implements World{
 		camera.update(context, this, delta);
 	}
 	public void render(GameContext context, Graphics g) throws SlickException {
-		debug_draw_sprite_rectangle(context.getSettings());
+		map.render(context, this, g);
 	}
 
 	public void addEntitySystem(String name, EntitySystem system) throws SlickException {
@@ -91,21 +90,7 @@ public class TestWorld implements World{
 		backing.remove(systems.remove(name));
 	}
 	
-	// INTERN
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private void debug_draw_sprite_rectangle(Settings settings) throws SlickException {
-		// draw ALL  rectangles
-		if(settings.isDebugging() && settings.getProperty("debug.sprite.rect.collision", false)) {
-			GraphicUtils.pushMatrix();
-			GL11.glScalef(2, 2, 1);
-			for(EntitySystem es : backing) {
-				for(Entity e : es.getEntities()) {
-					GraphicUtils.drawRect(e.getCollisionBox(DEBUG_BOUNDS), Color.white, 0.5f);
-				}
-			}
-			GraphicUtils.popMatrix();
-		}
-	}
+	
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -118,6 +103,9 @@ public class TestWorld implements World{
 	}
 	public Camera getCamera() {
 		return camera;
+	}
+	public Map getMap() {
+		return map;
 	}
 	public int getTileSize() {
 		return 16;
