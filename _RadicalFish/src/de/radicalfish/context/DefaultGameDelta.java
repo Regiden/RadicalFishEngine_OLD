@@ -44,8 +44,8 @@ public class DefaultGameDelta implements GameDelta {
 	
 	private SimpleFX tween;
 	
-	private int normalDelta;
-	private float delta;
+	private int normalDelta = 16;
+	private float delta = 16f;
 	
 	public DefaultGameDelta() {
 		tween = new SimpleFX(1.0f, 1.0f, 0, Easing.LINEAR);

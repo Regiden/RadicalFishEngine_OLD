@@ -1,5 +1,6 @@
 package de.radicalfish.test.world;
 import java.net.URL;
+import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -28,7 +29,8 @@ import de.radicalfish.debug.ToneEditor;
 import de.radicalfish.debug.ToolBox;
 import de.radicalfish.debug.parser.PropertyInputParser;
 import de.radicalfish.debug.parser.URLInputParser;
-import de.radicalfish.util.GraphicUtils;
+import de.radicalfish.world.Entity;
+import de.radicalfish.world.EntitySystem;
 import de.radicalfish.world.World;
 
 public class DebugGameState extends TWLGameState implements PerformanceListener, DebugHook {
@@ -37,7 +39,7 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 	private GUI gui;
 	private PerformanceGraph graph;
 	
-	private boolean displayShortInfo = false;
+	private boolean displayShortInfo = true;
 	private int delta = 0;
 	
 	public DebugGameState(GameContext context, World world, int id) {
@@ -57,7 +59,7 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 		graph.setFPS(context.getContainer().getFPS());
 		graph.setDelta(this.delta);
 		
-		if (context.getInput().isKeyPressed(Input.KEY_BACKSLASH)) {
+		if (context.getInput().isKeyPressed(Input.KEY_F1)) {
 			root.setVisible(!root.isVisible());
 			if (root.isVisible()) {
 				if (root.getCurrentFocusOwner() != null) {
@@ -66,7 +68,7 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 			}
 		}
 		
-		if(context.getInput().isKeyPressed(Input.KEY_F2)) {
+		if (context.getInput().isKeyPressed(Input.KEY_F2)) {
 			displayShortInfo = !displayShortInfo;
 		}
 		
@@ -102,15 +104,39 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private void renderShortInfo(GameContext context, World world, Graphics g) {
-		if(displayShortInfo) {
-			GraphicUtils.pushMatrix();
-			
+	private void renderShortInfo(GameContext context, World world, Graphics g) throws SlickException {
+		if (displayShortInfo) {
+			g.pushTransform();
+			g.resetTransform();
+			g.setColor(org.newdawn.slick.Color.white);
 			g.drawString("FPS: " + context.getContainer().getFPS(), 5, 5);
 			g.drawString("DELTA: " + delta, 5, 17);
+			g.drawString("ENTITES: " + getTotalEntites(world.getEntitySystems()) + " ( "
+					+ getTotalVisibleEntites(context, world.getEntitySystems()) + " ) ", 5, 29);
 			
-			GraphicUtils.popMatrix();
+			g.popTransform();
+			
 		}
+	}
+	private int getTotalEntites(List<EntitySystem> systems) throws SlickException {
+		int num = 0;
+		for (EntitySystem es : systems) {
+			for (Entity e : es.getEntities()) {
+				num++;
+			}
+		}
+		return num;
+	}
+	private int getTotalVisibleEntites(GameContext context, List<EntitySystem> systems) throws SlickException {
+		int num = 0;
+		for (EntitySystem es : systems) {
+			for (Entity e : es.getEntities()) {
+				if (!e.isOffscreen(context)) {
+					num++;
+				}
+			}
+		}
+		return num;
 	}
 	
 	private void updateGUI(GameContext context) {

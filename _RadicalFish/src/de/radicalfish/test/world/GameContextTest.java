@@ -57,6 +57,7 @@ import de.radicalfish.effects.FBOPostProcesser;
 import de.radicalfish.effects.PostProcesser;
 import de.radicalfish.effects.ToneModel;
 import de.radicalfish.effects.ToneShaderEffect;
+import de.radicalfish.test.collisionnew.MapEntitySystem;
 import de.radicalfish.text.FontRenderer;
 import de.radicalfish.text.FontSheet;
 import de.radicalfish.text.SpriteFont;
@@ -82,7 +83,7 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	private DebugGameState debug;
 	
 	private static int gameScale = 2;
-	private static int gameWidth = 320, gameHeight = 240;
+	private static int gameWidth = 400, gameHeight = 300;
 	private int maxTextureSize = 1024;
 	private boolean canDebug;
 	
@@ -114,6 +115,7 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		
 		AppGameContainer app = new AppGameContainer(new GameContextTest(), width, height, false);
 		
+		app.setTargetFrameRate(60);
 		app.setVSync(settings.isVSync());
 		app.setSmoothDeltas(settings.isSmoothDelta());
 		app.setForceExit(false);
@@ -140,10 +142,6 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		container.setFullscreen(settings.isFullscreen());
 		container.setDefaultFont(defaultFont);
 		
-		world = new TestWorld();
-		GlobalEntitySystem glo = new GlobalEntitySystem();
-		world.addEntitySystem("global", glo);
-		
 		res = new Resources();
 		
 		gameTone = new ToneModel();
@@ -159,18 +157,30 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 			settings.printSettings();
 			Logger.none("------------------------ GAME ------------------------");
 		}
-		
-		TestGameState test = new TestGameState(this, world, 1);
-		addState(test);
-		
 		canDebug = settings.isDebugging();
 		if(canDebug) {
 			debug = new DebugGameState(this, world, 0);
 			debug.init(this, world);
 			debug.setVisible(false);
-			debug.addPerformanceListener(test, "Test State", de.matthiasmann.twl.Color.LIGHTBLUE);
-			debug.addPerformanceListener(glo, "ES Global", Color.GREEN);
 		}
+		
+		res.loadSpriteSheet("test-chipset", "de/radicalfish/assets/collisionmap.png", 16, 16);
+		
+		world = new TestWorld();
+		world.init(this);
+		MapEntitySystem glo = new MapEntitySystem();
+		world.addEntitySystem("map-all", glo);
+		
+		TestGameState test = new TestGameState(this, world, 1);
+		
+		addState(test);
+		
+		if(canDebug) {
+			debug.addPerformanceListener(test, "Sprites", Color.RED);
+			debug.addPerformanceListener(glo, "ES Map", Color.GREEN);
+		}
+		
+		
 		
 	}
 	

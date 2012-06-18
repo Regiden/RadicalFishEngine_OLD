@@ -44,37 +44,6 @@ import de.radicalfish.Rectangle2D;
 public class GraphicUtils {
 	
 	private static float[] rectVerticies = new float[10];
-	private static int pushCount = 0;
-	
-	/**
-	 * Simply calls GL11.pushMatrix(), but saves the amount of pushes you made.
-	 */
-	public static void pushMatrix() {
-		GL11.glPushMatrix();
-		pushCount++;
-	}
-	/**
-	 * Simply calls GL11.popMatrix(), decreases the push count by 1.
-	 */
-	public static void popMatrix() {
-		GL11.glPopMatrix();
-		pushCount--;
-	}
-	/**
-	 * Resets the stack by call popMatrix as long as <code>getPushCount</code> return a value > 0
-	 */
-	public static void resetMatrixStack() {
-		while (getPushCount() > 0) {
-			popMatrix();
-		}
-	}
-	
-	/**
-	 * @return the depth of the push stack.
-	 */
-	public static int getPushCount() {
-		return pushCount;
-	}
 	
 	// LINE RENDERING BY Matthias M
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -111,7 +80,6 @@ public class GraphicUtils {
 		if (numPts >= 2) {
 			color.bind();
 			TextureImpl.bindNone();
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			drawLinesAsQuads(numPts, pts, width, drawAsLoop);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 		}

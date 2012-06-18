@@ -24,4 +24,4 @@ postprocessing:true
 debug.map.checklayers:true
 debug.xml.animations:true
 debug.sprite.rect.collision:true
-debug.sprite.rect.position:true
+debug.sprite.rect.position:false

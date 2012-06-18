@@ -275,7 +275,7 @@ public class PerformanceGraph extends ResizableFrame {
 			Label label = new Label(name);
 			label.setTintAnimator(new TintAnimator(label, color));
 			
-			row.add(label, Alignment.TOP);
+			row.add(label, Alignment.TOPLEFT);
 			row.add(checkbox, Alignment.TOP);
 			row.add(time, Alignment.TOPRIGHT);
 			
