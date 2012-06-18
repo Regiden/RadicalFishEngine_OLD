@@ -24,5 +24,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/Slick"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/_Mr.Hat I_Java Edition"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
