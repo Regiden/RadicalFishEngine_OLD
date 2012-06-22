@@ -34,11 +34,9 @@ import java.util.List;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
-import org.newdawn.slick.util.Log;
+import de.radicalfish.Grid;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.context.Settings;
-import de.radicalfish.test.collision.Grid;
 import de.radicalfish.util.Utils;
 import de.radicalfish.world.Camera;
 import de.radicalfish.world.CollisionManager;
@@ -106,14 +104,9 @@ public class DynamicTestMap implements Map {
 		
 	}
 	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
-		if (!isLoaded(context.getSettings())) {
-			return;
-		}
+	
 	}
 	public void render(GameContext context, World world, Graphics g) throws SlickException {
-		if (!isLoaded(context.getSettings())) {
-			return;
-		}
 		
 		Camera cam = world.getCamera();
 		cam.translateMap(context, world, g);
@@ -172,13 +165,6 @@ public class DynamicTestMap implements Map {
 		for (MapListener listener : this.listener) {
 			listener.onLayerComplete(context, world, g, layer);
 		}
-	}
-	private boolean isLoaded(Settings settings) {
-		if (layers == null && settings.getProperty("debug.map.checklayers", false)) {
-			Log.info("No Data was loaded!");
-			return false;
-		}
-		return true;
 	}
 	private void fillFirst() {
 		for (int i = 0; i < layers.length; i++) {

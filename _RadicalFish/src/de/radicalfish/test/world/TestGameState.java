@@ -217,7 +217,7 @@ public class TestGameState extends GameState implements MapListener, Performance
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	private void debug_draw_sprite_rectangle(World world, Settings settings, Graphics g) throws SlickException {
 		// draw ALL rectangles
-		if (settings.isDebugging() && settings.getProperty("debug.sprite.rect.collision", false)) {
+		if (settings.isDebugging() && settings.getProperty("debug.rect.collision", false)) {
 			g.pushTransform();
 			g.resetTransform();
 			if (mode == MODE.PLAY) {

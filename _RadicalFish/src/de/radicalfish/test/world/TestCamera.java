@@ -30,9 +30,9 @@
 package de.radicalfish.test.world;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Vector2f;
-import radicalDude.hat.util.FastMath;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.util.FastMath;
 import de.radicalfish.world.Camera;
 import de.radicalfish.world.World;
 

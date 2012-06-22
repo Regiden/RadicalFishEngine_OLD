@@ -41,6 +41,8 @@ import de.radicalfish.context.GameContext;
  * <p>
  * <code>de/radicalfish/assests/shader</code>.
  * 
+ * The shader will not run if the graphic details does not support shader are disabled.
+ * 
  * @author Stefan Lange
  * @version 0.0.0
  * @since 07.06.2012
@@ -49,6 +51,8 @@ public class ToneShaderEffect implements PostProcessingEffect {
 	
 	private ShaderProgram toneShader;
 	
+	private boolean usedShader;
+	
 	public ToneShaderEffect() throws SlickException {
 		toneShader = ShaderProgram.loadProgram("de/radicalfish/assets/shader/simple.vert", "de/radicalfish/assets/shader/toner.frag");
 	}
@@ -56,13 +60,19 @@ public class ToneShaderEffect implements PostProcessingEffect {
 	// INTERFACE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void begin(GameContext context, Graphics g) {
-		toneShader.bind();
-		ToneModel t = context.getGameTone();
-		toneShader.setUniform4f("rgbc", t.getRed(), t.getGreen(), t.getBlue(), t.getChroma());
-		toneShader.setUniform4f("rgbcOver", t.getRedOvershoot(), t.getGreenOvershoot(), t.getBlueOvershoot(), t.getChromaOvershoot());
+		if(context.getSettings().getGraphicDetails().useShader()) {
+			toneShader.bind();
+			ToneModel t = context.getGameTone();
+			toneShader.setUniform4f("rgbc", t.getRed(), t.getGreen(), t.getBlue(), t.getChroma());
+			toneShader.setUniform4f("rgbcOver", t.getRedOvershoot(), t.getGreenOvershoot(), t.getBlueOvershoot(), t.getChromaOvershoot());
+			usedShader = true;
+		}
+		
 	}
 	public void end(GameContext context, Graphics g) {
-		toneShader.unbind();
+		if(context.getSettings().getGraphicDetails().useShader() && usedShader) {
+			toneShader.unbind();
+		}
 	}
 	
 	// GETTER

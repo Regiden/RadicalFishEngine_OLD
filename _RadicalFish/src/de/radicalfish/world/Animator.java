@@ -114,7 +114,7 @@ public class Animator implements Serializable {
 	 */
 	public void loadAnimations(GameContext context, String pathXML, List<String> required) throws SlickException {
 		try {
-			if (context.getSettings().getProperty("debug.xml.animations", false)) {
+			if (context.getSettings().getProperty("debug.xmlanimations", false)) {
 				time = System.nanoTime();
 			}
 			XMLParser xpp = new XMLParser(ResourceLoader.getResource(pathXML));
@@ -140,7 +140,7 @@ public class Animator implements Serializable {
 				}
 			}
 			
-			if (context.getSettings().getProperty("debug.xml.animations", false)) {
+			if (context.getSettings().getProperty("debug.xml_animations", false)) {
 				Log.info("Animations were loaded from xml: " + pathXML);
 				Logger.none("\t=> Time:   " + Utils.formatTime((System.nanoTime() - time)));
 				Logger.none("\t=> Loaded: " + animations.size());
