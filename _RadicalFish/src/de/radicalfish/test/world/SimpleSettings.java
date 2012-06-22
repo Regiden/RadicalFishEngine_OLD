@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.context;
+package de.radicalfish.test.world;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -36,6 +36,8 @@ import java.util.Properties;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
+import de.radicalfish.context.GraphicDetails;
+import de.radicalfish.context.Settings;
 import de.radicalfish.debug.Logger;
 
 /**
@@ -44,11 +46,15 @@ import de.radicalfish.debug.Logger;
  * Note that values a loaded as soon as <code>loadSettings</code> is called. The C'tor just loads the properties without
  * setting any values.
  * 
+ * Common values will be auto set. For this all common properties have the "pre" value of <code>common</code>.property.
+ * The same goes for graphics with the <code>graphics</code>.property.
+ * 
+ * 
  * @author Stefan Lange
  * @version 1.0.0
  * @since 15.03.2012
  */
-public class DefaultSettings implements Settings, GraphicDetails {
+public class SimpleSettings implements Settings, GraphicDetails {
 	
 	private Properties properties;
 	private String gamePath, userPath;
@@ -64,7 +70,7 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	/**
 	 * Loads the properties file.
 	 */
-	public DefaultSettings(String path) throws SlickException {
+	public SimpleSettings(String path) throws SlickException {
 		loadSettings(path);
 	}
 	
@@ -158,22 +164,22 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		sound3D = false;
 	}
 	private void loadGraphicDetails() {
-		postprocessing = properties.getProperty("postprocessing", "false").equals("true");
-		animations = properties.getProperty("animations", "false").equals("true");
-		shaders = properties.getProperty("shaders", "false").equals("true");
-		effects = properties.getProperty("effects", "false").equals("true");
+		postprocessing = properties.getProperty("graphics.postprocessing", "false").equals("true");
+		animations = properties.getProperty("graphics.animations", "false").equals("true");
+		shaders = properties.getProperty("graphics.shaders", "false").equals("true");
+		effects = properties.getProperty("graphics.effects", "false").equals("true");
 	}
 	private void loadCommonSettings() {
-		fullscreen = properties.getProperty("fullscreen", "false").equals("true");
-		debug = properties.getProperty("debug", "false").equals("true");
-		logging = properties.getProperty("logging", "false").equals("true");
-		logging = properties.getProperty("sound3D", "false").equals("true");
-		vsync = properties.getProperty("vsync", "false").equals("true");
-		smoothDelta = properties.getProperty("smoothdelta", "false").equals("true");
+		fullscreen = properties.getProperty("common.fullscreen", "false").equals("true");
+		debug = properties.getProperty("common.debug", "false").equals("true");
+		logging = properties.getProperty("common.logging", "false").equals("true");
+		logging = properties.getProperty("common.sound3D", "false").equals("true");
+		vsync = properties.getProperty("common.vsync", "false").equals("true");
+		smoothDelta = properties.getProperty("common.smoothdelta", "false").equals("true");
 		
-		musicVolume = castToFloat(properties.getProperty("music", "1.0"), 1.0f);
-		soundVolume = castToFloat(properties.getProperty("sound", "1.0"), 1.0f);
-		textSpeed = castToInteger(properties.getProperty("textspeed", "1"), 1);
+		musicVolume = castToFloat(properties.getProperty("common.music", "1.0"), 1.0f);
+		soundVolume = castToFloat(properties.getProperty("common.sound", "1.0"), 1.0f);
+		textSpeed = castToInteger(properties.getProperty("common.textspeed", "1"), 1);
 		
 	}
 	
@@ -224,6 +230,45 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		return defaultValue;
 	}
 	
+	private void checkForSimpleSettings(String key) {
+		checkForCommon(key);
+		checkForGraphics(key);
+	}
+	private void checkForCommon(String key) {
+		if (key.equals("common.debug")) {
+			setDebugging(getProperty(key, false));
+		} else if (key.equals("common.fullscreen")) {
+			setFullscreen(getProperty(key, false));
+		} else if (key.equals("common.sound3D")) {
+			setSound3D(getProperty(key, false));
+		} else if (key.equals("common.logging")) {
+			setLogging(getProperty(key, false));
+		} else if (key.equals("common.vsync")) {
+			setVSync(getProperty(key, false));
+		} else if (key.equals("common.smoothdelta")) {
+			setSmoothDelta(getProperty(key, false));
+		} else if (key.equals("common.music")) {
+			setMusicVolume(getProperty(key, 0.0f));
+		} else if (key.equals("common.sound")) {
+			setSoundVolume(getProperty(key, 0.0f));
+		}
+	}
+	private void checkForGraphics(String key) {
+		if (key.equals("graphics.effect")) {
+			setUseEffects(getProperty(key, false));
+		} else if (key.equals("graphics.animation")) {
+			setUseAnimations(getProperty(key, false));
+		} else if (key.equals("graphics.shaders")) {
+			setUseShader(getProperty(key, false));
+		} else if (key.equals("graphics.postprocessing")) {
+			setUsePostProcessing(getProperty(key, false));
+		}
+	}
+	
+	public void _setProperty(String key, String value) {
+		properties.setProperty(key, value);
+	}
+	
 	// GETTER GRAPHICS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public boolean isFBOSupported() {
@@ -241,7 +286,7 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	public boolean isShaderSupported() {
 		return shaderSupported;
 	}
-	public boolean useShaders() {
+	public boolean useShader() {
 		return shaders && shaderSupported;
 	}
 	
@@ -256,28 +301,28 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	public void setUseShader(boolean value) {
 		if (isShaderSupported()) {
 			shaders = value;
-			setProperty("shaders", "" + value);
+			_setProperty("graphics.shaders", "" + value);
 		} else {
 			shaders = false;
-			setProperty("shaders", "" + false);
+			_setProperty("graphics.shaders", "" + false);
 		}
 	};
 	public void setUsePostProcessing(boolean value) {
 		if (isFBOSupported()) {
 			postprocessing = value;
-			setProperty("postprocessing", "" + value);
+			_setProperty("graphics.postprocessing", "" + value);
 		} else {
 			postprocessing = false;
-			setProperty("postprocessing", "" + false);
+			_setProperty("graphics.postprocessing", "" + false);
 		}
 	}
 	public void setUseAnimations(boolean value) {
 		animations = value;
-		setProperty("animations", "" + value);
+		_setProperty("graphics.animations", "" + value);
 	}
 	public void setUseEffects(boolean value) {
 		effects = value;
-		setProperty("effects", "" + value);
+		_setProperty("graphics.effects", "" + value);
 	}
 	
 	// GETTER SETTINGS
@@ -352,46 +397,47 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void setFullscreen(boolean value) {
 		fullscreen = value;
-		setProperty("fullscreen", "" + value);
+		_setProperty("common.fullscreen", "" + value);
 	}
 	public void setDebugging(boolean value) {
 		debug = value;
-		setProperty("debug", "" + value);
+		_setProperty("common.debug", "" + value);
 	}
 	public void setLogging(boolean value) {
 		logging = value;
-		setProperty("logging", "" + value);
+		_setProperty("common.logging", "" + value);
 		Logger.setLogging(logging);
 		Log.setVerbose(logging);
 	}
 	public void setVSync(boolean value) {
 		vsync = value;
-		setProperty("vsync", "" + value);
+		_setProperty("common.vsync", "" + value);
 	}
 	public void setSmoothDelta(boolean value) {
 		smoothDelta = value;
-		setProperty("smoothdelta", "" + value);
+		_setProperty("common.smoothdelta", "" + value);
 	}
 	
 	public void setSound3D(boolean value) {
 		sound3D = value;
-		setProperty("sound3D", "" + value);
+		_setProperty("common.sound3D", "" + value);
 	}
 	public void setMusicVolume(float value) {
 		musicVolume = value;
-		setProperty("music", "" + value);
+		_setProperty("common.music", "" + value);
 	}
 	public void setSoundVolume(float value) {
 		soundVolume = value;
-		setProperty("sound", "" + value);
+		_setProperty("common.sound", "" + value);
 	}
 	
 	public void setTextSpeed(int value) {
 		textSpeed = value;
-		setProperty("textspeed", "" + value);
+		_setProperty("common.textspeed", "" + value);
 	}
 	
 	public void setProperty(String key, String value) {
 		properties.setProperty(key, value);
+		checkForSimpleSettings(key);
 	}
 }
