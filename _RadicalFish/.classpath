@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="libs/lzma.jar"/>
-	<classpathentry kind="lib" path="libs/TWL.jar" sourcepath="/twl/src"/>
 	<classpathentry kind="lib" path="libs/xpp3-1.1.4c.jar"/>
 	<classpathentry kind="lib" path="libs/jinput.jar">
 		<attributes>
@@ -24,6 +23,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/Slick"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/_Mr.Hat I_Java Edition"/>
+	<classpathentry kind="lib" path="libs/TWL.jar" sourcepath="/twl"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
