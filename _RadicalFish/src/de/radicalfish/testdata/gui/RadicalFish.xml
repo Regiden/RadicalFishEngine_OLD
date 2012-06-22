@@ -16,6 +16,8 @@
     
         <area name="box.high" xywh="14,1,12,12" splitx="L4,R4" splity="T4,B4"/>
         <area name="box.down" xywh="27,1,12,12" splitx="L4,R4" splity="T4,B4"/>
+        <area name="box.down2" xywh="14,14,16,16" splitx="L4,R4" splity="T4,B4"/>
+    
         <area name="box.embedded" xywh="40,1,12,12" splitx="L4,R4" splity="T4,B4"/>
         <area name="box.border.normal" xywh="1,1,12,12" splitx="L4,R4" splity="T4,B4"/>
         <area name="box.border.bottom" xywh="3,1,8,10" splitx="L2,R2" splity="T4,B2"/>
@@ -224,7 +226,11 @@
             </composed>
         </select>
         <composed name="columnHeader">
-            <alias ref="box.high" inset="-3,0"/>
+            <select>
+                <alias ref="box.down" if="pressed" inset="-3,0" tint="#B2B2B2"/>
+                <alias ref="box.high" inset="-3,0"/>
+            </select>
+        
             <grid weightsX="1,0" weightsY="1">
                 <alias ref="none"/>
                 <select>
@@ -272,6 +278,18 @@
             <alias ref="box.down" inset="0,0,0,16"/>
         </select>
         <area name="pgrapharea.background" xywh="107,1,28,91" splitx="L21,R3" splity="T3,B73"/>
+        <area name="treebutton-plus" xywh="85,57,9,9"/>
+    
+        <area name="treebutton-minus" xywh="95,57,9,9"/>
+        <select name="treebutton" inset="0,3,0,2">
+            <alias ref="treebutton-plus" if="armed" tint="#646464"/>
+            <alias ref="treebutton-minus" if="selected + armed" tint="#646464"/>
+            <alias ref="treebutton-minus" if="selected"/>
+            <alias ref="treebutton-plus"/>
+        </select>
+        <area name="test" xywh="85,35,12,12" splitx="L2,R2" splity="T2,B2" tiled="true"/>
+    
+    
     
     
     
@@ -738,38 +756,60 @@
         <param name="mouseCursor.link"><cursor>cursor.finger</cursor></param>
     </theme>
     <theme name="treecellrenderer" ref="-defaults">
-        <param name="treeIndent"><int>15</int></param>
-        <param name="treeButtonSize"><dimension>14,11</dimension></param>
+        <param name="treeIndent"><int>14</int></param>
+        <param name="treeButtonSize"><dimension>14,9</dimension></param>
     </theme>
     <theme name="table" ref="-defaults">
     
+    
+        <param name="rowHeight"><int>font.lineHeight + 7</int></param>
+    
         <theme name="stringcellrenderer" ref="-defaults">
-            <param name="border"><border>0,3,0,0</border></param>
+            <param name="border"><border>0</border></param>
             <param name="font"><font>normal</font></param>
         </theme>
-        <theme name="ComboBoxCellRenderer" ref="-defaults">
-            <param name="comboBoxHeight"><int>18</int></param>
-        </theme>
         <theme name="TreeLeafCellRenderer" ref="treecellrenderer"/>
+        <theme name="TreeNodeCellRenderer" ref="treecellrenderer">
+        </theme>
+        <theme name="PropertyEditorCellRender" ref="-defaults"/>
+        <theme name="PropertyListCellRenderer" ref="treecellrenderer">
+            <param name="background"><image>box.high</image></param>
+        </theme>
+        <theme name="treeButton" ref="button">
+            <param name="background"><image>treebutton</image></param>
+        </theme>
+    
         <theme name="columnHeader" ref="button">
             <param name="background"><image>columnHeader</image></param>
             <param name="font"><font>normal</font></param>
         </theme>
         <param name="ensureColumnHeaderMinWidth"><bool>true</bool></param>
         <param name="columnDividerDragableDistance"><int>3</int></param>
-    
-    
-        <param name="rowHeight"><int>font.lineHeight + 6</int></param>
         <param name="columnHeaderWidth"><int>200</int></param>
         <param name="columnHeaderHeight"><int>20</int></param>
-        <param name="columnDivider"><image>none</image></param>
+        <param name="columnDivider"><image>pixel.separator</image></param>
         <param name="row"><image>table.row.*</image></param>
         <param name="minWidth"><int>326</int></param>
-        <param name="minHeight"><int>200</int></param>
+        <param name="minHeight"><int>100</int></param>
+        <theme name="ComboBoxCellRenderer" ref="-defaults">
+            <param name="comboBoxHeight"><int>18</int></param>
+        </theme>
+        <param name="columnWidths">
+            <map>
+            </map>
+        </param>
+        <param name="columnResizeCursor"><cursor>cursor.resizecolumn</cursor></param>
+    
     
     
     
     </theme>
+    <theme name="tableScrollPane" ref="scrollpane">
+        <param name="scrollbarsAlwaysVisible"><bool>false</bool></param>
+        <param name="border"><border>3</border></param>
+        <param name="background"><image>test</image></param>
+    </theme>
+
     <theme name="colorarea" ref="-defaults">
         <param name="border"><border>2</border></param>
         <param name="background"><image>box.embedded</image></param>
@@ -814,6 +854,7 @@
         <theme name="listbox" ref="listbox">
         </theme>
     </theme>
+
     <theme name="fpscounter" ref="label">
     </theme>
     <theme name="graph" ref="-defaults">
@@ -883,6 +924,7 @@
         <param name="border"><border>4,2,2,0</border></param>
         <param name="background"><image>box.border.bottom</image></param>
     </theme>
+
 
 
     <theme name="previewwidgets" ref="-defaults">
