@@ -40,11 +40,13 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.opengl.SlickCallable;
+import org.newdawn.slick.opengl.renderer.Renderer;
+import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.state.StateBasedGame;
 import de.matthiasmann.twl.Color;
 import de.radicalfish.context.DefaultGameDelta;
 import de.radicalfish.context.DefaultGameVariables;
-import de.radicalfish.context.DefaultSettings;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.context.GameVariables;
@@ -67,6 +69,8 @@ import de.radicalfish.world.World;
 
 public class GameContextTest extends StateBasedGame implements GameContext {
 	
+	private static SGL GL = Renderer.get();
+	
 	private static Settings settings;
 	private FontRenderer fontRenderer;
 	private GameContainer container;
@@ -87,6 +91,7 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	private int maxTextureSize = 1024;
 	private boolean canDebug;
 	
+	private boolean usedFBO;
 	private int avgfps, avgdelta, runs;
 	
 	private final int[][] widths = new int[][] { { 3, 3, 5, 7, 5, 7, 7, 3, 4, 4, 5, 5, 4, 5, 3, 5 },
@@ -104,7 +109,7 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		System.setProperty("net.java.games.input.librarypath", System.getProperty("org.lwjgl.librarypath"));
 		
 		try {
-			settings = new DefaultSettings("options.txt");
+			settings = new SimpleSettings("options.txt");
 		} catch (SlickException e) {
 			Sys.alert("ERROR", e.getMessage());
 			System.exit(0);
@@ -199,15 +204,36 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	
 	protected void preRenderState(GameContainer container, Graphics g) throws SlickException {
 		g.setFont(defaultFont);
-		postProcess.bind(this, g);
-		g.clear();
+		
+		if(getSettings().getGraphicDetails().usePostProcessing()) {
+			postProcess.bind(this, g);
+			g.clear();
+			usedFBO = true;
+		} else {
+			usedFBO = false;
+		}
+		
+		if(debug.isVisible()) {
+			SlickCallable.enterSafeBlock();
+			GL.glTranslatef(0, 0, 0);
+			g.scale(0.5f, 0.5f);
+			GL.glPushMatrix();
+		}
+		
 	}
 	protected void postRenderState(GameContainer container, Graphics g) throws SlickException {
-		postProcess.unbind(this, g);
+		if(debug.isVisible()) {
+			GL.glPopMatrix();
+			SlickCallable.leaveSafeBlock();
+		}
 		
-		postProcess.renderScene(this, g);
+		if(getSettings().getGraphicDetails().usePostProcessing() && usedFBO) {
+			postProcess.unbind(this, g);
+			postProcess.renderScene(this, g);
+		}
 		
 		renderDebug(g);
+		setPauseUpdate(debug.isVisible());
 		
 	}
 	

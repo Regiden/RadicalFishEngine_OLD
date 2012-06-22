@@ -30,6 +30,7 @@
 package de.radicalfish;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.InputListener;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -44,7 +45,7 @@ import de.radicalfish.world.World;
  * @version 1.0.0
  * @since 11.03.2012
  */
-public abstract class GameState extends BasicGameState {
+public abstract class GameState extends BasicGameState implements InputListener {
 	
 	private int id;
 	private World world;
@@ -90,6 +91,27 @@ public abstract class GameState extends BasicGameState {
 	 */
 	public abstract void render(GameContext context, World world, Graphics g) throws SlickException;
 	
+	/**
+	 * Get's called when entering this state
+	 * 
+	 * @param context
+	 *            the context the game runs in
+	 * @param world
+	 *            the world the game plays in
+	 * @throws SlickException
+	 */
+	protected void enter(GameContext context, World world) throws SlickException {}
+	/**
+	 * Get's called when leaving this state
+	 * 
+	 * @param context
+	 *            the context the game runs in
+	 * @param world
+	 *            the world the game plays in
+	 * @throws SlickException
+	 */
+	protected void leave(GameContext context, World world) throws SlickException {}
+	
 	// CALLBACK CATCH
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public final void init(GameContainer container, StateBasedGame game) throws SlickException {
@@ -108,4 +130,9 @@ public abstract class GameState extends BasicGameState {
 		return id;
 	}
 	
+	// INPUTS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public boolean isAcceptingInput() {
+		return true;
+	}
 }

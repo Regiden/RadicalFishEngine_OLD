@@ -22,6 +22,7 @@ import de.radicalfish.debug.DeveloperConsole;
 import de.radicalfish.debug.OptionsPanel;
 import de.radicalfish.debug.PerformanceGraph;
 import de.radicalfish.debug.PerformanceListener;
+import de.radicalfish.debug.PropertyEditor;
 import de.radicalfish.debug.TWLGameState;
 import de.radicalfish.debug.TWLInputForwarder;
 import de.radicalfish.debug.TWLRootPane;
@@ -121,9 +122,7 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 	private int getTotalEntites(List<EntitySystem> systems) throws SlickException {
 		int num = 0;
 		for (EntitySystem es : systems) {
-			for (Entity e : es.getEntities()) {
-				num++;
-			}
+			num += es.getEntities().size();
 		}
 		return num;
 	}
@@ -151,6 +150,7 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 		final OptionsPanel options = new OptionsPanel(context.getSettings());
 		final DeveloperConsole console = new DeveloperConsole();
 		final ToneEditor toneeditor = new ToneEditor(context.getGameTone());
+		final PropertyEditor propeditor = new PropertyEditor(context.getSettings());
 		graph = new PerformanceGraph();
 		
 		ToolBox toolbox = new ToolBox(context.getContainerWidth(), context.getContainerHeight());
@@ -160,6 +160,7 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 		toolbox.addButton("Console", console);
 		toolbox.addButton(" Tone ", toneeditor);
 		toolbox.addButton("Performance", graph);
+		toolbox.addButton("Properties", propeditor);
 		
 		toolbox.addFiller();
 		toolbox.addSeparator();
@@ -178,6 +179,7 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 				console.adjustSize();
 				toneeditor.adjustSize();
 				graph.adjustSize();
+				propeditor.adjustSize();
 			}
 		});
 		toolbox.addButton("Close All", new Runnable() {
@@ -186,6 +188,7 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 				console.setVisible(false);
 				toneeditor.setVisible(false);
 				graph.setVisible(false);
+				propeditor.setVisible(false);
 			}
 		});
 		toolbox.addButton("Exit", new Runnable() {
@@ -199,6 +202,7 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 		toneeditor.setVisible(false);
 		console.setVisible(false);
 		graph.setVisible(false);
+		propeditor.setVisible(false);
 		
 		console.addInputParser(new URLInputParser());
 		console.addInputParser(new PropertyInputParser(context.getSettings()));
@@ -208,6 +212,7 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 		root.add(console);
 		root.add(toneeditor);
 		root.add(graph);
+		root.add(propeditor);
 		
 		graph.addPerformanceListener(this, "Total Time", Color.ORANGE);
 	}
@@ -240,7 +245,7 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 		}
 	}
 	private ThemeManager loadTheme(Renderer renderer, GameContext context) throws Exception {
-		String gui = context.getSettings().getProperty("gui.path", "null");
+		String gui = context.getSettings().getProperty("misc.guipath", "null");
 		if (gui.equals("null")) {
 			throw new SlickException("no gui.path property is set!");
 		}

@@ -185,7 +185,7 @@ public interface Settings {
 	 */
 	public void setTextSpeed(int value);
 	/**
-	 * Adds a property dynamically to the settings.
+	 * Adds or sets a property dynamically to the settings.
 	 * 
 	 * @param key
 	 *            the key of the property

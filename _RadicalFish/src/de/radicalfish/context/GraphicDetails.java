@@ -55,7 +55,7 @@ public interface GraphicDetails {
 	/**
 	 * @return true if the game should use Shader.
 	 */
-	public boolean useShaders();
+	public boolean useShader();
 	/**
 	 * @return true if the game should use animations.
 	 */
