@@ -73,6 +73,7 @@ public class DebugGameState extends TWLGameState implements PerformanceListener,
 			displayShortInfo = !displayShortInfo;
 		}
 		
+		
 	}
 	public void render(GameContext context, World world, Graphics g) throws SlickException {
 		renderShortInfo(context, world, g);

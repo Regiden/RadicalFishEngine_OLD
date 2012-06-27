@@ -251,6 +251,8 @@ public class SimpleSettings implements Settings, GraphicDetails {
 			setMusicVolume(getProperty(key, 0.0f));
 		} else if (key.equals("common.sound")) {
 			setSoundVolume(getProperty(key, 0.0f));
+		} else if (key.equals("common.textspeed")) {
+			setTextSpeed(getProperty(key, 0));
 		}
 	}
 	private void checkForGraphics(String key) {

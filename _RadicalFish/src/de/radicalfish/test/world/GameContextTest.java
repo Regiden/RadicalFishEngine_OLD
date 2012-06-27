@@ -40,9 +40,6 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.opengl.SlickCallable;
-import org.newdawn.slick.opengl.renderer.Renderer;
-import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.state.StateBasedGame;
 import de.matthiasmann.twl.Color;
 import de.radicalfish.context.DefaultGameDelta;
@@ -68,8 +65,6 @@ import de.radicalfish.text.StyledFont;
 import de.radicalfish.world.World;
 
 public class GameContextTest extends StateBasedGame implements GameContext {
-	
-	private static SGL GL = Renderer.get();
 	
 	private static Settings settings;
 	private FontRenderer fontRenderer;
@@ -213,27 +208,19 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 			usedFBO = false;
 		}
 		
-		if(debug.isVisible()) {
-			SlickCallable.enterSafeBlock();
-			GL.glTranslatef(0, 0, 0);
-			g.scale(0.5f, 0.5f);
-			GL.glPushMatrix();
-		}
-		
 	}
 	protected void postRenderState(GameContainer container, Graphics g) throws SlickException {
-		if(debug.isVisible()) {
-			GL.glPopMatrix();
-			SlickCallable.leaveSafeBlock();
-		}
 		
 		if(getSettings().getGraphicDetails().usePostProcessing() && usedFBO) {
 			postProcess.unbind(this, g);
+			if(debug.isVisible()) {
+				g.scale(0.5f, 0.5f);
+			}
 			postProcess.renderScene(this, g);
 		}
 		
 		renderDebug(g);
-		setPauseUpdate(debug.isVisible());
+		//setPauseUpdate(debug.isVisible());
 		
 	}
 	

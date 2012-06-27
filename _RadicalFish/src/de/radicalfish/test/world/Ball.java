@@ -43,7 +43,7 @@ public class Ball extends Entity {
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void init(GameContext context, World world) throws SlickException {
-		position.x = FastMath.random(0, context.getGameWidth() - 32);
+		position.x = FastMath.random(17, context.getGameWidth() - 48);
 		position.x = FastMath.round(position.x);
 		position.y = 32;
 		velocity.y = 0.0f;

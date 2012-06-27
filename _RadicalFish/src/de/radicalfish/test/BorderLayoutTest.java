@@ -56,16 +56,10 @@ public class BorderLayoutTest extends DesktopArea {
 	public static void main(String[] args) {
 		try {
 			
-			
-			
 			Display.setDisplayMode(new DisplayMode(800, 600));
 			Display.setResizable(true);
-			//Display.setTitle("TWL Slider Demo");
+			// Display.setTitle("TWL Slider Demo");
 			Display.setVSyncEnabled(true);
-			
-	pixelFormat = new PixelFormat(8, 0, 8);
-	Display.create(pixelFormat);
-			
 			
 			LWJGLRenderer renderer = new LWJGLRenderer();
 			BorderLayoutTest sliders = new BorderLayoutTest();
@@ -83,7 +77,7 @@ public class BorderLayoutTest extends DesktopArea {
 				Display.update();
 				reduceInputLag();
 				
-				if(Display.wasResized()) {
+				if (Display.wasResized()) {
 					GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
 					renderer.setViewport(0, 0, Display.getWidth(), Display.getHeight());
 				}
@@ -124,10 +118,7 @@ public class BorderLayoutTest extends DesktopArea {
 		l.add(p, Location.WEST);
 		l.add(makeScrollPaneWithEditField(), Location.CENTER);
 		
-	
 		frame.add(l);
-		
-		
 		
 		add(frame);
 		

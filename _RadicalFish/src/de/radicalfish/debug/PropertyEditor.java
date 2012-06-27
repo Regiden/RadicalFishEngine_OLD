@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
+import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.PropertySheet;
 import de.matthiasmann.twl.PropertySheet.PropertyEditorFactory;
 import de.matthiasmann.twl.ResizableFrame;
@@ -77,6 +78,8 @@ public class PropertyEditor extends ResizableFrame {
 	private PropertySheet propertySheet;
 	private Settings settings;
 	
+	private ArrayList<String> parentList;
+	
 	private char separator;
 	
 	/**
@@ -97,11 +100,51 @@ public class PropertyEditor extends ResizableFrame {
 	public PropertyEditor(Settings settings, char separator) {
 		this.settings = settings;
 		this.separator = separator;
+		parentList = new ArrayList<String>();
 		createPanel();
+	}
+	
+	// OVERRIDE
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	protected void paintWidget(GUI gui) {
+		updateSettings(propertySheet.getPropertyList(), parentList);
+		super.paintWidget(gui);
+		
 	}
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private void updateSettings(SimplePropertyList list, List<String> parents) {
+		for (int i = 0; i < list.getNumProperties(); i++) {
+			Property<?> property = list.getProperty(i);
+			if (property instanceof SimplePropertyList) {
+				String parent = property.getName();
+				parents.add(parent);
+				updateSettings((SimplePropertyList) property, parents);
+				parents.remove(parent);
+			} else {
+				String name = concatStringList(parentList, property.getName());
+				if (checkBoolean(name, property.getPropertyValue().toString(), property)) {
+					continue;
+				}
+				if (checkInt(name, property.getPropertyValue().toString(), property)) {
+					continue;
+				} else if (checkFloat(name, property.getPropertyValue().toString(), property)) {
+					continue;
+				}
+			}
+			
+		}
+		
+	}
+	private String concatStringList(List<String> list, String property) {
+		String string = "";
+		for (String s : list) {
+			string += s + ".";
+		}
+		return string + property;
+	}
+	
 	private void createPanel() {
 		setTheme("resizableframe-title");
 		setResizableAxis(ResizableAxis.BOTH);
@@ -130,11 +173,6 @@ public class PropertyEditor extends ResizableFrame {
 		
 	}
 	
-	@Override
-	protected void layout() {
-		super.layout();
-	}
-	
 	private void loadSettings() {
 		if (settings == null) {
 			return;
@@ -150,7 +188,6 @@ public class PropertyEditor extends ResizableFrame {
 		
 		Collections.sort(keys, String.CASE_INSENSITIVE_ORDER);
 		for (String name : keys) {
-			System.out.println(name);
 			addProperty(name, prop.getProperty(name));
 		}
 		
@@ -162,9 +199,9 @@ public class PropertyEditor extends ResizableFrame {
 		Property<?> prop = null;
 		if ((prop = tryBoolean(name, original, value)) != null) {
 			return prop;
-		} else if ((prop = tryInteger(name, value)) != null) {
+		} else if ((prop = tryInteger(name, original, value)) != null) {
 			return prop;
-		} else if ((prop = tryFloat(name, value)) != null) {
+		} else if ((prop = tryFloat(name, original, value)) != null) {
 			return prop;
 		} else {
 			final Property<?> property = new SimpleProperty<String>(String.class, name, value);
@@ -224,6 +261,48 @@ public class PropertyEditor extends ResizableFrame {
 		return found;
 	}
 	
+	private boolean checkBoolean(String name, String value, Property<?> property) {
+		if ("true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value)) {
+			@SuppressWarnings("unchecked")
+			SimpleProperty<Boolean> pr = (SimpleProperty<Boolean>) property;
+			pr.setPropertyValue(settings.getProperty(name, false));
+			return true;
+		}
+		return false;
+	}
+	private boolean checkInt(String name, String value, Property<?> property) {
+		try {
+			Integer val = Integer.parseInt(value);
+			if (val != null) {
+				@SuppressWarnings("unchecked")
+				SimpleProperty<Integer> pr = (SimpleProperty<Integer>) property;
+				
+				pr.setPropertyValue(settings.getProperty(name, 0));
+				return true;
+			} else {
+				return false;
+			}
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+	private boolean checkFloat(String name, String value, Property<?> property) {
+		try {
+			Float val = Float.parseFloat(value);
+			if (val != null) {
+				@SuppressWarnings("unchecked")
+				SimpleProperty<Float> pr = (SimpleProperty<Float>) property;
+				pr.setPropertyValue(settings.getProperty(name, 0.0f));
+				
+				return true;
+			} else {
+				return false;
+			}
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+	
 	private Property<?> tryBoolean(String name, final String original, String value) {
 		if ("true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value)) {
 			boolean val = value.equalsIgnoreCase("true");
@@ -237,13 +316,13 @@ public class PropertyEditor extends ResizableFrame {
 		}
 		return null;
 	}
-	private Property<?> tryInteger(final String name, String value) {
+	private Property<?> tryInteger(String name, final String original, String value) {
 		try {
 			Integer val = Integer.parseInt(value);
 			final SimpleProperty<Integer> prop = new SimpleProperty<Integer>(Integer.class, name, val);
 			prop.addValueChangedCallback(new Runnable() {
 				public void run() {
-					settings.setProperty(name, prop.getPropertyValue().toString());
+					settings.setProperty(original, prop.getPropertyValue().toString());
 				}
 			});
 			return prop;
@@ -251,13 +330,13 @@ public class PropertyEditor extends ResizableFrame {
 			return null;
 		}
 	}
-	private Property<?> tryFloat(final String name, String value) {
+	private Property<?> tryFloat(final String name, final String original, String value) {
 		try {
 			Float val = Float.parseFloat(value);
 			final SimpleProperty<Float> prop = new SimpleProperty<Float>(Float.class, name, val);
 			prop.addValueChangedCallback(new Runnable() {
 				public void run() {
-					settings.setProperty(name, prop.getPropertyValue().toString());
+					settings.setProperty(original, prop.getPropertyValue().toString());
 				}
 			});
 			return prop;
@@ -302,7 +381,9 @@ public class PropertyEditor extends ResizableFrame {
 			
 		}
 		public boolean positionWidget(int x, int y, int width, int height) {
-			return false;
+			adjuster.setPosition(x + 2, y);
+			adjuster.setSize(width - 2, height);
+			return true;
 		}
 		
 	}
@@ -345,7 +426,9 @@ public class PropertyEditor extends ResizableFrame {
 			
 		}
 		public boolean positionWidget(int x, int y, int width, int height) {
-			return false;
+			adjuster.setPosition(x + 2, y);
+			adjuster.setSize(width - 2, height);
+			return true;
 		}
 		
 	}
