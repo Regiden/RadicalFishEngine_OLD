@@ -56,4 +56,15 @@ public final class Arrays2D {
 		return tiles;
 	}
 	
+	/**
+	 * Copies the content from <code>array1</code> into <code>array2</code>.
+	 */
+	public static void copyIntArray(int array1[][], int array2[][]) {
+		for (int i = 0; i < array1.length; i++) {
+			for (int j = 0; j < array2.length; j++) {
+				array2[i][j] = array1[i][j];
+			}
+		}
+	}
+	
 }
