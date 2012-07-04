@@ -36,8 +36,10 @@ import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.test.collisionnew.DynamicTestMap;
+import de.radicalfish.test.collisionnew.TileCollisionManager;
 import de.radicalfish.util.Utils;
 import de.radicalfish.world.Camera;
+import de.radicalfish.world.CollisionManager;
 import de.radicalfish.world.EntitySystem;
 import de.radicalfish.world.World;
 import de.radicalfish.world.map.Map;
@@ -45,21 +47,27 @@ import de.radicalfish.world.map.Map;
 public class TestWorld implements World {
 	
 	private HashMap<String, EntitySystem> systems;
+	private HashMap<String, CollisionManager> cols;
 	private ArrayList<EntitySystem> backing;
 	
 	private Camera camera;
 	private Map map;
+	private CollisionManager mapCol;
 	
 	public TestWorld() throws SlickException {
 		camera = new TestCamera();
 		systems = new HashMap<String, EntitySystem>();
 		backing = new ArrayList<EntitySystem>();
+		cols = new HashMap<String, CollisionManager>();
 		
 	}
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void init(GameContext context) throws SlickException {
+		mapCol = new TileCollisionManager(16);
+		cols.put("map", mapCol);
+		
 		map = new DynamicTestMap(25, 19, 16);
 		map.load(context, this, null);
 	};
@@ -94,6 +102,10 @@ public class TestWorld implements World {
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public CollisionManager getCollisionManager(String name) {
+		Utils.notNull("name", name);
+		return cols.get(name);
+	};
 	public List<EntitySystem> getEntitySystems() {
 		return backing;
 	}

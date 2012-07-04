@@ -27,12 +27,13 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.world.map;
+package de.radicalfish.test.collisionnew.blocks;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.world.World;
+import de.radicalfish.world.map.Tile;
 
 /**
  * A simple tile which does not change the tile id on it's own.

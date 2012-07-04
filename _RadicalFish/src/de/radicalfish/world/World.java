@@ -95,6 +95,11 @@ public interface World {
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
+	 * @return the CollisionManager defined by <code>name</code>.
+	 */
+	public CollisionManager getCollisionManager(String name);
+	
+	/**
 	 * @return a list of all system in use.
 	 */
 	public List<EntitySystem> getEntitySystems();

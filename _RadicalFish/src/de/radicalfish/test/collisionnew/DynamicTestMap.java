@@ -37,15 +37,15 @@ import org.newdawn.slick.SpriteSheet;
 import de.radicalfish.Grid;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.test.collisionnew.blocks.SimpleTile;
 import de.radicalfish.util.Utils;
 import de.radicalfish.world.Camera;
-import de.radicalfish.world.CollisionManager;
 import de.radicalfish.world.World;
 import de.radicalfish.world.map.Layer;
 import de.radicalfish.world.map.Map;
 import de.radicalfish.world.map.MapListener;
-import de.radicalfish.world.map.SimpleTile;
 import de.radicalfish.world.map.Tile;
+import de.radicalfish.world.map.TileSet;
 
 /**
  * A test map which can me changed dynamically for testing. It has only one layer.
@@ -55,8 +55,6 @@ import de.radicalfish.world.map.Tile;
  * @since 15.06.2012
  */
 public class DynamicTestMap implements Map {
-	
-	private static TileCollisionManager COLLIDER = new TileCollisionManager(16);
 	
 	private SpriteSheet sheet;
 	
@@ -85,7 +83,6 @@ public class DynamicTestMap implements Map {
 		widthP = width * tileSize;
 		heightP = height * tileSize;
 		this.tileSize = tileSize;
-		COLLIDER.setTileSize(tileSize);
 	}
 	
 	// METHODS
@@ -241,12 +238,14 @@ public class DynamicTestMap implements Map {
 			return null;
 		return collision.getTileAt(x, y);
 	}
-	public CollisionManager getCollisionManager() {
-		return COLLIDER;
-	}
+	
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public void setName(String name) {
+		this.name = name;
+	}
+	public void setTileSize(int size) {}
 	public void setTileAt(int x, int y, int id, int layer) {
 		layers[layer].setTileAt(x, y, id);
 	}
@@ -256,6 +255,12 @@ public class DynamicTestMap implements Map {
 	public void setLayer(Layer layer, int layerIndex) {
 		
 	}
+	@Override
+	public void setLayers(List<Layer> layers) {}
+	
+	public void setCollisionTileAt(int x, int y, int id) {}
+	public void setCollisionTileAt(int x, int y, Tile tile) {}
+	public void setCollisionLayer(Layer layer) {}
 	
 	// INTERN CLASSES
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -279,6 +284,13 @@ public class DynamicTestMap implements Map {
 		}
 		public void setTileAt(int x, int y, Tile tile) {
 			tiles[x][y] = tile;
+		}
+		
+		public String getName() {
+			return null;
+		}
+		public TileSet getTileSet() {
+			return null;
 		}
 		
 	}

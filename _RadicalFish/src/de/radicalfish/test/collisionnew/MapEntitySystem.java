@@ -35,17 +35,11 @@ import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.debug.PerformanceListener;
 import de.radicalfish.util.Utils;
+import de.radicalfish.world.CollisionManager;
 import de.radicalfish.world.Entity;
 import de.radicalfish.world.EntitySystem;
 import de.radicalfish.world.World;
 
-/**
- * And entity system which invokes the makes a call to the maps collision manager after an entity was updated.
- * 
- * @author Stefan Lange
- * @version 0.0.0
- * @since 16.06.2012
- */
 public class MapEntitySystem implements EntitySystem, PerformanceListener {
 	
 	private ArrayList<Entity> entities;
@@ -73,11 +67,14 @@ public class MapEntitySystem implements EntitySystem, PerformanceListener {
 		// idea from princec
 		// no iterator because we check the list dynamically
 		// one entity could add a new one and so on
+		
+		CollisionManager cm = world.getCollisionManager("map");
+		
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
 			if (e.isAlive()) {
 				e.update(context, world, delta);
-				world.getMap().getCollisionManager().checkCollision(context, world, e);
+				cm.checkCollision(context, world, e);
 				if (e.isAlive()) {
 					checkList.add(e);
 				}

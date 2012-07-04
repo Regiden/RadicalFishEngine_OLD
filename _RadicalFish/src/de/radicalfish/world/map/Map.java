@@ -33,7 +33,6 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.world.CollisionManager;
 import de.radicalfish.world.EntitySystem;
 import de.radicalfish.world.World;
 
@@ -52,7 +51,7 @@ public interface Map {
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Loads a map. This should also set up {@link EntitySystem}s used by maps. Note you can use the
+	 * Loads this map. This should also set up {@link EntitySystem}s used by maps. Note you can use the
 	 * <code>destroy</code> method to unload another map before to save memory.
 	 * 
 	 * @param context
@@ -88,7 +87,7 @@ public interface Map {
 	 */
 	public void render(GameContext context, World world, Graphics g) throws SlickException;
 	/**
-	 * Unloads all content. This can be used to flush {@link EntitySystem}s from entites and make one map object for all
+	 * Unloads all content. This can be used to flush {@link EntitySystem}s from entities and make one map object for all
 	 * maps to save memory.
 	 * 
 	 * @param context
@@ -161,24 +160,46 @@ public interface Map {
 	 * @return the collision tile at <code>x</code>, <code>y</code>.
 	 */
 	public Tile getCollisionTileAt(int x, int y);
-	/**
-	 * @return the collision manager used for collision in this map.
-	 */
-	public CollisionManager getCollisionManager();
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Dynamically sets the id of a tile at <code>x</code>, <code>y</code> at the index <code>layer</code>.
+	 * Sets the name of the map.
+	 */
+	public void setName(String name);
+	/**
+	 * Sets the size of one tile;
+	 */
+	public void setTileSize(int size);
+	
+	/**
+	 * Sets the id of a tile at <code>x</code>, <code>y</code> at the index <code>layer</code>.
 	 */
 	public void setTileAt(int x, int y, int id, int layer);
 	/**
-	 * Dynamically changes the tile at <code>x</code>, <code>y</code> at the index <code>layer</code>.
+	 * Changes the tile at <code>x</code>, <code>y</code> at the index <code>layer</code>.
 	 */
 	public void setTileAt(int x, int y, Tile tile, int layer);
 	/**
-	 * Dynamically changes a whole layer at the index <code>layer</code>.
+	 * Changes a whole layer at the index <code>layer</code>.
 	 */
 	public void setLayer(Layer layer, int layerIndex);
+	/**
+	 * Sets all the layers.
+	 */
+	public void setLayers(List<Layer> layers);
+	
+	/**
+	 * Sets the id of a tile at <code>x</code>, <code>y</code> at the index <code>layer</code> in the collision layer.
+	 */
+	public void setCollisionTileAt(int x, int y, int id);
+	/**
+	 * Changes the tile at <code>x</code>, <code>y</code> at the index <code>layer</code> in the collision layer.
+	 */
+	public void setCollisionTileAt(int x, int y, Tile tile);
+	/**
+	 * Changes the collision layer to <code>layer</code>.
+	 */
+	public void setCollisionLayer(Layer layer);
 	
 }

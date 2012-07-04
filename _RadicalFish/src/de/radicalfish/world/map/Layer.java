@@ -29,7 +29,6 @@
  */
 package de.radicalfish.world.map;
 
-
 /**
  * Interface for layers contained in a {@link Map}. A map should render all Entities ased on the layer they have.
  * @author Stefan Lange
@@ -40,6 +39,16 @@ public interface Layer {
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	
+	/**
+	 * @return the name if this layer
+	 */
+	public String getName();
+	/**
+	 * @return the {@link TileSet} used for this layer if any. Can be null if not used.
+	 */
+	public TileSet getTileSet();
+	
 	/**
 	 * @return the tile data.
 	 */
