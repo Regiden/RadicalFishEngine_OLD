@@ -55,7 +55,8 @@ import de.radicalfish.world.map.TileSet;
  * @since 15.06.2012
  */
 public class DynamicTestMap implements Map {
-	
+	private static final long serialVersionUID = 1L;
+
 	private SpriteSheet sheet;
 	
 	private ArrayList<MapListener> listener;
@@ -87,7 +88,7 @@ public class DynamicTestMap implements Map {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void load(GameContext context, World world, String path) {
+	public void init(GameContext context, World world) {
 		sheet = context.getResources().getSpriteSheet("test-chipset");
 		layers = new Layer[1];
 		layers[0] = new SimpleLayer(widthT, heightT);
@@ -120,7 +121,9 @@ public class DynamicTestMap implements Map {
 		Utils.notNull("listener", listener);
 		this.listener.remove(listener);
 	}
-	
+	public void removeAllListener() {
+		listener.clear();
+	}
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	private void renderMap(float x, float y, int sx, int sy, int width, int height, GameContext context, World world, Graphics g)
@@ -265,12 +268,16 @@ public class DynamicTestMap implements Map {
 	// INTERN CLASSES
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public static class SimpleLayer implements Layer {
-		
+		private static final long serialVersionUID = 1L;
 		private Tile[][] tiles;
 		
 		public SimpleLayer(int width, int height) {
 			tiles = new Tile[width][height];
 		}
+		
+		public void update(GameContext context, World world, GameDelta delta) throws SlickException {}
+		public void render(GameContext context, World world, Graphics g) throws SlickException {}
+		
 		
 		public Tile[][] getTiles() {
 			return tiles;

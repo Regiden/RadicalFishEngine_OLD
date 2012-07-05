@@ -69,7 +69,7 @@ public class TestWorld implements World {
 		cols.put("map", mapCol);
 		
 		map = new DynamicTestMap(25, 19, 16);
-		map.load(context, this, null);
+		map.init(context, this);
 	};
 	public void update(GameContext context, GameDelta delta) throws SlickException {
 		for(EntitySystem es : backing) {

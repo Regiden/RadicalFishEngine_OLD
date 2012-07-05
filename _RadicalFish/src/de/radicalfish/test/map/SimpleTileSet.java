@@ -27,42 +27,56 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.test.collisionnew.blocks;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
-import de.radicalfish.context.GameContext;
-import de.radicalfish.context.GameDelta;
-import de.radicalfish.world.World;
-import de.radicalfish.world.map.Tile;
+package de.radicalfish.test.map;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SpriteSheet;
+import de.radicalfish.world.map.TileSet;
 
-/**
- * A simple tile which does not change the tile id on it's own.
- * 
- * @author Stefan Lange
- * @version 0.0.0
- * @since 15.06.2012
- */
-public class SimpleTile implements Tile{
+public class SimpleTileSet implements TileSet {
+	
+	private transient SpriteSheet sheet;
+	
+	private String name, location;
+	
+	public SimpleTileSet(String resourceName, SpriteSheet sheet) {
+		name = resourceName;
+		this.sheet = sheet;
+		location = sheet.getResourceReference();
+	}
 	
 	private static final long serialVersionUID = 1L;
 	
-	private int id;
-	
-	public SimpleTile(int id) {
-		setTileID(id);
+	@Override
+	public String getResourceName() {
+		return name;
 	}
 	
-	// METHODS
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void update(GameContext context, World world, GameDelta delta) throws SlickException {}
-	public void render(GameContext context, World world, Graphics g) throws SlickException {}
+	@Override
+	public String getResourceLocation() {
+		return location;
+	}
 	
-	// GETTER & SETTER
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public int getTileID() {
-		return id;
+	@Override
+	public Image getTileAt(int index) {
+		int x = index % sheet.getHorizontalCount();
+		int y = index / sheet.getVerticalCount();
+		return sheet.getSubImage(x, y);
 	}
-	public void setTileID(int id) {
-		this.id = id;
+	
+	@Override
+	public Image getTileAt(int x, int y) {
+		return sheet.getSubImage(x, y);
 	}
+	
+	public SpriteSheet getSheet() {
+		return sheet;
+	}
+	
+	@Override
+	public void setSheet(String resourceName, SpriteSheet sheet) {
+		name = resourceName;
+		location = sheet.getResourceReference();
+		this.sheet = sheet;
+	}
+	
 }

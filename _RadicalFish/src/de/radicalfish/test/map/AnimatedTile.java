@@ -27,42 +27,60 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.test.collisionnew.blocks;
+package de.radicalfish.test.map;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.util.Log;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.world.World;
 import de.radicalfish.world.map.Tile;
 
-/**
- * A simple tile which does not change the tile id on it's own.
- * 
- * @author Stefan Lange
- * @version 0.0.0
- * @since 15.06.2012
- */
-public class SimpleTile implements Tile{
-	
+public class AnimatedTile implements Tile {
+
 	private static final long serialVersionUID = 1L;
 	
-	private int id;
+	private int[] times, index;
+	private boolean pingPong;
+	private int curIndex, curTime, direction;
 	
-	public SimpleTile(int id) {
-		setTileID(id);
+	public AnimatedTile(int[] times, int[] index, boolean pingPong) {
+		this.times = times;
+		this.index = index;
+		this.pingPong = pingPong;
+		
+		curTime = times[0];
+		curIndex = 0;
 	}
 	
-	// METHODS
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void update(GameContext context, World world, GameDelta delta) throws SlickException {}
-	public void render(GameContext context, World world, Graphics g) throws SlickException {}
-	
-	// GETTER & SETTER
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
+		curTime -= delta.getDelta();
+		
+		while (curTime < 0) {
+			curIndex = (curIndex + direction) % index.length;
+			if (pingPong) {
+				if (curIndex <= 0) {
+					curIndex = 0;
+					direction = 1;
+				} else if (curIndex >= index.length - 1) {
+					curIndex = index.length - 1;
+					direction = -1;
+				}
+			}
+			curTime += times[curIndex];
+		}
+	}
+	public void render(GameContext context, World world, Graphics g) throws SlickException {
+		
+	}
+
 	public int getTileID() {
-		return id;
+		return index[curIndex];
 	}
+
 	public void setTileID(int id) {
-		this.id = id;
+		Log.error("cannot set on animated tiles");
 	}
+	
 }
