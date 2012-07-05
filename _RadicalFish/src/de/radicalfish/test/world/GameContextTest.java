@@ -220,7 +220,7 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		}
 		
 		renderDebug(g);
-		//setPauseUpdate(debug.isVisible());
+		setUpdatePaused(debug.isVisible());
 		
 	}
 	
