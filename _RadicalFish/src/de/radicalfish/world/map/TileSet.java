@@ -28,6 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.world.map;
+import java.io.Serializable;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 import de.radicalfish.context.Resources;
@@ -39,7 +40,7 @@ import de.radicalfish.context.Resources;
  * @version 0.0.0
  * @since 04.07.2012
  */
-public interface TileSet {
+public interface TileSet extends Serializable{
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -63,5 +64,18 @@ public interface TileSet {
 	 */
 	public Image getTileAt(int x, int y);
 	
+	/**
+	 * @return the sheet used for the TilSet.
+	 */
+	public SpriteSheet getSheet();
+	
+	// GETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Sets the sheet to use.
+	 * @param resourceName the resource name if any
+	 * @param sheet the sheet to set.
+	 */
+	public void setSheet(String resourceName, SpriteSheet sheet);
 	
 }

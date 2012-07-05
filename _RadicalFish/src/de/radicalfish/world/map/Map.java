@@ -28,6 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.world.map;
+import java.io.Serializable;
 import java.util.List;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -46,22 +47,20 @@ import de.radicalfish.world.World;
  * @version 0.0.0
  * @since 15.06.2012
  */
-public interface Map {
+public interface Map extends Serializable {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Loads this map. This should also set up {@link EntitySystem}s used by maps. Note you can use the
+	 * Initializes this map. This should also set up {@link EntitySystem}s used by maps. Note you can use the
 	 * <code>destroy</code> method to unload another map before to save memory.
 	 * 
 	 * @param context
 	 *            the context the game runs in
 	 * @param world
 	 *            the world the game plays in
-	 * @param path
-	 *            the path from which the map should be loaded.
 	 */
-	public void load(GameContext context, World world, String path);
+	public void init(GameContext context, World world);
 	/**
 	 * Updates the map. This should also update all entities on the map.
 	 * 
@@ -105,6 +104,10 @@ public interface Map {
 	 * Removes and {@link MapListener} from the map.
 	 */
 	public void removeMapListener(MapListener listener);
+	/**
+	 * Removes all listener attached to the map. This will be used by the {@link MapIO} class.
+	 */
+	public void removeAllListener();
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

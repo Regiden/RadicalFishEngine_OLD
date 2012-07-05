@@ -1,31 +1,31 @@
 package de.radicalfish.util;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.util.ResourceLoader;
 
 /**
- * This class serializes-, saves-, de-serializes- and loads objects.
- * Last update: 19.11.2011
+ * This class serializes-, saves-, de-serializes- and loads objects. Last update: 19.11.2011
  * 
  * @author Marco Knietzsch & Stefan Lange
  * @version 3.0.0
  * @since 27.05.2010
  */
 public class IO_Object {
-
+	
 	/**
 	 * Saves an Object to a specific dictionary.
 	 * 
-	 * @param o the object which shall be saved
-	 * @param path where to save the object.
+	 * @param o
+	 *            the object which shall be saved
+	 * @param path
+	 *            where to save the object.
+	 * @throws SlickException
 	 */
-	public static void save(Object o, String path) {
+	public static void save(Object o, String path) throws SlickException {
 		ObjectOutputStream outStream;
 		try {
 			outStream = new ObjectOutputStream(new FileOutputStream(path));
@@ -33,23 +33,19 @@ public class IO_Object {
 			outStream.writeObject(o);
 			outStream.flush();
 			outStream.close();
-		}catch(InvalidClassException ex) {
-			System.err.println(ex);
-		}catch(OptionalDataException ex) {
-			System.err.println(ex);
-		}catch(FileNotFoundException ex) {
-			System.err.println(ex);
-		}catch(IOException ex) {
-			System.err.println(ex);
+		} catch (Exception ex) {
+			throw new SlickException(ex.getMessage(), ex.getCause());
 		}
 	}
 	/**
 	 * Loads and object from a given path.
 	 * 
-	 * @param path Where to find the object.
+	 * @param path
+	 *            Where to find the object.
 	 * @return A object representing some class without cast.
+	 * @throws SlickException
 	 */
-	public static Object load(String path) throws FileNotFoundException {
+	public static Object load(String path) throws SlickException {
 		Object o = new Object();
 		ObjectInputStream inStream;
 		try {
@@ -57,27 +53,19 @@ public class IO_Object {
 			o = inStream.readObject();
 			inStream.close();
 			return o;
-		}catch(InvalidClassException ex) {
-			System.err.println(ex);
-			return null;
-		}catch(ClassNotFoundException ex) {
-			System.err.println(ex);
-			return null;
-		}catch(OptionalDataException ex) {
-			System.err.println(ex);
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+		} catch (Exception ex) {
+			throw new SlickException(ex.getMessage(), ex.getCause());
 		}
 	}
 	/**
 	 * Loads and object from a given path in the class path.
 	 * 
-	 * @param path Where to find the object.
+	 * @param path
+	 *            where to find the object.
 	 * @return A object representing some class without cast.
+	 * @throws SlickException
 	 */
-	public static Object loadFromClassPath(String path) throws FileNotFoundException {
+	public static Object loadFromClassPath(String path) throws SlickException {
 		Object o = new Object();
 		InputStream in = IO_Object.class.getClassLoader().getResourceAsStream(path);
 		ObjectInputStream inStream;
@@ -86,76 +74,42 @@ public class IO_Object {
 			o = inStream.readObject();
 			inStream.close();
 			return o;
-		}catch(InvalidClassException ex) {
-			System.err.println(ex);
-			return null;
-		}catch(ClassNotFoundException ex) {
-			System.err.println(ex);
-			return null;
-		}catch(OptionalDataException ex) {
-			System.err.println(ex);
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+		} catch (Exception ex) {
+			throw new SlickException(ex.getMessage(), ex.getCause());
 		}
 		
 	}
 	/**
 	 * Loads an object from a given path as the left handed type.
-	 * @param path the path to the object.
+	 * 
+	 * @param path
+	 *            the path to the object.
 	 * @return A object representing a class automatically casted
-	 * @throws IOException 
+	 * @throws SlickException
+	 */
+	public static <T> T loadAs(String path) throws SlickException {
+		return loadAs(ResourceLoader.getResourceAsStream(path));
+	}
+	/**
+	 * Loads an object from a given path as the left handed type.
+	 * 
+	 * @param stream
+	 *            the stream from which we should load
+	 * @return A object representing a class automatically casted
+	 * @throws SlickException
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T loadAs(String path) throws IOException {
+	public static <T> T loadAs(InputStream stream) throws SlickException {
 		T object = null;
 		ObjectInputStream inStream;
 		try {
-			inStream = new ObjectInputStream(new FileInputStream(path));
+			inStream = new ObjectInputStream(stream);
 			object = (T) inStream.readObject();
 			inStream.close();
 			return object;
-		} catch (InvalidClassException ex) {
-			System.err.println(ex);
-			return null;
-		} catch (ClassNotFoundException ex) {
-			System.err.println(ex);
-			return null;
-		} catch (OptionalDataException ex) {
-			System.err.println(ex);
-			return null;
+		} catch (Exception ex) {
+			throw new SlickException(ex.getMessage(), ex.getCause());
 		}
-	}
-	/**
-	 * Loads an object from a given path int the class path as the left handed type.
-	 * @param path the path to the object.
-	 * @return A object representing a class automatically casted
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T loadFromClassPathAs(String path) throws FileNotFoundException {
-		T o = null;
-		InputStream in = IO_Object.class.getClassLoader().getResourceAsStream(path);
-		ObjectInputStream inStream;
-		try {
-			inStream = new ObjectInputStream(in);
-			o = (T) inStream.readObject();
-			inStream.close();
-			return o;
-		}catch(InvalidClassException ex) {
-			System.err.println(ex);
-			return null;
-		}catch(ClassNotFoundException ex) {
-			System.err.println(ex);
-			return null;
-		}catch(OptionalDataException ex) {
-			System.err.println(ex);
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		
 	}
 	
 }

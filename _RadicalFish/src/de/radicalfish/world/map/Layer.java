@@ -28,6 +28,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.world.map;
+import java.io.Serializable;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import de.radicalfish.context.GameContext;
+import de.radicalfish.context.GameDelta;
+import de.radicalfish.world.World;
 
 /**
  * Interface for layers contained in a {@link Map}. A map should render all Entities ased on the layer they have.
@@ -35,11 +41,37 @@ package de.radicalfish.world.map;
  * @version 0.5.0
  * @since 15.06.2012
  */
-public interface Layer {
+public interface Layer extends Serializable{
+	
+
+	// METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Updates the layer.
+	 * 
+	 * @param context
+	 *            the context the game runs in
+	 * @param world
+	 *            the world the game plays in
+	 * @param delta
+	 *            the {@link GameDelta} object holding the delta value
+	 */
+	public void update(GameContext context, World world, GameDelta delta) throws SlickException;
+	/**
+	 * Renders the layer. 
+	 * 
+	 * @param context
+	 *            the context the game runs in
+	 * @param world
+	 *            the world the game plays in
+	 * @param g
+	 *            the graphics context to draw to
+	 * @throws SlickException
+	 */
+	public void render(GameContext context, World world, Graphics g) throws SlickException;
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	
 	/**
 	 * @return the name if this layer
 	 */
