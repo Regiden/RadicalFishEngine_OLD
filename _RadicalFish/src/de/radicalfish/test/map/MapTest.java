@@ -58,26 +58,24 @@ public class MapTest extends BasicGame {
 		
 		delta = new DefaultGameDelta();
 		
-		map = new SimpleMap(30, 30);
-		map.init(null, null);
-		
-		MapIO.saveMap("test.map", map);
-		
-		System.out.println(map.getLayer(0).getTileSet().getResourceLocation());
-		System.out.println(map.getLayer(0).getTileSet().getSheet());
-		
-		Map map2 = MapIO.loadMap("test.map", new MapIOListener() {
+		Map map2 = new SimpleMap(30, 30);
+		map2.init(null, null);
+		MapIO.saveMap("test.map", map2);
+		map = MapIO.loadMap("test.map", new MapIOListener() {
 			public SpriteSheet readTileSet(Layer layer, String resourceName, String resourceLocation) {
-				System.out.println(resourceName);
-				System.out.println(resourceLocation);
 				
 				SimpleLayer.load();
 				return SimpleLayer.sheet;
 			}
 		});
 		
-		System.out.println(map2.getLayer(0).getTileSet().getResourceLocation());
-		System.out.println(map2.getLayer(0).getTileSet().getSheet());
+		Map map3 = new SimpleMap(50, 50);
+		map3.init(null, null);
+		
+		MapIO.writeMap("test2.map", map3, true);
+		
+		MapIO.readMap("test2.map", null, true);
+		
 		
 	}
 	public void update(GameContainer container, int delta) throws SlickException {
