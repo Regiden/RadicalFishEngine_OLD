@@ -39,17 +39,27 @@ import java.util.Date;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
-import de.radicalfish.util.IO_Object;
-import de.radicalfish.util.Utils;
+import de.radicalfish.world.Entity;
 
 /**
- * Loads and saves maps. All Implementations of the {@link Map} Interface must be serializable. if some fields are not
- * serializable this method will throw an exception. When loading the Callback {@link MapIOListener} makes it possible
- * to load Tilesets be resource name or resource location.
+ * Writes and Reads Maps. MapIO will attempt to write all data provided by the Interfaces {@link Map}, {@link Layer},
+ * {@link TileSet}, {@link Tile} and {@link EntityLayer}. For Entities MapIO will write all values provided by the
+ * abstract class {@link Entity} (excluding all abstract methods, those will not be saved).
+ * <p>
+ * When reading the {@link MapIOListener} can be used to provided instances of the Interfaces (or the abstract Entity
+ * class). This makes it possible to save the map in one Application and load in another with a complete different
+ * Implementation.
+ * <p>
+ * All data provided via the getter in the Interfaces and the Entity class should never return a null object. This could
+ * lead to errors while writing/reading maps.
+ * <p>
+ * MapIO can use GZIP to compress the file. For this {@link GZIPInputStream} and {@link GZIPOutputStream} are used. Use
+ * the boolean parameters in the write/read methods to enable GZIP.
  * 
  * @author Stefan Lange
- * @version 0.0.0
+ * @version 1.0.0
  * @since 04.07.2012
  */
 public class MapIO {
@@ -58,46 +68,6 @@ public class MapIO {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public static void saveMap(String path, Map map) throws SlickException {
-		IO_Object.save(map, path);
-	}
-	
-	/**
-	 * Loads a map frim a specific <code>path</code>. The path will be loaded via the {@link ResourceLoader}.
-	 * 
-	 * @param listener
-	 *            the listener for loading, cannot be null
-	 * @return the map as casted object.
-	 * @throws SlickException
-	 */
-	public static <T extends Map> T loadMap(String path, MapIOListener listener) throws SlickException {
-		Utils.notNull("path", path);
-		return loadMap(ResourceLoader.getResourceAsStream(path), listener);
-	}
-	
-	/**
-	 * Loads a map from a specific <code>stream</code>.
-	 * 
-	 * @param listener
-	 *            the listener for loading, cannot be null
-	 * @return the map as casted object.
-	 * @throws SlickException
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T extends Map> T loadMap(InputStream stream, MapIOListener listener) throws SlickException {
-		Utils.notNull("listener", listener);
-		Utils.notNull("stream", stream);
-		
-		Map map = IO_Object.loadAs(stream);
-		
-		for (int i = 0; i < map.getLayers().size(); i++) {
-			TileSet set = map.getLayer(i).getTileSet();
-			set.setSheet(set.getResourceName(), listener.readTileSet(map.getLayer(i), set.getResourceName(), set.getResourceLocation()));
-		}
-		
-		return (T) map;
-	}
-	
 	public static void writeMap(String path, Map map, boolean zip) throws SlickException {
 		try {
 			writeMap(new FileOutputStream(path), map, zip);
@@ -118,9 +88,8 @@ public class MapIO {
 			dos.writeInt(VERSION);
 			dos.writeLong(new Date().getTime()); // time-stamp
 			
-			// do the map
+			// write map
 			writeMap(dos, map);
-			writeLayer(dos, map.getCollisionLayer());
 			
 			dos.flush();
 			dos.close();
@@ -143,7 +112,10 @@ public class MapIO {
 			}
 			
 			int version = dis.readInt();
-			System.out.println(version);
+			
+			if (version != VERSION) {
+				Log.info("Version Mismatch! Current: " + VERSION + ", Read: " + version);
+			}
 			
 			dis.close();
 			
@@ -173,9 +145,19 @@ public class MapIO {
 			// layers
 			int layers = map.getLayers().size();
 			dos.writeInt(layers);
-			
 			for (int i = 0; i < layers; i++) {
 				writeLayer(dos, map.getLayer(i));
+			}
+			
+			// write collision
+			writeLayer(dos, map.getCollisionLayer());
+			
+			// write entities
+			EntityLayer el = map.getEntityLayer();
+			int entities = el.getEntites().size();
+			dos.writeInt(entities);
+			for (int i = 0; i < entities; i++) {
+				writeEntity(dos, el.getEntity(i));
 			}
 			
 		} catch (Exception e) {
@@ -250,7 +232,6 @@ public class MapIO {
 			if (tile instanceof AnimatedTile) {
 				writeAnimatedTile(dos, (AnimatedTile) tile);
 			}
-			
 		} catch (Exception e) {
 			throw new SlickException(e.getMessage(), e.getCause());
 		}
@@ -284,6 +265,21 @@ public class MapIO {
 		} catch (Exception e) {
 			throw new SlickException(e.getMessage(), e.getCause());
 		}
+	}
+	
+	private static void writeEntity(DataOutputStream dos, Entity entity) throws SlickException {
+		try {
+			// class name for loading
+			String className = entity.getClass().getSimpleName();
+			dos.writeInt(className.length());
+			dos.writeBytes(className);
+			
+			
+			
+		} catch (Exception e) {
+			throw new SlickException(e.getMessage(), e.getCause());
+		}
+		
 	}
 	
 	// INTERN READ

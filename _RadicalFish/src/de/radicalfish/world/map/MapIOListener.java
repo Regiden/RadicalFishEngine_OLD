@@ -1,29 +1,50 @@
 package de.radicalfish.world.map;
-import java.io.Serializable;
-import org.newdawn.slick.SpriteSheet;
 import de.radicalfish.context.Resources;
 
 /**
- * A listener for loading maps that must be provided when loading map via {@link MapIO}. Current use is for loading the
- * SpriteSheet in a TileSet. Those should not be saved because there are not {@link Serializable}. On load the callback will be invoked for each
- * TileSet (on each Layer). This should be used to set the SpriteSheet.
+ * A Listener to provide the read methods of {@link MapIO} with instances of the Map, Layer, TileSet and Tile
+ * Interfaces. e.g. when loading a tile, the listener will call {@link MapIOListener#getTileInstance(String, String)}.
+ * This methods should then return an new instance where the data can be set to.
  * 
  * @author Stefan Lange
- * @version 0.0.0
+ * @version 1.0.0
  * @since 04.07.2012
  */
 public interface MapIOListener {
 	
+	// READ
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Callback for a SpriteSheet that should be loaded for a Tileset. The returned SpriteSheet cannot be null. the
-	 * parameter <code>type</code> is equal to the class name of the TilSet to the time it was saved via {@link MapIO}.
-	 * 
-	 * @param resourceName
-	 *            the name of the resource in the {@link Resources} class
-	 * @param resourceLocation
-	 *            the location of the resource on the file system
-	 * @return a sprite sheet which should be used for the t
+	 * @param classname
+	 *            the name of the class which was saved by {@link MapIO#writeMap(String, Map, boolean)} for the map.
+	 * @return a {@link Map} Implementation to load the content into.
 	 */
-	public SpriteSheet readTileSet(Layer layer, String resourceName, String resourceLocation);
+	public Map getMapInstance(String classname);
+	/**
+	 * @param classname
+	 *            the name of the class which was saved by {@link MapIO#writeMap(String, Map, boolean)} for the layer.
+	 * @return a {@link Layer} Implementation to load the content into.
+	 */
+	public Layer getLayerIntance(String classname);
+	/**
+	 * @param classname
+	 *            the name of the class which was saved by {@link MapIO#writeMap(String, Map, boolean)} for the tileset.
+	 * @param resourceName
+	 *            the resource name which was saved and should be loaded in the {@link Resources} class. (Can be used to
+	 *            load the TileSet graphics)
+	 * @param resoureLocation
+	 *            the resource location which was saved. (Can be used to load the TileSet graphics)
+	 * @return a {@link TileSet} Implementation to load the content into.
+	 */
+	public TileSet getTileSetIntance(String classname, String resourceName, String resoureLocation);
+	/**
+	 * @param classname
+	 *            the name of the class which was saved by {@link MapIO#writeMap(String, Map, boolean)} for the tile.
+	 * @param type
+	 *            the type of the tile as it was saved. (currently: animated or normal)
+	 * @return a {@link Tile} Implementation to load the content into. (For animated tiles the returned tile must be
+	 *         {@link AnimatedTile} to load the data correctly)
+	 */
+	public Tile getTileInstance(String classname, String type);
 	
 }
