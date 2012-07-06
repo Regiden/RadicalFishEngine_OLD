@@ -44,8 +44,6 @@ public class SimpleTileSet implements TileSet {
 		location = sheet.getResourceReference();
 	}
 	
-	private static final long serialVersionUID = 1L;
-	
 	@Override
 	public String getResourceName() {
 		return name;
@@ -58,9 +56,7 @@ public class SimpleTileSet implements TileSet {
 	
 	@Override
 	public Image getTileAt(int index) {
-		int x = index % sheet.getHorizontalCount();
-		int y = index / sheet.getVerticalCount();
-		return sheet.getSubImage(x, y);
+		return getTileAt(index % sheet.getHorizontalCount(), index / sheet.getVerticalCount());
 	}
 	
 	@Override
@@ -68,15 +64,9 @@ public class SimpleTileSet implements TileSet {
 		return sheet.getSubImage(x, y);
 	}
 	
-	public SpriteSheet getSheet() {
-		return sheet;
-	}
-	
 	@Override
-	public void setSheet(String resourceName, SpriteSheet sheet) {
-		name = resourceName;
-		location = sheet.getResourceReference();
-		this.sheet = sheet;
+	public void setResourceName(String name) {
+		this.name = name;
 	}
 	
 }

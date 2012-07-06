@@ -39,8 +39,6 @@ import de.radicalfish.world.map.AnimatedTile;
 
 public class AnimatedTileImpl implements AnimatedTile {
 
-	private static final long serialVersionUID = 1L;
-	
 	private int[] times, index;
 	private boolean pingPong;
 	private int curIndex, curTime, direction;

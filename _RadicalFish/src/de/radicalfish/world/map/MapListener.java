@@ -34,7 +34,7 @@ import de.radicalfish.context.GameContext;
 import de.radicalfish.world.World;
 
 /**
- * Various call backs for map rendering and loading.
+ * Various call backs for in-between rendering
  * 
  * @author Stefan Lange
  * @version 1.0.0

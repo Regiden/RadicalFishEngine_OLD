@@ -44,8 +44,6 @@ import de.radicalfish.world.map.Tile;
  */
 public class SimpleTile implements Tile{
 	
-	private static final long serialVersionUID = 1L;
-	
 	private int id;
 	
 	public SimpleTile(int id) {

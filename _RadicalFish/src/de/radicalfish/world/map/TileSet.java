@@ -28,30 +28,30 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.world.map;
-import java.io.Serializable;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 import de.radicalfish.context.Resources;
 
 /**
- * A TileSet is a {@link SpriteSheet} that is used for a layer.
+ * A TileSet is a sheet which contains all tiles on a layer. an implementation could use {@link SpriteSheet} for this.
  * 
  * @author Stefan Lange
- * @version 0.0.0
+ * @version 1.0.0
  * @since 04.07.2012
  */
-public interface TileSet extends Serializable{
+public interface TileSet {
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * @return the resource name of the class if the {@link Resources} class is used. This will be used by the {@link MapIO} class.
-	 * if it's null {@link MapIO} will save an empty string.
+	 * @return the resource name of the class if the {@link Resources} class is used. This will be used by the
+	 *         {@link MapIO} class. cannot be null.
 	 */
 	public String getResourceName();
 	/**
-	 * @return the location where the TileSet is on the file system. his will be used by the {@link MapIO} class.
-	 * if it's null {@link MapIO} will save an empty string.
+	 * @return the location where the TileSet is on the file system. this will be used by the {@link MapIO} class. But
+	 *         it will not be set when loading a map. For Image classes from Slick just use
+	 *         {@link Image#getResourceReference()}. cannot be null.
 	 */
 	public String getResourceLocation();
 	
@@ -64,18 +64,14 @@ public interface TileSet extends Serializable{
 	 */
 	public Image getTileAt(int x, int y);
 	
-	/**
-	 * @return the sheet used for the TilSet.
-	 */
-	public SpriteSheet getSheet();
-	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Sets the sheet to use.
-	 * @param resourceName the resource name if any
-	 * @param sheet the sheet to set.
+	 * Sets the resource name to use.
+	 * 
+	 * @param name
+	 *            the resource name if any
 	 */
-	public void setSheet(String resourceName, SpriteSheet sheet);
+	public void setResourceName(String name);
 	
 }

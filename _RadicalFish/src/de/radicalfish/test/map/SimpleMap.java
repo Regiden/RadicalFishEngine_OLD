@@ -43,11 +43,10 @@ import de.radicalfish.world.map.Tile;
 
 public class SimpleMap implements Map {
 	
-	private static final long serialVersionUID = 1L;
-	
 	public List<Layer> layers = new ArrayList<Layer>();
 	
 	public Layer collision;
+	public EntityLayer eLayer;
 	
 	public int width, height;
 	public int tileSize;
@@ -59,6 +58,7 @@ public class SimpleMap implements Map {
 		this.height = height;
 		tileSize = 16;
 		collision = new SimpleLayer(width, height, "collision");
+		eLayer = new SimpleEntityLayer("entities");
 	}
 
 	@Override
@@ -66,6 +66,8 @@ public class SimpleMap implements Map {
 		layers.add(new SimpleLayer(width, height, "test1"));
 		layers.add(new SimpleLayer(width, height, "test2"));
 		layers.add(new SimpleLayer(width, height, "test3"));
+		
+		
 	}
 	
 	@Override
@@ -154,7 +156,7 @@ public class SimpleMap implements Map {
 	
 	@Override
 	public EntityLayer getEntityLayer() {
-		return null;
+		return eLayer;
 	}
 	
 	@Override
@@ -185,6 +187,8 @@ public class SimpleMap implements Map {
 	public void setCollisionLayer(Layer layer) {}
 	
 	@Override
-	public void setEntityLayer(EntityLayer layer) {}
+	public void setEntityLayer(EntityLayer layer) {
+		eLayer = layer;
+	}
 	
 }

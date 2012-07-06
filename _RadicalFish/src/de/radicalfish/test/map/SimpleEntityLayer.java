@@ -27,80 +27,64 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.world.map;
+package de.radicalfish.test.map;
+import java.util.ArrayList;
 import java.util.List;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.test.world.Ball;
 import de.radicalfish.world.Entity;
 import de.radicalfish.world.World;
+import de.radicalfish.world.map.EntityLayer;
 
-/**
- * An EntityLayer is a special layer on which a set of entities sit. A map only supports one entity layer and the
- * {@link MapIO} will only save this one layer.
- * 
- * @author Stefan Lange
- * @version 1.0.0
- * @since 06.07.2012
- */
-public interface EntityLayer {
+public class SimpleEntityLayer implements EntityLayer {
 	
-	// METHODS
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * Updates the layer.
-	 * 
-	 * @param context
-	 *            the context the game runs in
-	 * @param world
-	 *            the world the game plays in
-	 * @param delta
-	 *            the {@link GameDelta} object holding the delta value
-	 */
-	public void update(GameContext context, World world, GameDelta delta) throws SlickException;
-	/**
-	 * Renders the layer.
-	 * 
-	 * @param context
-	 *            the context the game runs in
-	 * @param world
-	 *            the world the game plays in
-	 * @param g
-	 *            the graphics context to draw to
-	 * @throws SlickException
-	 */
-	public void render(GameContext context, World world, Graphics g) throws SlickException;
+	private List<Entity> entities;
+	private String name;
 	
-	// GETTER
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * @return the name if this layer
-	 */
-	public String getName();
+	public SimpleEntityLayer(String name) {
+		this.name = name;
+		entities = new ArrayList<Entity>();
+		
+		entities.add(new Ball());
+		entities.add(new Ball());
+	}
 	
-	/**
-	 * @return a list of all entities in the map/entity layer.
-	 */
-	public List<Entity> getEntites();
-	/**
-	 * @return an entity from the list.
-	 */
-	public Entity getEntity(int index);
+	@Override
+	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
+		
+	}
+	@Override
+	public void render(GameContext context, World world, Graphics g) throws SlickException {
+		
+	}
 	
-	// SETTER
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * Sets the name of the layer.
-	 */
-	public void setName(String name);
-	/**
-	 * Sets the list of entities.
-	 */
-	public void setEntities(List<Entity> entities);
-	/**
-	 * Sets an entity int the list at <code>index</code>.
-	 */
-	public void setEntity(int index, Entity entity);
+	@Override
+	public String getName() {
+		return name;
+	}
+	@Override
+	public List<Entity> getEntites() {
+		return entities;
+	}
+	@Override
+	public Entity getEntity(int index) {
+		return entities.get(index);
+	}
+	
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Override
+	public void setEntities(List<Entity> entities) {
+		this.entities = entities;
+	}
+	@Override
+	public void setEntity(int index, Entity entity) {
+		entities.set(index, entity);
+	}
 	
 }

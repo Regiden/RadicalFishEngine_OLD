@@ -28,7 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.world.map;
-import java.io.Serializable;
 import java.util.List;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -38,16 +37,13 @@ import de.radicalfish.world.EntitySystem;
 import de.radicalfish.world.World;
 
 /**
- * Interface for maps returned by the {@link World}. A map should render and update all entities it contains. All
- * entities a map has should be mapped to {@link EntitySystem}s. So there is no need to update the systems manually. But
- * you call also handle that by yourself, e.g. updating everything in the world object and only update the object in the
- * gameplay state or something.
+ * Interface for maps returned by the {@link World}.
  * 
  * @author Stefan Lange
- * @version 0.0.0
+ * @version 1.0.0
  * @since 15.06.2012
  */
-public interface Map extends Serializable {
+public interface Map {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

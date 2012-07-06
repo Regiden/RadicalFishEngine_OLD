@@ -28,7 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.world.map;
-import java.io.Serializable;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
@@ -36,12 +35,12 @@ import de.radicalfish.context.GameDelta;
 import de.radicalfish.world.World;
 
 /**
- * Interface for layers contained in a {@link Map}. A map should render all Entities ased on the layer they have.
+ * Interface for layers contained in a {@link Map}.
  * @author Stefan Lange
- * @version 0.5.0
+ * @version 1.0.0
  * @since 15.06.2012
  */
-public interface Layer extends Serializable{
+public interface Layer {
 	
 
 	// METHODS

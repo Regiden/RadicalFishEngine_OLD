@@ -33,18 +33,14 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
 import de.radicalfish.context.DefaultGameDelta;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.world.map.Layer;
 import de.radicalfish.world.map.Map;
 import de.radicalfish.world.map.MapIO;
-import de.radicalfish.world.map.MapIOListener;
 
 public class MapTest extends BasicGame {
 	
 	private GameDelta delta;
-	private Map map;
 	
 	public MapTest() {
 		super("Map Test");
@@ -57,34 +53,21 @@ public class MapTest extends BasicGame {
 	public void init(GameContainer container) throws SlickException {
 		
 		delta = new DefaultGameDelta();
-		
-		Map map2 = new SimpleMap(30, 30);
-		map2.init(null, null);
-		MapIO.saveMap("test.map", map2);
-		map = MapIO.loadMap("test.map", new MapIOListener() {
-			public SpriteSheet readTileSet(Layer layer, String resourceName, String resourceLocation) {
-				
-				SimpleLayer.load();
-				return SimpleLayer.sheet;
-			}
-		});
-		
+
 		Map map3 = new SimpleMap(50, 50);
 		map3.init(null, null);
 		
-		MapIO.writeMap("test2.map", map3, true);
-		
-		MapIO.readMap("test2.map", null, true);
+		MapIO.writeMap("test2.map", map3, false);
+		//MapIO.readMap("test2.map", null, true);
 		
 		
 	}
 	public void update(GameContainer container, int delta) throws SlickException {
 		this.delta.update(null, null, delta);
 		
-		map.update(null, null, this.delta);
 	}
 	public void render(GameContainer container, Graphics g) throws SlickException {
-		map.render(null, null, g);
+		
 	}
 	
 	

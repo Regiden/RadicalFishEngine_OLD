@@ -56,7 +56,6 @@ import de.radicalfish.world.map.TileSet;
  * @since 15.06.2012
  */
 public class DynamicTestMap implements Map {
-	private static final long serialVersionUID = 1L;
 
 	private SpriteSheet sheet;
 	
@@ -276,7 +275,6 @@ public class DynamicTestMap implements Map {
 	// INTERN CLASSES
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public static class SimpleLayer implements Layer {
-		private static final long serialVersionUID = 1L;
 		private Tile[][] tiles;
 		
 		public SimpleLayer(int width, int height) {

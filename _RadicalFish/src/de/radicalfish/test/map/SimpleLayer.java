@@ -16,7 +16,6 @@ public class SimpleLayer implements Layer {
 	
 	public static transient SpriteSheet sheet;
 	
-	private static final long serialVersionUID = 1L;
 	private Tile[][] tiles;
 	
 	private String name;

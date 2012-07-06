@@ -28,7 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.world.map;
-import java.io.Serializable;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
@@ -43,7 +42,7 @@ import de.radicalfish.world.World;
  * @version 1.0.0
  * @since 15.06.2012
  */
-public interface Tile extends Serializable {
+public interface Tile {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
