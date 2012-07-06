@@ -27,60 +27,57 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.test.map;
+package de.radicalfish.world.map;
+import de.radicalfish.Animation;
 
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.util.Log;
-import de.radicalfish.context.GameContext;
-import de.radicalfish.context.GameDelta;
-import de.radicalfish.world.World;
-import de.radicalfish.world.map.Tile;
-
-public class AnimatedTile implements Tile {
-
-	private static final long serialVersionUID = 1L;
+/**
+ * An animated tile that changes it's index like in an {@link Animation}. {@link MapIO} will check for this tile and
+ * save the extra information for the tile.
+ * 
+ * @author Stefan Lange
+ * @version 1.0.0
+ * @since 06.07.2012
+ */
+public interface AnimatedTile extends Tile {
 	
-	private int[] times, index;
-	private boolean pingPong;
-	private int curIndex, curTime, direction;
+	// GETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return the array containing the times for each frame.
+	 */
+	public int[] getFrameTimes();
+	/**
+	 * @return the array containing the index for each frame.
+	 */
+	public int[] getIndexes();
 	
-	public AnimatedTile(int[] times, int[] index, boolean pingPong) {
-		this.times = times;
-		this.index = index;
-		this.pingPong = pingPong;
-		
-		curTime = times[0];
-		curIndex = 0;
-	}
+	/**
+	 * @return the time of the frame at <code>index</code>.
+	 */
+	public int getFrameTime(int index);
+	/**
+	 * @return the index of the frame at <code>index</code>.
+	 */
+	public int getIndex(int index);
 	
-	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
-		curTime -= delta.getDelta();
-		
-		while (curTime < 0) {
-			curIndex = (curIndex + direction) % index.length;
-			if (pingPong) {
-				if (curIndex <= 0) {
-					curIndex = 0;
-					direction = 1;
-				} else if (curIndex >= index.length - 1) {
-					curIndex = index.length - 1;
-					direction = -1;
-				}
-			}
-			curTime += times[curIndex];
-		}
-	}
-	public void render(GameContext context, World world, Graphics g) throws SlickException {
-		
-	}
-
-	public int getTileID() {
-		return index[curIndex];
-	}
-
-	public void setTileID(int id) {
-		Log.error("cannot set on animated tiles");
-	}
+	// SETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Sets the times for all frames.
+	 */
+	public void setFrameTimes(int[] times);
+	/**
+	 * Sets the indexes for all frames.
+	 */
+	public void setIndexes(int[] indexes);
+	
+	/**
+	 * Sets the time of a frame at <code>index</code>.
+	 */
+	public void setFrameTime(int index, int time);
+	/**
+	 * Sets the index of a frame at <code>index</code>.
+	 */
+	public void setIndex(int index, int tileIndex);
 	
 }
