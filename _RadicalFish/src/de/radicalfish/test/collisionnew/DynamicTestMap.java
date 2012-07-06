@@ -41,6 +41,7 @@ import de.radicalfish.test.collisionnew.blocks.SimpleTile;
 import de.radicalfish.util.Utils;
 import de.radicalfish.world.Camera;
 import de.radicalfish.world.World;
+import de.radicalfish.world.map.EntityLayer;
 import de.radicalfish.world.map.Layer;
 import de.radicalfish.world.map.Map;
 import de.radicalfish.world.map.MapListener;
@@ -242,6 +243,10 @@ public class DynamicTestMap implements Map {
 		return collision.getTileAt(x, y);
 	}
 	
+	@Override
+	public EntityLayer getEntityLayer() {
+		return null;
+	}
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -264,6 +269,9 @@ public class DynamicTestMap implements Map {
 	public void setCollisionTileAt(int x, int y, int id) {}
 	public void setCollisionTileAt(int x, int y, Tile tile) {}
 	public void setCollisionLayer(Layer layer) {}
+	
+	@Override
+	public void setEntityLayer(EntityLayer layer) {}
 	
 	// INTERN CLASSES
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

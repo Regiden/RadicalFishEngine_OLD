@@ -28,22 +28,25 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.world.map;
-import java.io.Serializable;
+
+import java.util.List;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.world.Entity;
 import de.radicalfish.world.World;
 
 /**
- * Interface for layers contained in a {@link Map}. A map should render all Entities ased on the layer they have.
+ * An EntityLayer is a special layer on which a set of entities sit. A map only supports one entity layer and the
+ * {@link MapIO} will only save this one layer.
+ * 
  * @author Stefan Lange
- * @version 0.5.0
- * @since 15.06.2012
+ * @version 0.0.0
+ * @since 06.07.2012
  */
-public interface Layer extends Serializable{
+public interface EntityLayer {
 	
-
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
@@ -58,7 +61,7 @@ public interface Layer extends Serializable{
 	 */
 	public void update(GameContext context, World world, GameDelta delta) throws SlickException;
 	/**
-	 * Renders the layer. 
+	 * Renders the layer.
 	 * 
 	 * @param context
 	 *            the context the game runs in
@@ -76,30 +79,30 @@ public interface Layer extends Serializable{
 	 * @return the name if this layer
 	 */
 	public String getName();
-	/**
-	 * @return the {@link TileSet} used for this layer if any. Can be null if not used.
-	 */
-	public TileSet getTileSet();
 	
 	/**
-	 * @return the tile data.
+	 * @return a list of all entities in the map/entity layer.
 	 */
-	public Tile[][] getTiles();
-	/**
-	 * @return the tile id at <code>x</code>, <code>y</code>.
-	 */
-	public Tile getTileAt(int x, int y);
+	public List<Entity> getEntites();
 	
+	/**
+	 * @return an entity from the list.
+	 */
+	public Entity getEntity(int index);
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Dynamically sets the id of a tile at <code>x</code>, <code>y</code>.
+	 * Sets the name of the layer.
 	 */
-	public void setTileAt(int x, int y, int id);
+	public void setName(String name);
 	/**
-	 * Dynamically changes the tile at <code>x</code>, <code>y</code>.
+	 * Sets the list of entities.
 	 */
-	public void setTileAt(int x, int y, Tile tile);
+	public void setEntities(List<Entity> entities);
+	/**
+	 * Sets an entity int the list at <code>index</code>.
+	 */
+	public void setEntity(int index, Entity entity);
 	
 }

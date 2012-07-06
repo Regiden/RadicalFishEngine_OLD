@@ -36,13 +36,14 @@ import de.radicalfish.context.GameDelta;
 import de.radicalfish.world.World;
 
 /**
- * A simple tile which can be returned by a layer. It has support for a update and render method if you need.
- * The update method is extremely useful for animated tiles.
+ * A simple tile which can be returned by a layer. It has support for a update and render method if you need. The update
+ * method is extremely useful for animated tiles.
+ * 
  * @author Stefan Lange
  * @version 1.0.0
  * @since 15.06.2012
  */
-public interface Tile extends Serializable{
+public interface Tile extends Serializable {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -77,8 +78,8 @@ public interface Tile extends Serializable{
 	 */
 	public int getTileID();
 	/**
-	 * Dynamically change the id of the tile. 
+	 * Dynamically change the id of the tile.
 	 */
 	public void setTileID(int id);
-
+	
 }

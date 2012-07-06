@@ -32,7 +32,7 @@ public class SimpleLayer implements Layer {
 		for (int i = 0; i < tiles.length; i++) {
 			for (int j = 0; j < tiles[0].length; j++) {
 				if (i == 0 && j == 0) {
-					tiles[i][j] = new AnimatedTile(new int[] { 1000, 1000 }, new int[] { 0, 1 }, true);
+					tiles[i][j] = new AnimatedTileImpl(new int[] { 1000, 1000 }, new int[] { 0, 1 }, true);
 				} else {
 					tiles[i][j] = new SimpleTile(FastMath.random(0, 10));
 				}

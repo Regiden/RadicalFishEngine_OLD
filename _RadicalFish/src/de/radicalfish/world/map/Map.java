@@ -86,8 +86,8 @@ public interface Map extends Serializable {
 	 */
 	public void render(GameContext context, World world, Graphics g) throws SlickException;
 	/**
-	 * Unloads all content. This can be used to flush {@link EntitySystem}s from entities and make one map object for all
-	 * maps to save memory.
+	 * Unloads all content. This can be used to flush {@link EntitySystem}s from entities and make one map object for
+	 * all maps to save memory.
 	 * 
 	 * @param context
 	 *            the context the game runs in
@@ -105,7 +105,7 @@ public interface Map extends Serializable {
 	 */
 	public void removeMapListener(MapListener listener);
 	/**
-	 * Removes all listener attached to the map. This will be used by the {@link MapIO} class.
+	 * Removes all listener attached to the map.
 	 */
 	public void removeAllListener();
 	
@@ -164,6 +164,11 @@ public interface Map extends Serializable {
 	 */
 	public Tile getCollisionTileAt(int x, int y);
 	
+	/**
+	 * @return the layer on which all entities in this map are.
+	 */
+	public EntityLayer getEntityLayer();
+	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
@@ -204,5 +209,10 @@ public interface Map extends Serializable {
 	 * Changes the collision layer to <code>layer</code>.
 	 */
 	public void setCollisionLayer(Layer layer);
+	
+	/**
+	 * Sets the EntityLayer of this map.
+	 */
+	public void setEntityLayer(EntityLayer layer);
 	
 }

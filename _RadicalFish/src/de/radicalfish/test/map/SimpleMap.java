@@ -35,6 +35,7 @@ import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.world.World;
+import de.radicalfish.world.map.EntityLayer;
 import de.radicalfish.world.map.Layer;
 import de.radicalfish.world.map.Map;
 import de.radicalfish.world.map.MapListener;
@@ -152,6 +153,11 @@ public class SimpleMap implements Map {
 	}
 	
 	@Override
+	public EntityLayer getEntityLayer() {
+		return null;
+	}
+	
+	@Override
 	public void setName(String name) {}
 	
 	@Override
@@ -177,5 +183,8 @@ public class SimpleMap implements Map {
 	
 	@Override
 	public void setCollisionLayer(Layer layer) {}
+	
+	@Override
+	public void setEntityLayer(EntityLayer layer) {}
 	
 }
