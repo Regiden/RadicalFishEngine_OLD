@@ -46,6 +46,9 @@ public class SimpleTile implements Tile{
 	
 	private int id;
 	
+	public SimpleTile() {
+		// null for reading tile
+	}
 	public SimpleTile(int id) {
 		setTileID(id);
 	}

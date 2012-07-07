@@ -60,6 +60,11 @@ public interface AnimatedTile extends Tile {
 	 */
 	public int getIndex(int index);
 	
+	/**
+	 * @return true if the animation "ping-pong"s.
+	 */
+	public boolean isPingPong();
+	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
@@ -79,5 +84,10 @@ public interface AnimatedTile extends Tile {
 	 * Sets the index of a frame at <code>index</code>.
 	 */
 	public void setIndex(int index, int tileIndex);
+	
+	/**
+	 * Sets if the AnimatedTile should "pingpong".
+	 */
+	public void setPingPong(boolean pingpong);
 	
 }

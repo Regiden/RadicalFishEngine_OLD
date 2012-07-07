@@ -28,10 +28,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.test.map;
-
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.util.Log;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.world.World;
@@ -43,6 +41,9 @@ public class AnimatedTileImpl implements AnimatedTile {
 	private boolean pingPong;
 	private int curIndex, curTime, direction;
 	
+	public AnimatedTileImpl() {
+		// null for reading map
+	}
 	public AnimatedTileImpl(int[] times, int[] index, boolean pingPong) {
 		this.times = times;
 		this.index = index;
@@ -78,9 +79,12 @@ public class AnimatedTileImpl implements AnimatedTile {
 	}
 
 	public void setTileID(int id) {
-		Log.error("cannot set on animated tiles");
+		curIndex = id;
 	}
 
+	public boolean isPingPong() {
+		return pingPong;
+	}
 	
 	@Override
 	public int[] getFrameTimes() {
@@ -120,6 +124,10 @@ public class AnimatedTileImpl implements AnimatedTile {
 	@Override
 	public void setIndex(int index, int tileIndex) {
 		this.index[index] = tileIndex;
+	}
+	
+	public void setPingPong(boolean pingPong) {
+		this.pingPong = pingPong;
 	}
 	
 }

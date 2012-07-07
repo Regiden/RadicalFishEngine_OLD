@@ -177,6 +177,18 @@ public interface Map {
 	public void setTileSize(int size);
 	
 	/**
+	 * Sets the size of the map. This should also set the pixel size (just multiply the <code>tileWidth</code> and
+	 * <code>tileHeight</code> with the <code>getTileSize()</code>. This method is used be the {@link MapIO} class when
+	 * reading the size of the map.
+	 * 
+	 * @param tileWidth
+	 *            the width in tiles.
+	 * @param tileHeight
+	 *            the height in tiles.
+	 */
+	public void setSize(int tileWidth, int tileHeight);
+	
+	/**
 	 * Sets the id of a tile at <code>x</code>, <code>y</code> at the index <code>layer</code>.
 	 */
 	public void setTileAt(int x, int y, int id, int layer);

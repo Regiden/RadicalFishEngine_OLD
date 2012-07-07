@@ -305,7 +305,19 @@ public class DynamicTestMap implements Map {
 		public TileSet getTileSet() {
 			return null;
 		}
+
+		@Override
+		public void setName(String name) {}
+
+		@Override
+		public void setTileSet(TileSet set) {}
+
+		@Override
+		public void setTiles(Tile[][] tiles) {}
 		
 	}
+
+	@Override
+	public void setSize(int tileWidth, int tileHeight) {}
 	
 }

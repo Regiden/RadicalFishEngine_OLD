@@ -145,7 +145,7 @@ public abstract class Entity implements Serializable {
 	 * this method after automatically checking if the entity needs an update. If this is not wanted this method can be
 	 * ignored an the <code>doUpdate</code> method can be used directly. This also updates the {@link Animator} used for
 	 * this entity and the direction in which the entity moved. After an update a collision manager should check
-	 * collision on this entity. 
+	 * collision on this entity.
 	 * 
 	 * @param context
 	 *            the context the game runs in
@@ -224,7 +224,7 @@ public abstract class Entity implements Serializable {
 	/**
 	 * @return the collision box used for collision.
 	 */
-	public  Rectangle2D getCollisionBox() {
+	public Rectangle2D getCollisionBox() {
 		return collisionbox;
 	}
 	/**
@@ -429,7 +429,7 @@ public abstract class Entity implements Serializable {
 	 * <li>y = -1 / 1: up / down</li>
 	 * <p>
 	 * 
-	 * if x or y in the direction vector is 0, no movement happend.
+	 * if x or y in the direction vector is 0, no movement happened.
 	 */
 	public Vector2f getDirection() {
 		return direction;
@@ -553,7 +553,13 @@ public abstract class Entity implements Serializable {
 	public void setOffScreenRanges(float leftRight, float topBottom) {
 		offscreen.set(leftRight, topBottom);
 	}
-	
+	/**
+	 * Sets the direction which the entity faces. This will be automatically set by the <code>update</code> method. You
+	 * can use it if you use your own update loop.
+	 */
+	public void setDirection(float x, float y) {
+		direction.set(x, y);
+	}
 	public void setPositionX(float x) {
 		position.x = x;
 	}

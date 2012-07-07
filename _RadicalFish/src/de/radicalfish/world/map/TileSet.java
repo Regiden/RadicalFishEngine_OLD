@@ -44,6 +44,11 @@ public interface TileSet {
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
+	 * @return the name of the TileSet.
+	 */
+	public String getName();
+	
+	/**
 	 * @return the resource name of the class if the {@link Resources} class is used. This will be used by the
 	 *         {@link MapIO} class. cannot be null.
 	 */
@@ -66,6 +71,10 @@ public interface TileSet {
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Sets the name of the TileSet.
+	 */
+	public void setName(String name);
 	/**
 	 * Sets the resource name to use.
 	 * 

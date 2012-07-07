@@ -34,7 +34,6 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.test.world.Ball;
 import de.radicalfish.world.Entity;
 import de.radicalfish.world.World;
 import de.radicalfish.world.map.EntityLayer;
@@ -44,12 +43,12 @@ public class SimpleEntityLayer implements EntityLayer {
 	private List<Entity> entities;
 	private String name;
 	
+	public SimpleEntityLayer() {
+		
+	}
 	public SimpleEntityLayer(String name) {
 		this.name = name;
 		entities = new ArrayList<Entity>();
-		
-		entities.add(new Ball());
-		entities.add(new Ball());
 	}
 	
 	@Override

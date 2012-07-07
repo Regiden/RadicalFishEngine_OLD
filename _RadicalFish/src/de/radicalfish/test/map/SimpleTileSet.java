@@ -36,17 +36,23 @@ public class SimpleTileSet implements TileSet {
 	
 	private transient SpriteSheet sheet;
 	
-	private String name, location;
+	private String resName, location, name;
 	
 	public SimpleTileSet(String resourceName, SpriteSheet sheet) {
-		name = resourceName;
+		resName = resourceName;
 		this.sheet = sheet;
 		location = sheet.getResourceReference();
+		name = "simple";
+	}
+	
+	@Override
+	public String getName() {
+		return name;
 	}
 	
 	@Override
 	public String getResourceName() {
-		return name;
+		return resName;
 	}
 	
 	@Override
@@ -66,6 +72,11 @@ public class SimpleTileSet implements TileSet {
 	
 	@Override
 	public void setResourceName(String name) {
+		this.resName = name;
+	}
+	
+	@Override
+	public void setName(String name) {
 		this.name = name;
 	}
 	

@@ -78,7 +78,6 @@ public interface EntityLayer {
 	 * @return the name if this layer
 	 */
 	public String getName();
-	
 	/**
 	 * @return a list of all entities in the map/entity layer.
 	 */

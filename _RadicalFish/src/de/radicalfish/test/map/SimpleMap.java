@@ -34,6 +34,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.test.collisionnew.blocks.SimpleTile;
+import de.radicalfish.test.world.Ball;
+import de.radicalfish.util.FastMath;
 import de.radicalfish.world.World;
 import de.radicalfish.world.map.EntityLayer;
 import de.radicalfish.world.map.Layer;
@@ -43,7 +46,7 @@ import de.radicalfish.world.map.Tile;
 
 public class SimpleMap implements Map {
 	
-	public List<Layer> layers = new ArrayList<Layer>();
+	public List<Layer> layers;
 	
 	public Layer collision;
 	public EntityLayer eLayer;
@@ -53,20 +56,55 @@ public class SimpleMap implements Map {
 	
 	public String name = "simple";
 	
+	public SimpleMap() {
+		
+	}
 	public SimpleMap(int width, int height) {
 		this.width = width;
 		this.height = height;
-		tileSize = 16;
-		collision = new SimpleLayer(width, height, "collision");
-		eLayer = new SimpleEntityLayer("entities");
 	}
 
 	@Override
 	public void init(GameContext context, World world) {
+		
+		// used to create content, when loading a map this will not be called so no overhead.
+		layers = new ArrayList<Layer>();
 		layers.add(new SimpleLayer(width, height, "test1"));
 		layers.add(new SimpleLayer(width, height, "test2"));
 		layers.add(new SimpleLayer(width, height, "test3"));
+		collision = new SimpleLayer(width, height, "collision");
+		eLayer = new SimpleEntityLayer("entities");
+		tileSize = 16;
 		
+		SimpleLayer.load();
+		
+		for(Layer layer : layers) {
+			layer.setTileSet(new SimpleTileSet("test", SimpleLayer.sheet));
+			for (int i = 0; i < layer.getTiles().length; i++) {
+				for (int j = 0; j < layer.getTiles()[0].length; j++) {
+					if (i == 0 && j == 0) {
+						layer.getTiles()[i][j] = new AnimatedTileImpl(new int[] { 1000, 1000 }, new int[] { 0, 1 }, true);
+					} else {
+						layer.getTiles()[i][j] = new SimpleTile(FastMath.random(0, 10));
+					}
+					
+				}
+			}
+		}
+		
+		for (int i = 0; i < collision.getTiles().length; i++) {
+			for (int j = 0; j < collision.getTiles()[0].length; j++) {
+				if (i == 0 && j == 0) {
+					collision.getTiles()[i][j] = new AnimatedTileImpl(new int[] { 1000, 1000 }, new int[] { 0, 1 }, true);
+				} else {
+					collision.getTiles()[i][j] = new SimpleTile(FastMath.random(0, 10));
+				}
+				
+			}
+		}
+		
+		eLayer.getEntites().add(new Ball());
+		eLayer.getEntites().add(new Ball());
 		
 	}
 	
@@ -160,31 +198,55 @@ public class SimpleMap implements Map {
 	}
 	
 	@Override
-	public void setName(String name) {}
+	public void setName(String name) {
+		this.name = name;
+	}
 	
 	@Override
-	public void setTileSize(int size) {}
+	public void setTileSize(int size) {
+		tileSize = size;
+	}
 	
 	@Override
-	public void setTileAt(int x, int y, int id, int layer) {}
+	public void setSize(int tileWidth, int tileHeight) {
+		width = tileWidth;
+		height = tileHeight;
+	}
 	
 	@Override
-	public void setTileAt(int x, int y, Tile tile, int layer) {}
+	public void setTileAt(int x, int y, int id, int layer) {
+		layers.get(layer).setTileAt(x, y, id);
+	}
 	
 	@Override
-	public void setLayer(Layer layer, int layerIndex) {}
+	public void setTileAt(int x, int y, Tile tile, int layer) {
+		layers.get(layer).setTileAt(x, y, tile);
+	}
 	
 	@Override
-	public void setLayers(List<Layer> layers) {}
+	public void setLayer(Layer layer, int layerIndex) {
+		layers.set(layerIndex, layer);
+	}
 	
 	@Override
-	public void setCollisionTileAt(int x, int y, int id) {}
+	public void setLayers(List<Layer> layers) {
+		this.layers = layers;
+	}
 	
 	@Override
-	public void setCollisionTileAt(int x, int y, Tile tile) {}
+	public void setCollisionTileAt(int x, int y, int id) {
+		collision.setTileAt(x, y, id);
+	}
 	
 	@Override
-	public void setCollisionLayer(Layer layer) {}
+	public void setCollisionTileAt(int x, int y, Tile tile) {
+		collision.setTileAt(x, y, tile);
+	}
+	
+	@Override
+	public void setCollisionLayer(Layer layer) {
+		collision = layer;
+	}
 	
 	@Override
 	public void setEntityLayer(EntityLayer layer) {

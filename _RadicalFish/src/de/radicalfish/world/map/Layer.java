@@ -36,15 +36,16 @@ import de.radicalfish.world.World;
 
 /**
  * Interface for layers contained in a {@link Map}.
+ * 
  * @author Stefan Lange
  * @version 1.0.0
  * @since 15.06.2012
  */
 public interface Layer {
 	
-
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	
 	/**
 	 * Updates the layer.
 	 * 
@@ -57,7 +58,7 @@ public interface Layer {
 	 */
 	public void update(GameContext context, World world, GameDelta delta) throws SlickException;
 	/**
-	 * Renders the layer. 
+	 * Renders the layer.
 	 * 
 	 * @param context
 	 *            the context the game runs in
@@ -89,15 +90,27 @@ public interface Layer {
 	 */
 	public Tile getTileAt(int x, int y);
 	
-	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Dynamically sets the id of a tile at <code>x</code>, <code>y</code>.
+	 * Sets the name of the layer.
+	 */
+	public void setName(String name);
+	/**
+	 * Sets the {@link TileSet} to use.
+	 */
+	public void setTileSet(TileSet set);
+	
+	/**
+	 * Sets the tiles int this layer.
+	 */
+	public void setTiles(Tile[][] tiles);
+	/**
+	 * Sets the id of a tile at <code>x</code>, <code>y</code>.
 	 */
 	public void setTileAt(int x, int y, int id);
 	/**
-	 * Dynamically changes the tile at <code>x</code>, <code>y</code>.
+	 * Cchanges the tile at <code>x</code>, <code>y</code>.
 	 */
 	public void setTileAt(int x, int y, Tile tile);
 	
