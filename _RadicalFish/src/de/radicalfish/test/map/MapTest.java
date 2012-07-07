@@ -33,10 +33,20 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.util.Log;
 import de.radicalfish.context.DefaultGameDelta;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.debug.Logger;
+import de.radicalfish.test.collisionnew.blocks.SimpleTile;
+import de.radicalfish.test.world.Ball;
+import de.radicalfish.world.Entity;
+import de.radicalfish.world.map.EntityLayer;
+import de.radicalfish.world.map.Layer;
 import de.radicalfish.world.map.Map;
 import de.radicalfish.world.map.MapIO;
+import de.radicalfish.world.map.MapIOReader;
+import de.radicalfish.world.map.Tile;
+import de.radicalfish.world.map.TileSet;
 
 public class MapTest extends BasicGame {
 	
@@ -46,20 +56,50 @@ public class MapTest extends BasicGame {
 		super("Map Test");
 	}
 	public static void main(String[] args) throws SlickException {
+		Logger.setLogging(true);
+		Log.setVerbose(true);
+		Log.setLogSystem(new Logger());
+		
 		AppGameContainer app = new AppGameContainer(new MapTest(), 800, 600, false);
 		app.start();
 	}
 	
 	public void init(GameContainer container) throws SlickException {
-		
 		delta = new DefaultGameDelta();
 
 		Map map3 = new SimpleMap(50, 50);
 		map3.init(null, null);
+		map3.setName("lol-bot");
 		
 		MapIO.writeMap("test2.map", map3, false);
-		//MapIO.readMap("test2.map", null, true);
-		
+		SimpleMap map = MapIO.readMap("test2.map", false, new MapIOReader() {
+			public TileSet getTileSetIntance(String classname, String resourceName, String resoureLocation) {
+				return new SimpleTileSet(resourceName, SimpleLayer.sheet);
+			}
+			public Tile getTileInstance(String classname, String type) {
+				if(type.equals("normal")) {
+					return new SimpleTile();
+				}
+				return new AnimatedTileImpl();
+			}
+			public Map getMapInstance(String classname) {
+				return new SimpleMap();
+			}
+			public Layer getLayerIntance(String classname) {
+				return new SimpleLayer();
+			}
+			public EntityLayer getEntityLayerInstance(String classname) {
+				return new SimpleEntityLayer();
+			}
+			public Entity getEntityInstance(String classname) {
+				if(classname.equals("Ball")) {
+					return new Ball();
+				}
+				return null;
+			}
+			
+		});
+		System.out.println(map.getName());
 		
 	}
 	public void update(GameContainer container, int delta) throws SlickException {
@@ -69,7 +109,5 @@ public class MapTest extends BasicGame {
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		
 	}
-	
-	
 	
 }
