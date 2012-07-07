@@ -181,8 +181,6 @@ public class MapIO {
 				dis = new DataInputStream(new BufferedInputStream(stream));
 			}
 			
-			System.out.println(stream.available());
-			
 			if (LOG) {
 				Log.info("Loading Map...");
 			}
