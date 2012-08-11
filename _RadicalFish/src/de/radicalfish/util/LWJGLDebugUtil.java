@@ -27,10 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.debug;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
+package de.radicalfish.util;
 import org.lwjgl.opengl.ContextCapabilities;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -38,6 +35,7 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Registry;
 import org.newdawn.slick.SlickException;
+import de.radicalfish.debug.Logger;
 
 /**
  * A simple class for display hardware information from LWJGL.
@@ -47,8 +45,6 @@ import org.newdawn.slick.SlickException;
  * @since 06.06.2012
  */
 public class LWJGLDebugUtil {
-	
-	private static int texCount = 0;
 	
 	/**
 	 * Prints the complete LWJGL information available by this class with the {@link Logger} class.
@@ -74,47 +70,9 @@ public class LWJGLDebugUtil {
 		}
 		
 	}
-	
-	/**
-	 * This creates a new texture ID if <code>returnSaved</code> is false. This is used to determine the real number of
-	 * textures in use on the GPU.
-	 * 
-	 * @param returnSaved
-	 *            if true this returns the saved value, otherwise it will be calculated.
-	 * @return the numbers of textures used by the application.
-	 */
-	public static int getTextureCount(boolean returnSaved) {
-		if (!returnSaved) {
-			
-			IntBuffer intBuffer = createIntBuffer(1);
-			GL11.glGenTextures(intBuffer);
 
-			int id = intBuffer.get(0);
-			texCount = id - 1;
-			
-			intBuffer = createIntBuffer(1);
-			intBuffer.put(id);
-			intBuffer.flip();
-			
-			GL11.glDeleteTextures(intBuffer);
-			return texCount;
-			
-		} else {
-			return texCount;
-		}
-	}
-	
-	/**
-	 * @return a string representing all versions of OpenGL which are supported separated by ", ".
-	 */
-	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private static IntBuffer createIntBuffer(int size) {
-		ByteBuffer temp = ByteBuffer.allocateDirect(4 * size);
-		temp.order(ByteOrder.nativeOrder());
-		return temp.asIntBuffer();
-	}
 	private static String getSupportedOpenGLVersions() {
 		StringBuilder buffer = new StringBuilder();
 		ContextCapabilities caps = GLContext.getCapabilities();

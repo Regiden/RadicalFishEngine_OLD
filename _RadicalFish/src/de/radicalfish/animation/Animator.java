@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.world;
+package de.radicalfish.animation;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +39,6 @@ import org.newdawn.slick.util.ResourceLoader;
 import org.xmlpull.v1.XmlPullParser;
 import de.matthiasmann.twl.utils.TextUtil;
 import de.matthiasmann.twl.utils.XMLParser;
-import de.radicalfish.Animation;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.Resources;
 import de.radicalfish.debug.Logger;

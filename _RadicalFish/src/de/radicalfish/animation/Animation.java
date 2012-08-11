@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish;
+package de.radicalfish.animation;
 import java.util.ArrayList;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
