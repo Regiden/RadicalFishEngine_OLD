@@ -1,0 +1,27 @@
+# Simple Properties for a game
+
+# Common
+common.debug:true
+common.fullscreen:false
+common.music:1.0
+common.sound:1.0
+common.sound3D:true
+common.logging:true
+common.textspeed:2
+common.vsync:true
+common.smoothdelta:true
+
+# Graphics
+graphics.effects:true
+graphics.animations:true
+graphics.shaders:true
+graphics.postprocessing:true
+
+# Debug Details
+debug.map_checklayers:true
+debug.xml_animations:true
+debug.rect.collision:true
+debug.rect.position:false
+
+# Misc
+misc.guipath:de/radicalfish/testdata/gui/RadicalFish.xml
