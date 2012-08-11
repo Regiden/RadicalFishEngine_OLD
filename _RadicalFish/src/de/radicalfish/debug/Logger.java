@@ -28,10 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.debug;
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Date;
-import org.newdawn.slick.util.LogSystem;
 
 /**
  * This is a LogSystem which adds some methods to the normal logger.
@@ -40,17 +37,13 @@ import org.newdawn.slick.util.LogSystem;
  * @version 1.0.0
  * @since 05.10.2011
  */
-public class Logger implements LogSystem {
+public class Logger {
 	
 	/** The types a log can have. */
 	public enum LOGTYPE {
 		NONE, LOAD, ERROR, WARN, INFO, DEBUG, INIT
 	}
 	
-	/** Standard {@link System} out stream. */
-	public static PrintStream OUT = System.out;
-	/** Standard {@link System} err stream. */
-	public static PrintStream ERR = System.err;
 	/** A log containing everything called by a {@link Logger}. */
 	public static ArrayList<String> LOG = new ArrayList<String>();
 	
@@ -81,23 +74,9 @@ public class Logger implements LogSystem {
 		}
 		Logger.listerner.remove(listener);
 	}
-	
-	public static void load(String message) {
-		if (isVerbose) {
-			OUT.println("LOADING: " + message);
-			appendLog(LOGTYPE.LOAD, message);
-		}
-	}
-	public static void none(String message) {
-		if (isVerbose) {
-			OUT.println(message);
-			appendLog(LOGTYPE.NONE, message);
-		}
-	}
-	
-	public int getMaxLogLines() {
-		return maxLogLines;
-	}
+	/**
+	 * @return a String with all recorded logs with <code>maxLines</code>.
+	 */
 	public static String getLogAsString(int maxLines) {
 		StringBuilder sb = new StringBuilder();
 		
@@ -110,18 +89,57 @@ public class Logger implements LogSystem {
 		return sb.toString();
 	}
 	
-	public static void setMaxLogLines(int value) {
-		maxLogLines = value;
-		if(LOG.size() > maxLogLines) {
-			int rem = LOG.size() - maxLogLines;
-			for(int i = 0; i < rem; i++) {
-				LOG.remove(maxLogLines + i);
-			}
+	public static void none(String message) {
+		if (isVerbose) {
+			log("", message);
+			appendLog(LOGTYPE.NONE, message);
 		}
-		
 	}
-	public static void setLogging(boolean value) {
-		isVerbose = value;
+	public static void load(String message) {
+		if (isVerbose) {
+			log("LOADING: ", message);
+			appendLog(LOGTYPE.LOAD, message);
+		}
+	}
+	public static void error(String message) {
+		if (isVerbose) {
+			logError("", message);
+			appendLog(LOGTYPE.ERROR, message);
+		}
+	}
+	public static void error(String message, Exception e) {
+		if (isVerbose) {
+			logError("ERROR", message, e);
+			appendLog(LOGTYPE.ERROR, message);
+		}
+	}
+	public static void warn(String message) {
+		if (isVerbose) {
+			log("WARN", message);
+			appendLog(LOGTYPE.WARN, message);
+		}
+	}
+	public static void info(String message) {
+		if (isVerbose) {
+			log("INFO", message);
+			appendLog(LOGTYPE.INFO, message);
+		}
+	}
+	public static void debug(String message) {
+		if (isVerbose) {
+			log("DEBUG", message);
+			appendLog(LOGTYPE.DEBUG, message);
+		}
+	}
+	public static void log(String tag, String message) {
+		System.out.println(tag + message);
+	}
+	public static void logError(String tag, String message) {
+		System.err.println(tag + message);
+	}
+	public static void logError(String tag, String message, Exception e) {
+		System.err.println(tag + message);
+		e.printStackTrace();
 	}
 	
 	// INTERN STATIC METHODS
@@ -136,44 +154,32 @@ public class Logger implements LogSystem {
 		}
 	}
 	
-	// METHODS
+	// SETTER & GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void error(String message, Throwable e) {
-		error(message);
-		error(e);
-		if (isVerbose)
-			appendLog(LOGTYPE.ERROR, message);
+	/**
+	 * @return number of max log lines.
+	 */
+	public int getMaxLogLines() {
+		return maxLogLines;
 	}
-	public void error(Throwable e) {
-		error("");
-		e.printStackTrace(ERR);
+	/**
+	 * Sets the maximum number of lines recorded. If the values is smaller then the current value the list holding the
+	 * recorded logs will be truncated.
+	 */
+	public static void setMaxLogLines(int value) {
+		maxLogLines = value;
+		if (LOG.size() > maxLogLines) {
+			int rem = LOG.size() - maxLogLines;
+			for (int i = 0; i < rem; i++) {
+				LOG.remove(maxLogLines + i);
+			}
+		}
 		
 	}
-	public void error(String message) {
-		ERR.println(new Date() + " ERROR: " + message);
-		if (isVerbose)
-			appendLog(LOGTYPE.ERROR, message);
+	/**
+	 * True if we want logging or not.
+	 */
+	public static void setLogging(boolean value) {
+		isVerbose = value;
 	}
-	public void warn(String message) {
-		OUT.println("WARNING: " + message);
-		if (isVerbose)
-			appendLog(LOGTYPE.WARN, message);
-	}
-	public void warn(String message, Throwable e) {
-		OUT.println("WARNING: " + message);
-		e.printStackTrace(OUT);
-		if (isVerbose)
-			appendLog(LOGTYPE.WARN, message);
-	}
-	public void info(String message) {
-		OUT.println("INFO: " + message);
-		if (isVerbose)
-			appendLog(LOGTYPE.INFO, message);
-	}
-	public void debug(String message) {
-		OUT.println("DEBUG: " + message);
-		if (isVerbose)
-			appendLog(LOGTYPE.DEBUG, message);
-	}
-	
 }
