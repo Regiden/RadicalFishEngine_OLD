@@ -1,4 +1,4 @@
 RadicalFishEngine
 =================
 
-An Engine build on top of Slick2D 
+An Engine build on top of libGDX
