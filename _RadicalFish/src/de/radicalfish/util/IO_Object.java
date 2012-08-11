@@ -29,7 +29,6 @@ public class IO_Object {
 		ObjectOutputStream outStream;
 		try {
 			outStream = new ObjectOutputStream(new FileOutputStream(path));
-			
 			outStream.writeObject(o);
 			outStream.flush();
 			outStream.close();

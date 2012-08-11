@@ -1,7 +1,7 @@
 package de.radicalfish.debug;
 
-import de.radicalfish.GameState;
 import de.radicalfish.context.GameContext;
+import de.radicalfish.state.GameState;
 import de.radicalfish.world.World;
 
 public abstract class TWLGameState extends GameState {

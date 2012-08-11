@@ -34,7 +34,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 import de.radicalfish.context.GraphicDetails;
 import de.radicalfish.context.Settings;
@@ -80,8 +79,6 @@ public class SimpleSettings implements Settings, GraphicDetails {
 		loadProperties(path);
 		
 		Logger.setLogging(logging);
-		Log.setVerbose(logging);
-		Log.setLogSystem(new Logger());
 	}
 	public void saveSettings(String path) {
 		
@@ -146,10 +143,9 @@ public class SimpleSettings implements Settings, GraphicDetails {
 			loadGraphicDetails();
 			loadCommonSettings();
 		} else {
-			Log.info("Settings File is empty! Using Defaults!");
+			Logger.info("Settings File is empty! Using Defaults!");
 			loadDefaults();
 		}
-		
 	}
 	private void loadDefaults() {
 		postprocessing = false;
@@ -409,7 +405,6 @@ public class SimpleSettings implements Settings, GraphicDetails {
 		logging = value;
 		_setProperty("common.logging", "" + value);
 		Logger.setLogging(logging);
-		Log.setVerbose(logging);
 	}
 	public void setVSync(boolean value) {
 		vsync = value;

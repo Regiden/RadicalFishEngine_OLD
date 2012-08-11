@@ -50,7 +50,6 @@ import de.radicalfish.context.GameVariables;
 import de.radicalfish.context.Resources;
 import de.radicalfish.context.Settings;
 import de.radicalfish.debug.DebugHook;
-import de.radicalfish.debug.LWJGLDebugUtil;
 import de.radicalfish.debug.Logger;
 import de.radicalfish.effects.FBOPostProcesser;
 import de.radicalfish.effects.PostProcesser;
@@ -62,6 +61,7 @@ import de.radicalfish.text.FontSheet;
 import de.radicalfish.text.SpriteFont;
 import de.radicalfish.text.SpriteFontRenderer;
 import de.radicalfish.text.StyledFont;
+import de.radicalfish.util.LWJGLDebugUtil;
 import de.radicalfish.world.World;
 
 public class GameContextTest extends StateBasedGame implements GameContext {

@@ -28,7 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.test;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JFrame;

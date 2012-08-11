@@ -37,6 +37,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 import de.radicalfish.Grid;
 import de.radicalfish.Rectangle2D;
+import de.radicalfish.animation.Animator;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 

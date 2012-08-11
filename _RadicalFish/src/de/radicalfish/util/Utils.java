@@ -29,6 +29,7 @@
  */
 package de.radicalfish.util;
 
+
 /**
  * Some Utilities for useful for developing.
  * 

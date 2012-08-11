@@ -33,7 +33,6 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.util.Log;
 import de.radicalfish.context.DefaultGameDelta;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.debug.Logger;
@@ -57,8 +56,6 @@ public class MapTest extends BasicGame {
 	}
 	public static void main(String[] args) throws SlickException {
 		Logger.setLogging(true);
-		Log.setVerbose(true);
-		Log.setLogSystem(new Logger());
 		
 		AppGameContainer app = new AppGameContainer(new MapTest(), 800, 600, false);
 		app.start();

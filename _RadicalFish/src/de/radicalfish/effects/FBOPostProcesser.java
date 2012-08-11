@@ -31,8 +31,8 @@ package de.radicalfish.effects;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.util.Log;
 import de.radicalfish.context.GameContext;
+import de.radicalfish.debug.Logger;
 import de.radicalfish.extern.FBO;
 
 /**
@@ -66,7 +66,7 @@ public class FBOPostProcesser implements PostProcesser {
 		usesEffect = true;
 		
 		if(context.getSettings().isDebugging()) {
-			Log.info("Created FBO for Post Processing with the size: [" + sceneBuffer.getWidth() + ", " + sceneBuffer.getHeight() + "]");
+			Logger.info("Created FBO for Post Processing with the size: [" + sceneBuffer.getWidth() + ", " + sceneBuffer.getHeight() + "]");
 		}
 	
 	}
@@ -98,7 +98,7 @@ public class FBOPostProcesser implements PostProcesser {
 		
 	}
 	public void updateSize(int width, int height) throws SlickException {
-		Log.info("Updating FBO size...");
+		Logger.info("Updating FBO size...");
 		
 		sceneBuffer.release();
 		sceneBuffer.getTexture().release();

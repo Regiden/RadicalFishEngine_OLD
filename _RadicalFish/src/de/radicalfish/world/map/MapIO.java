@@ -42,12 +42,11 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 import de.radicalfish.Grid;
+import de.radicalfish.animation.Animator;
 import de.radicalfish.debug.Logger;
 import de.radicalfish.util.Utils;
-import de.radicalfish.world.Animator;
 import de.radicalfish.world.Entity;
 
 /**
@@ -87,7 +86,7 @@ import de.radicalfish.world.Entity;
  */
 public class MapIO {
 	
-	/** If true, the method will print logs while writing/reading the maps. */
+	/** If true, the methods will print logs while writing/reading the maps. */
 	public static final boolean LOG = true;
 	
 	private static final int VERSION = 101;
@@ -139,7 +138,7 @@ public class MapIO {
 			}
 			
 			if (LOG) {
-				Log.info("Writing Map...");
+				Logger.info("Writing Map...");
 			}
 			
 			log("Version: " + VERSION);
@@ -154,7 +153,7 @@ public class MapIO {
 			dos.close();
 			
 			if (LOG) {
-				Log.info("Wrote Map: " + map.getName() + " (Layers: " + map.getLayers().size() + ", Entities: "
+				Logger.info("Wrote Map: " + map.getName() + " (Layers: " + map.getLayers().size() + ", Entities: "
 						+ map.getEntityLayer().getEntites().size() + ")");
 			}
 			
@@ -182,13 +181,13 @@ public class MapIO {
 			}
 			
 			if (LOG) {
-				Log.info("Loading Map...");
+				Logger.info("Loading Map...");
 			}
 			
 			int version = dis.readInt();
 			if (version != VERSION) {
-				Log.info("Version Mismatch! Current: " + VERSION + ", Read: " + version);
-				Log.info("Will try to load map anyway...");
+				Logger.info("Version Mismatch! Current: " + VERSION + ", Read: " + version);
+				Logger.info("Will try to load map anyway...");
 			}
 			log("Version: " + version);
 			

@@ -29,11 +29,10 @@
  */
 package de.radicalfish.world.map;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.SpriteSheet;
 import de.radicalfish.context.Resources;
 
 /**
- * A TileSet is a sheet which contains all tiles on a layer. an implementation could use {@link SpriteSheet} for this.
+ * A TileSet is a sheet which contains all tiles on a layer.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -61,10 +60,14 @@ public interface TileSet {
 	public String getResourceLocation();
 	
 	/**
+	 * Utility for Slick2D, use {@link TileSet#draw(int)} or {@link TileSet#draw(int, int)} for direct drawing.
+	 * 
 	 * @return the sub image of the TileSet at <code>index</code>.
 	 */
 	public Image getTileAt(int index);
 	/**
+	 * Utility for Slick2D, use {@link TileSet#draw(int)} or {@link TileSet#draw(int, int)} for direct drawing.
+	 * 
 	 * @return the sub image of the TileSet at <code>x</code>, <code>y</code>.
 	 */
 	public Image getTileAt(int x, int y);

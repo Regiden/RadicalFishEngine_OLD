@@ -29,8 +29,8 @@
  */
 package de.radicalfish;
 
+import java.awt.Rectangle;
 import java.io.Serializable;
-import de.radicalfish.util.FastMath;
 
 /**
  * A rectangle used for collision. This is a special implementation meant to be used for 2D games with a scale of two.
@@ -107,8 +107,8 @@ public class Rectangle2D implements Serializable {
 	 * Sets the bounds of the rectangle. the position gets rounded.
 	 */
 	public void setBounds(float x, float y, int width, int height) {
-		this.x = FastMath.round(x);
-		this.y = FastMath.round(y);
+		this.x = (int)x;
+		this.y = (int)y;
 		this.width = width;
 		this.height = height;
 	}

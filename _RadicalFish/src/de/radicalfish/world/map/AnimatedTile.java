@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.world.map;
-import de.radicalfish.Animation;
+import de.radicalfish.animation.Animation;
 
 /**
  * An animated tile that changes it's index like in an {@link Animation}. {@link MapIO} will check for this tile and

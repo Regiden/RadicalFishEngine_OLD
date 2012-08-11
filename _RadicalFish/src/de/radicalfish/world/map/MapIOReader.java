@@ -57,7 +57,6 @@ public interface MapIOReader {
 	 * @return an {@link EntityLayer} Implementation to load the content into.
 	 */
 	public EntityLayer getEntityLayerInstance(String classname);
-	
 	/**
 	 * 
 	 * @param classname

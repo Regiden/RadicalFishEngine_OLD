@@ -33,12 +33,12 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
-import de.radicalfish.GameState;
 import de.radicalfish.Rectangle2D;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.context.Settings;
 import de.radicalfish.debug.PerformanceListener;
+import de.radicalfish.state.GameState;
 import de.radicalfish.util.GraphicUtils;
 import de.radicalfish.world.Entity;
 import de.radicalfish.world.EntitySystem;
@@ -124,7 +124,6 @@ public class TestGameState extends GameState implements MapListener, Performance
 		g.fillRect(0, 0, context.getGameWidth(), context.getGameHeight());
 		g.resetTransform();
 		world.render(context, g);
-		
 	}
 	
 	private void updateEditor(GameContext context, World world, GameDelta delta) {
