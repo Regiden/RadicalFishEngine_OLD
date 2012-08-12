@@ -49,7 +49,7 @@ public class Player extends Entity {
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void init(GameContext context, World world) throws SlickException {
-		animator.loadAnimations(context, "de/radicalfish/assets/ani.xml", null);
+		// animator.loadAnimations(context, "de/radicalfish/assets/ani.xml", null);
 		setOffset(43, 48);
 		setOffScreenRanges(64, 90);
 		setID(0);

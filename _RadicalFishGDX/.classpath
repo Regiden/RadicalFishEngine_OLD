@@ -2,30 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="libs/lzma.jar"/>
-	<classpathentry kind="lib" path="libs/xpp3-1.1.4c.jar"/>
-	<classpathentry kind="lib" path="libs/jinput.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/D:/_MyData_/MyProjects/Java_Projects/__LIBARIES/jinput_coreapi_javadoc.zip!/apidocs"/>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="_RadicalFish/native/windows"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="libs/lwjgl_util.jar" sourcepath="D:/_MyData_/MyProjects/LWJGL/lwjgl 2.8.4/lwjgl-source-2.8.4.zip">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/D:/_MyData_/MyProjects/LWJGL/lwjgl 2.8.4/lwjgl-docs-2.8.4.zip!/javadoc"/>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="_RadicalFish/native"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="libs/lwjgl.jar" sourcepath="D:/_MyData_/MyProjects/LWJGL/lwjgl 2.8.4/lwjgl-source-2.8.4.zip">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/D:/_MyData_/MyProjects/LWJGL/lwjgl 2.8.4/lwjgl-docs-2.8.4.zip!/javadoc"/>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="_RadicalFish/native"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/Slick"/>
-	<classpathentry kind="lib" path="libs/TWL.jar" sourcepath="/twl"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/libgdx-contribs-postprocessing"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/libgdx-contribs-utils"/>
-	<classpathentry kind="lib" path="libs/gdx.jar" sourcepath="D:/_MyData_/MyProjects/libGDX/libgdx-0.9.6/sources/gdx-sources.jar"/>
+	<classpathentry kind="lib" path="libs/gdx.jar" sourcepath="libs/gdx-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

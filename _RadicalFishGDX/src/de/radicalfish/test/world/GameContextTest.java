@@ -41,7 +41,6 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-import de.matthiasmann.twl.Color;
 import de.radicalfish.context.DefaultGameDelta;
 import de.radicalfish.context.DefaultGameVariables;
 import de.radicalfish.context.GameContext;
@@ -49,7 +48,6 @@ import de.radicalfish.context.GameDelta;
 import de.radicalfish.context.GameVariables;
 import de.radicalfish.context.Resources;
 import de.radicalfish.context.Settings;
-import de.radicalfish.debug.DebugHook;
 import de.radicalfish.debug.Logger;
 import de.radicalfish.effects.FBOPostProcesser;
 import de.radicalfish.effects.PostProcesser;
@@ -61,7 +59,6 @@ import de.radicalfish.text.FontSheet;
 import de.radicalfish.text.SpriteFont;
 import de.radicalfish.text.SpriteFontRenderer;
 import de.radicalfish.text.StyledFont;
-import de.radicalfish.util.LWJGLDebugUtil;
 import de.radicalfish.world.World;
 
 public class GameContextTest extends StateBasedGame implements GameContext {
@@ -79,12 +76,9 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	private PostProcesser postProcess;
 	private ToneShaderEffect postEffect;
 	
-	private DebugGameState debug;
-	
 	private static int gameScale = 2;
 	private static int gameWidth = 400, gameHeight = 300;
 	private int maxTextureSize = 1024;
-	private boolean canDebug;
 	
 	private boolean usedFBO;
 	private int avgfps, avgdelta, runs;
@@ -125,7 +119,6 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		
 		app.start();
 		
-		
 	}
 	
 	// GAME METHODS
@@ -152,16 +145,9 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		checkGraphicsCapabilities();
 		if (settings.isLogging()) {
 			Logger.none("------------------------ OpenGL Information ------------------------");
-			LWJGLDebugUtil.printInformationToLog();
 			Logger.none("------------------------ Settings ------------------------");
 			settings.printSettings();
 			Logger.none("------------------------ GAME ------------------------");
-		}
-		canDebug = settings.isDebugging();
-		if(canDebug) {
-			debug = new DebugGameState(this, world, 0);
-			debug.init(this, world);
-			debug.setVisible(false);
 		}
 		
 		res.loadSpriteSheet("test-chipset", "de/radicalfish/assets/collisionmap.png", 16, 16);
@@ -174,13 +160,6 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		TestGameState test = new TestGameState(this, world, 1);
 		
 		addState(test);
-		
-		if(canDebug) {
-			debug.addPerformanceListener(test, "Sprites", Color.RED);
-			debug.addPerformanceListener(glo, "ES Map", Color.GREEN);
-		}
-		
-		
 		
 	}
 	
@@ -200,7 +179,7 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	protected void preRenderState(GameContainer container, Graphics g) throws SlickException {
 		g.setFont(defaultFont);
 		
-		if(getSettings().getGraphicDetails().usePostProcessing()) {
+		if (getSettings().getGraphicDetails().usePostProcessing()) {
 			postProcess.bind(this, g);
 			g.clear();
 			usedFBO = true;
@@ -211,16 +190,12 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	}
 	protected void postRenderState(GameContainer container, Graphics g) throws SlickException {
 		
-		if(getSettings().getGraphicDetails().usePostProcessing() && usedFBO) {
+		if (getSettings().getGraphicDetails().usePostProcessing() && usedFBO) {
 			postProcess.unbind(this, g);
-			if(debug.isVisible()) {
-				g.scale(0.5f, 0.5f);
-			}
 			postProcess.renderScene(this, g);
 		}
 		
 		renderDebug(g);
-		setUpdatePaused(debug.isVisible());
 		
 	}
 	
@@ -235,16 +210,9 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	private void updateDebug() throws SlickException {
-		if (canDebug) {
-			debug.update(this, world, getGameDelta());
-		}
 		
 	}
-	private void renderDebug(Graphics g) throws SlickException {
-		if (canDebug) {
-			debug.render(this, world, g);
-		}
-	}
+	private void renderDebug(Graphics g) throws SlickException {}
 	private void updateSettings(GameContainer container) throws SlickException {
 		if (container.isFullscreen() != settings.isFullscreen()) {
 			container.setFullscreen(settings.isFullscreen());
@@ -283,7 +251,7 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	}
 	private void closeGame() {
 		Logger.none("Exit Game:");
-		if(runs != 0) {
+		if (runs != 0) {
 			Logger.none("\tTotal Runs:   " + runs);
 			Logger.none("\tAverage FPS:   " + (avgfps / runs));
 			Logger.none("\tAverage Delta: " + (avgdelta / runs));
@@ -341,8 +309,5 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 	public Resources getResources() {
 		return res;
 	}
-	public DebugHook getDebugHook() {
-		return debug;
-	}
-
+	
 }

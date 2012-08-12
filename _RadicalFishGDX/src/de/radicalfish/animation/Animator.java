@@ -30,19 +30,8 @@
 package de.radicalfish.animation;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
-import org.newdawn.slick.util.Log;
-import org.newdawn.slick.util.ResourceLoader;
-import org.xmlpull.v1.XmlPullParser;
-import de.matthiasmann.twl.utils.TextUtil;
-import de.matthiasmann.twl.utils.XMLParser;
-import de.radicalfish.context.GameContext;
-import de.radicalfish.context.Resources;
-import de.radicalfish.debug.Logger;
-import de.radicalfish.util.Utils;
 
 /**
  * Handles animations for entities.
@@ -55,7 +44,7 @@ public class Animator implements Serializable {
 	
 	private static final long serialVersionUID = 8460918241921046816L;
 
-	private static long time;
+	// private static long time;
 	
 	private HashMap<String, Animation> animations;
 	private Animation current;
@@ -111,44 +100,44 @@ public class Animator implements Serializable {
 	 *            be null to ignore it
 	 * @throws SlickException
 	 */
-	public void loadAnimations(GameContext context, String pathXML, List<String> required) throws SlickException {
-		try {
-			if (context.getSettings().getProperty("debug.xmlanimations", false)) {
-				time = System.nanoTime();
-			}
-			XMLParser xpp = new XMLParser(ResourceLoader.getResource(pathXML));
-			
-			xpp.ignoreOtherAttributes();
-			xpp.nextTag();
-			xpp.require(XmlPullParser.START_TAG, null, "animations");
-			
-			xpp.ignoreOtherAttributes();
-			xpp.nextTag();
-			while (!xpp.isEndTag()) {
-				processElement(context.getResources(), xpp);
-				xpp.ignoreOtherAttributes();
-				xpp.nextTag();
-			}
-			
-			// check if all animations that are required are there.
-			if(required != null) {
-				for(String name : required) {
-					if(!animations.containsKey(name)) {
-						throw new SlickException("required name not found int the animations list: " + name);
-					}
-				}
-			}
-			
-			if (context.getSettings().getProperty("debug.xml_animations", false)) {
-				Log.info("Animations were loaded from xml: " + pathXML);
-				Logger.none("\t=> Time:   " + Utils.formatTime((System.nanoTime() - time)));
-				Logger.none("\t=> Loaded: " + animations.size());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new SlickException(e.getMessage(), e.getCause());
-		}
-	}
+//	public void loadAnimations(GameContext context, String pathXML, List<String> required) throws SlickException {
+//		try {
+//			if (context.getSettings().getProperty("debug.xmlanimations", false)) {
+//				time = System.nanoTime();
+//			}
+//			XMLParser xpp = new XMLParser(ResourceLoader.getResource(pathXML));
+//			
+//			xpp.ignoreOtherAttributes();
+//			xpp.nextTag();
+//			xpp.require(XmlPullParser.START_TAG, null, "animations");
+//			
+//			xpp.ignoreOtherAttributes();
+//			xpp.nextTag();
+//			while (!xpp.isEndTag()) {
+//				processElement(context.getResources(), xpp);
+//				xpp.ignoreOtherAttributes();
+//				xpp.nextTag();
+//			}
+//			
+//			// check if all animations that are required are there.
+//			if(required != null) {
+//				for(String name : required) {
+//					if(!animations.containsKey(name)) {
+//						throw new SlickException("required name not found int the animations list: " + name);
+//					}
+//				}
+//			}
+//			
+//			if (context.getSettings().getProperty("debug.xml_animations", false)) {
+//				Log.info("Animations were loaded from xml: " + pathXML);
+//				Logger.none("\t=> Time:   " + Utils.formatTime((System.nanoTime() - time)));
+//				Logger.none("\t=> Loaded: " + animations.size());
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new SlickException(e.getMessage(), e.getCause());
+//		}
+//	}
 	
 	/**
 	 * Adds a new Animation to the Animator.
@@ -212,62 +201,62 @@ public class Animator implements Serializable {
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private void processElement(Resources resources, XMLParser xpp) throws Exception {
-		xpp.require(XmlPullParser.START_TAG, null, "animation");
-		
-		String name = xpp.getAttributeNotNull("name");
-		
-		// try to load sprite sheet
-		String temp = xpp.getAttributeValue(null, "sheet");
-		SpriteSheet sheet = resources.getSpriteSheet(temp);
-		if (sheet == null) {
-			// load it from scratch
-			int tw = xpp.parseIntFromAttribute("tw");
-			int th = xpp.parseIntFromAttribute("th");
-			sheet = new SpriteSheet(temp, tw, th);
-		}
-		
-		int[] times = TextUtil.parseIntArray(xpp.getAttributeNotNull("times"));
-		int[] frames = TextUtil.parseIntArray(xpp.getAttributeNotNull("frames"));
-		
-		Utils.notNull("times array", times);
-		Utils.notNull("frames array", frames);
-		if (times.length != frames.length) {
-			throw new SlickException("Mismatch in times and frames length! times: " + times.length + " | frames: " + frames.length);
-		}
-		
-		// ignorable params
-		boolean loops = xpp.parseBoolFromAttribute("loops", false);
-		boolean pingPong = xpp.parseBoolFromAttribute("pingpong", false);
-		int loopAt = xpp.parseIntFromAttribute("loopat", -1);
-		
-		Animation animation = new Animation();
-		animation.setLoops(loops);
-		animation.setPingPong(pingPong);
-		if (loopAt >= 0) {
-			animation.setLoopsAt(true, loopAt);
-		}
-		for (int i = 0, x = 0, y = 0; i < frames.length; i++) {
-			// tileX = id % currentSheet.tilesAcross;
-			// tileY = id / currentSheet.tilesDown;
-			if (frames[i] < 0) {
-				throw new SlickException("sheet index can not be below 0: " + frames[i]);
-			}
-			if (times[i] < 0) {
-				throw new SlickException("time can not be below 0: " + times[i]);
-			}
-			
-			x = frames[i] % sheet.getHorizontalCount();
-			y = frames[i] / sheet.getVerticalCount();
-			
-			animation.addFrame(sheet.getSubImage(x, y), times[i]);
-		}
-		addAnimation(name, animation);
-		
-		// jump the end tag of animation!
-		xpp.nextTag();
-		xpp.require(XmlPullParser.END_TAG, null, "animation");
-	}
+//	private void processElement(Resources resources, XMLParser xpp) throws Exception {
+//		xpp.require(XmlPullParser.START_TAG, null, "animation");
+//		
+//		String name = xpp.getAttributeNotNull("name");
+//		
+//		// try to load sprite sheet
+//		String temp = xpp.getAttributeValue(null, "sheet");
+//		SpriteSheet sheet = resources.getSpriteSheet(temp);
+//		if (sheet == null) {
+//			// load it from scratch
+//			int tw = xpp.parseIntFromAttribute("tw");
+//			int th = xpp.parseIntFromAttribute("th");
+//			sheet = new SpriteSheet(temp, tw, th);
+//		}
+//		
+//		int[] times = TextUtil.parseIntArray(xpp.getAttributeNotNull("times"));
+//		int[] frames = TextUtil.parseIntArray(xpp.getAttributeNotNull("frames"));
+//		
+//		Utils.notNull("times array", times);
+//		Utils.notNull("frames array", frames);
+//		if (times.length != frames.length) {
+//			throw new SlickException("Mismatch in times and frames length! times: " + times.length + " | frames: " + frames.length);
+//		}
+//		
+//		// ignorable params
+//		boolean loops = xpp.parseBoolFromAttribute("loops", false);
+//		boolean pingPong = xpp.parseBoolFromAttribute("pingpong", false);
+//		int loopAt = xpp.parseIntFromAttribute("loopat", -1);
+//		
+//		Animation animation = new Animation();
+//		animation.setLoops(loops);
+//		animation.setPingPong(pingPong);
+//		if (loopAt >= 0) {
+//			animation.setLoopsAt(true, loopAt);
+//		}
+//		for (int i = 0, x = 0, y = 0; i < frames.length; i++) {
+//			// tileX = id % currentSheet.tilesAcross;
+//			// tileY = id / currentSheet.tilesDown;
+//			if (frames[i] < 0) {
+//				throw new SlickException("sheet index can not be below 0: " + frames[i]);
+//			}
+//			if (times[i] < 0) {
+//				throw new SlickException("time can not be below 0: " + times[i]);
+//			}
+//			
+//			x = frames[i] % sheet.getHorizontalCount();
+//			y = frames[i] / sheet.getVerticalCount();
+//			
+//			animation.addFrame(sheet.getSubImage(x, y), times[i]);
+//		}
+//		addAnimation(name, animation);
+//		
+//		// jump the end tag of animation!
+//		xpp.nextTag();
+//		xpp.require(XmlPullParser.END_TAG, null, "animation");
+//	}
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

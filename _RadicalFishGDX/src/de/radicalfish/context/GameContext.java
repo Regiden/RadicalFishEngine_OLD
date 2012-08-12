@@ -32,7 +32,6 @@ import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.state.StateBasedGame;
-import de.radicalfish.debug.DebugHook;
 import de.radicalfish.effects.PostProcesser;
 import de.radicalfish.effects.ToneModel;
 import de.radicalfish.text.FontRenderer;
@@ -112,8 +111,4 @@ public interface GameContext {
 	 * @return the resource manager for the game. can be null if not needed.
 	 */
 	public Resources getResources();
-	/**
-	 * @return the debug hook is any.
-	 */
-	public DebugHook getDebugHook();
 }
