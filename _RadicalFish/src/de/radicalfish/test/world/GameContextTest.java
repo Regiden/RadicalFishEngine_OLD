@@ -122,6 +122,7 @@ public class GameContextTest extends StateBasedGame implements GameContext {
 		app.setMouseGrabbed(!settings.isDebugging());
 		app.setShowFPS(false);
 		app.setAlwaysRender(settings.isDebugging());
+		app.setResizable(true);
 		
 		app.start();
 		
