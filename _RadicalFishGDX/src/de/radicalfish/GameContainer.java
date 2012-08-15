@@ -39,6 +39,7 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import de.radicalfish.debug.DebugCallback;
 import de.radicalfish.debug.Logger;
 import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.util.Version;
@@ -69,6 +70,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	private Camera2D camera;
 	private SpriteBatch batch;
 	private BitmapFont defaultFont;
+	private DebugCallback debugCallBack;
 	
 	private GameInput input;
 	private Graphics graphics;
@@ -174,6 +176,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		// set gdx stuff
 		app = Gdx.app;
 		input = new GameInput();
+		input.addInputProcessor(this);
 		checkIfFullscreenSupported();
 		setFullScreen(fullscreen);
 		
@@ -203,9 +206,12 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		}
 		// TODO if game implements InputProccessor add as listener!
 		
-		// call init on the game implementation
+		// call init on the game implementation and the debug callback
 		try {
 			game.init(this);
+			if(debugCallBack != null) {
+				debugCallBack.init(this);
+			}
 		} catch (RadicalFishException e) {
 			e.printStackTrace();
 			Gdx.app.exit();
@@ -218,6 +224,8 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 				return;
 			}
 			if (running) {
+				
+				
 				delta = Gdx.graphics.getDeltaTime();
 				fps = Gdx.graphics.getFramesPerSecond();
 				
@@ -228,6 +236,10 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 				}
 				
 				game.update(this, delta);
+				if(debugCallBack != null) {
+					debugCallBack.update(this, delta);
+				}
+				
 				
 				// render
 				if (clearScreen) {
@@ -236,6 +248,9 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 				}
 				
 				game.render(this, graphics, batch);
+				if(debugCallBack != null) {
+					debugCallBack.render(this, graphics, batch);
+				}
 				
 				// reset all to make each frame normal
 				if (resetTransform) {
@@ -428,6 +443,16 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		return running;
 	}
 	
+	/**
+	 * Sets the {@link DebugCallback} to use. Note this only works under Desktop implementations. If you set a callback
+	 * in another implementation the methods of the callback will not be called and a warning will be logged when the
+	 * container is created.
+	 * 
+	 */
+	public void setDebugCallBack(DebugCallback debugCallBack) {
+		this.debugCallBack = debugCallBack;
+	}
+	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
@@ -443,6 +468,13 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		return input;
 	}
 	/**
+	 * @return the debug callback, can be null if on another implementation then Desktop.
+	 */
+	public DebugCallback getDebugCallBack() {
+		return debugCallBack;
+	}
+	/**
+	 * 
 	 * @param name
 	 *            the name of the specific preference.
 	 * @return the preferences use to store data across runs.
@@ -518,6 +550,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	// INPUT
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public boolean keyDown(int keycode) {
+		System.out.println("Char: " +(char) keycode + ", Code: " + keycode);
 		return false;
 	}
 	public boolean keyUp(int keycode) {

@@ -49,9 +49,6 @@ public class TWLRootPane extends DesktopArea {
 	private int oldMouseY;
 	
 	public TWLRootPane(TWLGameState state) {
-		if (state == null) {
-			throw new NullPointerException("state");
-		}
 		this.state = state;
 		
 		ActionMap actionMap = getActionMap();
@@ -60,7 +57,10 @@ public class TWLRootPane extends DesktopArea {
 			setActionMap(actionMap);
 		}
 		
-		actionMap.addMapping(state);
+		if(state != null) {
+			actionMap.addMapping(state);
+		}
+		
 		
 		setCanAcceptKeyboardFocus(true);
 		
@@ -71,12 +71,16 @@ public class TWLRootPane extends DesktopArea {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	@Override
 	protected void keyboardFocusLost() {
-		state.keyboardFocusLost();
+		if(state != null) {
+			state.keyboardFocusLost();
+		}
 	}
 	@Override
 	protected boolean requestKeyboardFocus(Widget child) {
 		if (child != null) {
-			state.keyboardFocusLost();
+			if(state != null) {
+				state.keyboardFocusLost();
+			}
 		}
 		return super.requestKeyboardFocus(child);
 	}
@@ -89,6 +93,9 @@ public class TWLRootPane extends DesktopArea {
 	@Override
 	protected boolean handleEvent(Event evt) {
 		if (super.handleEvent(evt)) {
+			return true;
+		}
+		if(state == null) {
 			return true;
 		}
 		
@@ -130,7 +137,9 @@ public class TWLRootPane extends DesktopArea {
 	@Override
 	protected void layout() {
 		super.layout();
-		state.layoutRootPane();
+		if(state != null) {
+			state.layoutRootPane();
+		}
 	}
 	
 	// GETTER AND SETTER

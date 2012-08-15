@@ -28,22 +28,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.debug;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.util.InputAdapter;
+import com.badlogic.gdx.InputProcessor;
 import de.matthiasmann.twl.GUI;
+import de.radicalfish.GameInput;
 
 /**
  * Forwards input events from Slick to TWL.
  * 
  * @author Matthias Mann
  */
-public class TWLInputForwarder extends InputAdapter {
+public class TWLInputForwarder implements InputProcessor {
 
-    private final Input input;
+    private final GameInput input;
     private final GUI gui;
 
-    public TWLInputForwarder(GUI gui, Input input) {
+    public TWLInputForwarder(GUI gui, GameInput input) {
         if (gui == null) {
             throw new NullPointerException("gui");
         }
@@ -55,67 +56,47 @@ public class TWLInputForwarder extends InputAdapter {
         this.input = input;
     }
 
-    @Override
-    public void mouseWheelMoved(int change) {
-        gui.handleMouseWheel(change);
-        input.consumeEvent();
-    }
+	@Override
+	public boolean keyDown(int keycode) {
+		gui.handleKey(keycode, Keyboard.getEventCharacter(), true);
+		return true;
+	}
 
-    @Override
-    public void mousePressed(int button, int x, int y) {
-        gui.handleMouse(x, y, button, true);
-        input.consumeEvent();
-    }
+	@Override
+	public boolean keyUp(int keycode) {
+		return true;
+	}
 
-    @Override
-    public void mouseReleased(int button, int x, int y) {
-        gui.handleMouse(x, y, button, false);
-        input.consumeEvent();
-    }
+	@Override
+	public boolean keyTyped(char character) {
+		return true;
+	}
 
-    @Override
-    public void mouseMoved(int oldX, int oldY, int newX, int newY) {
-        gui.handleMouse(newX, newY, -1, false);
-        input.consumeEvent();
-    }
+	@Override
+	public boolean touchDown(int x, int y, int pointer, int button) {
+		return true;
+	}
 
-    @Override
-    public void mouseDragged(int oldx, int oldy, int newX, int newY) {
-        mouseMoved(oldx, oldy, newX, newY);
-    }
+	@Override
+	public boolean touchUp(int x, int y, int pointer, int button) {
+		return true;
+	}
 
-    @Override
-    public void keyPressed(int key, char c) {
-        gui.handleKey(key, c, true);
-        input.consumeEvent();
-    }
+	@Override
+	public boolean touchDragged(int x, int y, int pointer) {
+		return true;
+	}
 
-    @Override
-    public void keyReleased(int key, char c) {
-        gui.handleKey(key, c, false);
-        input.consumeEvent();
-    }
+	@Override
+	public boolean touchMoved(int x, int y) {
+		return true;
+	}
 
-    @Override
-    public void mouseClicked(int button, int x, int y, int clickCount) {
-        input.consumeEvent();
-    }
+	@Override
+	public boolean scrolled(int amount) {
+		gui.handleMouseWheel(amount);
+		return true;
+	}
 
-    @Override
-    public void inputStarted() {
-        gui.updateTime();
-        if (!Display.isActive()) {
-            gui.clearKeyboardState();
-            gui.clearMouseState();
-
-            if (gui.getRootPane() instanceof TWLRootPane) {
-                ((TWLRootPane) gui.getRootPane()).keyboardFocusLost();
-            }
-        }
-    }
-
-    @Override
-    public void inputEnded() {
-        gui.handleKeyRepeat();
-    }
+   
 }
