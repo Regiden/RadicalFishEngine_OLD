@@ -67,7 +67,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	
 	private Application app;
 	
-	private Camera2D camera;
+	private GraphicsContext camera;
 	private SpriteBatch batch;
 	private BitmapFont defaultFont;
 	private DebugCallback debugCallBack;
@@ -181,7 +181,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		setFullScreen(fullscreen);
 		
 		// init the camera used by the Graphics class
-		camera = new Camera2D(width, height);
+		camera = new GraphicsContext(width, height);
 		camera.position.set(0, 0, 0);
 		
 		// is GL2 is in use, use the default shader for the spritebatch

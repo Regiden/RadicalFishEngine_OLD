@@ -34,19 +34,20 @@ import com.badlogic.gdx.math.Vector3;
 
 /**
  * An implementation of the {@link OrthographicCamera} which makes the origin the top left corner. It also supports
- * different scale values for <code>x</code>, and <code>y</code>.
+ * different scale values for <code>x</code>, and <code>y</code>. It's used to supply a context like GL10 does for
+ * scaling, translating the whole context.
  * 
  * @author Stefan Lange
  * @version 0.0.0
  * @since 09.08.2012
  */
-public class Camera2D extends OrthographicCamera {
+public class GraphicsContext extends OrthographicCamera {
 	
 	private final Vector3 temp;
 	
 	private float scaleX, scaleY;
 	
-	public Camera2D(int viewportWidth, int viewportHeight) {
+	public GraphicsContext(int viewportWidth, int viewportHeight) {
 		scaleX = 1.0f;
 		scaleY = 1.0f;
 		temp = new Vector3();

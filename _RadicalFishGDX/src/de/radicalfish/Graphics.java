@@ -32,7 +32,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
 /**
- * A wrapper for translating the context/camera, drawing sprites with the {@link SpriteBatch} and displaying primitives.
+ * A wrapper for translating the context, drawing sprites with the {@link SpriteBatch} and displaying primitives.
  * It offers a Slick2D like drawing but also allows to batch sprites.
  * 
  * @author Stefan Lange
@@ -42,15 +42,15 @@ import com.badlogic.gdx.math.Vector3;
 public class Graphics {
 	
 	private SpriteBatch spriteBatch;
-	private Camera2D camera;
+	private GraphicsContext gContext;
 	
 	private Vector3 origin;
 	
-	public Graphics(SpriteBatch spriteBatch, Camera2D camera) {
-		this.camera = camera;
+	public Graphics(SpriteBatch spriteBatch, GraphicsContext gContext) {
+		this.gContext = gContext;
 		this.spriteBatch = spriteBatch;
 		
-		origin = new Vector3(camera.position);
+		origin = new Vector3(gContext.position);
 	}
 	
 	// METHODS
@@ -59,44 +59,44 @@ public class Graphics {
 	 * Resets the translation and only the translation!
 	 */
 	public void resetTranslate() {
-		camera.position.set(origin);
+		gContext.position.set(origin);
 	}
 	/**
-	 * Translate the camera to <code>x</code>, <code>y</code>.
+	 * Translate the context to <code>x</code>, <code>y</code>.
 	 */
 	public void translate(float x, float y) {
-		camera.translate(-x, -y);
+		gContext.translate(-x, -y);
 	}
 	
 	/**
 	 * Resets the scale and only the scale!
 	 */
 	public void resetScale() {
-		camera.setScale(1f);
+		gContext.setScale(1f);
 	}
 	/**
 	 * scales the context.
 	 */
 	public void scale(float scale) {
-		camera.scale(scale);
+		gContext.scale(scale);
 	}
 	/**
 	 * scales the context.
 	 */
 	public void scale(float x, float y) {
-		camera.scale(x, y);
+		gContext.scale(x, y);
 	}
 	/**
 	 * sets the scale of the context.
 	 */
 	public void setScale(float scale) {
-		camera.setScale(scale);
+		gContext.setScale(scale);
 	}
 	/**
 	 * sets the scale of the context.
 	 */
 	public void setScale(float x, float y) {
-		camera.setScale(x, y);
+		gContext.setScale(x, y);
 	}
 	
 	/**
@@ -115,23 +115,23 @@ public class Graphics {
 		
 	}
 	/**
-	 * Applies changes to both the camera and the batch.
+	 * Applies changes to both the context and the batch.
 	 */
 	public void apply() {
-		applyCamera();
+		applyContext();
 		applyBatch();
 	}
 	/**
-	 * Applies the Translations on the camera.
+	 * Applies the Translations on the context.
 	 */
-	public void applyCamera() {
-		camera.update();
+	public void applyContext() {
+		gContext.update();
 	}
 	/**
-	 * Applies the camera changes to the batch. This should be called as less as possible to avoid flushing the batch while batching.
+	 * Applies the context changes to the batch. This should be called as less as possible to avoid flushing the batch while batching.
 	 */
 	public void applyBatch() {
-		spriteBatch.setProjectionMatrix(camera.combined);
+		spriteBatch.setProjectionMatrix(gContext.combined);
 
 	}
 	
@@ -145,9 +145,9 @@ public class Graphics {
 	 * @return the current scale value.
 	 */
 	public float getScaleX() {
-		return camera.getScaleX();
+		return gContext.getScaleX();
 	}
 	public float getScaleY() {
-		return camera.getScaleY();
+		return gContext.getScaleY();
 	}
 }
