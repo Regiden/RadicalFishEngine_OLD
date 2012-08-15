@@ -61,4 +61,14 @@ public interface DebugCallback extends Game {
 	 * @return a list containing all the performance listener.
 	 */
 	public Array<PerformanceListener> getPerformanceListener();
+	
+	/**
+	 * Method to display or hide the debug.
+	 */
+	public void setVisible(boolean visible);
+	/**
+	 * @return true if the debug is currently visible
+	 */
+	public boolean isVisible();
+	
 }

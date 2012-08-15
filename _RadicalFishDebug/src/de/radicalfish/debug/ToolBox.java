@@ -29,10 +29,12 @@
  */
 package de.radicalfish.debug;
 import java.util.ArrayList;
+import com.badlogic.gdx.math.Interpolation;
 import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ColumnLayout;
 import de.matthiasmann.twl.ColumnLayout.Row;
+import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.ResizableFrame;
 import de.matthiasmann.twl.Widget;
 
@@ -59,7 +61,9 @@ public class ToolBox extends ResizableFrame {
 	
 	private ArrayList<WidgetWithAlginment> preWidgets;
 	
-	private int containerWidth, containerHeight;
+	private float currentPosition;
+	private int currentDirection;
+	
 	private boolean created;
 	
 	/**
@@ -70,15 +74,30 @@ public class ToolBox extends ResizableFrame {
 	 * @param gameHeight
 	 *            used to set the position to the bottom of the container
 	 */
-	public ToolBox(int containerWidth, int containerHeight) {
-		this.containerWidth = containerWidth;
-		this.containerHeight = containerHeight;
+	public ToolBox() {
 		created = false;
 		createPanel();
+		currentPosition = 0;
+		currentDirection = 0;
 	}
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Pops out the {@link ToolBox} from the bottom.
+	 */
+	public void show() {
+		currentPosition = 0;
+		currentDirection = 1;
+	}
+	/**
+	 * Hides the {@link ToolBox} at the bottom of the bar.
+	 */
+	public void hide() {
+		currentPosition = getHeight();
+		currentDirection = -1;
+	}
+	
 	/**
 	 * Adds a new button to the tool box. The tool gets a button to hide/show if pressed.
 	 * 
@@ -174,21 +193,74 @@ public class ToolBox extends ResizableFrame {
 		throw new UnsupportedOperationException("Use addButton or addCustomWidget!");
 	}
 	
+	@Override
+	protected void paint(GUI gui) {
+		if (currentDirection == 1) {
+			if (currentPosition != getHeight()) {
+				setPosition(0, getParent().getHeight() - getShowTime());
+			}
+		} else if (currentDirection == -1) {
+			if (currentPosition != getHeight()) {
+				setPosition(0, getParent().getHeight() - getHideTime());
+			}
+		}
+		
+		if (getWidth() != getParent().getWidth()) {
+			setSize(getParent().getWidth(), 0);
+		}
+		super.paint(gui);
+	}
+	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private int getShowTime() {
+		currentPosition = Interpolation.linear.apply(currentPosition, getHeight(), 0.2f);
+		if (currentPosition > getHeight()) {
+			currentPosition = getHeight();
+		}
+		return (int) currentPosition;
+	}
+	private int getHideTime() {
+		currentPosition = Interpolation.linear.apply(currentPosition, 0, 0.2f);
+		if (currentPosition < 0) {
+			currentPosition = 0;
+		}
+		return (int) currentPosition;
+	}
 	private void createPanel() {
 		setTheme("");
 		
 		layout = new ColumnLayout();
 		layout.setTheme("buttonBox");
 		
-		setPosition(0, containerHeight);
-		setSize(containerWidth, 0);
-		
 		super.add(layout);
 		
 		preWidgets = new ArrayList<WidgetWithAlginment>();
-		
+	}
+	
+	// GETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return true if the {@link ToolBox} is completely visible.
+	 */
+	public boolean isShown() {
+		if(currentDirection == 0) {
+			return false;
+		} else if(currentDirection == 1) {
+			return currentPosition == getHeight();
+		}
+		return false;
+	}
+	/**
+	 * @return true if the {@link ToolBox} is completely hidden.
+	 */
+	public boolean isHidden() {
+		if(currentDirection == 0) {
+			return false;
+		} else if(currentDirection == -1) {
+			return currentPosition == 0;
+		}
+		return false;
 	}
 	
 	// PRIVATE CLASSES

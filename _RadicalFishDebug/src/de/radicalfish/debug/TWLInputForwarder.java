@@ -28,11 +28,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.debug;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.GUI;
-import de.radicalfish.GameInput;
+import de.radicalfish.util.Utils;
 
 /**
  * Forwards input events from Slick to TWL.
@@ -40,63 +41,71 @@ import de.radicalfish.GameInput;
  * @author Matthias Mann
  */
 public class TWLInputForwarder implements InputProcessor {
-
-    private final GameInput input;
-    private final GUI gui;
-
-    public TWLInputForwarder(GUI gui, GameInput input) {
-        if (gui == null) {
-            throw new NullPointerException("gui");
-        }
-        if (input == null) {
-            throw new NullPointerException("input");
-        }
-
-        this.gui = gui;
-        this.input = input;
-    }
-
-	@Override
+	
+	private final GUI gui;
+	
+	private boolean mouseDown;
+	private boolean ignoreMouse;
+	private boolean consumedLastPress;
+	
+	public TWLInputForwarder(GUI gui) {
+		if (gui == null) {
+			throw new NullPointerException("gui");
+		}
+		this.gui = gui;
+	}
+	
+	// INTERFACE
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public boolean keyDown(int keycode) {
-		gui.handleKey(keycode, Keyboard.getEventCharacter(), true);
-		return true;
+		return gui.handleKey(Utils.mapGDXKeyToLWJGL(keycode), '\000', true);
 	}
-
-	@Override
 	public boolean keyUp(int keycode) {
-		return true;
+		return gui.handleKey(Utils.mapGDXKeyToLWJGL(keycode), '\000', false);
 	}
-
-	@Override
 	public boolean keyTyped(char character) {
-		return true;
+		return gui.handleKey(Event.KEY_NONE, character, true);
 	}
-
-	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		return true;
+		if (!mouseDown) {
+			consumedLastPress = false;
+		}
+		mouseDown = true;
+		if (ignoreMouse) {
+			return false;
+		}
+		boolean handled = gui.handleMouse(x, y, button, true);
+		if (handled) {
+			consumedLastPress = true;
+		}
+		return handled;
 	}
-
-	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		return true;
+		mouseDown = false;
+		if (ignoreMouse) {
+			ignoreMouse = false;
+			return false;
+		}
+		boolean handled = gui.handleMouse(x, y, button, false);
+		if (Gdx.app.getType() == Application.ApplicationType.Android) {
+			gui.handleMouse(-9999, -9999, -1, false);
+		}
+		return handled;
 	}
-
-	@Override
 	public boolean touchDragged(int x, int y, int pointer) {
-		return true;
+		if ((mouseDown) && (!consumedLastPress)) {
+			ignoreMouse = true;
+			gui.clearMouseState();
+			return false;
+		}
+		return gui.handleMouse(x, y, -1, true);
 	}
-
-	@Override
 	public boolean touchMoved(int x, int y) {
-		return true;
+		return gui.handleMouse(x, y, -1, true);
 	}
-
-	@Override
 	public boolean scrolled(int amount) {
 		gui.handleMouseWheel(amount);
 		return true;
 	}
-
-   
+	
 }

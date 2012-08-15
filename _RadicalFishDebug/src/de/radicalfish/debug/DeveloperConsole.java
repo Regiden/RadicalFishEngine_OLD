@@ -114,7 +114,7 @@ public class DeveloperConsole extends ResizableFrame implements LogListener {
 	// INTERFACE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void logChanged(java.util.List<String> log, String lastAdded, Logger.LOGTYPE type) {
-		if(logToConsole) {
+		if (logToConsole) {
 			// TODO
 		}
 	}
@@ -280,7 +280,9 @@ public class DeveloperConsole extends ResizableFrame implements LogListener {
 					} else if (key.equals("flushlog")) {
 						return flushlog(console);
 					} else if (key.equals("print")) {
-						return print(message);
+						if (message.length() >= 7) {
+							return print(message);
+						}
 					}
 				}
 			}
