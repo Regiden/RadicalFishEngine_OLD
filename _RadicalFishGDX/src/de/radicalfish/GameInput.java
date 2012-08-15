@@ -28,8 +28,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Input.Orientation;
 import com.badlogic.gdx.Input.Peripheral;
 import com.badlogic.gdx.Input.TextInputListener;
@@ -46,6 +49,36 @@ import com.badlogic.gdx.InputProcessor;
  * @since 10.08.2012
  */
 public class GameInput implements InputProcessor {
+	
+	private final static String[][] keynames = new String[256][2];
+	private static int counter = 0;
+	
+	static {
+		Field[] fields = Keys.class.getFields();
+		try {
+			for (Field field : fields) {
+				if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())
+						&& Modifier.isFinal(field.getModifiers()) && field.getType().equals(int.class)) {
+					
+					int key = field.getInt(null);
+					
+					if (key >= 0) {
+						
+						for (int i = 0; i < 3; i++) {
+							if (keynames[key][i] == null) {
+								keynames[key][i] = field.getName();
+								break;
+							}
+						}
+					}
+					counter++;
+				}
+			}
+			
+		} catch (Exception e) {}
+	}
+	
+	private static final int keyCount = counter;
 	
 	private Input input;
 	private boolean[] pressed;
@@ -464,6 +497,27 @@ public class GameInput implements InputProcessor {
 	 */
 	public void setCursorPosition(int x, int y) {
 		input.setCursorPosition(x, y);
+	}
+	
+	// STATIC METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private static final String[] ANYKEY = new String[] { "ANYKEY" };
+	
+	/**
+	 * @return the names of the keycode. Some keys have 2 names, the length of the array is always 2. (returns null if
+	 *         the keycode is unnamed)
+	 */
+	public static String[] getKeyName(int keycode) {
+		if (keycode == -1) {
+			return ANYKEY;
+		}
+		return keynames[keycode];
+	}
+	/**
+	 * @return the number of keys supported.
+	 */
+	public static int getKeys() {
+		return keyCount;
 	}
 	
 }

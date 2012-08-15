@@ -192,404 +192,84 @@ public class Utils {
 			case 56:
 				return 52;
 			case 57:
-				return 0;
+				return 56;
 			case 58:
-				return 0;
+				return 184;
 			case 59:
-				return 0;
+				return 42;
 			case 60:
-				return 0;
+				return 54;
 			case 61:
-				return 0;
+				return 15;
 			case 62:
-				return 0;
-			case 63:
-				return 0;
-			case 64:
-				return 0;
-			case 65:
-				return 0;
+				return 57;
 			case 66:
-				return 0;
+				return 28;
 			case 67:
-				return 0;
+				return 14;
 			case 68:
-				return 0;
+				return 41;
 			case 69:
-				return 0;
+				return 12;
 			case 70:
-				return 0;
+				return 13;
 			case 71:
-				return 0;
+				return 26;
 			case 72:
-				return 0;
+				return 27;
 			case 73:
-				return 0;
+				return 43;
 			case 74:
-				return 0;
+				return 39;
 			case 75:
-				return 0;
+				return 40;
 			case 76:
-				return 0;
-			case 77:
-				return 0;
-			case 78:
-				return 0;
-			case 79:
-				return 0;
-			case 80:
-				return 0;
+				return 53;
 			case 81:
-				return 0;
-			case 82:
-				return 0;
-			case 83:
-				return 0;
-			case 84:
-				return 0;
-			case 85:
-				return 0;
-			case 86:
-				return 0;
-			case 87:
-				return 0;
-			case 88:
-				return 0;
-			case 89:
-				return 0;
-			case 90:
-				return 0;
-			case 91:
-				return 0;
+				return 78;
 			case 92:
-				return 0;
+				return 201;
 			case 93:
-				return 0;
-			case 94:
-				return 0;
-			case 95:
-				return 0;
-			case 96:
-				return 0;
-			case 97:
-				return 0;
-			case 98:
-				return 0;
-			case 99:
-				return 0;
-			case 100:
-				return 0;
-			case 101:
-				return 0;
-			case 102:
-				return 0;
-			case 103:
-				return 0;
-			case 104:
-				return 0;
-			case 105:
-				return 0;
-			case 106:
-				return 0;
-			case 107:
-				return 0;
-			case 108:
-				return 0;
-			case 109:
-				return 0;
-			case 110:
-				return 0;
-			case 111:
-				return 0;
+				return 209;
 			case 112:
-				return 0;
-			case 113:
-				return 0;
-			case 114:
-				return 0;
-			case 115:
-				return 0;
-			case 116:
-				return 0;
-			case 117:
-				return 0;
-			case 118:
-				return 0;
-			case 119:
-				return 0;
-			case 120:
-				return 0;
-			case 121:
-				return 0;
-			case 122:
-				return 0;
-			case 123:
-				return 0;
-			case 124:
-				return 0;
-			case 125:
-				return 0;
-			case 126:
-				return 0;
-			case 127:
-				return 0;
-			case 128:
-				return 0;
+				return 211;
 			case 129:
-				return 0;
+				return 29;
 			case 130:
-				return 0;
+				return 157;
 			case 131:
-				return 0;
+				return 1;
 			case 132:
-				return 0;
+				return 207;
 			case 133:
-				return 0;
-			case 134:
-				return 0;
-			case 135:
-				return 0;
-			case 136:
-				return 0;
-			case 137:
-				return 0;
-			case 138:
-				return 0;
-			case 139:
-				return 0;
-			case 140:
-				return 0;
-			case 141:
-				return 0;
-			case 142:
-				return 0;
-			case 143:
-				return 0;
-			case 144:
-				return 0;
-			case 145:
-				return 0;
-			case 146:
-				return 0;
-			case 147:
-				return 0;
-			case 148:
-				return 0;
-			case 149:
-				return 0;
-			case 150:
-				return 0;
-			case 151:
-				return 0;
-			case 152:
-				return 0;
-			case 153:
-				return 0;
-			case 154:
-				return 0;
-			case 155:
-				return 0;
-			case 156:
-				return 0;
-			case 157:
-				return 0;
-			case 158:
-				return 0;
-			case 159:
-				return 0;
-			case 160:
-				return 0;
-			case 161:
-				return 0;
-			case 162:
-				return 0;
-			case 163:
-				return 0;
-			case 164:
-				return 0;
-			case 165:
-				return 0;
-			case 166:
-				return 0;
-			case 167:
-				return 0;
-			case 168:
-				return 0;
-			case 169:
-				return 0;
-			case 170:
-				return 0;
-			case 171:
-				return 0;
-			case 172:
-				return 0;
-			case 173:
-				return 0;
-			case 174:
-				return 0;
-			case 175:
-				return 0;
-			case 176:
-				return 0;
-			case 177:
-				return 0;
-			case 178:
-				return 0;
-			case 179:
-				return 0;
-			case 180:
-				return 0;
-			case 181:
-				return 0;
-			case 182:
-				return 0;
-			case 183:
-				return 0;
-			case 184:
-				return 0;
-			case 185:
-				return 0;
-			case 186:
-				return 0;
-			case 187:
-				return 0;
-			case 188:
-				return 0;
-			case 189:
-				return 0;
-			case 190:
-				return 0;
-			case 191:
-				return 0;
-			case 192:
-				return 0;
-			case 193:
-				return 0;
-			case 194:
-				return 0;
-			case 195:
-				return 0;
-			case 196:
-				return 0;
-			case 197:
-				return 0;
-			case 198:
-				return 0;
-			case 199:
-				return 0;
-			case 200:
-				return 0;
-			case 201:
-				return 0;
-			case 202:
-				return 0;
-			case 203:
-				return 0;
-			case 204:
-				return 0;
-			case 205:
-				return 0;
-			case 206:
-				return 0;
-			case 207:
-				return 0;
-			case 208:
-				return 0;
-			case 209:
-				return 0;
-			case 210:
-				return 0;
-			case 211:
-				return 0;
-			case 212:
-				return 0;
-			case 213:
-				return 0;
-			case 214:
-				return 0;
-			case 215:
-				return 0;
-			case 216:
-				return 0;
-			case 217:
-				return 0;
-			case 218:
-				return 0;
-			case 219:
-				return 0;
-			case 220:
-				return 0;
-			case 221:
-				return 0;
-			case 222:
-				return 0;
-			case 223:
-				return 0;
-			case 224:
-				return 0;
-			case 225:
-				return 0;
-			case 226:
-				return 0;
-			case 227:
-				return 0;
-			case 228:
-				return 0;
-			case 229:
-				return 0;
-			case 230:
-				return 0;
-			case 231:
-				return 0;
-			case 232:
-				return 0;
-			case 233:
-				return 0;
-			case 234:
-				return 0;
-			case 235:
-				return 0;
-			case 236:
-				return 0;
-			case 237:
-				return 0;
-			case 238:
-				return 0;
-			case 239:
-				return 0;
-			case 240:
-				return 0;
-			case 241:
-				return 0;
-			case 242:
-				return 0;
+				return 210;
 			case 243:
-				return 0;
+				return 146;
 			case 244:
-				return 0;
+				return 59;
 			case 245:
-				return 0;
+				return 60;
 			case 246:
-				return 0;
+				return 61;
 			case 247:
-				return 0;
+				return 62;
 			case 248:
-				return 0;
+				return 63;
 			case 249:
-				return 0;
+				return 64;
 			case 250:
-				return 0;
+				return 65;
 			case 251:
-				return 0;
+				return 66;
 			case 252:
-				return 0;
+				return 67;
 			case 253:
-				return 0;
+				return 68;
 			case 254:
-				return 0;
+				return 87;
 			case 255:
-				return 0;
+				return 88;
 		}
-		return -2;
+		return 0;
 	}
 }

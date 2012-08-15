@@ -102,6 +102,11 @@ public class GraphicsContext extends OrthographicCamera {
 		Matrix4.inv(invProjectionView.val);
 		frustum.update(invProjectionView);
 	}
+	public void setToOrtho (float viewportWidth, float viewportHeight) {
+		this.viewportWidth = viewportWidth;
+		this.viewportHeight = viewportHeight;
+		update();
+	}
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

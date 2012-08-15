@@ -42,6 +42,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.radicalfish.debug.DebugCallback;
 import de.radicalfish.debug.Logger;
 import de.radicalfish.util.RadicalFishException;
+import de.radicalfish.util.Utils;
 import de.radicalfish.util.Version;
 
 /*
@@ -66,12 +67,12 @@ import de.radicalfish.util.Version;
 public class GameContainer implements ApplicationListener, InputProcessor {
 	
 	private Application app;
-	
-	private GraphicsContext camera;
 	private SpriteBatch batch;
 	private BitmapFont defaultFont;
-	private DebugCallback debugCallBack;
+	private DisplayMode currentDisplayMode;
 	
+	private GraphicsContext gContext;
+	private DebugCallback debugCallBack;
 	private GameInput input;
 	private Graphics graphics;
 	private Game game;
@@ -86,6 +87,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	private int height;
 	private int spriteBatchSize;
 	
+	private boolean created;
 	private boolean running;
 	private boolean useGL2;
 	private boolean clearScreen;
@@ -141,6 +143,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		
 		this.title = title;
 		
+		created = false;
 		running = true;
 		clearScreen = true;
 		showDebug = true;
@@ -171,7 +174,8 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		Logger.info(new Date() + " libGDX Version: " + com.badlogic.gdx.Version.VERSION);
 		Logger.info(new Date() + " System: " + logSystemOS());
 		Logger.info(new Date() + " Original DisplayMode: " + Gdx.graphics.getDesktopDisplayMode());
-		Logger.info(new Date() + " Current DisplayMode: " + getCurrentDisplayMode());
+		currentDisplayMode = getCurrentDisplayMode();
+		Logger.info(new Date() + " Current DisplayMode: " + currentDisplayMode);
 		
 		// set gdx stuff
 		app = Gdx.app;
@@ -180,9 +184,9 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		checkIfFullscreenSupported();
 		setFullScreen(fullscreen);
 		
-		// init the camera used by the Graphics class
-		camera = new GraphicsContext(width, height);
-		camera.position.set(0, 0, 0);
+		// init the context used by the Graphics class
+		gContext = new GraphicsContext(width, height);
+		gContext.position.set(0, 0, 0);
 		
 		// is GL2 is in use, use the default shader for the spritebatch
 		if (useGL2) {
@@ -192,7 +196,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		}
 		
 		// init Graphics context which should work like the one in Slick2D
-		graphics = new Graphics(batch, camera);
+		graphics = new Graphics(batch, gContext);
 		
 		// load default gdx font if now default font if defined.
 		if (!fontPath.equals("") && !fontDefPath.equals("")) {
@@ -201,15 +205,23 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 			defaultFont = new BitmapFont(true);
 		}
 		
+		if (debugCallBack != null) {
+			if (app.getType() != ApplicationType.Desktop) {
+				debugCallBack = null;
+			}
+		}
+		
 		if (game instanceof InputProcessor) {
 			input.addInputProcessor((InputProcessor) game);
 		}
-		// TODO if game implements InputProccessor add as listener!
+		if (debugCallBack != null && debugCallBack instanceof InputProcessor) {
+			input.addInputProcessor((InputProcessor) debugCallBack);
+		}
 		
 		// call init on the game implementation and the debug callback
 		try {
 			game.init(this);
-			if(debugCallBack != null) {
+			if (debugCallBack != null) {
 				debugCallBack.init(this);
 			}
 		} catch (RadicalFishException e) {
@@ -217,6 +229,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 			Gdx.app.exit();
 		}
 		
+		created = false;
 	}
 	public void render() {
 		try {
@@ -224,7 +237,6 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 				return;
 			}
 			if (running) {
-				
 				
 				delta = Gdx.graphics.getDeltaTime();
 				fps = Gdx.graphics.getFramesPerSecond();
@@ -236,10 +248,9 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 				}
 				
 				game.update(this, delta);
-				if(debugCallBack != null) {
+				if (debugCallBack != null) {
 					debugCallBack.update(this, delta);
 				}
-				
 				
 				// render
 				if (clearScreen) {
@@ -248,7 +259,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 				}
 				
 				game.render(this, graphics, batch);
-				if(debugCallBack != null) {
+				if (debugCallBack != null) {
 					debugCallBack.render(this, graphics, batch);
 				}
 				
@@ -259,8 +270,8 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 				
 				// render fps
 				if (showDebug) {
-					int calls = batch.renderCalls;
 					batch.begin();
+					int calls = batch.renderCalls;
 					defaultFont.draw(batch, "Fps: " + fps, 10, 10);
 					defaultFont.draw(batch, "Delta: " + (int) (delta * 1000) + "ms", 10, 25);
 					defaultFont.draw(batch, "Render Calls: " + calls, 10, 40);
@@ -268,12 +279,9 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 				}
 				
 				input.update();
-				
 			} else {
-				dispose();
 				Gdx.app.exit();
 			}
-			
 		} catch (RadicalFishException e) {
 			e.printStackTrace();
 			Gdx.app.exit();
@@ -300,15 +308,14 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	}
 	
 	public void resize(int width, int height) {
-		this.width = width;
-		this.height = height;
-		// TODO implement resize code
-		// or leave for streched
+		gContext.setToOrtho(width, height);
 	}
 	
 	public void dispose() {
-		batch.dispose();
+		debugCallBack.dispose();
 		game.dispose();
+		defaultFont.dispose();
+		batch.dispose();
 	}
 	
 	// INTERN
@@ -391,10 +398,40 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	 * title, but not the <code>extras</code>.
 	 */
 	public void setTitle(String title, String extras) {
+		Utils.notNull("title", title);
+		Utils.notNull("extras", extras);
+		
 		this.title = title;
 		app.getGraphics().setTitle(title + extras);
 	}
-	
+	/**
+	 * Sets the paths for the default font to use. Set it before launching the Application to directly load your
+	 * {@link BitmapFont}. You can change it while in the game loop to. This will unload the current {@link BitmapFont}
+	 * and load the new. If the paths a empty (""), the default GDX font will be loaded.
+	 * 
+	 * @param fontPath
+	 *            the path to the image file (must be internal path)
+	 * @param fontDefPath
+	 *            the path of the def file (must be internal path)
+	 * @throws RadicalFishException
+	 */
+	public void setDefaultFont(String fontPath, String fontDefPath) throws RadicalFishException {
+		Utils.notNull("font path", fontPath);
+		Utils.notNull("dont def path", fontDefPath);
+		
+		this.fontPath = fontPath;
+		this.fontDefPath = fontDefPath;
+		
+		if (created) {
+			try {
+				defaultFont.dispose();
+				defaultFont = new BitmapFont(Gdx.files.internal(fontDefPath), Gdx.files.internal(fontPath), true);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new RadicalFishException(e.getMessage());
+			}
+		}
+	}
 	/**
 	 * True if we want to clear the frame each loop, false otherwise.
 	 */
@@ -437,19 +474,13 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		app.getGraphics().setContinuousRendering(alwaysRender);
 	}
 	/**
-	 * @return true if the container runs.
-	 */
-	public boolean isRunning() {
-		return running;
-	}
-	
-	/**
 	 * Sets the {@link DebugCallback} to use. Note this only works under Desktop implementations. If you set a callback
 	 * in another implementation the methods of the callback will not be called and a warning will be logged when the
-	 * container is created.
+	 * container is created. If the callback implements the {@link InputProcessor} it will be added to the input.
 	 * 
 	 */
 	public void setDebugCallBack(DebugCallback debugCallBack) {
+		Utils.notNull("debug callback", debugCallBack);
 		this.debugCallBack = debugCallBack;
 	}
 	
@@ -481,6 +512,12 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	 */
 	public Preferences getPreferences(String name) {
 		return app.getPreferences(name);
+	}
+	/**
+	 * @return the default font used by the container.
+	 */
+	public BitmapFont getFont() {
+		return defaultFont;
 	}
 	
 	/**
@@ -520,6 +557,12 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	public boolean isAlwaysRender() {
 		return app.getGraphics().isContinuousRendering();
 	}
+	/**
+	 * @return true if the container runs.
+	 */
+	public boolean isRunning() {
+		return running;
+	}
 	
 	/**
 	 * @return the time since the last frame in seconds.
@@ -550,7 +593,6 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	// INPUT
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public boolean keyDown(int keycode) {
-		System.out.println("Char: " +(char) keycode + ", Code: " + keycode);
 		return false;
 	}
 	public boolean keyUp(int keycode) {
