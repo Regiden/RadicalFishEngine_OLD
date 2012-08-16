@@ -28,12 +28,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
 /**
- * A wrapper for translating the context, drawing sprites with the {@link SpriteBatch} and displaying primitives.
- * It offers a Slick2D like drawing but also allows to batch sprites.
+ * A wrapper for translating the context, drawing sprites with the {@link SpriteBatch} and drawing primitives. It
+ * offers a Slick2D like drawing but also allows to batch sprites.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -43,6 +46,7 @@ public class Graphics {
 	
 	private SpriteBatch spriteBatch;
 	private GraphicsContext gContext;
+	private Color clearColor;
 	
 	private Vector3 origin;
 	
@@ -51,10 +55,19 @@ public class Graphics {
 		this.spriteBatch = spriteBatch;
 		
 		origin = new Vector3(gContext.position);
+		clearColor = new Color();
+		setClearColor(1, 1, 0);
 	}
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Clears the color with the clearColor set
+	 */
+	public void clearScreen() {
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+	}
+	
 	/**
 	 * Resets the translation and only the translation!
 	 */
@@ -86,21 +99,9 @@ public class Graphics {
 	public void scale(float x, float y) {
 		gContext.scale(x, y);
 	}
-	/**
-	 * sets the scale of the context.
-	 */
-	public void setScale(float scale) {
-		gContext.setScale(scale);
-	}
-	/**
-	 * sets the scale of the context.
-	 */
-	public void setScale(float x, float y) {
-		gContext.setScale(x, y);
-	}
 	
 	/**
-	 * Resets the translation and the scale. 
+	 * Resets the translation and the scale.
 	 * 
 	 * @param apply
 	 *            true if we want to apply the changes directly (on the batch too).
@@ -109,7 +110,7 @@ public class Graphics {
 		resetTranslate();
 		resetScale();
 		
-		if(apply) {
+		if (apply) {
 			apply();
 		}
 		
@@ -128,17 +129,72 @@ public class Graphics {
 		gContext.update();
 	}
 	/**
-	 * Applies the context changes to the batch. This should be called as less as possible to avoid flushing the batch while batching.
+	 * Applies the context changes to the batch. This should be called as less as possible to avoid flushing the batch
+	 * while batching.
 	 */
 	public void applyBatch() {
 		spriteBatch.setProjectionMatrix(gContext.combined);
-
+		
+	}
+	
+	// SETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Sets the origin to translate if we reset the transform.
+	 */
+	public void setOrigin(float x, float y) {
+		origin.set(x, y, 0);
+	}
+	
+	/**
+	 * Sets the color used for clearing the screen. (The color object will not be copied)
+	 * 
+	 * @param color
+	 *            the color we want as clear color
+	 */
+	public void setClearColor(Color color) {
+		setClearColor(color.r, color.g, color.b);
+	}
+	/**
+	 * Sets the color used for clearing the screen.
+	 * 
+	 * @param r
+	 *            the red component
+	 * @param g
+	 *            the green component
+	 * @param b
+	 *            the blue component
+	 */
+	public void setClearColor(float r, float g, float b) {
+		clearColor.set(r, g, b, 1);
+		Gdx.gl.glClearColor(clearColor.r, clearColor.g, clearColor.b, 1);
+	}
+	/**
+	 * sets the scale of the context.
+	 */
+	public void setScale(float scale) {
+		gContext.setScale(scale);
+	}
+	/**
+	 * sets the scale of the context.
+	 */
+	public void setScale(float x, float y) {
+		gContext.setScale(x, y);
 	}
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return the {@link SpriteBatch} used for batching.
+	 */
 	public SpriteBatch getSpriteBatch() {
 		return spriteBatch;
+	}
+	/**
+	 * @return the color used for clear teh screen.
+	 */
+	public Color getClearColor() {
+		return clearColor;
 	}
 	
 	/**

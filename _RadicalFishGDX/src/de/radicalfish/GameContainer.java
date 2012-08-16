@@ -29,7 +29,6 @@
  */
 package de.radicalfish;
 import java.util.Date;
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -37,6 +36,7 @@ import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.radicalfish.debug.DebugCallback;
@@ -45,58 +45,68 @@ import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.util.Utils;
 import de.radicalfish.util.Version;
 
-/*
- * TODOS:
- * 	- implement resize stuff + 0.0.2
- */
-
 /**
- * Central point for the update loop of the engine. This should be based into an implementation of the
- * {@link Application} class (in the C'Tor).
+ * Central point for the update loop of the engine. Pass a {@link Game} implementation and start this container via the
+ * Platform specific Launchers (e.g. LwjglApplication class).
  * <p>
- * The container holds an class which implements the Interface {@link Game}. The container takes care of managing the
- * update loop and calling the methods form the {@link Game} Interface.
+ * The container takes care of managing the update loop and calling the methods form the {@link Game} Interface.
  * <p>
  * If the Implementation of the Game Interface also implements the {@link InputProcessor} it will be automatically added
  * as listener for the input.
+ * <p>
+ * You can easily put in your own init(), update() and render() calls. Just override the fireInit(), fireUpdate() or
+ * fireRender() method.
  * 
  * @author Stefan Lange
- * @version 0.3.6
+ * @version 0.5.0
  * @since 08.08.2012
  */
 public class GameContainer implements ApplicationListener, InputProcessor {
 	
-	private Application app;
-	private SpriteBatch batch;
-	private BitmapFont defaultFont;
-	private DisplayMode currentDisplayMode;
+	// TODO add aspect
+	/**
+	 * The type the game area can have. stretch will stretch the whole game to the window size, while fix will fix the
+	 * width and height. Use {@link GameContainer#setClipViewport(boolean)} to enable clipping for fixed (is on by
+	 * default).
+	 */
+	public enum VIEWTYPE {
+		STRECH, FIX
+	}
 	
-	private GraphicsContext gContext;
-	private DebugCallback debugCallBack;
-	private GameInput input;
-	private Graphics graphics;
-	private Game game;
+	protected SpriteBatch batch;
+	protected BitmapFont defaultFont;
+	protected DisplayMode currentDisplayMode;
 	
-	private String title;
-	private String fontPath, fontDefPath;
+	protected GraphicsContext gContext;
+	protected DebugCallback debugCallBack;
+	protected GameInput input;
+	protected Graphics graphics;
+	protected Game game;
+	protected VIEWTYPE viewtype = VIEWTYPE.FIX;
 	
-	private float delta;
-	private int fps;
+	protected String title = "";
+	protected String fontPath = "", fontDefPath = "";
 	
-	private int width;
-	private int height;
-	private int spriteBatchSize;
+	protected float delta;
+	protected int fps;
 	
-	private boolean created;
-	private boolean running;
+	private int width = 800;
+	private int height = 600;
+	private int spriteBatchSize = 1000;
+	
+	private boolean created = false;
+	private boolean running = true;
 	private boolean useGL2;
-	private boolean clearScreen;
-	private boolean showDebug;
-	private boolean resetTransform;
-	private boolean canSetFullScreen;
-	private boolean fullscreen;
-	private boolean smoothDelta;
-	private boolean paused;
+	private boolean clearScreen = true;
+	private boolean showDebug = true;
+	private boolean resetTransform = true;
+	private boolean canSetFullScreen = true;
+	private boolean fullscreen = false;
+	private boolean smoothDelta = false;
+	private boolean paused = false;
+	private boolean clipViewport = true;
+	private boolean vsync = true;
+	private boolean useGL20 = false;
 	
 	long lastFrameTime;
 	
@@ -129,38 +139,66 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	 *            the width of the game (the window)
 	 * @param height
 	 *            the height of the game (the window)
-	 * @param useGL2
+	 * @param useGL20
 	 *            true if we use GL20
 	 * @param fullscreen
 	 *            true if fullscreen should be used (set it in the configuration to have a nicer start)
 	 * @throws RadicalFishException
 	 */
-	public GameContainer(String title, Game game, int width, int height, boolean useGL2, boolean fullscreen) throws RadicalFishException {
+	public GameContainer(String title, Game game, int width, int height, boolean useGL20, boolean fullscreen) throws RadicalFishException {
 		this.game = game;
 		this.width = width;
 		this.height = height;
-		this.useGL2 = useGL2;
+		this.useGL20 = useGL20;
 		
-		this.title = title;
-		
-		created = false;
-		running = true;
-		clearScreen = true;
-		showDebug = true;
-		resetTransform = true;
-		smoothDelta = false;
-		paused = false;
 		this.fullscreen = fullscreen;
-		spriteBatchSize = 1000;
-		
-		fontPath = "";
-		fontDefPath = "";
 	}
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Notifies the container to stop the game and dispose all content.
+	 */
 	public void exit() {
 		running = false;
+	}
+	/**
+	 * @return true if the system the game is running on supports fullscreen (Currently only Desktop and Web).
+	 */
+	public boolean supportsFullscreen() {
+		if (Gdx.app.getType() == ApplicationType.Android || Gdx.app.getType() == ApplicationType.iOS
+				|| Gdx.app.getType() == ApplicationType.Applet) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	// PROTECTED
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Gets called too call init on the {@link Game} implementation. Override for your own code.
+	 * 
+	 * @throws RadicalFishException
+	 */
+	protected void fireInit() throws RadicalFishException {
+		game.init(this);
+	}
+	/**
+	 * Gets called too call update on the {@link Game} implementation. Override for your own code.
+	 * 
+	 * @throws RadicalFishException
+	 */
+	protected void fireUpdate() throws RadicalFishException {
+		game.update(this, delta);
+	}
+	/**
+	 * Gets called too call render on the {@link Game} implementation. Override for your own code.
+	 * 
+	 * @throws RadicalFishException
+	 */
+	protected void fireRender() throws RadicalFishException {
+		game.render(this, graphics, batch);
 	}
 	
 	// OVERRIDE
@@ -178,11 +216,11 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		Logger.info(new Date() + " Current DisplayMode: " + currentDisplayMode);
 		
 		// set gdx stuff
-		app = Gdx.app;
 		input = new GameInput();
 		input.addInputProcessor(this);
-		checkIfFullscreenSupported();
+		canSetFullScreen = supportsFullscreen();
 		setFullScreen(fullscreen);
+		Gdx.graphics.setVSync(vsync);
 		
 		// init the context used by the Graphics class
 		gContext = new GraphicsContext(width, height);
@@ -206,7 +244,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		}
 		
 		if (debugCallBack != null) {
-			if (app.getType() != ApplicationType.Desktop) {
+			if (Gdx.app.getType() != ApplicationType.Desktop) {
 				debugCallBack = null;
 			}
 		}
@@ -220,7 +258,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		
 		// call init on the game implementation and the debug callback
 		try {
-			game.init(this);
+			fireInit();
 			if (debugCallBack != null) {
 				debugCallBack.init(this);
 			}
@@ -237,34 +275,41 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 				return;
 			}
 			if (running) {
-				
 				delta = Gdx.graphics.getDeltaTime();
 				fps = Gdx.graphics.getFramesPerSecond();
 				
-				if (app.getType() != ApplicationType.Android && smoothDelta) {
+				if (Gdx.app.getType() != ApplicationType.Android && smoothDelta) {
 					if (fps != 0) {
 						delta = (1000 / fps) / 1000f;
 					}
 				}
 				
-				game.update(this, delta);
+				fireUpdate();
 				if (debugCallBack != null) {
 					debugCallBack.update(this, delta);
 				}
 				
 				// render
-				if (clearScreen) {
+				if (clipViewport) {
 					Gdx.gl.glClearColor(0, 0, 0, 1);
 					Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+					Gdx.gl.glEnable(GL10.GL_SCISSOR_TEST);
+					Gdx.gl.glScissor(0, Gdx.graphics.getHeight() - height, width, height);
+					graphics.setClearColor(graphics.getClearColor());
 				}
 				
-				game.render(this, graphics, batch);
+				if (clearScreen) {
+					graphics.clearScreen();
+				}
+				
+				fireRender();
 				if (debugCallBack != null) {
 					debugCallBack.render(this, graphics, batch);
 				}
 				
 				// reset all to make each frame normal
 				if (resetTransform) {
+					// TODO fix to center and shit?
 					graphics.resetTransform(true);
 				}
 				
@@ -276,6 +321,10 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 					defaultFont.draw(batch, "Delta: " + (int) (delta * 1000) + "ms", 10, 25);
 					defaultFont.draw(batch, "Render Calls: " + calls, 10, 40);
 					batch.end();
+				}
+				
+				if (clipViewport) {
+					Gdx.gl.glDisable(GL10.GL_SCISSOR_TEST);
 				}
 				
 				input.update();
@@ -308,7 +357,10 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	}
 	
 	public void resize(int width, int height) {
-		gContext.setToOrtho(width, height);
+		if (viewtype == VIEWTYPE.FIX) {
+			gContext.setToOrtho(width, height);
+		}
+		
 	}
 	
 	public void dispose() {
@@ -320,24 +372,17 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private void checkIfFullscreenSupported() {
-		if (app.getType() == ApplicationType.Android || app.getType() == ApplicationType.iOS || app.getType() == ApplicationType.Applet) {
-			canSetFullScreen = false;
-		} else {
-			canSetFullScreen = true;
-		}
-	}
 	private void checkFullscreen(boolean fullscreen) {
 		if (this.fullscreen != fullscreen) {
 			this.fullscreen = fullscreen;
-			if (fullscreen == app.getGraphics().isFullscreen()) {
+			if (fullscreen == Gdx.graphics.isFullscreen()) {
 				return;
 			}
-			if (!app.getGraphics().supportsDisplayModeChange()) {
+			if (!Gdx.graphics.supportsDisplayModeChange()) {
 				return;
 			}
 			
-			if (app.getGraphics().setDisplayMode(width, height, fullscreen)) {
+			if (Gdx.graphics.setDisplayMode(width, height, fullscreen)) {
 				Logger.info(new Date() + " Switched to " + (fullscreen ? "fullscreen" : "windowed"));
 			} else {
 				Logger.info(new Date() + " Could not switch fullscreen");
@@ -392,7 +437,16 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	public void setSpriteBatchSize(int size) {
 		spriteBatchSize = size;
 	}
-	
+	/**
+	 * Sets the {@link DebugCallback} to use. Note this only works under Desktop implementations. If you set a callback
+	 * in another implementation the methods of the callback will not be called and a warning will be logged when the
+	 * container is created. If the callback implements the {@link InputProcessor} it will be added to the input.
+	 * 
+	 */
+	public void setDebugCallBack(DebugCallback debugCallBack) {
+		Utils.notNull("debug callback", debugCallBack);
+		this.debugCallBack = debugCallBack;
+	}
 	/**
 	 * Sets the title and appends and extra string to it. This way {@link GameContainer#getTitle()} will only return the
 	 * title, but not the <code>extras</code>.
@@ -402,7 +456,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		Utils.notNull("extras", extras);
 		
 		this.title = title;
-		app.getGraphics().setTitle(title + extras);
+		Gdx.graphics.setTitle(title + extras);
 	}
 	/**
 	 * Sets the paths for the default font to use. Set it before launching the Application to directly load your
@@ -433,6 +487,59 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		}
 	}
 	/**
+	 * Sets the {@link VIEWTYPE} to use.
+	 */
+	public void setViewType(VIEWTYPE viewtype) {
+		this.viewtype = viewtype;
+		if (this.viewtype == VIEWTYPE.STRECH) {
+			gContext.setToOrtho(width, height);
+		}
+	}
+	
+	/**
+	 * Sets one or more icons for the Desktop. This only works for Lwjgl. On Windows you should supply at least one
+	 * 16x16 icon and one 32x32. Linux (and similar platforms) expect one 32x32 icon. Mac OS X should be supplied one
+	 * 128x128 icon
+	 * 
+	 * @see {@link com.badlogic.gdx.Graphics#setIcon(Pixmap[])}.
+	 * @param paths
+	 *            the paths to the icon files. must be internal
+	 * @throws RadicalFishException
+	 */
+	public void setIcons(String[] paths) throws RadicalFishException {
+		Utils.notNull("paths", paths);
+		if (paths.length == 0) {
+			throw new RadicalFishException("must supply at least one path!");
+		}
+		try {
+			Pixmap[] maps = new Pixmap[paths.length];
+			for (int i = 0; i < maps.length; i++) {
+				maps[i] = new Pixmap(Gdx.files.internal(paths[i]));
+			}
+			Gdx.graphics.setIcon(maps);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RadicalFishException(e.getMessage());
+		}
+	}
+	/**
+	 * @see {@link com.badlogic.gdx.Graphics#setIcon(Pixmap[])}.
+	 * @throws RadicalFishException
+	 */
+	public void setIcons(Pixmap[] pixmaps) throws RadicalFishException {
+		Utils.notNull("pixmaps", pixmaps);
+		if (pixmaps.length == 0) {
+			throw new RadicalFishException("must supply at least one path!");
+		}
+		try {
+			Gdx.graphics.setIcon(pixmaps);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RadicalFishException(e.getMessage());
+		}
+	}
+	
+	/**
 	 * True if we want to clear the frame each loop, false otherwise.
 	 */
 	public void setClearEachFrame(boolean clear) {
@@ -456,6 +563,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	 */
 	public void setFullScreen(boolean fullscreen) {
 		if (!canSetFullScreen) {
+			Logger.info("Can't set fullscreen on system: " + getSystem());
 			this.fullscreen = false;
 			return;
 		}
@@ -471,17 +579,26 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	 * True if we want to render always event if the window is out of focus.
 	 */
 	public void setAlwaysRender(boolean alwaysRender) {
-		app.getGraphics().setContinuousRendering(alwaysRender);
+		Gdx.graphics.setContinuousRendering(alwaysRender);
 	}
 	/**
-	 * Sets the {@link DebugCallback} to use. Note this only works under Desktop implementations. If you set a callback
-	 * in another implementation the methods of the callback will not be called and a warning will be logged when the
-	 * container is created. If the callback implements the {@link InputProcessor} it will be added to the input.
+	 * True if the viewport of the game should be clipped. If the window gets resized, the "game area" will clip the
+	 * width and height set in the constructor. This works well when the
 	 * 
+	 * @param clipViewport
 	 */
-	public void setDebugCallBack(DebugCallback debugCallBack) {
-		Utils.notNull("debug callback", debugCallBack);
-		this.debugCallBack = debugCallBack;
+	public void setClipViewport(boolean clipViewport) {
+		this.clipViewport = clipViewport;
+		graphics.setClearColor(graphics.getClearColor());
+	}
+	/**
+	 * True if we want to use Vsync. Set before starting the container for proper handling. default value is true.
+	 * 
+	 * @param vsync
+	 */
+	public void setVSync(boolean vsync) {
+		this.vsync = vsync;
+		Gdx.graphics.setVSync(vsync);
 	}
 	
 	// GETTER
@@ -490,7 +607,13 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	 * @return the system the application runs on, can be Android, Desktop, Applet, WebGL or iOS.
 	 */
 	public ApplicationType getSystem() {
-		return app.getType();
+		return Gdx.app.getType();
+	}
+	/**
+	 * @return the graphics object used for translation etc.
+	 */
+	public Graphics getGraphics() {
+		return graphics;
 	}
 	/**
 	 * @return the input used for the game.
@@ -511,7 +634,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	 * @return the preferences use to store data across runs.
 	 */
 	public Preferences getPreferences(String name) {
-		return app.getPreferences(name);
+		return Gdx.app.getPreferences(name);
 	}
 	/**
 	 * @return the default font used by the container.
@@ -519,7 +642,12 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	public BitmapFont getFont() {
 		return defaultFont;
 	}
-	
+	/**
+	 * @return the view type we use.
+	 */
+	public VIEWTYPE getViewType() {
+		return viewtype;
+	}
 	/**
 	 * @return the title of the game.
 	 */
@@ -549,19 +677,37 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	 * @return true if the application runs in fullscreen, false otherwise (always returns false on android, web, iOS).
 	 */
 	public boolean isFullscreen() {
-		return app.getGraphics().isFullscreen() && canSetFullScreen;
+		return Gdx.graphics.isFullscreen() && canSetFullScreen;
 	}
 	/**
 	 * @return true if we always render.
 	 */
 	public boolean isAlwaysRender() {
-		return app.getGraphics().isContinuousRendering();
+		return Gdx.graphics.isContinuousRendering();
 	}
 	/**
 	 * @return true if the container runs.
 	 */
 	public boolean isRunning() {
 		return running;
+	}
+	/**
+	 * @return true if we clip the viewport.
+	 */
+	public boolean isClipViewport() {
+		return clipViewport;
+	}
+	/**
+	 * @return true if VSync is enabled.
+	 */
+	public boolean isVSyncEnabled() {
+		return vsync;
+	}
+	/**
+	 * @return true if we use GL20.
+	 */
+	public boolean isUseGL20() {
+		return useGL20;
 	}
 	
 	/**
