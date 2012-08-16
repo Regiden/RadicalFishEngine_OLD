@@ -54,8 +54,10 @@ import de.radicalfish.util.Version;
  * If the Implementation of the Game Interface also implements the {@link InputProcessor} it will be automatically added
  * as listener for the input.
  * <p>
- * You can easily put in your own init(), update() and render() calls. Just override the fireInit(), fireUpdate() or
- * fireRender() method.
+ * Use the <code>fire"Name"</code> methods to hack in your own code for init(), update(), render(), pause(), resume()
+ * and dispose() methods.
+ * <p>
+ * is the container is paused, it will not call any update or render code. 
  * 
  * @author Stefan Lange
  * @version 0.5.0
@@ -177,7 +179,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	// PROTECTED
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Gets called too call init on the {@link Game} implementation. Override for your own code.
+	 * Gets called to call init on the {@link Game} implementation. Override for your own code.
 	 * 
 	 * @throws RadicalFishException
 	 */
@@ -185,7 +187,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		game.init(this);
 	}
 	/**
-	 * Gets called too call update on the {@link Game} implementation. Override for your own code.
+	 * Gets called to call update on the {@link Game} implementation. Override for your own code.
 	 * 
 	 * @throws RadicalFishException
 	 */
@@ -193,12 +195,40 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		game.update(this, delta);
 	}
 	/**
-	 * Gets called too call render on the {@link Game} implementation. Override for your own code.
+	 * Gets called to call render on the {@link Game} implementation. Override for your own code.
 	 * 
 	 * @throws RadicalFishException
 	 */
 	protected void fireRender() throws RadicalFishException {
 		game.render(this, graphics, batch);
+	}
+	/**
+	 * Gets called to call pause on the {@link Game} implementation. Override for your own code.
+	 */
+	protected void firePause() {
+		try {
+			game.pause(this);
+		} catch (RadicalFishException e) {
+			e.printStackTrace();
+			Gdx.app.exit();
+		}
+	}
+	/**
+	 * Gets called to call resume on the {@link Game} implementation. Override for your own code.
+	 */
+	protected void fireResume() {
+		try {
+			game.resume(this);
+		} catch (RadicalFishException e) {
+			e.printStackTrace();
+			Gdx.app.exit();
+		}
+	}
+	/**
+	 * Gets called to call dispose on the {@link Game} implementation. Override for your own code.
+	 */
+	protected void fireDispose() {
+		game.dispose();
 	}
 	
 	// OVERRIDE
@@ -339,21 +369,11 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	
 	public void pause() {
 		paused = true;
-		try {
-			game.pause(this);
-		} catch (RadicalFishException e) {
-			e.printStackTrace();
-			Gdx.app.exit();
-		}
+		firePause();
 	}
 	public void resume() {
 		paused = false;
-		try {
-			game.resume(this);
-		} catch (RadicalFishException e) {
-			e.printStackTrace();
-			Gdx.app.exit();
-		}
+		fireResume();
 	}
 	
 	public void resize(int width, int height) {
@@ -365,7 +385,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	
 	public void dispose() {
 		debugCallBack.dispose();
-		game.dispose();
+		fireDispose();
 		defaultFont.dispose();
 		batch.dispose();
 	}
@@ -576,12 +596,6 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		this.smoothDelta = smoothDelta;
 	}
 	/**
-	 * True if we want to render always event if the window is out of focus.
-	 */
-	public void setAlwaysRender(boolean alwaysRender) {
-		Gdx.graphics.setContinuousRendering(alwaysRender);
-	}
-	/**
 	 * True if the viewport of the game should be clipped. If the window gets resized, the "game area" will clip the
 	 * width and height set in the constructor. This works well when the
 	 * 
@@ -678,12 +692,6 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	 */
 	public boolean isFullscreen() {
 		return Gdx.graphics.isFullscreen() && canSetFullScreen;
-	}
-	/**
-	 * @return true if we always render.
-	 */
-	public boolean isAlwaysRender() {
-		return Gdx.graphics.isContinuousRendering();
 	}
 	/**
 	 * @return true if the container runs.
