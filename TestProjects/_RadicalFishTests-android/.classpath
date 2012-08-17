@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/_RadicalFishTests"/>
+	<classpathentry exported="true" kind="lib" path="libs/gdx-backend-android.jar" sourcepath="libs/gdx-backend-android-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/_RadicalFishGDX"/>
+	<classpathentry kind="lib" path="/_RadicalFishTests/libs/gdx.jar" sourcepath="/_RadicalFishTests/libs/gdx-sources.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-backend-android-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/TOSHIBA/android-sdks/tools/support/annotations.jar"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>
