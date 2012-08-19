@@ -57,10 +57,6 @@ public interface GameVariables {
 	 * @return a float saved in the context of the game.
 	 */
 	public float getFloat(String key, float defaultValue);
-	/**
-	 * @return a double saved in the context of the game.
-	 */
-	public double getDouble(String key, double defaultValue);
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -80,8 +76,4 @@ public interface GameVariables {
 	 * Sets a float to a value.
 	 */
 	public void putFloat(String key, float value);
-	/**
-	 * Sets a double to a value.
-	 */
-	public void putDouble(String key, double value);
 }

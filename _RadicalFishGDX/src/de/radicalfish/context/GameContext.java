@@ -28,12 +28,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.context;
-import org.newdawn.slick.Font;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.state.StateBasedGame;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import de.radicalfish.GameContainer;
+import de.radicalfish.GameInput;
 import de.radicalfish.effects.PostProcesser;
 import de.radicalfish.effects.ToneModel;
+import de.radicalfish.state.StateBasedGame;
 import de.radicalfish.text.FontRenderer;
 
 /**
@@ -78,7 +78,7 @@ public interface GameContext {
 	/**
 	 * @return the input handler.
 	 */
-	public Input getInput();
+	public GameInput getInput();
 	/**
 	 * @return the game's settings.
 	 */
@@ -106,7 +106,7 @@ public interface GameContext {
 	/**
 	 * @return the default font to use.
 	 */
-	public Font getDefaultFont();
+	public BitmapFont getDefaultFont();
 	/**
 	 * @return the resource manager for the game. can be null if not needed.
 	 */

@@ -44,7 +44,7 @@ public interface Settings {
 	 * The possible OS's for a game
 	 */
 	public enum OperatingSystem {
-		WINDOWS, LINUX, MAC, SUN_OS, OTHER
+		WINDOWS, LINUX, MAC, SUN_OS, ANDROID, IOS, WEB, APPLET, OTHER
 	}
 	
 	// METHODS
@@ -69,11 +69,11 @@ public interface Settings {
 	 */
 	public GraphicDetails getGraphicDetails();
 	/**
-	 * @return the path where the game saves its state.
+	 * @return the user path is any.
 	 */
 	public String getUserPath();
 	/**
-	 * @return the path which the game runs from.
+	 * @return the game path is any.
 	 */
 	public String getGamePath();
 	/**

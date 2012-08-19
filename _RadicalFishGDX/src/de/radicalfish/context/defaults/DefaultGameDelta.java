@@ -27,76 +27,90 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.context;
+package de.radicalfish.context.defaults;
+import de.radicalfish.context.GameContext;
+import de.radicalfish.context.GameDelta;
 import de.radicalfish.extern.Easing;
+import de.radicalfish.extern.SimpleFX;
 import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.World;
 
 /**
- * Interface which should handle manipulating delta by a speed value. Useful for slow down effects.
+ * An Implementation of the {@link GameDelta} interface which supports easing to a target speed.
  * 
  * @author Stefan Lange
  * @version 1.0.0
  * @since 15.04.2012
  */
-public interface GameDelta {
+public class DefaultGameDelta implements GameDelta {
+	
+	private SimpleFX tween;
+	
+	private float normalDelta = 0.016f;
+	private float delta = 0.016f;
+	
+	public DefaultGameDelta() {
+		tween = new SimpleFX(1.0f, 1.0f, 0, Easing.LINEAR);
+	}
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * Updates the game speed changes.
-	 * 
-	 * @param context
-	 *            the context the game runs in
-	 * @param world
-	 *            the world in which the game plays
-	 * @param delta
-	 *            the unmodified time in seconds since the last frame
-	 */
-	public void update(GameContext context, World world, float delta) throws RadicalFishException;
-	/**
-	 * Changes the speed of the game.
-	 * 
-	 * @param target
-	 *            the target value (range 0 - 1 would be good)
-	 * @param time
-	 *            the time in milliseconds the change should happen
-	 * @param easing
-	 *            the easing to use. if null this method should be equal to <code>setSpeed</code>
-	 */
-	public void slowDown(float target, int time, Easing easing) throws RadicalFishException;
+	public void update(GameContext context, World world, float delta) throws RadicalFishException {
+		if (!tween.finished()) {
+			tween.update((int)(delta * 1000));
+			if (tween.finished()) {
+				tween.setValue(tween.getEnd());
+			}
+		}
+		normalDelta = delta;
+		this.delta = normalDelta * tween.getValue();
+	}
+	public void slowDown(float target, int time, Easing easing) throws RadicalFishException {
+		if (easing == null) {
+			setSpeed(target);
+		} else {
+			if (target >= 0.0 && target <= 1.0) {
+				if (target == tween.getValue()) {
+					return;
+				}
+				tween.setDuration(time);
+				tween.setEnd(target);
+				tween.setStart(tween.getValue());
+				tween.setEasing(easing);
+				tween.restart();
+			} else {
+				throw new RadicalFishException("target value is out of bounds: " + target + " (must be 0 - 1)");
+			}
+		}
+		
+	}
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * @return the current game speed. 1 would be normal and 0.5 would mean half the speed and so on.
-	 */
-	public float getSpeed();
-	/**
-	 * @return the current target speed. if current == target this should be equal to <code>getSpeed()</code>.
-	 */
-	public float getTargetSpeed();
-	/**
-	 * @return the modified delta value.
-	 */
-	public float getDelta();
-	/**
-	 * @return the unmodified delta value. Useful for objects which should not be influenced by a slowdown.
-	 */
-	public float getNormalDelta();
-	/**
-	 * @return true if the current value is equal to the target.
-	 */
-	public boolean reachedTarget();
+	public float getSpeed() {
+		return tween.getValue();
+	}
+	public float getTargetSpeed() {
+		return tween.getEnd();
+	}
+	public float getDelta() {
+		return delta;
+	}
+	public float getNormalDelta() {
+		return normalDelta;
+	}
+	public boolean reachedTarget() {
+		return tween.finished();
+	}
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * Sets the speed without easing.
-	 * 
-	 * @param speed
-	 *            the value to set (most likely in the range of 0-1)
-	 */
-	public void setSpeed(float speed) throws RadicalFishException;
+	public void setSpeed(float speed) throws RadicalFishException {
+		if (speed >= 0.0 && speed <= 1.0) {
+			tween.finish();
+		} else {
+			throw new RadicalFishException("speed value is out of bounds: " + speed + " (must be 0 - 1)");
+		}
+	}
 	
 }

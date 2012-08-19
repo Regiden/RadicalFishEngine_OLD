@@ -29,7 +29,6 @@
  */
 package de.radicalfish;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.radicalfish.util.RadicalFishException;
 
 /**
@@ -46,7 +45,7 @@ public abstract class BasicGame implements Game, InputProcessor {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public abstract void init(GameContainer container) throws RadicalFishException;
 	public abstract void update(GameContainer container, float delta) throws RadicalFishException;
-	public abstract void render(GameContainer container, Graphics g, SpriteBatch batch) throws RadicalFishException;
+	public abstract void render(GameContainer container, Graphics g) throws RadicalFishException;
 	
 	public abstract void pause(GameContainer container) throws RadicalFishException;
 	public abstract void resume(GameContainer container) throws RadicalFishException;
