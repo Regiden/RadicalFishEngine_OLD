@@ -33,11 +33,12 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import de.radicalfish.context.DefaultGameDelta;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.context.defaults.DefaultGameDelta;
 import de.radicalfish.debug.Logger;
 import de.radicalfish.test.collisionnew.blocks.SimpleTile;
 import de.radicalfish.test.world.Ball;
+import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.Entity;
 import de.radicalfish.world.map.EntityLayer;
 import de.radicalfish.world.map.Layer;
@@ -100,7 +101,11 @@ public class MapTest extends BasicGame {
 		
 	}
 	public void update(GameContainer container, int delta) throws SlickException {
-		this.delta.update(null, null, delta);
+		try {
+			this.delta.update(null, null, delta);
+		} catch (RadicalFishException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	public void render(GameContainer container, Graphics g) throws SlickException {

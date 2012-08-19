@@ -57,7 +57,7 @@ import de.radicalfish.util.Version;
  * Use the <code>fire"Name"</code> methods to hack in your own code for init(), update(), render(), pause(), resume()
  * and dispose() methods.
  * <p>
- * is the container is paused, it will not call any update or render code. 
+ * is the container is paused, it will not call any update or render code.
  * 
  * @author Stefan Lange
  * @version 0.5.0
@@ -79,7 +79,6 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	protected BitmapFont defaultFont;
 	protected DisplayMode currentDisplayMode;
 	
-	protected GraphicsContext gContext;
 	protected DebugCallback debugCallBack;
 	protected GameInput input;
 	protected Graphics graphics;
@@ -94,11 +93,9 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	
 	private int width = 800;
 	private int height = 600;
-	private int spriteBatchSize = 1000;
 	
 	private boolean created = false;
 	private boolean running = true;
-	private boolean useGL2;
 	private boolean clearScreen = true;
 	private boolean showDebug = true;
 	private boolean resetTransform = true;
@@ -123,12 +120,12 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	 *            the width of the game (the window)
 	 * @param height
 	 *            the height of the game (the window)
-	 * @param useGL2
+	 * @param useGL20
 	 *            true if we use GL20
 	 * @throws RadicalFishException
 	 */
-	public GameContainer(String title, Game game, int width, int height, boolean useGL2) throws RadicalFishException {
-		this(title, game, width, height, useGL2, false);
+	public GameContainer(String title, Game game, int width, int height, boolean useGL20) throws RadicalFishException {
+		this(title, game, width, height, useGL20, false);
 	}
 	/**
 	 * Creates a new GameContainer with the given parameters.
@@ -200,7 +197,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	 * @throws RadicalFishException
 	 */
 	protected void fireRender() throws RadicalFishException {
-		game.render(this, graphics, batch);
+		game.render(this, graphics);
 	}
 	/**
 	 * Gets called to call pause on the {@link Game} implementation. Override for your own code.
@@ -252,19 +249,9 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		setFullScreen(fullscreen);
 		Gdx.graphics.setVSync(vsync);
 		
-		// init the context used by the Graphics class
-		gContext = new GraphicsContext(width, height);
-		gContext.position.set(0, 0, 0);
-		
-		// is GL2 is in use, use the default shader for the spritebatch
-		if (useGL2) {
-			batch = new SpriteBatch(spriteBatchSize, SpriteBatch.createDefaultShader());
-		} else {
-			batch = new SpriteBatch(spriteBatchSize);
-		}
-		
 		// init Graphics context which should work like the one in Slick2D
-		graphics = new Graphics(batch, gContext);
+		graphics = new Graphics(width, height, useGL20);
+		batch = graphics.getSpriteBatch();
 		
 		// load default gdx font if now default font if defined.
 		if (!fontPath.equals("") && !fontDefPath.equals("")) {
@@ -334,7 +321,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 				
 				fireRender();
 				if (debugCallBack != null) {
-					debugCallBack.render(this, graphics, batch);
+					debugCallBack.render(this, graphics);
 				}
 				
 				// reset all to make each frame normal
@@ -346,10 +333,8 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 				// render fps
 				if (showDebug) {
 					batch.begin();
-					int calls = batch.renderCalls;
 					defaultFont.draw(batch, "Fps: " + fps, 10, 10);
 					defaultFont.draw(batch, "Delta: " + (int) (delta * 1000) + "ms", 10, 25);
-					defaultFont.draw(batch, "Render Calls: " + calls, 10, 40);
 					batch.end();
 				}
 				
@@ -378,7 +363,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	
 	public void resize(int width, int height) {
 		if (viewtype == VIEWTYPE.FIX) {
-			gContext.setToOrtho(width, height);
+			graphics.resize(width, height);
 		}
 		
 	}
@@ -387,7 +372,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		debugCallBack.dispose();
 		fireDispose();
 		defaultFont.dispose();
-		batch.dispose();
+		graphics.dispose();
 	}
 	
 	// INTERN
@@ -452,12 +437,6 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Sets the number of a single batch of sprites. only affected before starting the app.
-	 */
-	public void setSpriteBatchSize(int size) {
-		spriteBatchSize = size;
-	}
-	/**
 	 * Sets the {@link DebugCallback} to use. Note this only works under Desktop implementations. If you set a callback
 	 * in another implementation the methods of the callback will not be called and a warning will be logged when the
 	 * container is created. If the callback implements the {@link InputProcessor} it will be added to the input.
@@ -512,7 +491,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	public void setViewType(VIEWTYPE viewtype) {
 		this.viewtype = viewtype;
 		if (this.viewtype == VIEWTYPE.STRECH) {
-			gContext.setToOrtho(width, height);
+			graphics.resize(width, height);
 		}
 	}
 	
@@ -742,6 +721,18 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	 */
 	public int getHeight() {
 		return height;
+	}
+	/**
+	 * @return the width of the display.
+	 */
+	public int getDisplayWidth() {
+		return Gdx.graphics.getWidth();
+	}
+	/**
+	 * @return the height of the display.
+	 */
+	public int getDisplayHeight() {
+		return Gdx.graphics.getHeight();
 	}
 	
 	// INPUT

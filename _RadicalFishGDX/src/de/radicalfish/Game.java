@@ -28,7 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.util.RadicalFishException;
 
@@ -67,11 +66,9 @@ public interface Game extends Disposable {
 	 *            The container holding the game
 	 * @param g
 	 *            the wrapper for graphics
-	 * @param batch
-	 *            the {@link SpriteBatch} to use for rendering a collection of sprites.
 	 * @throws RadicalFishException
 	 */
-	public void render(GameContainer container, Graphics g, SpriteBatch batch) throws RadicalFishException;
+	public void render(GameContainer container, Graphics g) throws RadicalFishException;
 	/**
 	 * Gets called if the app pauses (e.g. on android putting the app in background).
 	 * 

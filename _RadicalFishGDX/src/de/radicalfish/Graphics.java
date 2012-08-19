@@ -31,31 +31,57 @@ package de.radicalfish;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Disposable;
+import de.radicalfish.GameContainer.VIEWTYPE;
 
 /**
- * A wrapper for translating the context, drawing sprites with the {@link SpriteBatch} and drawing primitives. It
- * offers a Slick2D like drawing but also allows to batch sprites.
+ * A wrapper for translating the context, drawing sprites with the {@link SpriteBatch} and drawing primitives.
  * 
  * @author Stefan Lange
- * @version 1.0.0
+ * @version 0.6.2
  * @since 08.08.2012
  */
-public class Graphics {
+public class Graphics implements Disposable {
 	
 	private SpriteBatch spriteBatch;
-	private GraphicsContext gContext;
-	private Color clearColor;
+	private Color clearColor, shapeColor;
 	
+	private Texture texture;
 	private Vector3 origin;
 	
-	public Graphics(SpriteBatch spriteBatch, GraphicsContext gContext) {
-		this.gContext = gContext;
-		this.spriteBatch = spriteBatch;
+	private GraphicsContext gContext;
+	
+	private float[] lineVerts = new float[4 * 5];
+	private float linewidth = 1f;
+	private float color = 0f;
+	
+	public Graphics(int width, int height, boolean useGL20) {
+		gContext = new GraphicsContext(width, height);
+		gContext.position.set(0, 0, 0);
+		
+		if (useGL20) {
+			spriteBatch = new SpriteBatch(2000, SpriteBatch.createDefaultShader());
+		} else {
+			spriteBatch = new SpriteBatch(2000);
+		}
+		
+		// create a simple white pixel
+		Pixmap white = new Pixmap(1, 1, Format.RGB888);
+		white.setColor(1, 1, 1, 1);
+		white.drawPixel(0, 0);
+		texture = new Texture(white);
+		white.dispose(); // we don't need dat data so flush it down the memory toilet
 		
 		origin = new Vector3(gContext.position);
-		clearColor = new Color();
+		clearColor = new Color(0, 0, 0, 1);
+		shapeColor = new Color(1, 1, 1, 0.5f);
+		color = shapeColor.toFloatBits();
 		setClearColor(1, 1, 0);
 	}
 	
@@ -134,7 +160,78 @@ public class Graphics {
 	 */
 	public void applyBatch() {
 		spriteBatch.setProjectionMatrix(gContext.combined);
+	}
+	
+	/**
+	 * This method is called by the {@link GameContainer} if the {@link VIEWTYPE} is FIX to avoid a stretched view. You
+	 * can call it by your self if you want but it should be avoided.
+	 */
+	public void resize(int width, int height) {
+		gContext.setToOrtho(width, height);
+	}
+	
+	public void dispose() {
+		texture.dispose();
+		spriteBatch.dispose();
+	}
+	
+	// METHODS PRIMITIVES
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Fills a rectangular area with the given parameters. This function uses a texture loaded from the engine. This can
+	 * be used since it's slightly faster then {@link ShapeRenderer}.
+	 * <p>
+	 * You must <code>apply</code> all transformation for this too! also the {@link SpriteBatch} must be started!
+	 */
+	public void fillRect(float x, float y, float width, float height) {
+		Color temp = spriteBatch.getColor();
 		
+		spriteBatch.setColor(shapeColor);
+		spriteBatch.draw(texture, x, y, width, height);
+		spriteBatch.setColor(temp);
+	}
+	/**
+	 * draws a rectangular area with the given parameters. This function uses a texture loaded from the engine. This can
+	 * be used since it's slightly faster then {@link ShapeRenderer}.
+	 * <p>
+	 * You must <code>apply</code> all transformation for this too! also the {@link SpriteBatch} must be started!
+	 */
+	public void drawRect(float x, float y, float width, float height) {
+		spriteBatch.draw(texture, x, y, width, linewidth);
+		spriteBatch.draw(texture, x + width, y, linewidth, height);
+		spriteBatch.draw(texture, x + width, y + height, -width, linewidth);
+		spriteBatch.draw(texture, x, y + height, linewidth, -height);
+	}
+	/**
+	 * Draws a line from <code>x, y</code> to <code>x2, y2</code>. This function uses a texture loaded from the engine.
+	 * This can be used since it's slightly faster then {@link ShapeRenderer}.
+	 * <p>
+	 * You must <code>apply</code> all transformation for this too! also the {@link SpriteBatch} must be started!
+	 */
+	public void drawLine(float x, float y, float x2, float y2) {
+		// based on an idea from Matthias Mann (TWL)
+		float dx = x2 - x;
+		float dy = y2 - y;
+		float l = (float) Math.sqrt(dx * dx + dy * dy) / (linewidth / 2f);
+		dx /= l;
+		dy /= l;
+		
+		vertexLine(0, x - dx + dy, y - dy - dx, color, 0, 0);
+		vertexLine(5, (x - dx - dy), y - dy + dx, color, 1, 0);
+		vertexLine(10, x2 + dx - dy, y2 + dy + dx, color, 1, 1);
+		vertexLine(15, x2 + dx + dy, y2 + dy - dx, color, 0, 1);
+		
+		spriteBatch.draw(texture, lineVerts, 0, lineVerts.length);
+	}
+	
+	// INTERN
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private void vertexLine(int index, float x, float y, float color, float u, float v) {
+		lineVerts[index] = x;
+		lineVerts[index + 1] = y;
+		lineVerts[index + 2] = color;
+		lineVerts[index + 3] = u;
+		lineVerts[index + 4] = v;
 	}
 	
 	// SETTER
@@ -147,10 +244,35 @@ public class Graphics {
 	}
 	
 	/**
+	 * Sets the color used for primitives.
+	 * 
+	 * @param shapeColor
+	 *            the color to use, will not referenced
+	 */
+	public void setColor(Color shapeColor) {
+		setColor(shapeColor.r, shapeColor.g, shapeColor.b, shapeColor.a);
+	}
+	/**
+	 * Sets the color used for primitives.
+	 * 
+	 * @param r
+	 *            the red component
+	 * @param g
+	 *            the green component
+	 * @param b
+	 *            the blue component
+	 * @param a
+	 *            the alpha component
+	 */
+	public void setColor(float r, float g, float b, float a) {
+		shapeColor.set(r, g, b, 1);
+		color = shapeColor.toFloatBits();
+	}
+	/**
 	 * Sets the color used for clearing the screen. (The color object will not be copied)
 	 * 
 	 * @param color
-	 *            the color we want as clear color
+	 *            the color we want as clear color, will not referenced
 	 */
 	public void setClearColor(Color color) {
 		setClearColor(color.r, color.g, color.b);
@@ -168,6 +290,13 @@ public class Graphics {
 	public void setClearColor(float r, float g, float b) {
 		clearColor.set(r, g, b, 1);
 		Gdx.gl.glClearColor(clearColor.r, clearColor.g, clearColor.b, 1);
+	}
+	
+	/**
+	 * Sets the width of lines used by the primitives methods from this class.
+	 */
+	public void setLinesWidth(float width) {
+		linewidth = width;
 	}
 	/**
 	 * sets the scale of the context.
@@ -191,18 +320,33 @@ public class Graphics {
 		return spriteBatch;
 	}
 	/**
-	 * @return the color used for clear teh screen.
+	 * @return the color used for clear the screen.
 	 */
 	public Color getClearColor() {
 		return clearColor;
 	}
+	/**
+	 * @return the color used for primitives.
+	 */
+	public Color getColor() {
+		return shapeColor;
+	}
 	
 	/**
-	 * @return the current scale value.
+	 * @return the width of the lines used by the primitives methods from this class.
+	 */
+	public float getLineWidth() {
+		return linewidth;
+	}
+	/**
+	 * @return the current x scale value.
 	 */
 	public float getScaleX() {
 		return gContext.getScaleX();
 	}
+	/**
+	 * @return the current y scale value.
+	 */
 	public float getScaleY() {
 		return gContext.getScaleY();
 	}

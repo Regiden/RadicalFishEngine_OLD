@@ -30,22 +30,22 @@
 package de.radicalfish.test.world;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
+import com.badlogic.gdx.Input;
+import de.radicalfish.GameInput;
 import de.radicalfish.Rectangle2D;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.context.Settings;
 import de.radicalfish.debug.PerformanceListener;
-import de.radicalfish.state.GameState;
-import de.radicalfish.util.GraphicUtils;
+import de.radicalfish.state.BasicGameState;
 import de.radicalfish.world.Entity;
 import de.radicalfish.world.EntitySystem;
 import de.radicalfish.world.World;
 import de.radicalfish.world.map.MapListener;
 
-public class TestGameState extends GameState implements MapListener, PerformanceListener {
+public class TestGameState extends BasicGameState implements MapListener, PerformanceListener {
 	
 	private static Rectangle2D DEBUG_BOUNDS = new Rectangle2D();
 	
@@ -87,9 +87,9 @@ public class TestGameState extends GameState implements MapListener, Performance
 		
 	}
 	public void update(GameContext context, World world, GameDelta delta) throws SlickException {
-		if (context.getInput().isKeyPressed(Input.KEY_F10)) {
+		if (context.getInput().isKeyPressed(Input.Keys.F10)) {
 			mode = MODE.PLAY;
-		} else if (context.getInput().isKeyPressed(Input.KEY_F11)) {
+		} else if (context.getInput().isKeyPressed(Input.Keys.F11)) {
 			mode = MODE.EDIT;
 		}
 		
@@ -113,7 +113,7 @@ public class TestGameState extends GameState implements MapListener, Performance
 	private void updateGame(GameContext context, World world, GameDelta delta) throws SlickException {
 		world.update(context, delta);
 		
-		if (context.getInput().isKeyDown(Input.KEY_P)) {
+		if (context.getInput().isKeyDown(Input.Keys.P)) {
 			world.getEntitySystem("map-all").addEntity(new Ball(), context, world);
 		}
 	}
@@ -127,26 +127,26 @@ public class TestGameState extends GameState implements MapListener, Performance
 	}
 	
 	private void updateEditor(GameContext context, World world, GameDelta delta) {
-		gridX = context.getInput().getMouseX() / world.getTileSize() - 2;
-		gridY = context.getInput().getMouseY() / world.getTileSize() - 2;
+		gridX = context.getInput().getX() / world.getTileSize() - 2;
+		gridY = context.getInput().getY() / world.getTileSize() - 2;
 		
-		mouseX = context.getInput().getMouseX();
-		mouseY = context.getInput().getMouseY();
+		mouseX = context.getInput().getX();
+		mouseY = context.getInput().getY();
 		
-		Input in = context.getInput();
+		GameInput in = context.getInput();
 		
-		if (in.isKeyDown(Input.KEY_LEFT)) {
+		if (in.isKeyDown(Input.Keys.LEFT)) {
 			player.getPosition().x -= 0.1f * delta.getDelta();
-		} else if (in.isKeyDown(Input.KEY_RIGHT)) {
+		} else if (in.isKeyDown(Input.Keys.RIGHT)) {
 			player.getPosition().x += 0.1f * delta.getDelta();
 		}
-		if (in.isKeyDown(Input.KEY_UP)) {
+		if (in.isKeyDown(Input.Keys.UP)) {
 			player.getPosition().y -= 0.1f * delta.getDelta();
-		} else if (in.isKeyDown(Input.KEY_DOWN)) {
+		} else if (in.isKeyDown(Input.Keys.DOWN)) {
 			player.getPosition().y += 0.1f * delta.getDelta();
 		}
 		
-		if (in.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+		if (in.isButtonPressed(Input.Buttons.LEFT)) {
 			if (gridX >= 0 && gridY >= 0 && gridX < world.getMap().getTileWidth() && gridY < world.getMap().getTileHeight()) {
 				world.getMap().setTileAt(gridX, gridY, index, 0);
 				world.getMap().getCollisionLayer().setTileAt(gridX, gridY, index);
@@ -157,20 +157,20 @@ public class TestGameState extends GameState implements MapListener, Performance
 			}
 			
 		}
-		if (in.isMousePressed(Input.MOUSE_RIGHT_BUTTON)) {
+		if (in.isButtonPressed(Input.Buttons.RIGHT)) {
 			if (gridX >= 0 && gridY >= 0 && gridX < world.getMap().getTileWidth() && gridY < world.getMap().getTileHeight()) {
 				world.getMap().setTileAt(gridX, gridY, -1, 0);
 				world.getMap().getCollisionLayer().setTileAt(gridX, gridY, -1);
 			}
 		}
 		
-		if (in.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)) {
+		if (in.isButtonDown(Input.Buttons.LEFT)) {
 			if (gridX >= 0 && gridY >= 0 && gridX < world.getMap().getTileWidth() && gridY < world.getMap().getTileHeight()) {
 				world.getMap().setTileAt(gridX, gridY, index, 0);
 				world.getMap().getCollisionLayer().setTileAt(gridX, gridY, index);
 			}
 		}
-		if (in.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)) {
+		if (in.isButtonDown(Input.Buttons.RIGHT)) {
 			if (gridX >= 0 && gridY >= 0 && gridX < world.getMap().getTileWidth() && gridY < world.getMap().getTileHeight()) {
 				world.getMap().setTileAt(gridX, gridY, -1, 0);
 				world.getMap().getCollisionLayer().setTileAt(gridX, gridY, -1);
@@ -225,14 +225,14 @@ public class TestGameState extends GameState implements MapListener, Performance
 			for (EntitySystem es : world.getEntitySystems()) {
 				for (Entity e : es.getEntities()) {
 					e.calculateCollisionBox(DEBUG_BOUNDS);
+					Color c = g.getColor();
+					g.setColor(Color.white);
 					if(mode == MODE.EDIT) {
-						GraphicUtils.drawRect(DEBUG_BOUNDS.getX() + 32, DEBUG_BOUNDS.getY() +32, DEBUG_BOUNDS.getWidth(), DEBUG_BOUNDS.getHeight(),
-								Color.white, 1f);
+						g.drawRect(DEBUG_BOUNDS.getX() + 32, DEBUG_BOUNDS.getY() +32, DEBUG_BOUNDS.getWidth(), DEBUG_BOUNDS.getHeight());
 					} else {
-						GraphicUtils.drawRect(DEBUG_BOUNDS.getX(), DEBUG_BOUNDS.getY(), DEBUG_BOUNDS.getWidth(), DEBUG_BOUNDS.getHeight(),
-								Color.white, 0.5f);
+						g.drawRect(DEBUG_BOUNDS.getX(), DEBUG_BOUNDS.getY(), DEBUG_BOUNDS.getWidth(), DEBUG_BOUNDS.getHeight());
 					}
-					
+					g.setColor(c);
 				}
 			}
 			g.popTransform();

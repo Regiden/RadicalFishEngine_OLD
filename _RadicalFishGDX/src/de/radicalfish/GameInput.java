@@ -52,7 +52,6 @@ public class GameInput implements InputProcessor {
 	
 	private final static String[][] keynames = new String[256][2];
 	private static int counter = 0;
-	
 	static {
 		Field[] fields = Keys.class.getFields();
 		try {
@@ -77,14 +76,13 @@ public class GameInput implements InputProcessor {
 			
 		} catch (Exception e) {}
 	}
-	
 	private static final int keyCount = counter;
 	
 	private Input input;
+	private InputMultiplexer listener;
+	
 	private boolean[] pressed;
 	private boolean[] buttons;
-	
-	private InputMultiplexer listener;
 	
 	public GameInput() {
 		input = Gdx.input;

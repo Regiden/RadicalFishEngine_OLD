@@ -30,8 +30,9 @@
 package de.radicalfish.test.world;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import com.badlogic.gdx.Input;
+import de.radicalfish.GameInput;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.util.FastMath;
@@ -70,15 +71,15 @@ public class Player extends Entity {
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void handleInput(Input input, float delta) {
-		if (input.isKeyDown(Input.KEY_RIGHT)) {
+	public void handleInput(GameInput input, float delta) {
+		if (input.isKeyDown(Input.Keys.RIGHT)) {
 			position.x += friction * delta;
-		} else if (input.isKeyDown(Input.KEY_LEFT)) {
+		} else if (input.isKeyDown(Input.Keys.LEFT)) {
 			position.x -= friction * delta;
 		}
-		if (input.isKeyDown(Input.KEY_DOWN)) {
+		if (input.isKeyDown(Input.Keys.DOWN)) {
 			position.y += friction * delta;
-		} else if (input.isKeyDown(Input.KEY_UP)) {
+		} else if (input.isKeyDown(Input.Keys.UP)) {
 			position.y -= friction * delta;
 		}
 	}

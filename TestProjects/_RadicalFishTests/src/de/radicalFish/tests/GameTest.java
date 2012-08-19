@@ -63,13 +63,19 @@ public class GameTest implements Game {
 	public void update(GameContainer container, float delta) throws RadicalFishException {
 		handleInput(delta);
 	}
-	public void render(GameContainer container, Graphics g, SpriteBatch batch) throws RadicalFishException {
+	public void render(GameContainer container, Graphics g) throws RadicalFishException {
+		SpriteBatch batch = g.getSpriteBatch();
+		
 		sprite.setPosition(position.x, position.y);
 		sprite.setScale(scale);
 		
 		batch.begin();
 		sprite.draw(batch);
+		
+		g.fillRect(0, 0, 32, 32);
+		
 		batch.end();
+		
 		
 	}
 	

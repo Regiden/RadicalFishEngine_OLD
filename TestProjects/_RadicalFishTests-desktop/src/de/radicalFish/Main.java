@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.FPSCounter;
@@ -26,6 +25,8 @@ public class Main implements DebugCallback {
 	
 	private Debug debug;
 	private ToolBox toolbox;
+	
+	
 	
 	// MAIN and C'TOR
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -82,7 +83,7 @@ public class Main implements DebugCallback {
 			}
 		}
 	}
-	public void render(GameContainer container, Graphics g, SpriteBatch batch) throws RadicalFishException {
+	public void render(GameContainer container, Graphics g) throws RadicalFishException {
 		debug.update();
 		debug.render();
 	}
