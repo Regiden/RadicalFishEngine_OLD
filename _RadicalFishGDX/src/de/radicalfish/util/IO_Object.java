@@ -8,7 +8,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.ResourceLoader;
 
 /**
- * This class serializes-, saves-, de-serializes- and loads objects. Last update: 19.11.2011
+ * This class serializes-, saves-, de-serializes- and loads objects. Not sure if this works well under Android, iOS, Web
+ * and shit but Desktop will do.
  * 
  * @author Marco Knietzsch & Stefan Lange
  * @version 3.0.0

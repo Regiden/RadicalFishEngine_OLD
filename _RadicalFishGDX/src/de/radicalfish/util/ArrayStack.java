@@ -28,9 +28,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.util;
-
-import java.util.ArrayList;
 import java.util.EmptyStackException;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * A stack which uses an ArrayList to hold values.
@@ -41,13 +40,13 @@ import java.util.EmptyStackException;
  */
 public class ArrayStack<T> {
 	
-	private ArrayList<T> list;
+	private Array<T> list;
 	
 	public ArrayStack() {
 		this(10);
 	}
 	public ArrayStack(int size) {
-		list = new ArrayList<T>();
+		list = new Array<T>();
 	}
 	
 	// STACK METHODS
@@ -57,10 +56,10 @@ public class ArrayStack<T> {
 		return element;
 	}
 	public T pop() {
-		int len = list.size();
+		int len = list.size;
 		if (len == 0)
 			throw new EmptyStackException();
-		return list.remove(len - 1);
+		return list.removeIndex(len - 1);
 	}
 	
 	/**
@@ -68,7 +67,7 @@ public class ArrayStack<T> {
 	 * @throws EmptyStackException
 	 */
 	public T peek() throws EmptyStackException {
-		int len = list.size();
+		int len = list.size;
 		if (len == 0)
 			throw new EmptyStackException();
 		list.get(len - 1);
@@ -78,7 +77,7 @@ public class ArrayStack<T> {
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public boolean isEmpty() {
-		return list.isEmpty();
+		return list.size == 0;
 	}
 	
 }

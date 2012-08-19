@@ -28,6 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.util;
+import com.badlogic.gdx.utils.TimeUtils;
 
 /**
  * Some Utilities for useful for developing.
@@ -38,6 +39,10 @@ package de.radicalfish.util;
  */
 public class Utils {
 	
+	private static long timer = 0;
+	
+	// METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
 	 * Check is the object is null and if so throws an NPE.
 	 */
@@ -69,29 +74,20 @@ public class Utils {
 		}
 		return time + getTimeUnit(steps);
 	}
-	private static String getTimeUnit(int steps) {
-		switch (steps) {
-			case 0:
-				return "ns";
-			case 1:
-				return "us";
-			case 2:
-				return "ms";
-			case 3:
-				return "s";
-			case 4:
-				return "m";
-			case 5:
-				return "h";
-			case 6:
-				return "days";
-			case 7:
-				return "months";
-			case 8:
-				return "years";
-			default:
-				return "d (WTF dude check you calculation!)";
-		}
+	/**
+	 * Starts a single nano timer, ended with {@link Utils#endNanoTimer()}. the value of the timmer will be overriden if
+	 * this is called twice without a {@link Utils#endNanoTimer()} call.
+	 */
+	public static void startNanoTimer() {
+		timer = TimeUtils.nanoTime();
+	}
+	/**
+	 * Ends the nano timer.
+	 * 
+	 * @return the time between {@link Utils#startNanoTimer()} and this method call.
+	 */
+	public static long endNanoTimer() {
+		return TimeUtils.nanoTime() - timer;
 	}
 	
 	/**
@@ -271,5 +267,32 @@ public class Utils {
 				return 88;
 		}
 		return 0;
+	}
+	
+	// INTERN
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private static String getTimeUnit(int steps) {
+		switch (steps) {
+			case 0:
+				return "ns";
+			case 1:
+				return "us";
+			case 2:
+				return "ms";
+			case 3:
+				return "s";
+			case 4:
+				return "m";
+			case 5:
+				return "h";
+			case 6:
+				return "days";
+			case 7:
+				return "months";
+			case 8:
+				return "years";
+			default:
+				return "d (WTF dude check you calculation!)";
+		}
 	}
 }
