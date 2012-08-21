@@ -41,6 +41,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.radicalfish.debug.DebugCallback;
 import de.radicalfish.debug.Logger;
+import de.radicalfish.graphics.BlendMode;
+import de.radicalfish.graphics.Graphics;
 import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.util.Utils;
 import de.radicalfish.util.Version;
@@ -93,6 +95,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	
 	private int width = 800;
 	private int height = 600;
+	private int batchSize = 2000;
 	
 	private boolean created = false;
 	private boolean running = true;
@@ -250,7 +253,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		Gdx.graphics.setVSync(vsync);
 		
 		// init Graphics context which should work like the one in Slick2D
-		graphics = new Graphics(width, height, useGL20);
+		graphics = new Graphics(width, height, useGL20, batchSize);
 		batch = graphics.getSpriteBatch();
 		
 		// load default gdx font if now default font if defined.
@@ -330,11 +333,13 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 					graphics.resetTransform(true);
 				}
 				
+				graphics.setBlendMode(BlendMode.NORMAL);
+				
 				// render fps
 				if (showDebug) {
 					batch.begin();
-					defaultFont.draw(batch, "Fps: " + fps, 10, 10);
-					defaultFont.draw(batch, "Delta: " + (int) (delta * 1000) + "ms", 10, 25);
+					defaultFont.draw(batch, "Fps: " + fps, 5, 5);
+					defaultFont.draw(batch, "Delta: " + (int) (delta * 1000) + "ms", 5, 20);
 					batch.end();
 				}
 				
@@ -369,7 +374,9 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	}
 	
 	public void dispose() {
-		debugCallBack.dispose();
+		if (debugCallBack != null) {
+			debugCallBack.dispose();
+		}
 		fireDispose();
 		defaultFont.dispose();
 		graphics.dispose();
@@ -536,6 +543,14 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 			e.printStackTrace();
 			throw new RadicalFishException(e.getMessage());
 		}
+	}
+	
+	/**
+	 * Sets the size of the batch. this size will be used when creating the batch. It has not effect setting it while
+	 * the game runs!
+	 */
+	public void setBatchSize(int batchSize) {
+		this.batchSize = batchSize;
 	}
 	
 	/**

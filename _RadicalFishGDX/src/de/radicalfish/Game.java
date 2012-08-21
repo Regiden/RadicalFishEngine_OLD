@@ -29,6 +29,7 @@
  */
 package de.radicalfish;
 import com.badlogic.gdx.utils.Disposable;
+import de.radicalfish.graphics.Graphics;
 import de.radicalfish.util.RadicalFishException;
 
 /**

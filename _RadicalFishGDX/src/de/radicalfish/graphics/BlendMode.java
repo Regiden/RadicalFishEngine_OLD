@@ -27,57 +27,48 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish;
-import com.badlogic.gdx.InputProcessor;
-import de.radicalfish.graphics.Graphics;
-import de.radicalfish.util.RadicalFishException;
+package de.radicalfish.graphics;
+import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 
 /**
- * Basic Implementation of the {@link Game} Interface. It implements the {@link InputProcessor}. Simply override one of
- * the methods to supply your own code.
+ * Simple enum for blend modes with method apply a blend mode. Note that {@link BlendMode#SUB} only works for GL20!
  * 
  * @author Stefan Lange
- * @version 1.0.0
- * @since 16.08.2012
+ * @version 0.1.7
+ * @since 21.08.2012
  */
-public abstract class BasicGame implements Game, InputProcessor {
+public enum BlendMode {
 	
-	// GAME METHODS
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public abstract void init(GameContainer container) throws RadicalFishException;
-	public abstract void update(GameContainer container, float delta) throws RadicalFishException;
-	public abstract void render(GameContainer container, Graphics g) throws RadicalFishException;
+	/** Normal drawing with alpha support. */
+	NORMAL(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA),
+	/** Draw adding the existing color to the new color. */
+	ADD(GL10.GL_SRC_ALPHA, GL10.GL_ONE),
+	/**
+	 * Draw subtracting the existing color to the new color. Note for this the {@link GL20#glBlendEquation(int)} must be
+	 * changed (which only works when using GL20
+	 */
+	SUB(GL10.GL_SRC_ALPHA, GL10.GL_ONE),
+	/** Draws blending the new image into the old one by a factor of it's color. */
+	SCREEN(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_COLOR),
+	/** Draws by multiplying the source and destination color. */
+	MULTIPLY(GL10.GL_ONE_MINUS_SRC_COLOR, GL10.GL_ONE_MINUS_SRC_ALPHA),
+	/** Draws to using an alpha map, this disables blending and leaves only the alpha channel open for drawing. */
+	ALPHA_MAP(-1, -1),
+	/** Draws using alpha blending. */
+	ALPHA_BLEND(GL10.GL_DST_ALPHA, GL10.GL_ONE_MINUS_DST_ALPHA);
 	
-	public void pause(GameContainer container) throws RadicalFishException {}
-	public void resume(GameContainer container) throws RadicalFishException {}
+	private final int src, dst;
 	
-	public void dispose() {}
-	
-	// INPUT
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public boolean keyDown(int keycode) {
-		return false;
-	}
-	public boolean keyUp(int keycode) {
-		return false;
-	}
-	public boolean keyTyped(char character) {
-		return false;
-	}
-	public boolean touchDown(int x, int y, int pointer, int button) {
-		return false;
-	}
-	public boolean touchUp(int x, int y, int pointer, int button) {
-		return false;
-	}
-	public boolean touchDragged(int x, int y, int pointer) {
-		return false;
-	}
-	public boolean touchMoved(int x, int y) {
-		return false;
-	}
-	public boolean scrolled(int amount) {
-		return false;
+	BlendMode(int src, int dst) {
+		this.src = src;
+		this.dst = dst;
 	}
 	
+	public int src() {
+		return src;
+	}
+	public int dst() {
+		return dst;
+	}
 }
