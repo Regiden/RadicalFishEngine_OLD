@@ -265,6 +265,10 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 		postUpdate(context, world, context.getGameDelta());
 	}
 	
+	public final void render(GameContainer container, Graphics g) throws RadicalFishException {
+		
+	}
+	
 	// INPUT METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public boolean keyDown(int keycode) {

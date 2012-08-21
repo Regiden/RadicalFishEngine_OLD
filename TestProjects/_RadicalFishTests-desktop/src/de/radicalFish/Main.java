@@ -36,7 +36,7 @@ public class Main implements DebugCallback {
 		GameContainer app = new GameContainer(config.title, new ParticleTest(), 800, 600, config.useGL20);
 		app.setBatchSize(10000);
 		//app.setDebugCallBack(this);
-		//app.setSmoothDelta(true);
+		app.setSmoothDelta(true);
 		
 		new LwjglApplication(app, config);
 	}
