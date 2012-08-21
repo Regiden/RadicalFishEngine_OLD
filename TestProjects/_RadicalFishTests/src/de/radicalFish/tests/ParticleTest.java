@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalFish.tests;
+package de.radicalfish.tests;
 import java.util.Random;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -42,6 +42,7 @@ import de.radicalfish.GameContainer;
 import de.radicalfish.GameInput;
 import de.radicalfish.graphics.BlendMode;
 import de.radicalfish.graphics.Graphics;
+import de.radicalfish.tests.utils.RadicalFishTest;
 import de.radicalfish.util.MathUtil;
 import de.radicalfish.util.RadicalFishException;
 
@@ -56,7 +57,7 @@ import de.radicalfish.util.RadicalFishException;
  * @version 0.5.0
  * @since 21.08.2012
  */
-public class ParticleTest extends BasicGame {
+public class ParticleTest extends BasicGame implements RadicalFishTest {
 	
 	private Particle[] particles;
 	
@@ -70,7 +71,7 @@ public class ParticleTest extends BasicGame {
 	private float lastx, lasty;
 	private float mouseX, mouseY;
 	private float minColor = 0.1f, maxColor = 0.6f, colorSpeed = 0.05f;
-
+	
 	private long updateTime, renderTime, localTime, runs;
 	
 	private int width, height;
@@ -91,8 +92,6 @@ public class ParticleTest extends BasicGame {
 		container.setClipViewport(false);
 		width = container.getDisplayWidth();
 		height = container.getDisplayHeight();
-		
-		System.out.println(width);
 		
 		loopyColorShit = new Color(maxColor, minColor, minColor, 1.0f);
 		
@@ -128,12 +127,12 @@ public class ParticleTest extends BasicGame {
 		for (int i = 0; i < size; i++) {
 			particles[i].update(delta);
 			
-			if(pressState == 1) {
+			if (pressState == 1) {
 				suckHard(i, delta, mouseX, mouseY);
-			} else if(pressState == 2) {
+			} else if (pressState == 2) {
 				suckHard(i, delta, mouseX, mouseY);
 				spinHard(i, delta, mouseX, mouseY);
-			} else if(pressState == 3) {
+			} else if (pressState == 3) {
 				suckHard(i, delta, mouseX, mouseY);
 			}
 		}
@@ -145,7 +144,7 @@ public class ParticleTest extends BasicGame {
 		
 		localTime = TimeUtils.nanoTime();
 		
-		if(!clearScreen) {
+		if (!clearScreen) {
 			batch.begin();
 			g.setColor(transClear);
 			g.fillRect(0, 0, container.getDisplayWidth(), container.getDisplayHeight());
@@ -160,8 +159,7 @@ public class ParticleTest extends BasicGame {
 				batch.draw(particle, particles[i].px - pixelWidth / 2, particles[i].py - pixelWidth / 2, pixelWidth, pixelWidth);
 			}
 			
-			
-			if(showOptions) {
+			if (showOptions) {
 				rendercalls = batch.renderCalls;
 				g.setBlendMode(BlendMode.NORMAL);
 				batch.setColor(1, 1, 1, 1);
@@ -304,6 +302,25 @@ public class ParticleTest extends BasicGame {
 		if (in.isKeyPressed(Keys.ESCAPE)) {
 			container.exit();
 		}
+	}
+	
+	// TEST METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public void initContainer(GameContainer container) {
+		container.setSmoothDelta(true);
+	}
+	
+	public String getTitle() {
+		return "Performance Test with particles";
+	}
+	public int getWidth() {
+		return 800; // init width
+	}
+	public int getHeight() {
+		return 600; // init height
+	}
+	public boolean needsGL20() {
+		return false;
 	}
 	
 	// INNER CLASS

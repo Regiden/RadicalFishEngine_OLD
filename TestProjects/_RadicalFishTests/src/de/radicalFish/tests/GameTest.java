@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalFish.tests;
+package de.radicalfish.tests;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
@@ -39,12 +39,12 @@ import de.radicalfish.Game;
 import de.radicalfish.GameContainer;
 import de.radicalfish.graphics.BlendMode;
 import de.radicalfish.graphics.Graphics;
+import de.radicalfish.tests.utils.RadicalFishTest;
 import de.radicalfish.util.MathUtil;
 import de.radicalfish.util.RadicalFishException;
 
-public class GameTest implements Game {
+public class GameTest implements Game, RadicalFishTest {
 	
-	private Texture texture;
 	private Sprite sprite;
 	private Texture part;
 	
@@ -56,7 +56,6 @@ public class GameTest implements Game {
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void init(GameContainer container) throws RadicalFishException {
-		texture = new Texture(Gdx.files.internal("data/block.png"));
 		part = new Texture(Gdx.files.internal("data/particle.png"));
 		sprite = new Sprite(part);
 		sprite.flip(false, true);
@@ -73,7 +72,6 @@ public class GameTest implements Game {
 		}
 		
 		sprite.setColor(1, 0, 0, 1);
-		//container.getGraphics().setClearColor(1, 1, 0);
 	}
 	
 	public void update(GameContainer container, float delta) throws RadicalFishException {
@@ -190,5 +188,24 @@ public class GameTest implements Game {
 	public void pause(GameContainer container) {}
 	public void resume(GameContainer container) {}
 	public void dispose() {}
+	
+	// TEST METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public void initContainer(GameContainer container) {
+		container.setSmoothDelta(true);
+	}
+	
+	public String getTitle() {
+		return "Simple Game Test";
+	}
+	public int getWidth() {
+		return 800;
+	}
+	public int getHeight() {
+		return 600;
+	}
+	public boolean needsGL20() {
+		return true;
+	}
 	
 }
