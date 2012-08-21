@@ -34,30 +34,46 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import de.radicalfish.Game;
 import de.radicalfish.GameContainer;
-import de.radicalfish.Graphics;
+import de.radicalfish.graphics.BlendMode;
+import de.radicalfish.graphics.Graphics;
+import de.radicalfish.util.MathUtil;
 import de.radicalfish.util.RadicalFishException;
 
 public class GameTest implements Game {
 	
 	private Texture texture;
 	private Sprite sprite;
+	private Texture part;
 	
 	private float scale;
 	private Vector2 position, velocity;
+	
+	private Vector3[] pos;
 	
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void init(GameContainer container) throws RadicalFishException {
 		texture = new Texture(Gdx.files.internal("data/block.png"));
-		sprite = new Sprite(texture);
+		part = new Texture(Gdx.files.internal("data/particle.png"));
+		sprite = new Sprite(part);
 		sprite.flip(false, true);
 		sprite.setOrigin(16, 16);
 		
 		position = new Vector2();
 		velocity = new Vector2();
 		scale = 1.0f;
+		
+		pos = new Vector3[1000];
+		for (int i = 0; i < pos.length; i++) {
+			pos[i] = new Vector3();
+			pos[i].set(MathUtil.random(0, container.getWidth() - 32), MathUtil.random(0, container.getHeight() - 32), MathUtil.random(0, 1f));
+		}
+		
+		sprite.setColor(1, 0, 0, 1);
+		//container.getGraphics().setClearColor(1, 1, 0);
 	}
 	
 	public void update(GameContainer container, float delta) throws RadicalFishException {
@@ -69,10 +85,16 @@ public class GameTest implements Game {
 		sprite.setPosition(position.x, position.y);
 		sprite.setScale(scale);
 		
+		g.setBlendMode(BlendMode.SUB);
+		
 		batch.begin();
 		sprite.draw(batch);
 		
-		g.fillRect(0, 0, 32, 32);
+		for (int i = 0; i < pos.length; i++) {
+			sprite.setPosition(pos[i].x, pos[i].y);
+			sprite.draw(batch, pos[i].z);
+		}
+		
 		
 		batch.end();
 		

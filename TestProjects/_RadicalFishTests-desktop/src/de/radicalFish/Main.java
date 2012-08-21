@@ -8,15 +8,15 @@ import com.badlogic.gdx.utils.Array;
 import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.FPSCounter;
 import de.matthiasmann.twl.Label;
-import de.radicalFish.tests.GameTest;
+import de.radicalFish.tests.ParticleTest;
 import de.radicalfish.GameContainer;
-import de.radicalfish.Graphics;
 import de.radicalfish.debug.Debug;
 import de.radicalfish.debug.DebugCallback;
 import de.radicalfish.debug.DeveloperConsole;
 import de.radicalfish.debug.PerformanceListener;
 import de.radicalfish.debug.ToolBox;
 import de.radicalfish.debug.parser.URLInputParser;
+import de.radicalfish.graphics.Graphics;
 import de.radicalfish.util.RadicalFishException;
 
 public class Main implements DebugCallback {
@@ -33,9 +33,10 @@ public class Main implements DebugCallback {
 	public Main() throws RadicalFishException {
 		LwjglApplicationConfiguration config = createConfig();
 		
-		GameContainer app = new GameContainer(config.title, new GameTest(), 800, 600, config.useGL20);
-		app.setDebugCallBack(this);
-		app.setSmoothDelta(true);
+		GameContainer app = new GameContainer(config.title, new ParticleTest(), 800, 600, config.useGL20);
+		app.setBatchSize(10000);
+		//app.setDebugCallBack(this);
+		//app.setSmoothDelta(true);
 		
 		new LwjglApplication(app, config);
 	}
