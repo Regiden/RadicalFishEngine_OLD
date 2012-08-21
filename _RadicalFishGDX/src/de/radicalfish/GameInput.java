@@ -118,7 +118,7 @@ public class GameInput implements InputProcessor {
 	}
 	
 	/**
-	 * @return true if the key in <code>keycode</code> is pressed.
+	 * @return true if the key in <code>keycode</code> was pressed.
 	 */
 	public boolean isKeyPressed(int keycode) {
 		if (pressed[keycode]) {

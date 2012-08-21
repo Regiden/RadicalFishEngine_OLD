@@ -32,7 +32,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Vector2f;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.util.FastMath;
+import de.radicalfish.util.MathUtil;
 import de.radicalfish.world.Camera;
 import de.radicalfish.world.World;
 
@@ -60,7 +60,7 @@ public class TestCamera implements Camera {
 	}
 	public void translateMap(GameContext context, World world, Graphics g) {
 		g.scale(2, 2);
-		g.translate(-FastMath.round2Up(currentPosition.x % world.getTileSize()), -FastMath.round2Up(currentPosition.y % world.getTileSize()));
+		g.translate(-MathUtil.round2Up(currentPosition.x % world.getTileSize()), -MathUtil.round2Up(currentPosition.y % world.getTileSize()));
 	}
 	
 	public void centerCurrent(World world, float x, float y) {}

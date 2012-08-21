@@ -32,7 +32,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.util.FastMath;
+import de.radicalfish.util.MathUtil;
 import de.radicalfish.world.Entity;
 import de.radicalfish.world.World;
 
@@ -43,8 +43,8 @@ public class Ball extends Entity {
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void init(GameContext context, World world) throws SlickException {
-		position.x = FastMath.random(17, context.getGameWidth() - 48);
-		position.x = FastMath.round(position.x);
+		position.x = MathUtil.random(17, context.getGameWidth() - 48);
+		position.x = MathUtil.round(position.x);
 		position.y = 32;
 		velocity.y = 0.0f;
 		setOffset(0, 0);
@@ -59,7 +59,7 @@ public class Ball extends Entity {
 		}
 		
 		position.y += velocity.y * delta.getDelta();
-		position.y = FastMath.round(position.y);
+		position.y = MathUtil.round(position.y);
 		
 		
 	}

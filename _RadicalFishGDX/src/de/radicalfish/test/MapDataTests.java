@@ -33,7 +33,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import de.radicalfish.util.FastMath;
+import de.radicalfish.util.MathUtil;
 
 /**
  * Test for writing a map and reading it.
@@ -64,7 +64,7 @@ public class MapDataTests {
 		public void fillRandom(int min, int max) {
 			for (int i = 0; i < data.length; i++) {
 				for (int j = 0; j < data[0].length; j++) {
-					data[i][j] = FastMath.random(min, max);
+					data[i][j] = MathUtil.random(min, max);
 				}
 			}
 		}

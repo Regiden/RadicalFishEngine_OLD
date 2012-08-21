@@ -30,7 +30,7 @@ package de.radicalfish;
  */
 
 import java.io.Serializable;
-import de.radicalfish.util.FastMath;
+import de.radicalfish.util.MathUtil;
 
 /**
  * A single grid with a x and y position.
@@ -106,7 +106,7 @@ public class Grid implements Serializable {
 	 *            the new y grid
 	 */
 	public void set(float x, float y) {
-		this.x = FastMath.round(x);
-		this.y = FastMath.round(y);
+		this.x = MathUtil.round(x);
+		this.y = MathUtil.round(y);
 	}
 }

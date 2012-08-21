@@ -35,7 +35,7 @@ import com.badlogic.gdx.Input;
 import de.radicalfish.GameInput;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.util.FastMath;
+import de.radicalfish.util.MathUtil;
 import de.radicalfish.world.Entity;
 import de.radicalfish.world.World;
 
@@ -58,8 +58,8 @@ public class Player extends Entity {
 	public void doUpdate(GameContext context, World world, GameDelta delta) throws SlickException {
 		handleInput(context.getInput(), delta.getDelta());
 		
-		position.x = FastMath.round(position.x);
-		position.y = FastMath.round(position.y);
+		position.x = MathUtil.round(position.x);
+		position.y = MathUtil.round(position.y);
 		
 	}
 	public void doRender(GameContext context, World world, Graphics g) throws SlickException {

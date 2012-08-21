@@ -36,7 +36,7 @@ import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.test.collisionnew.blocks.SimpleTile;
 import de.radicalfish.test.world.Ball;
-import de.radicalfish.util.FastMath;
+import de.radicalfish.util.MathUtil;
 import de.radicalfish.world.World;
 import de.radicalfish.world.map.EntityLayer;
 import de.radicalfish.world.map.Layer;
@@ -85,7 +85,7 @@ public class SimpleMap implements Map {
 					if (i == 0 && j == 0) {
 						layer.getTiles()[i][j] = new AnimatedTileImpl(new int[] { 1000, 1000 }, new int[] { 0, 1 }, true);
 					} else {
-						layer.getTiles()[i][j] = new SimpleTile(FastMath.random(0, 10));
+						layer.getTiles()[i][j] = new SimpleTile(MathUtil.random(0, 10));
 					}
 					
 				}
@@ -97,7 +97,7 @@ public class SimpleMap implements Map {
 				if (i == 0 && j == 0) {
 					collision.getTiles()[i][j] = new AnimatedTileImpl(new int[] { 1000, 1000 }, new int[] { 0, 1 }, true);
 				} else {
-					collision.getTiles()[i][j] = new SimpleTile(FastMath.random(0, 10));
+					collision.getTiles()[i][j] = new SimpleTile(MathUtil.random(0, 10));
 				}
 				
 			}

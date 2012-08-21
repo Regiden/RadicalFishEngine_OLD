@@ -33,7 +33,8 @@ import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 
 /**
- * This is a LogSystem which adds some methods to the normal logger.
+ * This Logger can be used to avoid using {@link Gdx#app} code. It also supports a listener to inform a class about
+ * changes to the log. The class is used by the engine as logging tool.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -50,7 +51,7 @@ public class Logger {
 	public static ArrayList<String> LOG = new ArrayList<String>();
 	
 	private static ArrayList<LogListener> listerner = new ArrayList<LogListener>();
-	private static boolean isVerbose = true;
+	private static boolean logging = true;
 	private static int maxLogLines = 1000;
 	
 	// STATIC METHODS
@@ -92,8 +93,8 @@ public class Logger {
 	}
 	
 	public static void none(String message) {
-		if (isVerbose) {
-			if(Gdx.app == null || Gdx.app.getType() != ApplicationType.Desktop) {
+		if (logging) {
+			if (Gdx.app == null || Gdx.app.getType() != ApplicationType.Desktop) {
 				System.out.println(message);
 			} else {
 				log("", message);
@@ -102,57 +103,57 @@ public class Logger {
 		}
 	}
 	public static void load(String message) {
-		if (isVerbose) {
+		if (logging) {
 			log("LOADING: ", message);
 			appendLog(LOGTYPE.LOAD, message);
 		}
 	}
 	public static void error(String message) {
-		if (isVerbose) {
+		if (logging) {
 			logError("", message);
 			appendLog(LOGTYPE.ERROR, message);
 		}
 	}
 	public static void error(String message, Exception e) {
-		if (isVerbose) {
+		if (logging) {
 			logError("ERROR", message, e);
 			appendLog(LOGTYPE.ERROR, message);
 		}
 	}
 	public static void warn(String message) {
-		if (isVerbose) {
+		if (logging) {
 			log("WARN", message);
 			appendLog(LOGTYPE.WARN, message);
 		}
 	}
 	public static void info(String message) {
-		if (isVerbose) {
+		if (logging) {
 			log("INFO", message);
 			appendLog(LOGTYPE.INFO, message);
 		}
 	}
 	public static void debug(String message) {
-		if (isVerbose) {
+		if (logging) {
 			log("DEBUG", message);
 			appendLog(LOGTYPE.DEBUG, message);
 		}
 	}
 	public static void log(String tag, String message) {
-		if(Gdx.app != null) {
+		if (Gdx.app != null) {
 			Gdx.app.log(tag, message);
 		} else {
 			System.out.println(tag + message);
 		}
 	}
 	public static void logError(String tag, String message) {
-		if(Gdx.app != null) {
+		if (Gdx.app != null) {
 			Gdx.app.error(tag, message);
 		} else {
 			System.err.println(tag + message);
 		}
 	}
 	public static void logError(String tag, String message, Exception e) {
-		if(Gdx.app != null) {
+		if (Gdx.app != null) {
 			Gdx.app.error(tag, message, e);
 		} else {
 			e.printStackTrace();
@@ -174,12 +175,6 @@ public class Logger {
 	// SETTER & GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * @return number of max log lines.
-	 */
-	public int getMaxLogLines() {
-		return maxLogLines;
-	}
-	/**
 	 * Sets the maximum number of lines recorded. If the values is smaller then the current value the list holding the
 	 * recorded logs will be truncated.
 	 */
@@ -197,6 +192,20 @@ public class Logger {
 	 * True if we want logging or not.
 	 */
 	public static void setLogging(boolean value) {
-		isVerbose = value;
+		logging = value;
+	}
+	
+	/**
+	 * 
+	 * @return true if we are logging.
+	 */
+	public static boolean isLogging() {
+		return logging;
+	}
+	/**
+	 * @return number of max log lines.
+	 */
+	public int getMaxLogLines() {
+		return maxLogLines;
 	}
 }
