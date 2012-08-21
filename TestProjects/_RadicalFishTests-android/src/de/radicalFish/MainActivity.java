@@ -1,4 +1,4 @@
-package de.radicalFish;
+package de.radicalfish;
 
 import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -11,6 +11,6 @@ public class MainActivity extends AndroidApplication {
         
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
         cfg.useGL20 = false;
-        initialize(new LibGDXTest(), cfg);
+       // initialize(new LibGDXTest(), cfg);
     }
 }

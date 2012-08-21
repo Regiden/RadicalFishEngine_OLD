@@ -1,6 +1,4 @@
-package de.radicalFish;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+package de.radicalfish;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -8,8 +6,6 @@ import com.badlogic.gdx.utils.Array;
 import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.FPSCounter;
 import de.matthiasmann.twl.Label;
-import de.radicalFish.tests.ParticleTest;
-import de.radicalfish.GameContainer;
 import de.radicalfish.debug.Debug;
 import de.radicalfish.debug.DebugCallback;
 import de.radicalfish.debug.DeveloperConsole;
@@ -17,6 +13,7 @@ import de.radicalfish.debug.PerformanceListener;
 import de.radicalfish.debug.ToolBox;
 import de.radicalfish.debug.parser.URLInputParser;
 import de.radicalfish.graphics.Graphics;
+import de.radicalfish.tests.ParticleTest;
 import de.radicalfish.util.RadicalFishException;
 
 public class Main implements DebugCallback {
@@ -42,25 +39,6 @@ public class Main implements DebugCallback {
 	}
 	public static void main(String[] args) throws RadicalFishException {
 		new Main();
-	}
-	
-	public static void write() {
-		try {
-			PrintWriter w = new PrintWriter("insert.bla");
-			
-			w.write("switch (gdxKeyCode) {\n");
-			for (int i = 0; i < 257; i++) {
-				w.write("case " + (i - 1) + ":\n");
-				w.write("return 0;\n");
-			}
-			w.write("}");
-			
-			w.flush();
-			w.close();
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	// GAME METHODS
