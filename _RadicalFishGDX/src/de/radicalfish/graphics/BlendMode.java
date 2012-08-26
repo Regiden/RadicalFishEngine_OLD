@@ -40,6 +40,8 @@ import com.badlogic.gdx.graphics.GL20;
  */
 public enum BlendMode {
 	
+	/** This can be used if you want to use pre-multiplied alpha */
+	PRE_MULTIPLY(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA),
 	/** Normal drawing with alpha support. */
 	NORMAL(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA),
 	/** Draw adding the existing color to the new color. */

@@ -28,11 +28,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.state;
-import org.newdawn.slick.Graphics;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.graphics.Graphics;
 import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.World;
 

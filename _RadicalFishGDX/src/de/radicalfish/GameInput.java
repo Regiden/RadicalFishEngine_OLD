@@ -111,13 +111,6 @@ public class GameInput implements InputProcessor {
 	}
 	
 	/**
-	 * Called at the end of a container loop. TODO may remove
-	 */
-	public void update() {
-		// Arrays.fill(pressed, false);
-	}
-	
-	/**
 	 * @return true if the key in <code>keycode</code> was pressed.
 	 */
 	public boolean isKeyPressed(int keycode) {

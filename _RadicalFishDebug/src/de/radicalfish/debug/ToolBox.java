@@ -29,7 +29,6 @@
  */
 package de.radicalfish.debug;
 import java.util.ArrayList;
-import com.badlogic.gdx.math.Interpolation;
 import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ColumnLayout;
@@ -83,21 +82,6 @@ public class ToolBox extends ResizableFrame {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * Pops out the {@link ToolBox} from the bottom.
-	 */
-	public void show() {
-		currentPosition = 0;
-		currentDirection = 1;
-	}
-	/**
-	 * Hides the {@link ToolBox} at the bottom of the bar.
-	 */
-	public void hide() {
-		currentPosition = getHeight();
-		currentDirection = -1;
-	}
-	
 	/**
 	 * Adds a new button to the tool box. The tool gets a button to hide/show if pressed.
 	 * 
@@ -195,16 +179,9 @@ public class ToolBox extends ResizableFrame {
 	
 	@Override
 	protected void paint(GUI gui) {
-		if (currentDirection == 1) {
-			if (currentPosition != getHeight()) {
-				setPosition(0, getParent().getHeight() - getShowTime());
-			}
-		} else if (currentDirection == -1) {
-			if (currentPosition != getHeight()) {
-				setPosition(0, getParent().getHeight() - getHideTime());
-			}
+		if(getY() != getParent().getHeight() - getHeight()) {
+			setPosition(0, getParent().getHeight() - getHeight());
 		}
-		
 		if (getWidth() != getParent().getWidth()) {
 			setSize(getParent().getWidth(), 0);
 		}
@@ -213,20 +190,6 @@ public class ToolBox extends ResizableFrame {
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private int getShowTime() {
-		currentPosition = Interpolation.linear.apply(currentPosition, getHeight(), 0.2f);
-		if (currentPosition > getHeight()) {
-			currentPosition = getHeight();
-		}
-		return (int) currentPosition;
-	}
-	private int getHideTime() {
-		currentPosition = Interpolation.linear.apply(currentPosition, 0, 0.2f);
-		if (currentPosition < 0) {
-			currentPosition = 0;
-		}
-		return (int) currentPosition;
-	}
 	private void createPanel() {
 		setTheme("");
 		

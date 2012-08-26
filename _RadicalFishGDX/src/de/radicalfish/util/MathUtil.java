@@ -135,6 +135,8 @@ public final class MathUtil {
 		return (float) FastTrig.sin(radians);
 	}
 	
+	// VECTOR
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
 	 * Makes the given {@link Vector2} to the perpendicular to this vector.
 	 * 
@@ -143,5 +145,36 @@ public final class MathUtil {
 	public static Vector2 makePerpendicular(Vector2 vec) {
 		return vec.set(-vec.y, vec.x);
 	}
-	
+	/**
+	 * Rotates the given {@link Vector2} by the given <code>radians</code>. the rotation is counter-clockwise.
+	 * 
+	 * @param radians
+	 *            the radians in the scope of 0 - Math.PI * 2.
+	 * @return the rotated vector.
+	 */
+	public static Vector2 rotate(Vector2 vec, double radians) {
+		float x = vec.x;
+		vec.x = (float) (Math.cos(radians) * x + Math.sin(radians) * vec.y);
+		vec.y = (float) (Math.sin(-radians) * x + Math.cos(radians) * vec.y);
+		return vec;
+	}
+	/**
+	 * Sets the length of the vector.
+	 * 
+	 * @param length
+	 *            the length the vector should have.
+	 * @return the vector with the new length.
+	 */
+	public static Vector2 setLength(Vector2 vec, float length) {
+		float cur = vec.len();
+		if (cur == 0.0f) {
+			vec.x = length;
+			vec.y = 0;
+		} else {
+			float f = length / cur;
+			vec.x *= f;
+			vec.y *= f;
+		}
+		return vec;
+	}
 }

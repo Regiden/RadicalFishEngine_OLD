@@ -28,60 +28,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.effects;
-
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.opengl.shader.ShaderProgram;
-import de.radicalfish.context.GameContext;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import de.radicalfish.util.Utils;
 
 /**
- * A simple effect which use the <code>getGameTone</code> method from the {@link GameContext} to manipulate the tone of
- * the scene. This is a nice effect to make the scene look like it is afternoon or night. the files for the shader can be
- * found under;
- * <p>
- * <code>de/radicalfish/assests/shader</code>.
- * 
- * The shader will not run if the graphic details does not support shader are disabled.
+ * A simple effect which manipulates the tone of the sprite via the {@link ToneModel}. It uses a globale
+ * {@link ToneModel} to make the illusion of a screen effect but gives you the possibility to not tone a sprites (like
+ * fire in the night).
  * 
  * @author Stefan Lange
- * @version 0.0.0
+ * @version 1.0.0
  * @since 07.06.2012
  */
-public class ToneShaderEffect implements PostProcessingEffect {
+public class ToneShader {
 	
-	private ShaderProgram toneShader;
+	private ShaderProgram shader;
+	private ToneModel tone;
 	
-	private boolean usedShader;
-	
-	public ToneShaderEffect() throws SlickException {
-		toneShader = ShaderProgram.loadProgram("de/radicalfish/assets/shader/simple.vert", "de/radicalfish/assets/shader/toner.frag");
-	}
-	
-	// INTERFACE
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void begin(GameContext context, Graphics g) {
-		if(context.getSettings().getGraphicDetails().useShader()) {
-			toneShader.bind();
-			ToneModel t = context.getGameTone();
-			toneShader.setUniform4f("rgbc", t.getRed(), t.getGreen(), t.getBlue(), t.getChroma());
-			toneShader.setUniform4f("rgbcOver", t.getRedOvershoot(), t.getGreenOvershoot(), t.getBlueOvershoot(), t.getChromaOvershoot());
-			usedShader = true;
-		}
-		
-	}
-	public void end(GameContext context, Graphics g) {
-		if(context.getSettings().getGraphicDetails().useShader() && usedShader) {
-			toneShader.unbind();
-		}
-	}
-	
-	// GETTER
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * @return the shader use fot the toning.
+	 * Creates a new {@link ToneShader} which takes it values from the {@link ToneModel}.
 	 */
-	public ShaderProgram getShader() {
-		return toneShader;
+	public ToneShader(ToneModel tone) {
+		shader = new ShaderProgram(Gdx.files.internal("shaders/simple.vert"), Gdx.files.internal("shaders/toner.frag"));
+		Utils.notNull("tone", tone);
+		this.tone = tone;
 	}
 	
+	public void setUniforms() {
+		shader.setUniformf("rgbc", tone.getRed(), tone.getGreen(), tone.getBlue(), tone.getChroma());
+		shader.setUniformf("rgbcOver", tone.getRedOvershoot(), tone.getGreenOvershoot(), tone.getBlueOvershoot(), tone.getChromaOvershoot());
+	}
 }

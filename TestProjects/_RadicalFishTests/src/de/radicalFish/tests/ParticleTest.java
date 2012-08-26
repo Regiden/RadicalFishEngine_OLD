@@ -40,6 +40,11 @@ import com.badlogic.gdx.utils.TimeUtils;
 import de.radicalfish.BasicGame;
 import de.radicalfish.GameContainer;
 import de.radicalfish.GameInput;
+import de.radicalfish.effects.Rumble;
+import de.radicalfish.effects.Rumble.RUMBLE_AXIS;
+import de.radicalfish.effects.Rumble.RUMBLE_POWER;
+import de.radicalfish.effects.Rumble.RUMBLE_SPEED;
+import de.radicalfish.effects.Rumble.RumbleHandle;
 import de.radicalfish.graphics.BlendMode;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.tests.utils.RadicalFishTest;
@@ -67,6 +72,8 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 	private Vector2 temp = new Vector2();
 	private Color loopyColorShit;
 	private Color transClear = new Color(0, 0, 0, 0.5f);
+	
+	private Rumble rumble = new Rumble();
 	
 	private float lastx, lasty;
 	private float mouseX, mouseY;
@@ -112,12 +119,13 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 		particle = new Texture("data/particle.png");
 		
 		showOptions = container.isShowDebug();
-		
 	}
 	public void update(GameContainer container, float delta) throws RadicalFishException {
 		width = container.getDisplayWidth();
 		height = container.getDisplayHeight();
 		runs++;
+		
+		rumble.update(delta);
 		
 		localTime = TimeUtils.nanoTime();
 		
@@ -144,6 +152,9 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 		
 		localTime = TimeUtils.nanoTime();
 		
+		g.translate(rumble.getOffsetX(), rumble.getOffsetY());
+		g.apply();
+		
 		if (!clearScreen) {
 			batch.begin();
 			g.setColor(transClear);
@@ -156,8 +167,10 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 		batch.begin();
 		{
 			for (int i = 0; i < size; i++) {
-				batch.draw(particle, particles[i].px - pixelWidth / 2, particles[i].py - pixelWidth / 2, pixelWidth, pixelWidth);
+				batch.draw(particle, particles[i].px, particles[i].py, pixelWidth, pixelWidth);
 			}
+			
+			g.resetTransform(true);
 			
 			if (showOptions) {
 				rendercalls = batch.renderCalls;
@@ -173,6 +186,7 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 			}
 		}
 		batch.end();
+		
 		
 		renderTime += TimeUtils.nanoTime() - localTime;
 		
@@ -299,6 +313,11 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 			showOptions = !showOptions;
 			container.setShowDebug(!container.isShowDebug());
 		}
+		if(in.isKeyPressed(Keys.R)) {
+			RumbleHandle rh = new RumbleHandle(RUMBLE_AXIS.BOTH, RUMBLE_POWER.EXTREME, RUMBLE_SPEED.FAST, 5.0f, false, true);
+			rumble.addRumble(rh);
+		}
+		
 		if (in.isKeyPressed(Keys.ESCAPE)) {
 			container.exit();
 		}
@@ -308,6 +327,7 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void initContainer(GameContainer container) {
 		container.setSmoothDelta(true);
+		container.setBatchSize(10000);
 	}
 	
 	public String getTitle() {
@@ -320,7 +340,7 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 		return 600; // init height
 	}
 	public boolean needsGL20() {
-		return false;
+		return true;
 	}
 	
 	// INNER CLASS
@@ -345,15 +365,15 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 			if (px < 0.0f && vx < 0.0f) {
 				px = 0.0f;
 				vx *= -0.7f;
-			} else if (px > width && vx > 0.0f) {
-				px = width;
+			} else if (px > width - pixelWidth && vx > 0.0f) {
+				px = width - pixelWidth;
 				vx *= -0.7f;
 			}
 			if (py < 0.0f && vy < 0.0f) {
 				py = 0.0f;
 				vy *= -0.7f;
-			} else if (py > height && vy > 0.0f) {
-				py = height;
+			} else if (py > height - pixelWidth && vy > 0.0f) {
+				py = height - pixelWidth;
 				vy *= -0.7f;
 			}
 			

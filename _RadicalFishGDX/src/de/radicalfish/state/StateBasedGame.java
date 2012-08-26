@@ -43,8 +43,6 @@ import de.radicalfish.context.Settings;
 import de.radicalfish.context.defaults.DefaultGameDelta;
 import de.radicalfish.context.defaults.DefaultGameVariables;
 import de.radicalfish.context.defaults.DefaultSettings;
-import de.radicalfish.effects.PostProcesser;
-import de.radicalfish.effects.ToneModel;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.state.transitions.EmptyTransition;
 import de.radicalfish.state.transitions.Transition;
@@ -376,7 +374,6 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 		private GameDelta delta;
 		private Settings settings;
 		private GameVariables varis;
-		private ToneModel tone;
 		
 		public DefaultGameContext(GameContainer container, StateBasedGame game) {
 			this.container = container;
@@ -385,7 +382,6 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 			delta = new DefaultGameDelta();
 			settings = new DefaultSettings();
 			varis = new DefaultGameVariables();
-			tone = new ToneModel();
 		}
 		
 		// INTERFACE
@@ -422,12 +418,6 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 		}
 		public GameVariables getGameVariables() {
 			return varis;
-		}
-		public ToneModel getGameTone() {
-			return tone;
-		}
-		public PostProcesser getPostProcesser() {
-			return null;
 		}
 		public FontRenderer getFontRenderer() {
 			return null;

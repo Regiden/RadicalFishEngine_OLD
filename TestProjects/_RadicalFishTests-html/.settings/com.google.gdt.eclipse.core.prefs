@@ -1,4 +1,4 @@
 eclipse.preferences.version=1
-jarsExcludedFromWebInfLib=
+jarsExcludedFromWebInfLib=D\:/_MyData_/MyProjects/Repos/RadicalFishEngine/TestProjects/_RadicalFishTests/libs/gdx-sources.jar|D\:/_MyData_/MyProjects/Repos/RadicalFishEngine/TestProjects/_RadicalFishTests/libs/gdx.jar
 warSrcDir=war
 warSrcDirIsOutput=true

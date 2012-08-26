@@ -31,8 +31,6 @@ package de.radicalfish.context;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import de.radicalfish.GameContainer;
 import de.radicalfish.GameInput;
-import de.radicalfish.effects.PostProcesser;
-import de.radicalfish.effects.ToneModel;
 import de.radicalfish.state.StateBasedGame;
 import de.radicalfish.text.FontRenderer;
 
@@ -91,14 +89,6 @@ public interface GameContext {
 	 * @return the variables shared across the game.
 	 */
 	public GameVariables getGameVariables();
-	/**
-	 * @return a tone model to use for the game if any.
-	 */
-	public ToneModel getGameTone();
-	/**
-	 * @return the post processer used fot this can if any.
-	 */
-	public PostProcesser getPostProcesser();
 	/**
 	 * @return the font renderer to use.
 	 */

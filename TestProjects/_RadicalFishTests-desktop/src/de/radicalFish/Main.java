@@ -32,7 +32,7 @@ public class Main implements DebugCallback {
 		
 		GameContainer app = new GameContainer(config.title, new ParticleTest(), 800, 600, config.useGL20);
 		app.setBatchSize(10000);
-		//app.setDebugCallBack(this);
+		app.setDebugCallBack(this);
 		app.setSmoothDelta(true);
 		
 		new LwjglApplication(app, config);
@@ -47,18 +47,14 @@ public class Main implements DebugCallback {
 		debug = new Debug(container);
 		debug.setVisible(false);
 		buildGUI(container);
-		toolbox.show();
 	}
 	public void update(GameContainer container, float delta) throws RadicalFishException {
 		if (container.getInput().isKeyPressed(Keys.F1)) {
 			debug.setVisible(!debug.isVisible());
 			if (debug.isVisible()) {
-				toolbox.show();
 				if (debug.getCurrentFocusOwner() != null) {
 					debug.getCurrentFocusOwner().requestKeyboardFocus();
 				}
-			} else {
-				toolbox.hide();
 			}
 		}
 	}
