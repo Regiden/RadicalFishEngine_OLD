@@ -16,21 +16,21 @@ All methods are static (You don't need an instance of the class)so the general u
 Logger.info("Just logged and Info!");
 // will add an LogListener to the Logger.
 Logger.addLogListener(FanzyClass);
-// will return an strign with the last '20' logs. 
-String logText = getLogAsString(20)
+// will return an string with the last '20' logs. 
+String logText = Logger.getLogAsString(20)
 ```
 
 
 [DebugCallback][3]
 ----------------
 
-This little class is used in the debug project. You can set a DebugCallBack in the [GameContainer][4] class via the methods:
+This little class is used in the debug project. You can set a DebugCallBack in the [GameContainer][4] class via the method:
 ```Java
 GameContainer app = new GameContainer("Fancy Title", GameClass, 800, 600, yesWeWantGL20);
 app.setDebugCallBack(MyDebugClass);
 ```
-The Interface forces the implementation to use the methods provided by the [Game][5] Interface. All methods will be called after the game methods are called be the game container. 
-This you always get a clean state from the game to debug. Note that all methods are only called if the type of the application is Deskop. Otherwise setting a callback will be ignored.
+The Interface forces the implementation to use the methods provided by the [Game][5] Interface. All methods will be called after the game methods are called by the game container. 
+This way you always get a clean state from the game to debug. Note that all methods are only called if the type of the application is Deskop. Otherwise setting a callback will be ignored.
 
 The Implementation of the DebugCallback should run in the Desktop version of the game to access the Debug project. With this you have a powerfull debugging tool (especially is you use a [GameContext ][7]).
 
