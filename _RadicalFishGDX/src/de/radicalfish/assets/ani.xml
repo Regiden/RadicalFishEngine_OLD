@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<animations>
-	<animation name="idle" sheet="de/radicalfish/assets/mrhat.png" tw="96" th="96" times="16" frames="0"/>
-
-</animations>

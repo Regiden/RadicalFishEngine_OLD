@@ -29,13 +29,13 @@
  */
 package de.radicalfish.effects;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import de.radicalfish.util.Utils;
 
 /**
- * A simple effect which manipulates the tone of the sprite via the {@link ToneModel}. It uses a globale
- * {@link ToneModel} to make the illusion of a screen effect but gives you the possibility to not tone a sprites (like
- * fire in the night).
+ * A simple effect which manipulates the tone of the sprite via the {@link ToneModel}. It uses an {@link ShaderProgram}
+ * so you can use it in a {@link SpriteBatch}.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -47,16 +47,28 @@ public class ToneShader {
 	private ToneModel tone;
 	
 	/**
-	 * Creates a new {@link ToneShader} which takes it values from the {@link ToneModel}.
+	 * Creates the {@link ToneShader}. the {@link ToneModel} can't be null
 	 */
 	public ToneShader(ToneModel tone) {
-		shader = new ShaderProgram(Gdx.files.internal("shaders/simple.vert"), Gdx.files.internal("shaders/toner.frag"));
 		Utils.notNull("tone", tone);
+		shader = new ShaderProgram(Gdx.files.internal("shaders/simple.vert"), Gdx.files.internal("shaders/toner.frag"));
 		this.tone = tone;
 	}
 	
+	/**
+	 * Call this to set the uniforms on the shader.
+	 */
 	public void setUniforms() {
 		shader.setUniformf("rgbc", tone.getRed(), tone.getGreen(), tone.getBlue(), tone.getChroma());
 		shader.setUniformf("rgbcOver", tone.getRedOvershoot(), tone.getGreenOvershoot(), tone.getBlueOvershoot(), tone.getChromaOvershoot());
+	}
+	
+	/**
+	 * The shader uses for this effect.
+	 * 
+	 * @return
+	 */
+	public ShaderProgram getShader() {
+		return shader;
 	}
 }

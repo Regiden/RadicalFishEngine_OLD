@@ -206,4 +206,9 @@ public class ToneModel {
 		this.chromaOvershoot = chromaOvershoot;
 	}
 	
+	public String toString() {
+		return "[(r:" + red + ", g:" + green + ", b:" + blue + ", c:" + chroma + ")] (ro:" + redOvershoot + ", go:" + greenOvershoot + ", bo:"
+				+ blueOvershoot + ", co:" + chromaOvershoot + ")";
+	}
+	
 }

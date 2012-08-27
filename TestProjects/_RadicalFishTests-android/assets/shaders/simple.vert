@@ -1,7 +1,15 @@
 // Simple vertex shader
+attribute vec4 a_position;
+attribute vec4 a_color;
+attribute vec2 a_texCoord0;
 
-void main(void) {
+uniform mat4 u_projTrans;
 
-	gl_TexCoord[0] = gl_MultiTexCoord0;
-	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;  
+varying vec4 v_color;
+varying vec2 v_texCoords;
+			
+void main() {
+	v_color = a_color;							// the color
+	v_texCoords = a_texCoord0;					// the text coord we pass to the fragment shader
+	gl_Position =  u_projTrans * a_position;	// can be ignored most of the time
 }

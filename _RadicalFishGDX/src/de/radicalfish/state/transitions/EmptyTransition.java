@@ -35,21 +35,21 @@ import de.radicalfish.state.GameState;
 import de.radicalfish.util.RadicalFishException;
 
 /**
- * Does nothing at all.
+ * Does nothing at all. Will be used if no Transition has been set when switching {@link GameState}s.
+ * 
  * @author Stefan Lange
  * @version 1.0.0
  * @since 17.08.2012
  */
 public class EmptyTransition implements Transition {
-
+	
 	public void init(GameContext context, GameState from, GameState to) throws RadicalFishException {}
 	public void update(GameContext context, GameDelta delta) {}
 	public void preRender(GameContext context, Graphics g) {}
 	public void postRender(GameContext context, Graphics g) {}
-
+	
 	public boolean isFinished() {
 		return true;
 	}
-	
 	
 }

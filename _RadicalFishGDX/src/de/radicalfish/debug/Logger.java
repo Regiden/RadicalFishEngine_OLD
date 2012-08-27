@@ -37,7 +37,7 @@ import com.badlogic.gdx.Gdx;
  * changes to the log. The class is used by the engine as logging tool.
  * 
  * @author Stefan Lange
- * @version 1.0.0
+ * @version 1.1.0
  * @since 05.10.2011
  */
 public class Logger {

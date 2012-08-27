@@ -35,6 +35,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import de.radicalfish.BasicGame;
@@ -45,6 +46,8 @@ import de.radicalfish.effects.Rumble.RUMBLE_AXIS;
 import de.radicalfish.effects.Rumble.RUMBLE_POWER;
 import de.radicalfish.effects.Rumble.RUMBLE_SPEED;
 import de.radicalfish.effects.Rumble.RumbleHandle;
+import de.radicalfish.effects.ToneModel;
+import de.radicalfish.effects.ToneShader;
 import de.radicalfish.graphics.BlendMode;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.tests.utils.RadicalFishTest;
@@ -86,6 +89,9 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 	private int pixelWidth = 4;
 	private int rendercalls;
 	
+	private ToneModel tone = new ToneModel(1, 1, 1, 1);
+	private ToneShader shader;
+	
 	private int state = 0, pressState;
 	
 	private boolean clearScreen = true;
@@ -93,12 +99,14 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 	private boolean gravityRandom = false;
 	private boolean showOptions = false;
 	
+	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void init(GameContainer container) throws RadicalFishException {
 		container.setClipViewport(false);
 		width = container.getDisplayWidth();
 		height = container.getDisplayHeight();
+		
 		
 		loopyColorShit = new Color(maxColor, minColor, minColor, 1.0f);
 		
@@ -119,8 +127,12 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 		particle = new Texture("data/particle.png");
 		
 		showOptions = container.isShowDebug();
+		ShaderProgram.pedantic = false;
+		shader = new ToneShader(tone);
+		
 	}
 	public void update(GameContainer container, float delta) throws RadicalFishException {
+		GameInput in = container.getInput();
 		width = container.getDisplayWidth();
 		height = container.getDisplayHeight();
 		runs++;
@@ -130,6 +142,27 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 		localTime = TimeUtils.nanoTime();
 		
 		handleInput(container, delta);
+		if (in.isKeyDown(Keys.O)) {
+			tone.setRed(tone.getRed() + 1 * delta);
+		}
+		if (in.isKeyDown(Keys.I)) {
+			tone.setRed(tone.getRed() - 1 * delta);
+		}
+		if (in.isKeyDown(Keys.L)) {
+			tone.setGreen(tone.getGreen() + 1 * delta);
+		}
+		if (in.isKeyDown(Keys.K)) {
+			tone.setGreen(tone.getGreen() - 1 * delta);
+		}
+		if (in.isKeyDown(Keys.M)) {
+			tone.setBlue(tone.getBlue() + 1 * delta);
+		}
+		if (in.isKeyDown(Keys.N)) {
+			tone.setBlue(tone.getBlue() - 1 * delta);
+		}
+		
+		System.out.println(tone);
+		
 		cycleColor();
 		
 		for (int i = 0; i < size; i++) {
@@ -152,6 +185,8 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 		
 		localTime = TimeUtils.nanoTime();
 		
+		batch.setShader(shader.getShader());
+		
 		g.translate(rumble.getOffsetX(), rumble.getOffsetY());
 		g.apply();
 		
@@ -165,13 +200,16 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 		g.setBlendMode(BlendMode.ADD);
 		batch.setColor(loopyColorShit);
 		batch.begin();
+		
+		shader.setUniforms();
+		
 		{
 			for (int i = 0; i < size; i++) {
 				batch.draw(particle, particles[i].px, particles[i].py, pixelWidth, pixelWidth);
 			}
 			
+			batch.setShader(null);
 			g.resetTransform(true);
-			
 			if (showOptions) {
 				rendercalls = batch.renderCalls;
 				g.setBlendMode(BlendMode.NORMAL);
@@ -186,7 +224,6 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 			}
 		}
 		batch.end();
-		
 		
 		renderTime += TimeUtils.nanoTime() - localTime;
 		
@@ -313,7 +350,7 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 			showOptions = !showOptions;
 			container.setShowDebug(!container.isShowDebug());
 		}
-		if(in.isKeyPressed(Keys.R)) {
+		if (in.isKeyPressed(Keys.R)) {
 			RumbleHandle rh = new RumbleHandle(RUMBLE_AXIS.BOTH, RUMBLE_POWER.EXTREME, RUMBLE_SPEED.FAST, 5.0f, false, true);
 			rumble.addRumble(rh);
 		}

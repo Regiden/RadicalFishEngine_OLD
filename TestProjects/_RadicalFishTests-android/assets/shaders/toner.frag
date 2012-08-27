@@ -2,7 +2,10 @@
 uniform vec4 rgbc;			// the normal rgb and chorma values for the toneModel
 uniform vec4 rgbcOver;		// the overshoots from the toneModel
 
-uniform sampler2D texture;
+uniform sampler2D u_texture;
+
+varying vec4 v_color;
+varying vec2 v_texCoords;
 
 //¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯ METHODS
 float range(float val, float add) {
@@ -14,9 +17,8 @@ float lerp(float current, float target, float ratio) {
 
 //¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯ MAIN
 void main() {
-	
 	// the current fragment with it's color values in rgba
-	vec4 fragment = texture2D(texture, gl_TexCoord[0].st);
+	vec4 fragment = texture2D(u_texture, v_texCoords);
 	
 	// range the rgb values with the overshoots and multiply the fragment with rgbc values
 	// the range method makes sure we keep the values in [0, 1]
@@ -37,5 +39,5 @@ void main() {
 	fragment.g = min(1.0, fragment.g * (rgbcOver.a + 1.0));
 	fragment.b = min(1.0, fragment.b * (rgbcOver.a + 1.0));
 
-	gl_FragColor =  fragment;
+	gl_FragColor =  v_color * fragment;
 }

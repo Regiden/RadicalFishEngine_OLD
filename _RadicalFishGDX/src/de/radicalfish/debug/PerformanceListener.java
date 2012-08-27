@@ -30,12 +30,11 @@
 package de.radicalfish.debug;
 
 /**
- * An Interface which describes an object that can be monitored for performance. Here is one of the moments where
- * multiple inheritance would be useful to have field you simply need to access. Here you need to store a value inside
- * that object which gives back the measured time and name.
+ * An Interface which describes an object that can be monitored for performance. This will be used only under the
+ * Desktop Implementation by the debug plug-in. you can use it for your own debugging to.
  * 
  * @author Stefan Lange
- * @version 0.5.0
+ * @version 1.0.0
  * @since 24.05.2012
  */
 public interface PerformanceListener {
