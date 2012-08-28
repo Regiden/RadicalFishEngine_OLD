@@ -30,9 +30,9 @@ GameContainer app = new GameContainer("Fancy Title", GameClass, 800, 600, yesWeW
 app.setDebugCallBack(MyDebugClass);
 ```
 The Interface forces the implementation to use the methods provided by the [Game][5] Interface. All methods will be called after the game methods are called by the game container. 
-This way you always get a clean state from the game to debug. Note that all methods are only called if the type of the application is Deskop. Otherwise setting a callback will be ignored.
+This way you always get a clean state from the game to debug. Note that all methods are only called if the type of the application is Desktop. Otherwise setting a callback will be ignored.
 
-The Implementation of the DebugCallback should run in the Desktop version of the game to access the Debug project. With this you have a powerfull debugging tool (especially is you use a [GameContext ][7]).
+The Implementation of the DebugCallback should run in the Desktop version of the game to access the Debug project. With this you have a powerful debugging tool (especially is you use a [GameContext ][7]).
 
 
 [1]: https://github.com/Regiden/RadicalFishEngine/blob/master/_RadicalFishGDX/src/de/radicalfish/debug/Logger.java
