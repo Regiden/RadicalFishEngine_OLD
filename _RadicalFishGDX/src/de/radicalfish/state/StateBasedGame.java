@@ -54,31 +54,32 @@ import de.radicalfish.world.World;
 /**
  * A game which handles a set of {@link GameState}s. The class always updates and renders one state but exposes access
  * to all states via setter/getter.
+ * <p>
+ * You use {@link Transition}s to switch from one state to another with a nice animation. The delta value of the update
+ * methods in the {@link Transition} class will be the modified delta form the {@link GameDelta} object.
+ * <p>
  * 
  * @author Stefan Lange
- * @version 0.5.0
+ * @version 1.0.0
  * @since 17.08.2012
  */
 public abstract class StateBasedGame implements Game, InputProcessor {
 	
 	private IntMap<GameState> states = new IntMap<GameState>();
 	
+	private GameContainer container;
 	private GameState currentState, nextState, previousState;
 	private Transition enterTransition, leaveTransition;
 	private GameContext context;
 	private World world;
 	
-	private boolean pauseUpdate, pauseRender;
+	private boolean pauseUpdate = false, pauseRender = false;
 	private boolean usingDefaultContext = false;
-	
-	public StateBasedGame() {
-		// TODO Auto-generated constructor stub
-	}
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Adds a state to the state list. if the current state is null the added state will be set as teh current state.
+	 * Adds a state to the state list. if the current state is null the added state will be set as the current state.
 	 */
 	public void addState(GameState state) {
 		Utils.notNull("state", state);
@@ -90,21 +91,24 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 	}
 	/**
 	 * Enters the state with the specific <code>ID</code>. if the states does not exits and exception will be thrown.
-	 * @throws RadicalFishException 
+	 * 
+	 * @throws RadicalFishException
 	 */
 	public void enterState(int ID) throws RadicalFishException {
 		enterState(ID, null, null);
 	}
 	/**
-	 * Enters the state with the specific <code>ID</code>. if the states does not exits and exception will be thrown. 
+	 * Enters the state with the specific <code>ID</code>. if the states does not exits and exception will be thrown.
 	 * 
-	 * @param leave the "Out"-Transition to use (can be null);
-	 * @param enter the "In"-Transition to use (can be null)
+	 * @param leave
+	 *            the "Out"-Transition to use (can be null);
+	 * @param enter
+	 *            the "In"-Transition to use (can be null)
 	 * 
-	 * @throws RadicalFishException 
+	 * @throws RadicalFishException
 	 */
-	public void enterState(int ID, Transition leave, Transition enter ) throws RadicalFishException {
-		if(!states.containsKey(ID)) {
+	public void enterState(int ID, Transition leave, Transition enter) throws RadicalFishException {
+		if (!states.containsKey(ID)) {
 			throw new RadicalFishException("No GameState is registered with the ID: " + ID);
 		}
 		
@@ -118,18 +122,17 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 		enterTransition = enter;
 		
 		nextState = getState(ID);
-		leaveTransition.init(context, currentState, nextState);
+		leaveTransition.init(container, currentState, nextState);
 		currentState.leaving(context, world, nextState);
 	}
 	
 	// ABSTRACT METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Gets called to initialize the {@link GameContext}. if null is returned. A default implementation will be created.
+	 * Gets called to initialize the {@link GameContext}. If null is returned a default implementation will be created.
 	 * <p>
 	 * The default context will return null on the current getters:
 	 * <li> {@link GameContext#getResources()}</li>
-	 * <li> {@link GameContext#getPostProcesser()}</li>
 	 * <li> {@link GameContext#getFontRenderer()}</li>
 	 * <hr>
 	 * 
@@ -138,7 +141,7 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 	public abstract GameContext initGameContext(GameContainer container) throws RadicalFishException;
 	/**
 	 * Gets called to initialize the {@link World}. You may return null. The class will not create a default
-	 * implementation (would be hard to guess how you want a world, also not all games need a world).
+	 * implementation (would be hard to guess how you want your world, also not all games need a world).
 	 * 
 	 * @return an instance of the {@link World} Interface (if wanted).
 	 */
@@ -148,6 +151,8 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 	 * {@link StateBasedGame#initWorld(GameContainer)} to add all states.
 	 * <p>
 	 * After this call all states get a call to the {@link GameState#init(GameContext, World)} method.
+	 * <p>
+	 * Use this code to initiate your game to. After this call the game will start running.
 	 */
 	public abstract void initStates(GameContext context) throws RadicalFishException;
 	
@@ -202,6 +207,7 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public final void init(GameContainer container) throws RadicalFishException {
+		this.container = container;
 		context = initGameContext(container);
 		world = initWorld(container);
 		if (context == null) {
@@ -221,13 +227,13 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 		}
 	}
 	public final void update(GameContainer container, float delta) throws RadicalFishException {
-		if(usingDefaultContext) {
+		if (usingDefaultContext) {
 			context.getGameDelta().update(context, world, delta);
 		}
 		preUpdate(context, world, context.getGameDelta());
 		
 		if (leaveTransition != null) {
-			leaveTransition.update(context, context.getGameDelta());
+			leaveTransition.update(container, context.getGameDelta().getDelta());
 			if (leaveTransition.isFinished()) {
 				currentState.left(context, world, nextState);
 				previousState = currentState;
@@ -236,7 +242,7 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 				leaveTransition = null;
 				currentState.entering(context, world, previousState);
 				if (enterTransition != null) {
-					enterTransition.init(context, previousState, currentState);
+					enterTransition.init(container, previousState, currentState);
 				}
 			} else {
 				postUpdate(context, world, context.getGameDelta());
@@ -245,7 +251,7 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 		}
 		
 		if (enterTransition != null) {
-			enterTransition.update(context, context.getGameDelta());
+			enterTransition.update(container, context.getGameDelta().getDelta());
 			if (enterTransition.isFinished()) {
 				currentState.entered(context, world, previousState);
 				previousState = null;
@@ -256,15 +262,32 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 			}
 		}
 		
-		if(!pauseUpdate) {
+		if (!pauseUpdate) {
 			currentState.update(context, world, context.getGameDelta());
 		}
 		
 		postUpdate(context, world, context.getGameDelta());
 	}
-	
 	public final void render(GameContainer container, Graphics g) throws RadicalFishException {
+		preRender(context, world, g);
 		
+		if (leaveTransition != null) {
+			leaveTransition.preRender(container, g);
+		} else if (enterTransition != null) {
+			enterTransition.preRender(container, g);
+		}
+		
+		if (!pauseRender) {
+			currentState.render(context, world, g);
+		}
+		
+		if (leaveTransition != null) {
+			leaveTransition.postRender(container, g);
+		} else if (enterTransition != null) {
+			enterTransition.postRender(container, g);
+		}
+		
+		postRender(context, world, g);
 	}
 	
 	// INPUT METHODS
@@ -349,6 +372,9 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 	public GameState getCurrentState() {
 		return currentState;
 	}
+	/**
+	 * @return the state mapped by <code>ID</code>. null is returned if there is state mapped to the ID.
+	 */
 	public GameState getState(int ID) {
 		return states.get(ID);
 	}

@@ -28,110 +28,79 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.state;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.InputListener;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.StateBasedGame;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.graphics.Graphics;
+import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.World;
 
 /**
- * A better implementation of a game state which includes a world object and a game context.
+ * A simple abstract implementation of the {@link GameState}. Use this to hide code you may not want and only override
+ * if you need. Also this class has a direct ID so you only set the ID in the C'Tor.
  * 
  * @author Stefan Lange
  * @version 1.0.0
  * @since 11.03.2012
  */
-public abstract class BasicGameState extends org.newdawn.slick.state.BasicGameState implements InputListener {
+public abstract class BasicGameState implements GameState {
 	
-	private int id;
-	private World world;
-	private GameContext context;
+	private int ID;
 	
-	public BasicGameState(GameContext context, World world, int id) {
-		this.id = id;
-		this.world = world;
-		this.context = context;
+	/**
+	 * Creates a new {@link BasicGameState} for easy to use states.
+	 */
+	public BasicGameState(int ID) {
+		this.ID = ID;
 	}
 	
-	// METHODS
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * Initiates this game state.
-	 * 
-	 * @param context
-	 *            the context the game runs in
-	 * @param world
-	 *            the world the game plays in
-	 */
-	public abstract void init(GameContext context, World world) throws SlickException;
-	/**
-	 * Updates all logic of the state.
-	 * 
-	 * @param context
-	 *            the context the game runs in
-	 * @param world
-	 *            the world the game plays in
-	 * @param delta
-	 *            the {@link GameDelta} object containing the delta values.
-	 */
-	public abstract void update(GameContext context, World world, GameDelta delta) throws SlickException;
-	/**
-	 * Renders all entities of the state.
-	 * 
-	 * @param context
-	 *            the context the game runs in
-	 * @param world
-	 *            the world the game plays in
-	 * @param g
-	 *            the graphic context to draw to
-	 */
-	public abstract void render(GameContext context, World world, Graphics g) throws SlickException;
+	// ABSRACT METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public abstract void init(GameContext context, World world) throws RadicalFishException;
+	public abstract void update(GameContext context, World world, GameDelta delta) throws RadicalFishException;
+	public abstract void render(GameContext context, World world, Graphics g) throws RadicalFishException;
 	
-	/**
-	 * Get's called when entering this state
-	 * 
-	 * @param context
-	 *            the context the game runs in
-	 * @param world
-	 *            the world the game plays in
-	 * @throws SlickException
-	 */
-	protected void enter(GameContext context, World world) throws SlickException {}
-	/**
-	 * Get's called when leaving this state
-	 * 
-	 * @param context
-	 *            the context the game runs in
-	 * @param world
-	 *            the world the game plays in
-	 * @throws SlickException
-	 */
-	protected void leave(GameContext context, World world) throws SlickException {}
+	// OVERRIDE METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public void entering(GameContext context, World world, GameState form) throws RadicalFishException {}
+	public void entered(GameContext context, World world, GameState form) throws RadicalFishException {}
+	public void leaving(GameContext context, World world, GameState to) throws RadicalFishException {}
+	public void left(GameContext context, World world, GameState to) throws RadicalFishException {}
 	
-	// CALLBACK CATCH
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public final void init(GameContainer container, StateBasedGame game) throws SlickException {
-		init(context, world);
+	public void pause(GameContext context, World world) throws RadicalFishException {}
+	public void resume(GameContext context, World world) throws RadicalFishException {}
+	public void dispose() {}
+	
+	// OVERRIDE INPUT METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public boolean keyDown(int keycode) {
+		return false;
 	}
-	public final void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-		render(context, world, g);
+	public boolean keyUp(int keycode) {
+		return false;
 	}
-	public final void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-		update(context, world, context.getGameDelta());
+	public boolean keyTyped(char character) {
+		return false;
+	}
+	public boolean touchDown(int x, int y, int pointer, int button) {
+		return false;
+	}
+	public boolean touchUp(int x, int y, int pointer, int button) {
+		return false;
+	}
+	public boolean touchMoved(int x, int y) {
+		return false;
+	}
+	public boolean touchDragged(int x, int y, int pointer) {
+		return false;
+	}
+	public boolean scrolled(int amount) {
+		return false;
 	}
 	
-	// GETTER & SETTER
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	// GETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public int getID() {
-		return id;
+		return ID;
 	}
 	
-	// INPUTS
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public boolean isAcceptingInput() {
-		return true;
-	}
 }
