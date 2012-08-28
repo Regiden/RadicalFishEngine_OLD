@@ -28,9 +28,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.state.transitions;
-import com.badlogic.gdx.Graphics;
-import de.radicalfish.context.GameContext;
-import de.radicalfish.context.GameDelta;
+import de.radicalfish.GameContainer;
+import de.radicalfish.graphics.Graphics;
 import de.radicalfish.state.GameState;
 import de.radicalfish.util.RadicalFishException;
 
@@ -46,41 +45,45 @@ public interface Transition {
 	/**
 	 * Initiates this transition.
 	 * 
-	 * @param context
-	 *            the context the game runs in
+	 * @param container
+	 *            the container the game runs in
 	 * @param from
 	 *            the state we coming from
 	 * @param to
 	 *            the state we moving to
+	 * @throws RadicalFishException
 	 */
-	public void init(GameContext context, GameState from, GameState to) throws RadicalFishException;
+	public void init(GameContainer container, GameState from, GameState to) throws RadicalFishException;
 	/**
 	 * Updates the transition.
 	 * 
-	 * @param context
-	 *            the context the game runs in
+	 * @param container
+	 *            the container the game runs in
 	 * @param delta
-	 *            the {@link GameDelta} object containing the delta values.
+	 *            the time since the last frame in seconds
+	 * @throws RadicalFishException
 	 */
-	public void update(GameContext context, GameDelta delta);
+	public void update(GameContainer container, float delta) throws RadicalFishException;
 	/**
-	 * renders the transition before the existing state.
+	 * Renders the transition before the existing state.
 	 * 
-	 * @param context
-	 *            the context the game runs in
+	 * @param container
+	 *            the container the game runs in
 	 * @param g
 	 *            the wrapper for graphics
+	 * @throws RadicalFishException
 	 */
-	public void preRender(GameContext context, Graphics g);
+	public void preRender(GameContainer container, Graphics g) throws RadicalFishException;
 	/**
-	 * renders the transition after the existing state.
+	 * Renders the transition after the existing state.
 	 * 
-	 * @param context
-	 *            the context the game runs in
+	 * @param container
+	 *            the container the game runs in
 	 * @param g
 	 *            the wrapper for graphics
+	 * @throws RadicalFishException
 	 */
-	public void postRender(GameContext context, Graphics g);
+	public void postRender(GameContainer container, Graphics g) throws RadicalFishException;
 	
 	/**
 	 * @return true if the transition is completed.

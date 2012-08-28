@@ -28,9 +28,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.state.transitions;
-import com.badlogic.gdx.Graphics;
-import de.radicalfish.context.GameContext;
-import de.radicalfish.context.GameDelta;
+import de.radicalfish.GameContainer;
+import de.radicalfish.graphics.Graphics;
 import de.radicalfish.state.GameState;
 import de.radicalfish.util.RadicalFishException;
 
@@ -43,10 +42,10 @@ import de.radicalfish.util.RadicalFishException;
  */
 public class EmptyTransition implements Transition {
 	
-	public void init(GameContext context, GameState from, GameState to) throws RadicalFishException {}
-	public void update(GameContext context, GameDelta delta) {}
-	public void preRender(GameContext context, Graphics g) {}
-	public void postRender(GameContext context, Graphics g) {}
+	public void init(GameContainer container, GameState from, GameState to) throws RadicalFishException {}
+	public void update(GameContainer container, float delta) throws RadicalFishException {}
+	public void preRender(GameContainer container, Graphics g) throws RadicalFishException {}
+	public void postRender(GameContainer container, Graphics g) throws RadicalFishException {}
 	
 	public boolean isFinished() {
 		return true;
