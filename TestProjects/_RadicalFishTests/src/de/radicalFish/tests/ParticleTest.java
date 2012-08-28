@@ -161,8 +161,6 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 			tone.setBlue(tone.getBlue() - 1 * delta);
 		}
 		
-		System.out.println(tone);
-		
 		cycleColor();
 		
 		for (int i = 0; i < size; i++) {

@@ -34,13 +34,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import de.radicalfish.Game;
 import de.radicalfish.GameContainer;
-import de.radicalfish.graphics.BlendMode;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.tests.utils.RadicalFishTest;
-import de.radicalfish.util.MathUtil;
 import de.radicalfish.util.RadicalFishException;
 
 public class GameTest implements Game, RadicalFishTest {
@@ -50,8 +47,6 @@ public class GameTest implements Game, RadicalFishTest {
 	
 	private float scale;
 	private Vector2 position, velocity;
-	
-	private Vector3[] pos;
 	
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -65,12 +60,6 @@ public class GameTest implements Game, RadicalFishTest {
 		velocity = new Vector2();
 		scale = 1.0f;
 		
-		pos = new Vector3[1000];
-		for (int i = 0; i < pos.length; i++) {
-			pos[i] = new Vector3();
-			pos[i].set(MathUtil.random(0, container.getWidth() - 32), MathUtil.random(0, container.getHeight() - 32), MathUtil.random(0, 1f));
-		}
-		
 		sprite.setColor(1, 0, 0, 1);
 	}
 	
@@ -83,20 +72,9 @@ public class GameTest implements Game, RadicalFishTest {
 		sprite.setPosition(position.x, position.y);
 		sprite.setScale(scale);
 		
-		g.setBlendMode(BlendMode.SUB);
-		
 		batch.begin();
 		sprite.draw(batch);
-		
-		for (int i = 0; i < pos.length; i++) {
-			sprite.setPosition(pos[i].x, pos[i].y);
-			sprite.draw(batch, pos[i].z);
-		}
-		
-		
 		batch.end();
-		
-		
 	}
 	
 	private void handleInput(float delta) {
