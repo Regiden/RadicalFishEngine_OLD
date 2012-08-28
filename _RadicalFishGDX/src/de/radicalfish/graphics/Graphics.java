@@ -38,10 +38,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Pool;
 import de.radicalfish.GameContainer;
 import de.radicalfish.GameContainer.VIEWTYPE;
 import de.radicalfish.debug.Logger;
+import de.radicalfish.util.RadicalFishException;
 
 /**
  * A wrapper for translating the context, drawing sprites with the {@link SpriteBatch} and drawing primitives.
@@ -52,14 +55,21 @@ import de.radicalfish.debug.Logger;
  */
 public class Graphics implements Disposable {
 	
+	private Pool<GraphicsTransform> pool = new Pool<GraphicsTransform>() {
+		protected GraphicsTransform newObject() {
+			return new GraphicsTransform();
+		}
+	};
+	
 	private SpriteBatch spriteBatch;
 	private Color clearColor, shapeColor;
-	
 	private Texture texture;
 	private Vector3 origin;
 	
 	private GraphicsContext gContext;
 	private BlendMode blendMode;
+	
+	private Array<GraphicsTransform> transformStack = new Array<GraphicsTransform>();
 	
 	private float[] lineVerts = new float[4 * 5];
 	private float linewidth = 1f;
@@ -138,6 +148,38 @@ public class Graphics implements Disposable {
 	 */
 	public void scale(float x, float y) {
 		gContext.scale(x, y);
+	}
+	
+	/**
+	 * Pushes the current transforms. This pushes the position, scale and origin.
+	 */
+	public void pushTransform() {
+		GraphicsTransform newStack = pool.obtain();
+		newStack.stackPos(gContext.position.x, gContext.position.y, gContext.position.z);
+		newStack.stackOriginPos(origin.x, origin.y, origin.z);
+		newStack.stackScale(getScaleX(), getScaleY());
+		transformStack.add(newStack);
+		
+	}
+	/**
+	 * Pops the last transform which was pushed.
+	 * 
+	 * @param apply
+	 *            true if the popped transform should be applied directly;
+	 * 
+	 * @throws RadicalFishException
+	 */
+	public void popTransform(boolean apply) throws RadicalFishException {
+		if (transformStack.size == 0) {
+			throw new RadicalFishException("Pop failed! No Transform is in the stack (forgot a pushTransform()?)");
+		}
+		GraphicsTransform popTransform = transformStack.pop();
+		origin.set(popTransform.oPosX, popTransform.oPosY, popTransform.oPosZ);
+		setScale(popTransform.scaleX, popTransform.scaleY);
+		gContext.position.set(popTransform.posX, popTransform.posY, popTransform.posZ);
+		if(apply) {
+			apply();
+		}
 	}
 	
 	/**
@@ -466,5 +508,29 @@ public class Graphics implements Disposable {
 	 */
 	public float getScaleY() {
 		return gContext.getScaleY();
+	}
+	
+	// INTERN CLASSES
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private static class GraphicsTransform {
+		
+		float posX, posY, posZ;
+		float scaleX, scaleY;
+		float oPosX, oPosY, oPosZ;
+		
+		void stackPos(float posX, float posY, float posZ) {
+			this.posX = posX;
+			this.posY = posY;
+			this.posZ = posZ;
+		}
+		void stackScale(float scaleX, float scaleY) {
+			this.scaleX = scaleX;
+			this.scaleY = scaleY;
+		}
+		void stackOriginPos(float oPosX, float oPosY, float oPosZ) {
+			this.oPosX = oPosX;
+			this.oPosY = oPosY;
+			this.oPosZ = oPosZ;
+		}
 	}
 }
