@@ -30,16 +30,24 @@
 package de.radicalfish.tests;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import de.radicalfish.Game;
 import de.radicalfish.GameContainer;
+import de.radicalfish.context.Settings;
+import de.radicalfish.context.defaults.DefaultSettings;
 import de.radicalfish.graphics.Graphics;
+import de.radicalfish.state.transitions.FadeTransition;
+import de.radicalfish.state.transitions.FadeTransition.FADETYPE;
 import de.radicalfish.tests.utils.RadicalFishTest;
 import de.radicalfish.util.RadicalFishException;
 
+/**
+ * My testing ground.
+ */
 public class GameTest implements Game, RadicalFishTest {
 	
 	private Sprite sprite;
@@ -47,6 +55,8 @@ public class GameTest implements Game, RadicalFishTest {
 	
 	private float scale;
 	private Vector2 position, velocity;
+	
+	private FadeTransition fade;
 	
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -61,10 +71,16 @@ public class GameTest implements Game, RadicalFishTest {
 		scale = 1.0f;
 		
 		sprite.setColor(1, 0, 0, 1);
+		fade = new FadeTransition(Color.RED, FADETYPE.FADE_OUT, 2.0f);
+		
+		Settings s = new DefaultSettings();
+		s.printSettings();
+		
 	}
 	
 	public void update(GameContainer container, float delta) throws RadicalFishException {
 		handleInput(delta);
+		fade.update(container, delta);
 	}
 	public void render(GameContainer container, Graphics g) throws RadicalFishException {
 		SpriteBatch batch = g.getSpriteBatch();
@@ -72,9 +88,14 @@ public class GameTest implements Game, RadicalFishTest {
 		sprite.setPosition(position.x, position.y);
 		sprite.setScale(scale);
 		
+		g.translate(10, 10);
+		g.apply();
+		
 		batch.begin();
 		sprite.draw(batch);
 		batch.end();
+		
+		fade.postRender(container, g);
 	}
 	
 	private void handleInput(float delta) {

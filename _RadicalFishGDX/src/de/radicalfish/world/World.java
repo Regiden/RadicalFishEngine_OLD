@@ -31,6 +31,7 @@ package de.radicalfish.world;
 import java.util.List;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.world.map.Map;
@@ -45,7 +46,7 @@ import de.radicalfish.world.map.Map;
  * @version 0.0.0
  * @since 11.03.2012
  */
-public interface World {
+public interface World extends Disposable {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
