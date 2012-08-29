@@ -520,7 +520,7 @@ public abstract class Entity implements Serializable {
 	
 	// SETTER POSITIONS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void setGridPosition(int x, int y) {
+	public void setGridPosition(float x, float y) {
 		grid.set(x, y);
 	}
 	public void setPosition(float x, float y) {

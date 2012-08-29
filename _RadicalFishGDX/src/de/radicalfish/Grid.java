@@ -1,4 +1,3 @@
-package de.radicalfish;
 /*
  * Copyright (c) 2011, Stefan Lange
  * 
@@ -28,21 +27,19 @@ package de.radicalfish;
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package de.radicalfish;
 
-import java.io.Serializable;
-import de.radicalfish.util.MathUtil;
 
 /**
- * A single grid with a x and y position.
+ * A single grid with a x and y position, can have sub positions (values are float)
  * 
  * @author Stefan Lange
  * @version 1.0.0
  * @since 03.11.2011
  */
-public class Grid implements Serializable {
-	private static final long serialVersionUID = 101L;
+public class Grid {
 	
-	public int x, y;
+	public float x, y;
 	
 	// C'Tors
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -60,7 +57,7 @@ public class Grid implements Serializable {
 	 * @param y
 	 *            the y position
 	 */
-	public Grid(int x, int y) {
+	public Grid(float x, float y) {
 		set(x, y);
 	}
 	
@@ -86,18 +83,6 @@ public class Grid implements Serializable {
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Sets the grid to a new position.
-	 * 
-	 * @param x
-	 *            the new x grid.
-	 * @param y
-	 *            the new y grid
-	 */
-	public void set(int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
-	/**
 	 * Sets the grid to a new position. the position gets rounded.
 	 * 
 	 * @param x
@@ -106,7 +91,7 @@ public class Grid implements Serializable {
 	 *            the new y grid
 	 */
 	public void set(float x, float y) {
-		this.x = MathUtil.round(x);
-		this.y = MathUtil.round(y);
+		this.x = x;
+		this.y = y;
 	}
 }

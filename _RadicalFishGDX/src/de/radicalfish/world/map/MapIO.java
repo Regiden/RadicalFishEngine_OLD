@@ -325,7 +325,7 @@ public class MapIO {
 		
 		entity.setName(readString(dis));
 		entity.setID(dis.readInt());
-		entity.setGridPosition(dis.readInt(), dis.readInt());
+		entity.setGridPosition(dis.readFloat(), dis.readFloat());
 		entity.setPosition(dis.readFloat(), dis.readFloat());
 		entity.setOldPosition(dis.readFloat(), dis.readFloat());
 		entity.setScreenPosition(dis.readFloat(), dis.readFloat());
@@ -552,8 +552,8 @@ public class MapIO {
 		dos.writeBytes(string);
 	}
 	private static void writeGrid(DataOutputStream dos, Grid grid) throws IOException {
-		dos.writeInt(grid.x);
-		dos.writeInt(grid.y);
+		dos.writeFloat(grid.x);
+		dos.writeFloat(grid.y);
 	}
 	private static void writeVector(DataOutputStream dos, Vector2f vector) throws IOException {
 		dos.writeFloat(vector.x);
