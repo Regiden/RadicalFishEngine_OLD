@@ -31,7 +31,7 @@ package de.radicalfish.effects;
 import java.util.HashMap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import de.radicalfish.util.MathUtil;
+import de.radicalfish.util.VectorUtil;
 import de.radicalfish.util.Utils;
 
 /**
@@ -236,8 +236,8 @@ public final class Rumble {
 			if (singleTimer >= singleDuration) {
 				singleTimer = 0;
 				start.set(target);
-				MathUtil.rotate(target, Math.PI / 2 + Math.random() * Math.PI);
-				MathUtil.setLength(target, power);
+				VectorUtil.rotate(target, Math.PI / 2 + Math.random() * Math.PI);
+				VectorUtil.setLength(target, power);
 			}
 		}
 		

@@ -51,7 +51,7 @@ import de.radicalfish.effects.ToneShader;
 import de.radicalfish.graphics.BlendMode;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.tests.utils.RadicalFishTest;
-import de.radicalfish.util.MathUtil;
+import de.radicalfish.util.VectorUtil;
 import de.radicalfish.util.RadicalFishException;
 
 /**
@@ -293,7 +293,7 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 		temp.x = (x - particles[i].px);
 		temp.y = (y - particles[i].py);
 		temp.nor();
-		temp = MathUtil.makePerpendicular(temp);
+		temp = VectorUtil.makePerpendicular(temp);
 		
 		if (gravityRandom) {
 			particles[i].vx += temp.x * delta * 4f * RND.nextFloat();

@@ -28,8 +28,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.context.defaults;
-import java.util.HashMap;
 import com.badlogic.gdx.utils.ObjectIntMap;
+import com.badlogic.gdx.utils.ObjectMap;
 import de.radicalfish.context.GameVariables;
 import de.radicalfish.util.collection.ObjectBooleanMap;
 import de.radicalfish.util.collection.ObjectFloatMap;
@@ -43,13 +43,13 @@ import de.radicalfish.util.collection.ObjectFloatMap;
  */
 public class DefaultGameVariables implements GameVariables {
 	
-	private HashMap<String, String> strings;
+	private ObjectMap<String, String> strings;
 	private ObjectBooleanMap<String> bools;
 	private ObjectIntMap<String> ints;
 	private ObjectFloatMap<String> floats;
 	
 	public DefaultGameVariables() {
-		strings = new HashMap<String, String>();
+		strings = new ObjectMap<String, String>();
 		bools = new ObjectBooleanMap<String>();
 		ints = new ObjectIntMap<String>();
 		floats = new ObjectFloatMap<String>();

@@ -55,7 +55,6 @@ import de.radicalfish.util.RadicalFishException;
  */
 public class Graphics implements Disposable {
 	
-	// this pool should avoid allocating memory for stacking.
 	private Pool<GraphicsTransform> pool = new Pool<GraphicsTransform>() {
 		protected GraphicsTransform newObject() {
 			return new GraphicsTransform();

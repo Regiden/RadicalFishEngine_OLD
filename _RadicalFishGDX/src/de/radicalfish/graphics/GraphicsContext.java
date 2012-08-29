@@ -91,7 +91,6 @@ public class GraphicsContext extends OrthographicCamera {
 	
 	// OVERRIDE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	@Override
 	public void update() {
 		checkScale();
 		projection.setToOrtho(0, viewportWidth / scaleX, viewportHeight / scaleY, 0, Math.abs(near), Math.abs(far));

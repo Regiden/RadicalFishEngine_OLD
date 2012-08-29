@@ -37,6 +37,7 @@ package de.radicalfish.util;
  * @since 26.04.2012
  */
 public final class Arrays2D {
+	
 	private Arrays2D() {}
 	
 	/**
