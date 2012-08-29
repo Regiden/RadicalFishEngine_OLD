@@ -50,11 +50,12 @@ import de.radicalfish.util.RadicalFishException;
  * A wrapper for translating the context, drawing sprites with the {@link SpriteBatch} and drawing primitives.
  * 
  * @author Stefan Lange
- * @version 0.6.2
+ * @version 0.8.0
  * @since 08.08.2012
  */
 public class Graphics implements Disposable {
 	
+	// this pool should avoid allocating memory for stacking.
 	private Pool<GraphicsTransform> pool = new Pool<GraphicsTransform>() {
 		protected GraphicsTransform newObject() {
 			return new GraphicsTransform();
@@ -97,11 +98,11 @@ public class Graphics implements Disposable {
 		blendMode = BlendMode.NORMAL;
 		
 		// create a simple white pixel
-		Pixmap white = new Pixmap(1, 1, Format.RGB888);
+		Pixmap white = new Pixmap(1, 1, Format.RGBA8888);
 		white.setColor(1, 1, 1, 1);
 		white.drawPixel(0, 0);
 		texture = new Texture(white);
-		white.dispose(); // we don't need dat data so flush it down the memory toilet
+		white.dispose(); // we don't need data data so flush it down the memory toilet
 		
 		origin = new Vector3(gContext.position);
 		clearColor = new Color(0, 0, 0, 1);
@@ -165,7 +166,7 @@ public class Graphics implements Disposable {
 	 * Pops the last transform which was pushed.
 	 * 
 	 * @param apply
-	 *            true if the popped transform should be applied directly;
+	 *            true if the popped transform should be applied directly
 	 * 
 	 * @throws RadicalFishException
 	 */
@@ -177,6 +178,7 @@ public class Graphics implements Disposable {
 		origin.set(popTransform.oPosX, popTransform.oPosY, popTransform.oPosZ);
 		setScale(popTransform.scaleX, popTransform.scaleY);
 		gContext.position.set(popTransform.posX, popTransform.posY, popTransform.posZ);
+		pool.free(popTransform);
 		if(apply) {
 			apply();
 		}
