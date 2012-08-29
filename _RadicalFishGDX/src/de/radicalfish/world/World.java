@@ -34,16 +34,17 @@ import org.newdawn.slick.SlickException;
 import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.map.Map;
 
 /**
  * Describes a world the game plays in. A world will give the map the game currently plays on and all EntitySystems that
- * are used by the game. A world will <b>not be automatically updated and rendered!</b>. You must call update and render
- * somewhere on your own and also decided what would be rendered if you make a call. e.g. what should be rendered if you
- * call render and so on.
+ * are used by the game. A world will <b>not be automatically updated and rendered!</b>.
+ * <p>
+ * You must call update and render somewhere on your own and also decided what should be rendered.
  * 
  * @author Stefan Lange
- * @version 0.0.0
+ * @version 0.5.0
  * @since 11.03.2012
  */
 public interface World extends Disposable {
@@ -55,9 +56,9 @@ public interface World extends Disposable {
 	 * 
 	 * @param context
 	 *            the context the game plays in
-	 * @throws SlickException 
+	 * @throws SlickException
 	 */
-	public void init(GameContext context) throws SlickException;
+	public void init(GameContext context) throws RadicalFishException;
 	/**
 	 * Updates the world. No parameter for World here since we call this on the world anyway.
 	 * 
@@ -66,7 +67,7 @@ public interface World extends Disposable {
 	 * @param delta
 	 *            the {@link GameDelta} object holding the delta value
 	 */
-	public void update(GameContext context, GameDelta delta) throws SlickException;
+	public void update(GameContext context, GameDelta delta) throws RadicalFishException;
 	/**
 	 * Renders the world. No parameter for World here since we call this on the world anyway.
 	 * 
@@ -75,8 +76,16 @@ public interface World extends Disposable {
 	 * @param g
 	 *            the graphics context to draw to
 	 */
-	public void render(GameContext context, Graphics g) throws SlickException;
+	public void render(GameContext context, Graphics g) throws RadicalFishException;
 	
+	// SETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Adds a {@link CollisionManager} by name.
+	 * 
+	 * @throws RadicalFishException
+	 */
+	public void addCollisionManager(String name, CollisionManager manager) throws RadicalFishException;
 	/**
 	 * Adds an {@link EntitySystem} to the world.
 	 * 
@@ -84,14 +93,28 @@ public interface World extends Disposable {
 	 *            the name of the system
 	 * @throws SlickException
 	 */
-	public void addEntitySystem(String name, EntitySystem system) throws SlickException;
+	public void addEntitySystem(String name, EntitySystem system) throws RadicalFishException;
 	/**
 	 * Removes and {@link EntitySystem} for the world.
 	 * 
 	 * @param name
 	 *            the name of the system
 	 */
-	public void removeEntitySystem(String name) throws SlickException;
+	public void removeEntitySystem(String name) throws RadicalFishException;
+	
+	/**
+	 * Sets the camera to use for this world.
+	 */
+	public void setCamera(Camera camera);
+	/**
+	 * Sets the current map to use.
+	 */
+	public void setMap(Map map);
+	
+	/**
+	 * Sets the the gravity this world has (mostly pixel per seconds).
+	 */
+	public void setGravity(float gravity);
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -99,7 +122,6 @@ public interface World extends Disposable {
 	 * @return the CollisionManager defined by <code>name</code>.
 	 */
 	public CollisionManager getCollisionManager(String name);
-	
 	/**
 	 * @return a list of all system in use.
 	 */
@@ -108,16 +130,22 @@ public interface World extends Disposable {
 	 * @return the EntitySystem defined by <code>name</code>.
 	 */
 	public EntitySystem getEntitySystem(String name);
+	
 	/**
-	 * @return the camera in use. Should never be null!
+	 * @return the camera in use.
 	 */
 	public Camera getCamera();
 	/**
 	 * @return the map the world currently plays in.
 	 */
 	public Map getMap();
+	
 	/**
-	 * @return the size of a tile. can be ignored if the game does not requires tiles.
+	 * @return the gravity of this world.
+	 */
+	public float getGravity();
+	/**
+	 * @return the size of a tile.
 	 */
 	public int getTileSize();
 }

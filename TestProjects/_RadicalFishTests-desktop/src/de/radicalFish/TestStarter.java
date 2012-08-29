@@ -50,7 +50,6 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
 import com.badlogic.gdx.backends.lwjgl.LwjglPreferences;
 import com.badlogic.gdx.files.FileHandle;
-import de.radicalfish.extern.Bresenham;
 import de.radicalfish.tests.utils.RadicalFishTest;
 import de.radicalfish.tests.utils.RadicalFishTests;
 import de.radicalfish.util.RadicalFishException;
@@ -78,16 +77,6 @@ public class TestStarter extends JFrame {
 		setVisible(true);
 	}
 	public static void main(String[] args) throws Exception {
-		
-		Bresenham b = new Bresenham();
-		
-		b.plot(0, 0, 30, 50);
-		
-		while(b.next()) {
-			System.out.println("Point: (" + b.getX() + ", " + b.getY() + ")");
-		}
-		
-		
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
