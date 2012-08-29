@@ -28,8 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.util;
-import java.util.Random;
-import org.newdawn.slick.util.FastTrig;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -39,101 +37,10 @@ import com.badlogic.gdx.math.Vector2;
  * @version 1.0.0
  * @since 14.07.2011
  */
-public final class MathUtil {
-	
-	private static final Random SEED = new Random();
+public final class VectorUtil {
 	
 	// NO C'Tor
-	private MathUtil() {}
-	
-	// GENERAL METHODS
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * Makes an OpenGl round for a normal matrix, where a <code>+/- x.5f</code> value means the next pixel.
-	 * 
-	 * example:
-	 * 
-	 * <pre>
-	 * round(1.5f) = 2;
-	 * round(-1.5f) = -2;
-	 * </pre>
-	 * 
-	 * @param value
-	 *            the value to round
-	 * @return the rounded value.
-	 */
-	public static int round(float value) {
-		if (value < 0) {
-			return (int) (value - 0.5f);
-		} else {
-			return (int) (value + 0.5f);
-		}
-	}
-	/**
-	 * @param value
-	 *            the value to round
-	 * @return a x.0 if the value floating value if < x.5 otherwise x.5.
-	 */
-	public static float round2Up(float value) {
-		boolean temp = false;
-		if (value < 0) {
-			temp = true;
-		}
-		int full = (int) Math.abs(value);
-		float past = Math.abs(value) - full;
-		
-		if (past < 0.5) {
-			past = full;
-		} else {
-			past = (float) full + 0.5f;
-		}
-		if (temp) {
-			past *= -1;
-		}
-		
-		return past;
-	}
-	/**
-	 * @return a random number between start and end
-	 */
-	public static int random(int start, int end) {
-		return random(start, end, SEED);
-		
-	}
-	/**
-	 * @return a random number between start and end
-	 */
-	public static float random(float start, float end) {
-		return random(start, end, SEED);
-	}
-	/**
-	 * @return a random number between start and end
-	 */
-	public static int random(int start, int end, Random random) {
-		return (int) (SEED.nextDouble() * (end - start + 1)) + start;
-	}
-	/**
-	 * @return a random number between start and end
-	 */
-	public static float random(float start, float end, Random random) {
-		return SEED.nextFloat() * (end - start) + start;
-	}
-	/**
-	 * @return the seed used for random values.
-	 */
-	public static Random getRandom() {
-		return SEED;
-	}
-	/**
-	 * Get the sine of an angle
-	 * 
-	 * @param radians
-	 *            The angle
-	 * @return The sine of the angle
-	 */
-	public static float sinTrig(float radians) {
-		return (float) FastTrig.sin(radians);
-	}
+	private VectorUtil() {}
 	
 	// VECTOR
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
