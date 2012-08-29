@@ -13,7 +13,7 @@ import de.radicalfish.debug.PerformanceListener;
 import de.radicalfish.debug.ToolBox;
 import de.radicalfish.debug.parser.URLInputParser;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.tests.SpriteBatchError;
+import de.radicalfish.tests.other.SpriteBatchError;
 import de.radicalfish.util.RadicalFishException;
 
 public class Main implements DebugCallback {
