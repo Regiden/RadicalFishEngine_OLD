@@ -32,9 +32,9 @@ Of course now you need to update the rumble effect somewhere in your update code
 	rumble.update(delta);
 ```
 After a rumble effect is done it will be disposed (maybe later there will be a version with a pool to avoid memory allocation).
-As you can see you can rumble on both axis or just one axis(BOTH, X_ONLY, Y_ONLY).
-The power of the effect is also controlled by an Enum (WEAKEST, WEAKER, WEAK, MEDIUM, STRONG, STRONGER, STRONGEST, MEGA, ULTRA, EXTREME). 
-The same goes for the speed (SUPERSLOW, SLOWEST, SLOWER, SLOW, NORMAL, FAST, FASTER, FASTEST).
+As you can see you can rumble on both axis or just one axis(**BOTH**, **X_ONLY**, **Y_ONLY**).
+The power of the effect is also controlled by an Enum (**WEAKEST**, **WEAKER**, **WEAK**, **MEDIUM**, **STRONG**, **STRONGER**, **STRONGEST**, **MEGA**, **ULTRA**, **EXTREME**). 
+The same goes for the speed (**SUPERSLOW**, **SLOWEST**, **SLOWER**, **SLOW**, **NORMAL**, **FAST**, **FASTER**, **FASTEST**).
 This is done control the effect. If you want further customization you are free to copy the code of course.
 
 After you update the Rumble object with all it handles, you can get the computed offset with:
