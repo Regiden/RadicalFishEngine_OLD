@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.context;
-import de.radicalfish.extern.Easing;
+import de.radicalfish.context.defaults.DefaultGameDelta;
 import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.World;
 
@@ -44,7 +44,8 @@ public interface GameDelta {
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Updates the game speed changes.
+	 * Updates the game speed changes if needed. Make sure you pass the the normal delta in here. see
+	 * {@link DefaultGameDelta#update(GameContext, World, float)}.
 	 * 
 	 * @param context
 	 *            the context the game runs in
@@ -54,17 +55,6 @@ public interface GameDelta {
 	 *            the unmodified time in seconds since the last frame
 	 */
 	public void update(GameContext context, World world, float delta) throws RadicalFishException;
-	/**
-	 * Changes the speed of the game.
-	 * 
-	 * @param target
-	 *            the target value (range 0 - 1 would be good)
-	 * @param time
-	 *            the time in milliseconds the change should happen
-	 * @param easing
-	 *            the easing to use. if null this method should be equal to <code>setSpeed</code>
-	 */
-	public void slowDown(float target, int time, Easing easing) throws RadicalFishException;
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -73,10 +63,6 @@ public interface GameDelta {
 	 */
 	public float getSpeed();
 	/**
-	 * @return the current target speed. if current == target this should be equal to <code>getSpeed()</code>.
-	 */
-	public float getTargetSpeed();
-	/**
 	 * @return the modified delta value.
 	 */
 	public float getDelta();
@@ -84,15 +70,11 @@ public interface GameDelta {
 	 * @return the unmodified delta value. Useful for objects which should not be influenced by a slowdown.
 	 */
 	public float getNormalDelta();
-	/**
-	 * @return true if the current value is equal to the target.
-	 */
-	public boolean reachedTarget();
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Sets the speed without easing.
+	 * Sets the factor to multiply the delta value with. 
 	 * 
 	 * @param speed
 	 *            the value to set (most likely in the range of 0-1)

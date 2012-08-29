@@ -30,13 +30,11 @@
 package de.radicalfish.context.defaults;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.extern.Easing;
-import de.radicalfish.extern.SimpleFX;
 import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.World;
 
 /**
- * An Implementation of the {@link GameDelta} interface which supports easing to a target speed.
+ * An Implementation of the {@link GameDelta} Interface which supports easing to a target speed.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -44,54 +42,23 @@ import de.radicalfish.world.World;
  */
 public class DefaultGameDelta implements GameDelta {
 	
-	private SimpleFX tween;
-	
+	private float factor = 1.0f;
 	private float normalDelta = 0.016f;
 	private float delta = 0.016f;
 	
-	public DefaultGameDelta() {
-		tween = new SimpleFX(1.0f, 1.0f, 0, Easing.LINEAR);
-	}
+	public DefaultGameDelta() {}
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void update(GameContext context, World world, float delta) throws RadicalFishException {
-		if (!tween.finished()) {
-			tween.update((int)(delta * 1000));
-			if (tween.finished()) {
-				tween.setValue(tween.getEnd());
-			}
-		}
 		normalDelta = delta;
-		this.delta = normalDelta * tween.getValue();
-	}
-	public void slowDown(float target, int time, Easing easing) throws RadicalFishException {
-		if (easing == null) {
-			setSpeed(target);
-		} else {
-			if (target >= 0.0 && target <= 1.0) {
-				if (target == tween.getValue()) {
-					return;
-				}
-				tween.setDuration(time);
-				tween.setEnd(target);
-				tween.setStart(tween.getValue());
-				tween.setEasing(easing);
-				tween.restart();
-			} else {
-				throw new RadicalFishException("target value is out of bounds: " + target + " (must be 0 - 1)");
-			}
-		}
-		
+		this.delta = normalDelta * factor;
 	}
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public float getSpeed() {
-		return tween.getValue();
-	}
-	public float getTargetSpeed() {
-		return tween.getEnd();
+		return factor;
 	}
 	public float getDelta() {
 		return delta;
@@ -99,18 +66,11 @@ public class DefaultGameDelta implements GameDelta {
 	public float getNormalDelta() {
 		return normalDelta;
 	}
-	public boolean reachedTarget() {
-		return tween.finished();
-	}
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void setSpeed(float speed) throws RadicalFishException {
-		if (speed >= 0.0 && speed <= 1.0) {
-			tween.finish();
-		} else {
-			throw new RadicalFishException("speed value is out of bounds: " + speed + " (must be 0 - 1)");
-		}
+		factor = speed;
 	}
 	
 }
