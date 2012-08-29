@@ -13,7 +13,7 @@ import de.radicalfish.debug.PerformanceListener;
 import de.radicalfish.debug.ToolBox;
 import de.radicalfish.debug.parser.URLInputParser;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.tests.ParticleTest;
+import de.radicalfish.tests.SpriteBatchError;
 import de.radicalfish.util.RadicalFishException;
 
 public class Main implements DebugCallback {
@@ -29,13 +29,7 @@ public class Main implements DebugCallback {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public Main() throws RadicalFishException {
 		LwjglApplicationConfiguration config = createConfig();
-		
-		GameContainer app = new GameContainer(config.title, new ParticleTest(), 800, 600, config.useGL20);
-		app.setBatchSize(10000);
-		app.setDebugCallBack(this);
-		app.setSmoothDelta(true);
-		
-		new LwjglApplication(app, config);
+		new LwjglApplication(new SpriteBatchError(config.width, config.height), config);
 	}
 	public static void main(String[] args) throws RadicalFishException {
 		new Main();
@@ -90,8 +84,8 @@ public class Main implements DebugCallback {
 	private LwjglApplicationConfiguration createConfig() {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "RadicalFishTests";
-		cfg.useGL20 = true;
-		cfg.width = 1000;
+		cfg.useGL20 = false;
+		cfg.width = 800;
 		cfg.height = 600;
 		cfg.useCPUSynch = false; // to true on release, else minimizing window will freak out
 		return cfg;
