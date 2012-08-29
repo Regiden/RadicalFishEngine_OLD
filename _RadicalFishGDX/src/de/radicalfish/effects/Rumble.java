@@ -36,18 +36,18 @@ import de.radicalfish.util.Utils;
 
 /**
  * Rumble is a utility class you can use to offset your camera and make it look like the screen shakes. The class is not
- * meant to be sub-classes but if you need further customization, you a free to copy the code :)
+ * meant to be sub-classes but if you need further customization, you a free to do it.
  * 
  * @author Stefan Lange
  * @version 1.0.0
  * @since 25.08.2012
  */
-public final class Rumble {
+public class Rumble {
 	
-	private Vector2 offset;
+	protected Vector2 offset;
 	
-	private Array<RumbleHandle> handles;
-	private HashMap<String, RumbleHandle> namedHandles;
+	protected Array<RumbleHandle> handles;
+	protected HashMap<String, RumbleHandle> namedHandles;
 	
 	/**
 	 * Creates a new {@link Rumble}.
@@ -203,6 +203,7 @@ public final class Rumble {
 		
 		// METHODS
 		// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+		
 		/**
 		 * Updates the handle.
 		 */
@@ -220,27 +221,6 @@ public final class Rumble {
 				stop();
 			}
 		}
-		private void updatePosition(float power, float originPower, float delta) {
-			float t = (float) Math.min(1.0, singleTimer / singleDuration);
-			singleTimer += delta;
-			
-			if (axis == RUMBLE_AXIS.BOTH) {
-				offset.x = lerp(this.target.x, this.start.x, t);
-				offset.y = lerp(this.target.y, this.start.y, t);
-			} else if (axis == RUMBLE_AXIS.X_ONLY) {
-				offset.x = lerp(this.target.x, this.start.x, t);
-			} else if (axis == RUMBLE_AXIS.Y_ONLY) {
-				offset.y = lerp(this.target.y, this.start.y, t);
-			}
-			
-			if (singleTimer >= singleDuration) {
-				singleTimer = 0;
-				start.set(target);
-				VectorUtil.rotate(target, Math.PI / 2 + Math.random() * Math.PI);
-				VectorUtil.setLength(target, power);
-			}
-		}
-		
 		/**
 		 * Stops this handle. this means it will be removed from the list of handles.
 		 */
@@ -256,6 +236,12 @@ public final class Rumble {
 			return totalTime >= totalDuration && !continues;
 		}
 		
+		/**
+		 * Sets the name if any.
+		 */
+		public void setName(String name) {
+			this.name = name;
+		}
 		/**
 		 * Sets the {@link RumbleHandle} values.
 		 */
@@ -278,9 +264,31 @@ public final class Rumble {
 			singleDuration = speed.val;
 		}
 		
+		private void updatePosition(float power, float originPower, float delta) {
+			float t = (float) Math.min(1.0, singleTimer / singleDuration);
+			singleTimer += delta;
+			
+			if (axis == RUMBLE_AXIS.BOTH) {
+				offset.x = lerp(this.target.x, this.start.x, t);
+				offset.y = lerp(this.target.y, this.start.y, t);
+			} else if (axis == RUMBLE_AXIS.X_ONLY) {
+				offset.x = lerp(this.target.x, this.start.x, t);
+			} else if (axis == RUMBLE_AXIS.Y_ONLY) {
+				offset.y = lerp(this.target.y, this.start.y, t);
+			}
+			
+			if (singleTimer >= singleDuration) {
+				singleTimer = 0;
+				start.set(target);
+				VectorUtil.rotate(target, Math.PI / 2 + Math.random() * Math.PI);
+				VectorUtil.setLength(target, power);
+			}
+		}
 		private float lerp(float target, float start, float alpha) {
 			return target * (alpha) + (1 - alpha) * start;
 		}
+		
+		
 		
 	}
 	
@@ -296,7 +304,7 @@ public final class Rumble {
 	 * The power a rumble effect can have.
 	 */
 	public static enum RUMBLE_POWER {
-		WEAKEST(1), WEAKER(2), WEAK(3), MEDIUM(4), STRONG(5), STRONGER(6), STRONGEST(7), MEGA(8), ULTRA(9), EXTREME(10);
+		WEAKEST(1), WEAKER(2), WEAK(3), MEDIUM(4), STRONG(5), STRONGER(6), STRONGEST(7), MEGA(8), ULTRA(10), EXTREME(15);
 		private int val;
 		
 		private RUMBLE_POWER(int val) {
@@ -311,7 +319,7 @@ public final class Rumble {
 	 * rumble takes.
 	 */
 	public static enum RUMBLE_SPEED {
-		SLOWEST(0.5f), SLOWER(0.3f), SLOW(0.2f), NORMAL(0.1f), FAST(0.05f), FASTER(0.025f), FASTEST(0.01f);
+		SUPERSLOW(0.4f), SLOWEST(0.2f), SLOWER(0.1f), SLOW(0.075f), NORMAL(0.050f), FAST(0.040f), FASTER(0.033f), FASTEST(0.020f);
 		private float val;
 		
 		private RUMBLE_SPEED(float val) {
