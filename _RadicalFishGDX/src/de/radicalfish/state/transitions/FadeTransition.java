@@ -53,13 +53,40 @@ public class FadeTransition implements Transition {
 	
 	private Color color;
 	private FADETYPE type;
-	private float fadeTime;
+	private float fadeTime, waitTime, timer;
 	
+	/**
+	 * Creates a new {@link FadeTransition}. Note that this will make a copy of the color object.
+	 * 
+	 * @param color
+	 *            the color to fade in or to
+	 * @param type
+	 *            the type of the fade
+	 * @param fadeTime
+	 *            the time of the fade in seconds
+	 */
 	public FadeTransition(Color color, FADETYPE type, float fadeTime) {
-		this.color = color;
+		this(color, type, fadeTime, 0.0f);
+	}
+	/**
+	 * Creates a new {@link FadeTransition}. Note that this will make a copy of the color object.
+	 * 
+	 * @param color
+	 *            the color to fade in or to
+	 * @param type
+	 *            the type of the fade
+	 * @param fadeTime
+	 *            the time of the fade in seconds
+	 * @param waitTime
+	 *            the time to wait after the basic transition is done (Used to wait some time before going to the next
+	 *            transition)
+	 */
+	public FadeTransition(Color color, FADETYPE type, float fadeTime, float waitTime) {
+		this.color = color.cpy();
 		this.color.a = (type == FADETYPE.FADE_IN ? 1f : 0f);
 		this.type = type;
 		this.fadeTime = fadeTime;
+		this.waitTime = waitTime;
 	}
 	
 	// METHODS
@@ -76,7 +103,12 @@ public class FadeTransition implements Transition {
 				color.a = 1;
 			}
 		}
-		
+		if(done()) {
+			timer += delta;
+			if(timer >= waitTime) {
+				timer = waitTime;
+			}
+		}
 	}
 	public void postRender(GameContainer container, Graphics g) throws RadicalFishException {
 		g.pushTransform();
@@ -88,7 +120,11 @@ public class FadeTransition implements Transition {
 		
 		batch.begin();
 		g.setColor(color);
+		
 		g.fillRect(0, 0, container.getDisplayWidth(), container.getDisplayHeight());
+		if(color.a >= 1.0f) {
+			g.fillRect(0, 0, container.getDisplayWidth(), container.getDisplayHeight());
+		}
 		batch.end();
 		
 		g.setColor(temp);
@@ -97,12 +133,21 @@ public class FadeTransition implements Transition {
 	
 	public boolean isFinished() {
 		if (type == FADETYPE.FADE_IN) {
+			return (color.a <= 0) && (timer >= waitTime);
+		} else {
+			return (color.a >= 1) && (timer >= waitTime);
+		}
+	}
+	
+	// INTERN
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private boolean done() {
+		if (type == FADETYPE.FADE_IN) {
 			return (color.a <= 0);
 		} else {
 			return (color.a >= 1);
 		}
 	}
-	
 	
 	// UNUSED
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

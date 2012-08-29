@@ -167,7 +167,7 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 	 *            the {@link GameDelta} object containing the delta values.
 	 * @throws RadicalFishException
 	 */
-	public abstract void preUpdate(GameContext context, World world, GameDelta delta) throws RadicalFishException;
+	protected void preUpdate(GameContext context, World world, GameDelta delta) throws RadicalFishException {}
 	/**
 	 * Gets called after the update call to the current state.
 	 * 
@@ -179,7 +179,7 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 	 *            the {@link GameDelta} object containing the delta values.
 	 * @throws RadicalFishException
 	 */
-	public abstract void postUpdate(GameContext context, World world, GameDelta delta) throws RadicalFishException;
+	protected void postUpdate(GameContext context, World world, GameDelta delta) throws RadicalFishException {}
 	
 	/**
 	 * Gets called before the render call to the current state.
@@ -191,7 +191,7 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 	 * @param g
 	 *            the wrapper for graphics
 	 */
-	public abstract void preRender(GameContext context, World world, Graphics g) throws RadicalFishException;
+	protected void preRender(GameContext context, World world, Graphics g) throws RadicalFishException {}
 	/**
 	 * Gets called after the render call to the current state.
 	 * 
@@ -202,7 +202,7 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 	 * @param g
 	 *            the wrapper for graphics
 	 */
-	public abstract void postRender(GameContext context, World world, Graphics g) throws RadicalFishException;
+	protected void postRender(GameContext context, World world, Graphics g) throws RadicalFishException {}
 	
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -263,7 +263,9 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 		}
 		
 		if (!pauseUpdate) {
-			currentState.update(context, world, context.getGameDelta());
+			if(currentState != null) {
+				currentState.update(context, world, context.getGameDelta());
+			}
 		}
 		
 		postUpdate(context, world, context.getGameDelta());
@@ -278,7 +280,9 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 		}
 		
 		if (!pauseRender) {
-			currentState.render(context, world, g);
+			if(currentState != null) {
+				currentState.render(context, world, g);
+			}
 		}
 		
 		if (leaveTransition != null) {
@@ -341,10 +345,25 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 		return false;
 	}
 	
+	// OVERRIDE
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public void pause(GameContainer container) throws RadicalFishException {}
+	public void resume(GameContainer container) throws RadicalFishException {}
+	
+	/**
+	 * If you override this, call super.dispose. This will dispose the {@link GameContext} and the {@link World} for you.
+	 */
+	public void dispose() {
+		context.dispose();
+		if(world != null) {
+			world.dispose();
+		}
+	}
+	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	private boolean canForwardInput() {
-		return (leaveTransition != null) && (enterTransition != null) && !isUpdatePaused() && (currentState != null);
+		return (leaveTransition == null) && (enterTransition == null) && !isUpdatePaused() && (currentState != null);
 	}
 	
 	// SETTER
@@ -419,7 +438,7 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 			return container.getWidth();
 		}
 		public int getGameHeight() {
-			return container.getWidth();
+			return container.getHeight();
 		}
 		public int getContainerWidth() {
 			return container.getWidth();
@@ -448,12 +467,14 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 		public FontRenderer getFontRenderer() {
 			return null;
 		}
-		public BitmapFont getDefaultFont() {
+		public BitmapFont getFont() {
 			return container.getFont();
 		}
 		public Resources getResources() {
 			return null;
 		}
+		
+		public void dispose() {}
 		
 	}
 }

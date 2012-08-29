@@ -27,40 +27,48 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.tests.utils;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import de.radicalfish.tests.GameTest;
-import de.radicalfish.tests.ParticleTest;
-import de.radicalfish.tests.StatesTest;
+package de.radicalfish.tests.states;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import de.radicalfish.GameInput;
+import de.radicalfish.context.GameContext;
+import de.radicalfish.context.GameDelta;
+import de.radicalfish.graphics.Graphics;
+import de.radicalfish.state.BasicGameState;
+import de.radicalfish.state.transitions.FadeTransition;
+import de.radicalfish.state.transitions.FadeTransition.FADETYPE;
+import de.radicalfish.util.RadicalFishException;
+import de.radicalfish.world.World;
 
-/**
- * Methods to get all the tests.
- * 
- * @author Stefan Lange
- * @version 1.0.0
- * @since 21.08.2012
- */
-public class RadicalFishTests {
-	public static final Class<?>[] classes = new Class[] { GameTest.class, ParticleTest.class, StatesTest.class };
+public class SimpleState extends BasicGameState {
 	
-	public static String[] getNames() {
-		List<String> names = new ArrayList<String>();
-		for (Class<?> clazz : classes)
-			names.add(clazz.getSimpleName());
-		Collections.sort(names);
-		return names.toArray(new String[names.size()]);
+	private String text;
+	
+	public SimpleState(int ID) {
+		super(ID);
+		text = "This is the state with the ID: " + ID;
 	}
 	
-	public static RadicalFishTest newTest(String testName) {
-		try {
-			Class<?> clazz = Class.forName("de.radicalfish.tests." + testName);
-			return (RadicalFishTest) clazz.newInstance();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			return null;
+	public void init(GameContext context, World world) throws RadicalFishException {
+		
+	}
+	public void update(GameContext context, World world, GameDelta delta) throws RadicalFishException {
+		GameInput input = context.getInput();
+		
+		if (input.isKeyPressed(Keys.ENTER)) {
+			context.getGame().enterState((getID() + 1) % 2, new FadeTransition(Color.BLACK, FADETYPE.FADE_OUT, 2.0f, 1.0f),
+					new FadeTransition(Color.BLACK, FADETYPE.FADE_IN, 2.0f));
 		}
+	}
+	public void render(GameContext context, World world, Graphics g) throws RadicalFishException {
+		BitmapFont font = context.getFont();
+		
+		float width = font.getBounds(text).width;
+		
+		g.getSpriteBatch().begin();
+		font.draw(g.getSpriteBatch(), text, 800 / 2 - width / 2, 600 / 2 - font.getLineHeight() / 2);
+		g.getSpriteBatch().end();
 	}
 	
 }
