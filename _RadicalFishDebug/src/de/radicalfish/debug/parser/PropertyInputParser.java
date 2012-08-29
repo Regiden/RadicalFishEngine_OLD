@@ -170,18 +170,6 @@ public class PropertyInputParser implements InputParser {
 			}
 			
 		}
-		if (name.equals("textspeed")) {
-			int temp = castInteger(value);
-			
-			if (temp < 0) {
-				return makeErrorMessage("could not parse value to integer: " + value);
-			} else {
-				settings.setTextSpeed(temp);
-				return makeSuccessMessage(name, value);
-			}
-			
-		}
-		
 		return "";
 	}
 	
@@ -189,13 +177,6 @@ public class PropertyInputParser implements InputParser {
 		float temp = -1;
 		try {
 			temp = Float.parseFloat(value);
-		} catch (NumberFormatException e) {}
-		return temp;
-	}
-	private int castInteger(String value) {
-		int temp = -1;
-		try {
-			temp = Integer.parseInt(value);
 		} catch (NumberFormatException e) {}
 		return temp;
 	}

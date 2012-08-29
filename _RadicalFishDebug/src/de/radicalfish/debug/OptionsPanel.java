@@ -168,7 +168,6 @@ public class OptionsPanel extends ResizableFrame {
 		
 		musicVolume.setValue((int)(settings.getMusicVolume() * 100));
 		soundVolume.setValue((int)(settings.getSoundVolume() * 100));
-		textSpeed.setValue(settings.getTextSpeed());
 	}
 	private void createPanel() {
 		setTheme("resizableframe-title");
@@ -193,7 +192,6 @@ public class OptionsPanel extends ResizableFrame {
 		addSeparator();
 		addMusicSliders();
 		addSeparator();
-		addTextSpeed();
 		
 		add(layout);
 	}
@@ -204,26 +202,6 @@ public class OptionsPanel extends ResizableFrame {
 		row.add(w);
 	}
 	
-	private void addTextSpeed() {
-		final Label value = new Label("" + settings.getTextSpeed());
-		value.setTheme("fixedlabel");
-		
-		textSpeed = new Slider(Orientation.HORIZONTAL);
-		textSpeed.setMinMaxValue(0, 10);
-		textSpeed.setPageSize(1);
-		textSpeed.addCallback(new Runnable() {
-			public void run() {
-				settings.setTextSpeed(textSpeed.getValue());
-				value.setText("" + textSpeed.getValue());
-			}
-		});
-		textSpeed.setValue(settings.getTextSpeed());
-		textSpeed.setStepSize(1);
-		
-		Row row = layout.addRow(sliderColumns);
-		row.addLabel("Text Speed: ").add(textSpeed, Alignment.FILL).add(value, Alignment.CENTER);
-		
-	}
 	private void addMusicSliders() {
 		final Label value = new Label("" + (int)(settings.getMusicVolume() * 100));
 		value.setTheme("fixedlabel");

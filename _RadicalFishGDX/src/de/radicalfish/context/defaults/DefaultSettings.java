@@ -34,22 +34,24 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.util.ResourceLoader;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.Gdx;
 import de.radicalfish.context.GraphicDetails;
 import de.radicalfish.context.Settings;
 import de.radicalfish.debug.Logger;
+import de.radicalfish.util.ResourceLoader;
 
 /**
  * Simple implementation of {@link Settings} and {@link GraphicDetails}. Loads settings via {@link Properties}.
- * 
- * Note that values a loaded as soon as <code>loadSettings</code> is called. The C'tor just loads the properties without
- * setting any values.
- * 
+ * <p>
+ * Note that values are loaded as soon as <code>loadSettings</code> is called. The C'Tor just loads the properties
+ * without setting any values. Use the C'Tor without a parameter to create an empty settings implementation. all values
+ * will be set to defaults (false for boolean and 1.0 for floats).
+ * <p>
  * Common values will be auto set. For this all common properties have the "pre" value of <code>common</code>.property.
  * The same goes for graphics with the <code>graphics</code>.property.
- * 
+ * <p>
+ * FBO support and Shader support works is GL20 is available.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -57,27 +59,32 @@ import de.radicalfish.debug.Logger;
  */
 public class DefaultSettings implements Settings, GraphicDetails {
 	
+	private static boolean shaderSupported, fboSupported;
+	
 	private Properties properties;
-	private String gamePath, userPath;
+	private String localStore, externalStore;
 	
 	private OperatingSystem system;
 	
-	private int textSpeed;
 	private float musicVolume, soundVolume;
 	private boolean debug, logging, fullscreen, sound3D, vsync, smoothDelta;
 	private boolean postprocessing, animations, effects, shaders;
-	private static boolean shaderSupported, fboSupported;
 	
 	/**
-	 * Creates an empty settings object, with no set properties. the default properties will get default values.
+	 * Creates an empty settings object, with no set properties. the default properties will get default values. Logging
+	 * will be set to true, assuming you use this C'Tor only for testing. A real game should load settings form
+	 * somewhere.
 	 */
 	public DefaultSettings() {
 		loadOS();
 		properties = new Properties();
 		loadDefaults();
+		loadPaths();
+		checkGraphicDetails();
+		logging = true;
 	}
 	/**
-	 * Loads the properties file. the path must be internal.
+	 * Loads the properties file. the path must be internal. calls {@link Settings#loadSettings(String)}.
 	 */
 	public DefaultSettings(String path) throws SlickException {
 		loadSettings(path);
@@ -87,17 +94,16 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void loadSettings(String path) throws SlickException {
 		loadProperties(path);
-		
 		Logger.setLogging(logging);
 	}
 	public void saveSettings(String path) {
 		
 	}
 	public void printSettings() {
-		Logger.none("Operating System: " + system);
-		Logger.none("Game Path:        " + gamePath);
-		Logger.none("User Path:        " + userPath);
-		Logger.none("Properties:       " + properties.size());
+		Logger.none("Operating System:  " + system);
+		Logger.none("Local Storage:     " + localStore);
+		Logger.none("External Strorage: " + externalStore);
+		Logger.none("Properties:        " + properties.size());
 		Logger.none("Common:");
 		Logger.none("\tDebug:        " + debug);
 		Logger.none("\tLogging:      " + logging);
@@ -105,7 +111,6 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		Logger.none("\t3D Sound:     " + sound3D);
 		Logger.none("\tVsync:        " + vsync);
 		Logger.none("\tSmooth Delta: " + smoothDelta);
-		Logger.none("\tText Speed:   " + textSpeed);
 		Logger.none("\tMusic Volume: " + musicVolume);
 		Logger.none("\tSound Volume: " + soundVolume);
 		
@@ -143,12 +148,16 @@ public class DefaultSettings implements Settings, GraphicDetails {
 					system = OperatingSystem.SUN_OS;
 				else if (os.contains("sunos"))
 					system = OperatingSystem.SUN_OS;
+				break;
 			case Applet:
 				system = OperatingSystem.APPLET;
+				break;
 			case iOS:
 				system = OperatingSystem.IOS;
+				break;
 			case WebGL:
 				system = OperatingSystem.WEB;
+				break;
 			default:
 				system = OperatingSystem.OTHER;
 		}
@@ -168,18 +177,22 @@ public class DefaultSettings implements Settings, GraphicDetails {
 			Logger.info("Settings File is empty! Using Defaults!");
 			loadDefaults();
 		}
+		loadPaths();
+		checkGraphicDetails();
 	}
 	private void loadDefaults() {
 		postprocessing = false;
-		animations = true;
+		animations = false;
 		shaders = false;
-		effects = true;
+		effects = false;
 		
-		fullscreen = false;
 		musicVolume = 1.0f;
 		soundVolume = 1.0f;
-		textSpeed = 1;
+		fullscreen = false;
 		sound3D = false;
+		vsync = false;
+		debug = false;
+		logging = false;
 	}
 	private void loadGraphicDetails() {
 		postprocessing = properties.getProperty("graphics.postprocessing", "false").equals("true");
@@ -197,8 +210,14 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		
 		musicVolume = castToFloat(properties.getProperty("common.music", "1.0"), 1.0f);
 		soundVolume = castToFloat(properties.getProperty("common.sound", "1.0"), 1.0f);
-		textSpeed = castToInteger(properties.getProperty("common.textspeed", "1"), 1);
-		
+	}
+	private void loadPaths() {
+		localStore = Gdx.files.getLocalStoragePath();
+		externalStore = Gdx.files.getExternalStoragePath();
+	}
+	private void checkGraphicDetails() {
+		fboSupported = Gdx.graphics.isGL20Available();
+		shaderSupported = Gdx.graphics.isGL20Available();
 	}
 	
 	private void printAllUncommonProperties() {
@@ -241,12 +260,6 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		} catch (NumberFormatException e) {}
 		return defaultValue;
 	}
-	private int castToInteger(String value, int defaultValue) {
-		try {
-			return Integer.valueOf(value);
-		} catch (NumberFormatException e) {}
-		return defaultValue;
-	}
 	
 	private void checkForSimpleSettings(String key) {
 		checkForCommon(key);
@@ -269,8 +282,6 @@ public class DefaultSettings implements Settings, GraphicDetails {
 			setMusicVolume(getProperty(key, 0.0f));
 		} else if (key.equals("common.sound")) {
 			setSoundVolume(getProperty(key, 0.0f));
-		} else if (key.equals("common.textspeed")) {
-			setTextSpeed(getProperty(key, 0));
 		}
 	}
 	private void checkForGraphics(String key) {
@@ -293,7 +304,7 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public boolean isFBOSupported() {
 		return fboSupported;
-	};
+	}
 	public boolean usePostProcessing() {
 		return postprocessing && fboSupported;
 	}
@@ -349,17 +360,18 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public GraphicDetails getGraphicDetails() {
 		return this;
-	};
+	}
 	public OperatingSystem getSystem() {
 		return system;
 	}
 	
-	public String getUserPath() {
-		return userPath;
+	public String getLocalStorage() {
+		return localStore;
 	}
-	public String getGamePath() {
-		return gamePath;
+	public String getExternalStorage() {
+		return externalStore;
 	}
+	
 	public String getProperty(String key, String defaultValue) {
 		return properties.getProperty(key, defaultValue);
 	}
@@ -384,10 +396,6 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	}
 	public float getMusicVolume() {
 		return musicVolume;
-	}
-	
-	public int getTextSpeed() {
-		return textSpeed;
 	}
 	
 	public boolean isDebugging() {
@@ -448,11 +456,6 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	public void setSoundVolume(float value) {
 		soundVolume = value;
 		_setProperty("common.sound", "" + value);
-	}
-	
-	public void setTextSpeed(int value) {
-		textSpeed = value;
-		_setProperty("common.textspeed", "" + value);
 	}
 	
 	public void setProperty(String key, String value) {

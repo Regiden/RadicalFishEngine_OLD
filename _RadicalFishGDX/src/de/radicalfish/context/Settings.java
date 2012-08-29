@@ -30,6 +30,7 @@
 package de.radicalfish.context;
 import java.util.Properties;
 import org.newdawn.slick.SlickException;
+import com.badlogic.gdx.Files;
 
 /**
  * small interfaces for some simple settings.
@@ -69,13 +70,13 @@ public interface Settings {
 	 */
 	public GraphicDetails getGraphicDetails();
 	/**
-	 * @return the user path is any.
+	 * @return the local storage {@link Files#getLocalStoragePath()}.
 	 */
-	public String getUserPath();
+	public String getLocalStorage();
 	/**
-	 * @return the game path is any.
+	 * @return the external storage {@link Files#getExternalStoragePath()}.
 	 */
-	public String getGamePath();
+	public String getExternalStorage();
 	/**
 	 * @return true if the game runs in debug mode.
 	 */
@@ -108,10 +109,6 @@ public interface Settings {
 	 * @return the volume of the music.
 	 */
 	public float getMusicVolume();
-	/**
-	 * @return the speed of the text.
-	 */
-	public int getTextSpeed();
 	/**
 	 * @return the system the games runs on.
 	 */
@@ -179,11 +176,6 @@ public interface Settings {
 	 *            the volume of the music (range should be 0.0 - 1.0)
 	 */
 	public void setMusicVolume(float value);
-	/**
-	 * @param value
-	 *            the speed of the text
-	 */
-	public void setTextSpeed(int value);
 	/**
 	 * Adds or sets a property dynamically to the settings.
 	 * 
