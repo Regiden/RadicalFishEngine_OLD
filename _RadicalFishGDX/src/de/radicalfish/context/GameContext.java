@@ -29,6 +29,7 @@
  */
 package de.radicalfish.context;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.GameContainer;
 import de.radicalfish.GameInput;
 import de.radicalfish.state.StateBasedGame;
@@ -41,7 +42,7 @@ import de.radicalfish.text.FontRenderer;
  * @version 0.5.0
  * @since 11.03.2012
  */
-public interface GameContext {
+public interface GameContext extends Disposable {
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -96,7 +97,7 @@ public interface GameContext {
 	/**
 	 * @return the default font to use.
 	 */
-	public BitmapFont getDefaultFont();
+	public BitmapFont getFont();
 	/**
 	 * @return the resource manager for the game. can be null if not needed.
 	 */
