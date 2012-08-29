@@ -94,7 +94,7 @@ public class Logger {
 	
 	public static void none(String message) {
 		if (logging) {
-			if (Gdx.app == null || Gdx.app.getType() != ApplicationType.Desktop) {
+			if (Gdx.app == null || Gdx.app.getType() == ApplicationType.Desktop) {
 				System.out.println(message);
 			} else {
 				log("", message);

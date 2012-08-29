@@ -20,7 +20,6 @@ Logger.addLogListener(FanzyClass);
 String logText = Logger.getLogAsString(20)
 ```
 
-
 [DebugCallback][3]
 ----------------
 
