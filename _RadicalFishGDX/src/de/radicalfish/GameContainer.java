@@ -346,6 +346,8 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 				if (clipViewport) {
 					Gdx.gl.glDisable(GL10.GL_SCISSOR_TEST);
 				}
+				
+				input.update();
 			} else {
 				Gdx.app.exit();
 			}

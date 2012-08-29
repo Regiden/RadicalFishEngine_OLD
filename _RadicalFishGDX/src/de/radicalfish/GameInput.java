@@ -30,6 +30,7 @@
 package de.radicalfish;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
@@ -97,6 +98,14 @@ public class GameInput implements InputProcessor {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Updates the input. this clears the pressed states for this frame.
+	 */
+	public void update() {
+		Arrays.fill(pressed, false);
+		Arrays.fill(buttons, false);
+	}
+	
 	/**
 	 * Adds an {@link InputProcessor} to the {@link GameInput}.
 	 */
