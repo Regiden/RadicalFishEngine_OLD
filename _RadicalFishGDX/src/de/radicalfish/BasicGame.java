@@ -73,7 +73,7 @@ public abstract class BasicGame implements Game, InputProcessor {
 	public boolean touchDragged(int x, int y, int pointer) {
 		return false;
 	}
-	public boolean touchMoved(int x, int y) {
+	public boolean mouseMoved(int x, int y) {
 		return false;
 	}
 	public boolean scrolled(int amount) {

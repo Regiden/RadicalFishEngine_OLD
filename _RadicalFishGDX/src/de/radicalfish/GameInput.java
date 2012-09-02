@@ -257,7 +257,7 @@ public class GameInput implements InputProcessor {
 	public boolean scrolled(int amount) {
 		return false;
 	}
-	public boolean touchMoved(int x, int y) {
+	public boolean mouseMoved(int screenX, int screenY) {
 		return false;
 	}
 	

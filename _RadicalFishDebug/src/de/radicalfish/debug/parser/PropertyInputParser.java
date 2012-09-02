@@ -29,7 +29,7 @@
  */
 package de.radicalfish.debug.parser;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.regex.Pattern;
 import de.radicalfish.context.Settings;
 import de.radicalfish.debug.DeveloperConsole;
@@ -64,10 +64,10 @@ public class PropertyInputParser implements InputParser {
 		
 		keys = new ArrayList<String>();
 		compList = new ArrayList<String>();
-		Enumeration<Object> e = settings.getProperties().keys();
+		Iterator<String> set = settings.getAll().keySet().iterator();
 		
-		while (e.hasMoreElements()) {
-			keys.add(e.nextElement().toString());
+		while (set.hasNext()) {
+			keys.add(set.next());
 		}
 		
 		// add extras
@@ -84,8 +84,7 @@ public class PropertyInputParser implements InputParser {
 				String temp = checkDefaultSettings(pair[1], pair[2]);
 				
 				if (temp.equals("")) {
-					
-					if (settings.getProperties().containsKey(pair[1])) {
+					if (settings.contains(pair[1])) {
 						settings.setProperty(pair[1], pair[2]);
 						return makeSuccessMessage(pair[1], "" + pair[2]);
 					} else {

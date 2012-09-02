@@ -446,7 +446,7 @@ public class TWLInputForwarder implements InputProcessor {
 		}
 		return gui.handleMouse(x, y, -1, true);
 	}
-	public boolean touchMoved(int x, int y) {
+	public boolean mouseMoved(int x, int y) {
 		return gui.handleMouse(x, y, -1, true);
 	}
 	public boolean scrolled(int amount) {

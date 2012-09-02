@@ -46,7 +46,6 @@ import de.radicalfish.context.defaults.DefaultSettings;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.state.transitions.EmptyTransition;
 import de.radicalfish.state.transitions.Transition;
-import de.radicalfish.text.FontRenderer;
 import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.util.Utils;
 import de.radicalfish.world.World;
@@ -263,7 +262,7 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 		}
 		
 		if (!pauseUpdate) {
-			if(currentState != null) {
+			if (currentState != null) {
 				currentState.update(context, world, context.getGameDelta());
 			}
 		}
@@ -280,7 +279,7 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 		}
 		
 		if (!pauseRender) {
-			if(currentState != null) {
+			if (currentState != null) {
 				currentState.render(context, world, g);
 			}
 		}
@@ -332,9 +331,9 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 		}
 		return false;
 	}
-	public boolean touchMoved(int x, int y) {
+	public boolean mouseMoved(int x, int y) {
 		if (canForwardInput()) {
-			return currentState.touchMoved(x, y);
+			return currentState.mouseMoved(x, y);
 		}
 		return false;
 	}
@@ -351,11 +350,12 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 	public void resume(GameContainer container) throws RadicalFishException {}
 	
 	/**
-	 * If you override this, call super.dispose. This will dispose the {@link GameContext} and the {@link World} for you.
+	 * If you override this, call super.dispose. This will dispose the {@link GameContext} and the {@link World} for
+	 * you.
 	 */
 	public void dispose() {
 		context.dispose();
-		if(world != null) {
+		if (world != null) {
 			world.dispose();
 		}
 	}
@@ -385,6 +385,19 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return the context in which the game runs.
+	 */
+	public GameContext getGameContext() {
+		return context;
+	}
+	/**
+	 * @return the world the game plays in. can be null if you did not provide one!
+	 */
+	public World getWorld() {
+		return world;
+	}
+	
 	/**
 	 * @return the current state.
 	 */
@@ -420,7 +433,7 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 		private Settings settings;
 		private GameVariables varis;
 		
-		public DefaultGameContext(GameContainer container, StateBasedGame game) {
+		public DefaultGameContext(GameContainer container, StateBasedGame game) throws RadicalFishException {
 			this.container = container;
 			this.game = game;
 			
@@ -463,9 +476,6 @@ public abstract class StateBasedGame implements Game, InputProcessor {
 		}
 		public GameVariables getGameVariables() {
 			return varis;
-		}
-		public FontRenderer getFontRenderer() {
-			return null;
 		}
 		public BitmapFont getFont() {
 			return container.getFont();

@@ -30,9 +30,9 @@
 package de.radicalfish.debug;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.PropertySheet;
 import de.matthiasmann.twl.PropertySheet.PropertyEditorFactory;
@@ -49,7 +49,6 @@ import de.matthiasmann.twl.model.SimpleIntegerModel;
 import de.matthiasmann.twl.model.SimpleProperty;
 import de.matthiasmann.twl.model.SimplePropertyList;
 import de.radicalfish.context.Settings;
-
 /**
  * Editor for simple properties. It uses an Implementation of the {@link Settings} Interface. The supported type are
  * <code>boolean</code>, <code>float</code>, <code>int</code>, <code>String</code>.
@@ -178,17 +177,17 @@ public class PropertyEditor extends ResizableFrame {
 			return;
 		}
 		
-		Properties prop = settings.getProperties();
 		List<String> keys = new ArrayList<String>();
-		Enumeration<Object> e = prop.keys();
+		Map<String, ?> map = settings.getAll();
+		Iterator<String> set = map.keySet().iterator();
 		
-		while (e.hasMoreElements()) {
-			keys.add(e.nextElement().toString());
+		while (set.hasNext()) {
+			keys.add(set.next());
 		}
 		
 		Collections.sort(keys, String.CASE_INSENSITIVE_ORDER);
 		for (String name : keys) {
-			addProperty(name, prop.getProperty(name));
+			addProperty(name, map.get(name).toString());
 		}
 		
 	}
