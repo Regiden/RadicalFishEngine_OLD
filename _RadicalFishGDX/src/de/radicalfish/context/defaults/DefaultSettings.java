@@ -30,28 +30,29 @@
 package de.radicalfish.context.defaults;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
-import org.newdawn.slick.SlickException;
+import java.util.Map;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import de.radicalfish.context.GraphicDetails;
 import de.radicalfish.context.Settings;
 import de.radicalfish.debug.Logger;
-import de.radicalfish.util.ResourceLoader;
+import de.radicalfish.util.RadicalFishException;
 
 /**
- * Simple implementation of {@link Settings} and {@link GraphicDetails}. Loads settings via {@link Properties}.
+ * Simple implementation of {@link Settings} and {@link GraphicDetails}. The {@link Preferences} interface from libgdx
+ * will be used here.
  * <p>
  * Note that values are loaded as soon as <code>loadSettings</code> is called. The C'Tor just loads the properties
  * without setting any values. Use the C'Tor without a parameter to create an empty settings implementation. all values
  * will be set to defaults (false for boolean and 1.0 for floats).
  * <p>
- * Common values will be auto set. For this all common properties have the "pre" value of <code>common</code>.property.
- * The same goes for graphics with the <code>graphics</code>.property.
+ * Common values will be auto set. For this all common properties must use the "pre" value of <code>common</code>
+ * .property. The same goes for graphics with the <code>graphics</code>.property.
  * <p>
- * FBO support and Shader support works is GL20 is available.
+ * FBO support and Shader support works if GL20 is available.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -61,7 +62,7 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	
 	private static boolean shaderSupported, fboSupported;
 	
-	private Properties properties;
+	private Preferences prefs;
 	private String localStore, externalStore;
 	
 	private OperatingSystem system;
@@ -71,39 +72,41 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	private boolean postprocessing, animations, effects, shaders;
 	
 	/**
-	 * Creates an empty settings object, with no set properties. the default properties will get default values. Logging
-	 * will be set to true, assuming you use this C'Tor only for testing. A real game should load settings form
-	 * somewhere.
+	 * Creates an empty settings object. the name of the {@link Preferences} used here will be defaults-rfe.xml. Logging
+	 * will be set to true.
+	 * 
+	 * @throws RadicalFishException
 	 */
-	public DefaultSettings() {
-		loadOS();
-		properties = new Properties();
-		loadDefaults();
-		loadPaths();
-		checkGraphicDetails();
-		logging = true;
+	public DefaultSettings() throws RadicalFishException {
+		loadSettings("defaults-rfe.xml");
+		setLogging(true);
 	}
 	/**
-	 * Loads the properties file. the path must be internal. calls {@link Settings#loadSettings(String)}.
+	 * Loads the settings file by the given <code>name</code>.
 	 */
-	public DefaultSettings(String path) throws SlickException {
-		loadSettings(path);
+	public DefaultSettings(String name) throws RadicalFishException {
+		loadSettings(name);
+		Logger.setLogging(logging);
 	}
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void loadSettings(String path) throws SlickException {
-		loadProperties(path);
-		Logger.setLogging(logging);
-	}
-	public void saveSettings(String path) {
+	public void loadSettings(String name) throws RadicalFishException {
+		loadPrefs(name);
 		
+	}
+	public void saveSettings() throws RadicalFishException {
+		try {
+			prefs.flush();
+		} catch (Exception e) {
+			Logger.error(e.getMessage(), e.getCause());
+			throw new RadicalFishException(e.getMessage());
+		}
 	}
 	public void printSettings() {
 		Logger.none("Operating System:  " + system);
 		Logger.none("Local Storage:     " + localStore);
 		Logger.none("External Strorage: " + externalStore);
-		Logger.none("Properties:        " + properties.size());
 		Logger.none("Common:");
 		Logger.none("\tDebug:        " + debug);
 		Logger.none("\tLogging:      " + logging);
@@ -121,14 +124,34 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		Logger.none("\tFBO:            " + postprocessing);
 		Logger.none("\tEffects:        " + effects);
 		Logger.none("\tAnimations:     " + animations);
-		if (properties.size() > 11) {
-			Logger.none("Others:");
-			printAllUncommonProperties();
-		}
+		Logger.none("Others:");
+		printAllUncommonProperties();
+	}
+	
+	public boolean contains(String key) {
+		return prefs.contains(key);
+	}
+	
+	public Map<String, ?> getAll() {
+		return prefs.get();
 	}
 	
 	// PRIVATE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private void loadPrefs(String name) throws RadicalFishException {
+		loadOS();
+		prefs = Gdx.app.getPreferences(name);
+		if (name.equals("defaults-rfe.xml")) {
+			System.out.println("test");
+			loadDefaults();
+		}
+		
+		loadCommonSettings();
+		loadGraphicDetails();
+		loadPaths();
+		checkGraphicDetails();
+	}
+	
 	private void loadOS() {
 		ApplicationType type = Gdx.app.getType();
 		switch (type) {
@@ -162,74 +185,58 @@ public class DefaultSettings implements Settings, GraphicDetails {
 				system = OperatingSystem.OTHER;
 		}
 	}
-	private void loadProperties(String path) throws SlickException {
-		loadOS();
-		properties = new Properties();
-		try {
-			properties.load(ResourceLoader.getResourceAsStream(path));
-		} catch (Exception e) {
-			throw new SlickException("Could load settings file: " + path);
-		}
-		if (!properties.isEmpty()) {
-			loadGraphicDetails();
-			loadCommonSettings();
-		} else {
-			Logger.info("Settings File is empty! Using Defaults!");
-			loadDefaults();
-		}
-		loadPaths();
-		checkGraphicDetails();
-	}
 	private void loadDefaults() {
-		postprocessing = false;
-		animations = false;
-		shaders = false;
-		effects = false;
+		prefs.putBoolean("common.fullscreen", false);
+		prefs.putBoolean("common.debug", false);
+		prefs.putBoolean("common.logging", true);
+		prefs.putBoolean("common.vsync", true);
+		prefs.putBoolean("common.sound3D", false);
+		prefs.putBoolean("common.smoothdelta", false);
 		
-		musicVolume = 1.0f;
-		soundVolume = 1.0f;
-		fullscreen = false;
-		sound3D = false;
-		vsync = false;
-		debug = false;
-		logging = false;
+		prefs.putFloat("common.music", 1.0f);
+		prefs.putFloat("common.sound", 1.0f);
+		
+		prefs.putBoolean("graphics.postprocessing", false);
+		prefs.putBoolean("graphics.animations", false);
+		prefs.putBoolean("graphics.shaders", false);
+		prefs.putBoolean("graphics.effects", false);
+		
 	}
 	private void loadGraphicDetails() {
-		postprocessing = properties.getProperty("graphics.postprocessing", "false").equals("true");
-		animations = properties.getProperty("graphics.animations", "false").equals("true");
-		shaders = properties.getProperty("graphics.shaders", "false").equals("true");
-		effects = properties.getProperty("graphics.effects", "false").equals("true");
+		postprocessing = prefs.getBoolean("graphics.postprocessing", false);
+		animations = prefs.getBoolean("graphics.animations", false);
+		shaders = prefs.getBoolean("graphics.shaders", false);
+		effects = prefs.getBoolean("graphics.effects", false);
 	}
 	private void loadCommonSettings() {
-		fullscreen = properties.getProperty("common.fullscreen", "false").equals("true");
-		debug = properties.getProperty("common.debug", "false").equals("true");
-		logging = properties.getProperty("common.logging", "false").equals("true");
-		logging = properties.getProperty("common.sound3D", "false").equals("true");
-		vsync = properties.getProperty("common.vsync", "false").equals("true");
-		smoothDelta = properties.getProperty("common.smoothdelta", "false").equals("true");
+		fullscreen = prefs.getBoolean("common.fullscreen", false);
+		debug = prefs.getBoolean("common.debug", false);
+		logging = prefs.getBoolean("common.logging", false);
+		sound3D = prefs.getBoolean("common.sound3D", false);
+		vsync = prefs.getBoolean("common.vsync", false);
+		smoothDelta = prefs.getBoolean("common.smoothdelta", false);
 		
-		musicVolume = castToFloat(properties.getProperty("common.music", "1.0"), 1.0f);
-		soundVolume = castToFloat(properties.getProperty("common.sound", "1.0"), 1.0f);
+		musicVolume = prefs.getFloat("common.music", 1.0f);
+		soundVolume = prefs.getFloat("common.sound", 1.0f);
 	}
 	private void loadPaths() {
 		localStore = Gdx.files.getLocalStoragePath();
 		externalStore = Gdx.files.getExternalStoragePath();
 	}
+	
 	private void checkGraphicDetails() {
 		fboSupported = Gdx.graphics.isGL20Available();
 		shaderSupported = Gdx.graphics.isGL20Available();
 	}
 	
 	private void printAllUncommonProperties() {
-		Enumeration<Object> keys = properties.keys();
+		Iterator<String> keys = prefs.get().keySet().iterator();
 		String temp;
 		int longestKey = 0;
 		
 		List<String> list = new ArrayList<String>();
-		
-		while (keys.hasMoreElements()) {
-			temp = keys.nextElement().toString();
-			// hacky way. assuming every special property has at least one "." (dot).
+		while (keys.hasNext()) {
+			temp = keys.next();
 			if (temp.contains(".")) {
 				list.add(temp);
 				if (temp.length() > longestKey) {
@@ -239,12 +246,10 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		}
 		
 		int length = 0;
-		
 		Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
-		
 		for (String s : list) {
 			length = longestKey - s.length();
-			Logger.none("\t" + s + ": " + fillEmptySpace(length) + properties.getProperty(s));
+			Logger.none("\t" + s + ": " + fillEmptySpace(length) + prefs.getString(s));
 		}
 	}
 	private String fillEmptySpace(int length) {
@@ -253,12 +258,6 @@ public class DefaultSettings implements Settings, GraphicDetails {
 			s += " ";
 		}
 		return s;
-	}
-	private float castToFloat(String value, float defaultValue) {
-		try {
-			return Float.valueOf(value);
-		} catch (NumberFormatException e) {}
-		return defaultValue;
 	}
 	
 	private void checkForSimpleSettings(String key) {
@@ -296,10 +295,6 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		}
 	}
 	
-	private void _setProperty(String key, String value) {
-		properties.setProperty(key, value);
-	}
-	
 	// GETTER GRAPHICS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public boolean isFBOSupported() {
@@ -332,28 +327,28 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	public void setUseShader(boolean value) {
 		if (isShaderSupported()) {
 			shaders = value;
-			_setProperty("graphics.shaders", "" + value);
+			prefs.putBoolean("graphics.shaders", value);
 		} else {
 			shaders = false;
-			_setProperty("graphics.shaders", "" + false);
+			prefs.putBoolean("graphics.shaders", false);
 		}
 	};
 	public void setUsePostProcessing(boolean value) {
 		if (isFBOSupported()) {
 			postprocessing = value;
-			_setProperty("graphics.postprocessing", "" + value);
+			prefs.putBoolean("graphics.postprocessing", value);
 		} else {
 			postprocessing = false;
-			_setProperty("graphics.postprocessing", "" + false);
+			prefs.putBoolean("graphics.postprocessing", false);
 		}
 	}
 	public void setUseAnimations(boolean value) {
 		animations = value;
-		_setProperty("graphics.animations", "" + value);
+		prefs.putBoolean("graphics.animations", value);
 	}
 	public void setUseEffects(boolean value) {
 		effects = value;
-		_setProperty("graphics.effects", "" + value);
+		prefs.putBoolean("graphics.effects", value);
 	}
 	
 	// GETTER SETTINGS
@@ -373,22 +368,16 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	}
 	
 	public String getProperty(String key, String defaultValue) {
-		return properties.getProperty(key, defaultValue);
+		return prefs.getString(key, defaultValue);
 	}
 	public boolean getProperty(String key, boolean defaultValue) {
-		return getProperty(key, "" + defaultValue).equals("true");
+		return prefs.getBoolean(key, defaultValue);
 	}
 	public float getProperty(String key, float defaultValue) {
-		try {
-			return Float.valueOf(properties.getProperty(key));
-		} catch (NumberFormatException e) {}
-		return defaultValue;
+		return prefs.getFloat(key, defaultValue);
 	}
 	public int getProperty(String key, int defaultValue) {
-		try {
-			return Integer.valueOf(properties.getProperty(key));
-		} catch (NumberFormatException e) {}
-		return defaultValue;
+		return prefs.getInteger(key, defaultValue);
 	}
 	
 	public float getSoundVolume() {
@@ -417,49 +406,58 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		return smoothDelta;
 	}
 	
-	public Properties getProperties() {
-		return properties;
-	}
-	
 	// SETTER SETTINGS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public void setProperty(String key, String value) {
+		prefs.putString(key, value);
+		checkForSimpleSettings(key);
+	}
+	public void setProperty(String key, boolean value) {
+		prefs.putBoolean(key, value);
+		checkForSimpleSettings(key);
+	}
+	public void setProperty(String key, float value) {
+		prefs.putFloat(key, value);
+		checkForSimpleSettings(key);
+	}
+	public void setProperty(String key, int value) {
+		prefs.putInteger(key, value);
+		checkForSimpleSettings(key);
+	}
+	
 	public void setFullscreen(boolean value) {
 		fullscreen = value;
-		_setProperty("common.fullscreen", "" + value);
+		prefs.putBoolean("common.fullscreen", value);
 	}
 	public void setDebugging(boolean value) {
 		debug = value;
-		_setProperty("common.debug", "" + value);
+		prefs.putBoolean("common.debug", value);
 	}
 	public void setLogging(boolean value) {
 		logging = value;
-		_setProperty("common.logging", "" + value);
+		prefs.putBoolean("common.logging", value);
 		Logger.setLogging(logging);
 	}
 	public void setVSync(boolean value) {
 		vsync = value;
-		_setProperty("common.vsync", "" + value);
+		prefs.putBoolean("common.vsync", value);
 	}
 	public void setSmoothDelta(boolean value) {
 		smoothDelta = value;
-		_setProperty("common.smoothdelta", "" + value);
+		prefs.putBoolean("common.smoothdelta", value);
 	}
 	
 	public void setSound3D(boolean value) {
 		sound3D = value;
-		_setProperty("common.sound3D", "" + value);
+		prefs.putBoolean("common.sound3D", value);
 	}
 	public void setMusicVolume(float value) {
 		musicVolume = value;
-		_setProperty("common.music", "" + value);
+		prefs.putFloat("common.music", value);
 	}
 	public void setSoundVolume(float value) {
 		soundVolume = value;
-		_setProperty("common.sound", "" + value);
+		prefs.putFloat("common.sound", value);
 	}
 	
-	public void setProperty(String key, String value) {
-		properties.setProperty(key, value);
-		checkForSimpleSettings(key);
-	}
 }
