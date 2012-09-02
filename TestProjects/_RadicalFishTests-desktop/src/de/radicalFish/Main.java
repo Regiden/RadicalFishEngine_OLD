@@ -6,30 +6,31 @@ import com.badlogic.gdx.utils.Array;
 import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.FPSCounter;
 import de.matthiasmann.twl.Label;
-import de.radicalfish.debug.Debug;
 import de.radicalfish.debug.DebugCallback;
+import de.radicalfish.debug.DebugPanel;
 import de.radicalfish.debug.DeveloperConsole;
 import de.radicalfish.debug.PerformanceListener;
 import de.radicalfish.debug.ToolBox;
 import de.radicalfish.debug.parser.URLInputParser;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.tests.other.SpriteBatchError;
+import de.radicalfish.tests.StatesTest;
 import de.radicalfish.util.RadicalFishException;
 
 public class Main implements DebugCallback {
 	
 	private Array<PerformanceListener> perListener;
 	
-	private Debug debug;
+	private DebugPanel debug;
 	private ToolBox toolbox;
-	
-	
 	
 	// MAIN and C'TOR
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public Main() throws RadicalFishException {
 		LwjglApplicationConfiguration config = createConfig();
-		new LwjglApplication(new SpriteBatchError(config.width, config.height), config);
+		
+		GameContainer app = new GameContainer(config.title, new StatesTest(), config.width, config.height, config.useGL20);
+		app.setDebugCallBack(this);
+		new LwjglApplication(app, config);
 	}
 	public static void main(String[] args) throws RadicalFishException {
 		new Main();
@@ -38,7 +39,7 @@ public class Main implements DebugCallback {
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void init(GameContainer container) throws RadicalFishException {
-		debug = new Debug(container);
+		debug = new DebugPanel(container);
 		debug.setVisible(false);
 		buildGUI(container);
 	}

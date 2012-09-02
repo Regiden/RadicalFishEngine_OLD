@@ -32,6 +32,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import de.radicalfish.GameContainer;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.context.Settings;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.state.StateBasedGame;
 import de.radicalfish.tests.states.SimpleState;
@@ -52,6 +53,10 @@ public class StatesTest extends StateBasedGame implements RadicalFishTest {
 	public void initStates(GameContext context) throws RadicalFishException {
 		addState(new SimpleState(0));
 		addState(new SimpleState(1));
+		
+		Settings set = context.getSettings();
+		set.saveSettings();
+		
 	}
 	
 	// GAME METHODS

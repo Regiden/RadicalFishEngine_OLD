@@ -94,7 +94,6 @@ public class TestStarter extends JFrame {
 			setLayout(new BorderLayout());
 			
 			final JButton button = new JButton("Run Test");
-			
 			final JList list = new JList(RadicalFishTests.getNames());
 			JScrollPane pane = new JScrollPane(list);
 			
