@@ -1,4 +1,5 @@
-RadicalFishEngine
+![1][]
+
 =================
 
 An 2D engine build on top of libgdx (see https://github.com/libgdx/libgdx). The goal of this engine is to provide and easy to use framework which abstracts
@@ -34,3 +35,5 @@ Current Features
     * for Desktop the engine has a debug mechanism
     * backed by TWL http://twl.l33tlabs.org/
     * a lot of Widgets already done
+
+[1]:  https://raw.github.com/Regiden/RadicalFishEngine/master/TestProjects/_RadicalFishTests-android/assets/data/logo.png
