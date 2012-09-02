@@ -36,7 +36,6 @@ import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.radicalfish.debug.DebugCallback;
@@ -501,50 +500,6 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 			graphics.resize(width, height);
 		}
 	}
-	
-	/**
-	 * Sets one or more icons for the Desktop. This only works for Lwjgl. On Windows you should supply at least one
-	 * 16x16 icon and one 32x32. Linux (and similar platforms) expect one 32x32 icon. Mac OS X should be supplied one
-	 * 128x128 icon
-	 * 
-	 * @see {@link com.badlogic.gdx.Graphics#setIcon(Pixmap[])}.
-	 * @param paths
-	 *            the paths to the icon files. must be internal
-	 * @throws RadicalFishException
-	 */
-	public void setIcons(String[] paths) throws RadicalFishException {
-		Utils.notNull("paths", paths);
-		if (paths.length == 0) {
-			throw new RadicalFishException("must supply at least one path!");
-		}
-		try {
-			Pixmap[] maps = new Pixmap[paths.length];
-			for (int i = 0; i < maps.length; i++) {
-				maps[i] = new Pixmap(Gdx.files.internal(paths[i]));
-			}
-			Gdx.graphics.setIcon(maps);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RadicalFishException(e.getMessage());
-		}
-	}
-	/**
-	 * @see {@link com.badlogic.gdx.Graphics#setIcon(Pixmap[])}.
-	 * @throws RadicalFishException
-	 */
-	public void setIcons(Pixmap[] pixmaps) throws RadicalFishException {
-		Utils.notNull("pixmaps", pixmaps);
-		if (pixmaps.length == 0) {
-			throw new RadicalFishException("must supply at least one path!");
-		}
-		try {
-			Gdx.graphics.setIcon(pixmaps);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RadicalFishException(e.getMessage());
-		}
-	}
-	
 	/**
 	 * Sets the size of the batch. this size will be used when creating the batch. It has not effect setting it while
 	 * the game runs!
@@ -552,7 +507,6 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	public void setBatchSize(int batchSize) {
 		this.batchSize = batchSize;
 	}
-	
 	/**
 	 * True if we want to clear the frame each loop, false otherwise.
 	 */
@@ -773,8 +727,7 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	public boolean scrolled(int amount) {
 		return false;
 	}
-	public boolean touchMoved(int arg0, int arg1) {
+	public boolean mouseMoved(int screenX, int screenY) {
 		return false;
 	}
-	
 }
