@@ -28,9 +28,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.text;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+
+import com.badlogic.gdx.graphics.Color;
+import de.radicalfish.graphics.Graphics;
+import de.radicalfish.util.RadicalFishException;
 
 /**
  * Simple interface for a font renderer and methods it must implement.
@@ -53,7 +54,7 @@ public interface FontRenderer {
 	 * @param y
 	 *            the y position
 	 */
-	public void drawString(String text, float x, float y) throws SlickException;
+	public void drawString(String text, float x, float y) throws RadicalFishException;
 	/**
 	 * Draws the text with the default font.
 	 * 
@@ -66,7 +67,7 @@ public interface FontRenderer {
 	 * @param filter
 	 *            a simple color filter
 	 */
-	public void drawString(String text, float x, float y, Color filter) throws SlickException;
+	public void drawString(String text, float x, float y, Color filter) throws RadicalFishException;
 	/**
 	 * Draws the string with a list of commands to style the text. See {@link StyleCommand} and {@link StyledText}. If
 	 * the current font does not support styled text this should throw an exception or ignored <code>styling</code>.
@@ -82,7 +83,7 @@ public interface FontRenderer {
 	 * @param g
 	 *            the graphic context do draw to
 	 */
-	public void drawString(String text, float x, float y, StyledText styling, Graphics g) throws SlickException;
+	public void drawString(String text, float x, float y, StyledText styling, Graphics g) throws RadicalFishException;
 	/**
 	 * Draws numbers.
 	 * 
@@ -93,7 +94,7 @@ public interface FontRenderer {
 	 * @param y
 	 *            the y position
 	 */
-	public void drawNumber(float x, float y, String numbers) throws SlickException;
+	public void drawNumber(float x, float y, String numbers) throws RadicalFishException;
 	/**
 	 * Draws numbers.
 	 * 
@@ -106,14 +107,14 @@ public interface FontRenderer {
 	 * @param filter
 	 *            the color to apply.
 	 */
-	public void drawNumbers(float x, float y, String numbers, Color filter) throws SlickException;
+	public void drawNumbers(float x, float y, String numbers, Color filter) throws RadicalFishException;
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
 	 * @return the font defined be <code>key</code>. if no value exists this should return null.
 	 */
-	public StyledFont getFont(String key) throws SlickException;
+	public StyledFont getFont(String key) throws RadicalFishException;
 	/**
 	 * @return the current font in use.
 	 */
@@ -129,12 +130,12 @@ public interface FontRenderer {
 	 * @param font
 	 *            the font to add
 	 */
-	public void addFont(String key, StyledFont font) throws SlickException;
+	public void addFont(String key, StyledFont font) throws RadicalFishException;
 	/**
 	 * Sets the font to use for rendering.
 	 * 
 	 * @param key
 	 *            the key for the font
 	 */
-	public void setFont(String key) throws SlickException;
+	public void setFont(String key) throws RadicalFishException;
 }
