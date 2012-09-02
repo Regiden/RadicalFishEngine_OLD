@@ -35,6 +35,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -67,7 +68,7 @@ public class TestStarter extends JFrame {
 	
 	// MAIN AND C'TOR
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public TestStarter() {
+	public TestStarter() throws ClassNotFoundException, IOException {
 		super("libgdx Tests");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setContentPane(new TestList());
@@ -80,7 +81,13 @@ public class TestStarter extends JFrame {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new TestStarter();
+				try {
+					new TestStarter();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}
@@ -90,7 +97,8 @@ public class TestStarter extends JFrame {
 	private class TestList extends JPanel {
 		private static final long serialVersionUID = 1L;
 		
-		public TestList() {
+		
+		public TestList() throws ClassNotFoundException, IOException {
 			setLayout(new BorderLayout());
 			
 			final JButton button = new JButton("Run Test");

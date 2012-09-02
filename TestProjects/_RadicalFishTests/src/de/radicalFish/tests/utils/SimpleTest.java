@@ -27,58 +27,74 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.tests;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import de.radicalfish.GameContainer;
-import de.radicalfish.context.GameContext;
-import de.radicalfish.context.GameDelta;
-import de.radicalfish.graphics.Graphics;
-import de.radicalfish.state.StateBasedGame;
-import de.radicalfish.tests.states.SimpleState;
-import de.radicalfish.tests.utils.RadicalFishTest;
-import de.radicalfish.util.RadicalFishException;
-import de.radicalfish.world.World;
+package de.radicalfish.tests.utils;
 
-public class StatesTest extends StateBasedGame implements RadicalFishTest {
+import com.badlogic.gdx.InputProcessor;
+import de.radicalfish.GameContainer;
+import de.radicalfish.graphics.Graphics;
+import de.radicalfish.util.RadicalFishException;
+
+/**
+ * Simple basic class for tests. already implements all features form {@link RadicalFishTest} with default values. Width
+ * and height will 800 and 600, Gl2 will be used and the container will be started with smooth delta.
+ * 
+ * @author Stefan Lange
+ * @version 1.0.0
+ * @since 02.09.2012
+ */
+public abstract class SimpleTest implements RadicalFishTest, InputProcessor {
 	
-	// INIT
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public GameContext initGameContext(GameContainer container) throws RadicalFishException {
-		return null;
-	}
-	public World initWorld(GameContainer container) throws RadicalFishException {
-		return null;
-	}
-	public void initStates(GameContext context) throws RadicalFishException {
-		addState(new SimpleState(0));
-		addState(new SimpleState(1));
+	private String title;
+	
+	public SimpleTest(String title) {
+		this.title = title;
 	}
 	
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	protected void preUpdate(GameContext context, World world, GameDelta delta) throws RadicalFishException {
+	public abstract void init(GameContainer container) throws RadicalFishException;
+	public abstract void update(GameContainer container, float delta) throws RadicalFishException;
+	public abstract void render(GameContainer container, Graphics g) throws RadicalFishException;
+	
+	public void pause(GameContainer container) throws RadicalFishException {}
+	public void resume(GameContainer container) throws RadicalFishException {}
+	
+	public void dispose() {}
+	
+	// INPUT
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public boolean keyDown(int keycode) {
+		return false;
 	}
-	protected void postUpdate(GameContext context, World world, GameDelta delta) throws RadicalFishException {
+	public boolean keyUp(int keycode) {
+		return false;
 	}
-	protected void preRender(GameContext context, World world, Graphics g) throws RadicalFishException {
-		
+	public boolean keyTyped(char character) {
+		return false;
 	}
-	protected void postRender(GameContext context, World world, Graphics g) throws RadicalFishException {
-		BitmapFont font = context.getFont();
-		
-		g.getSpriteBatch().begin();
-		font.draw(g.getSpriteBatch(), "Press Enter to move forward to the next state", 5, 35);
-		g.getSpriteBatch().end();
+	public boolean touchDown(int x, int y, int pointer, int button) {
+		return false;
+	}
+	public boolean touchUp(int x, int y, int pointer, int button) {
+		return false;
+	}
+	public boolean touchDragged(int x, int y, int pointer) {
+		return false;
+	}
+	public boolean mouseMoved(int x, int y) {
+		return false;
+	}
+	public boolean scrolled(int amount) {
+		return false;
 	}
 	
-	
-	// OVERRIDE FOR TESTS
+	// TESTS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void initContainer(GameContainer container) {
 		container.setSmoothDelta(true);
 	}
 	public String getTitle() {
-		return "States Test";
+		return title;
 	}
 	public int getWidth() {
 		return 800;
@@ -89,5 +105,4 @@ public class StatesTest extends StateBasedGame implements RadicalFishTest {
 	public boolean needsGL20() {
 		return true;
 	}
-	
 }

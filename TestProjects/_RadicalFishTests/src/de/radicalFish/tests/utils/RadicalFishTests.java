@@ -28,39 +28,99 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.tests.utils;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
-import de.radicalfish.tests.GameTest;
-import de.radicalfish.tests.ParticleTest;
-import de.radicalfish.tests.StatesTest;
 
 /**
- * Methods to get all the tests.
+ * Methods to get all the tests. The class will go trough all packages starting from the de.radicalfish.test package. It
+ * loads all classes which implement the {@link RadicalFishTest} interface or are a sub class of {@link SimpleTest}.
  * 
  * @author Stefan Lange
  * @version 1.0.0
  * @since 21.08.2012
  */
 public class RadicalFishTests {
-	public static final Class<?>[] classes = new Class[] { GameTest.class, ParticleTest.class, StatesTest.class };
+	private static Class<?>[] classes;
 	
-	public static String[] getNames() {
+	public static String[] getNames() throws ClassNotFoundException, IOException {
+		if (classes == null) {
+			classes = loadClasses("de.radicalfish.tests");
+		}
+		
 		List<String> names = new ArrayList<String>();
 		for (Class<?> clazz : classes)
 			names.add(clazz.getSimpleName());
 		Collections.sort(names);
 		return names.toArray(new String[names.size()]);
 	}
-	
 	public static RadicalFishTest newTest(String testName) {
 		try {
-			Class<?> clazz = Class.forName("de.radicalfish.tests." + testName);
-			return (RadicalFishTest) clazz.newInstance();
+			if (classes == null) {
+				classes = loadClasses("de.radicalfish.tests");
+			}
+			for (Class<?> temp : classes) {
+				if(temp.getSimpleName().equals(testName)) {
+					return (RadicalFishTest) temp.newInstance();
+				}
+			}
+			return null;
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			return null;
 		}
 	}
 	
+	private static Class<?>[] loadClasses(String packageName) throws ClassNotFoundException, IOException {
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		assert classLoader != null;
+		String path = packageName.replace('.', '/');
+		Enumeration<URL> resources = classLoader.getResources(path);
+		List<File> dirs = new ArrayList<File>();
+		while (resources.hasMoreElements()) {
+			URL resource = resources.nextElement();
+			dirs.add(new File(resource.getFile()));
+		}
+		ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
+		for (File directory : dirs) {
+			classes.addAll(findClasses(directory, packageName));
+		}
+		return classes.toArray(new Class[classes.size()]);
+	}
+	private static List<Class<?>> findClasses(File directory, String packageName) throws ClassNotFoundException {
+		List<Class<?>> classes = new ArrayList<Class<?>>();
+		if (!directory.exists()) {
+			return classes;
+		}
+		File[] files = directory.listFiles();
+		Class<?> clazz = null;
+		for (File file : files) {
+			if (file.isDirectory()) {
+				assert !file.getName().contains(".");
+				classes.addAll(findClasses(file, packageName + "." + file.getName()));
+			} else if (file.getName().endsWith(".class")) {
+				clazz = Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6));
+				if (isValid(clazz, clazz.getInterfaces())) {
+					classes.add(clazz);
+				}
+				
+			}
+		}
+		return classes;
+	}
+	private static boolean isValid(Class<?> base, Class<?>[] classes) {
+		if (base.getSuperclass() != null && base.getSuperclass().equals(SimpleTest.class)) {
+			return true;
+		}
+		for (Class<?> c : base.getInterfaces()) {
+			if (c.equals(RadicalFishTest.class)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
