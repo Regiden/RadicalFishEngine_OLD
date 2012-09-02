@@ -53,6 +53,8 @@ public enum BlendMode {
 	SUB(GL10.GL_SRC_ALPHA, GL10.GL_ONE),
 	/** Draws blending the new image into the old one by a factor of it's color. */
 	SCREEN(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_COLOR),
+	/** Draws blending the new image into the old one by a factor of it's color including the alpha of the source */
+	SCREEN_ALPHA(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_COLOR),
 	/** Draws by multiplying the source and destination color. */
 	MULTIPLY(GL10.GL_ONE_MINUS_SRC_COLOR, GL10.GL_ONE_MINUS_SRC_ALPHA),
 	/** Draws to using an alpha map, this disables blending and leaves only the alpha channel open for drawing. */

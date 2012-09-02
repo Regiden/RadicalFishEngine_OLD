@@ -142,7 +142,6 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		loadOS();
 		prefs = Gdx.app.getPreferences(name);
 		if (name.equals("defaults-rfe.xml")) {
-			System.out.println("test");
 			loadDefaults();
 		}
 		
@@ -237,7 +236,7 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		List<String> list = new ArrayList<String>();
 		while (keys.hasNext()) {
 			temp = keys.next();
-			if (temp.contains(".")) {
+			if (temp.contains(".") && !temp.startsWith("common") && !temp.startsWith("graphics")) {
 				list.add(temp);
 				if (temp.length() > longestKey) {
 					longestKey = temp.length();

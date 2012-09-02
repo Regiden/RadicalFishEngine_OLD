@@ -45,7 +45,7 @@ public interface ContextGame extends Game {
 	/**
 	 * @return the {@link GameContext} the {@link ContextGame} uses.
 	 */
-	public GameContext getContext();
+	public GameContext getGameContext();
 	
 	/**
 	 * @return the {@link World} the game runs in.

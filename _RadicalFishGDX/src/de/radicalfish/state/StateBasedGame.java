@@ -32,7 +32,7 @@ import java.util.Iterator;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.IntMap;
-import de.radicalfish.Game;
+import de.radicalfish.ContextGame;
 import de.radicalfish.GameContainer;
 import de.radicalfish.GameInput;
 import de.radicalfish.context.GameContext;
@@ -62,7 +62,7 @@ import de.radicalfish.world.World;
  * @version 1.0.0
  * @since 17.08.2012
  */
-public abstract class StateBasedGame implements Game, InputProcessor {
+public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	
 	private IntMap<GameState> states = new IntMap<GameState>();
 	
