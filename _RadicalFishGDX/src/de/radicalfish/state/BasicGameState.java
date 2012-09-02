@@ -87,7 +87,7 @@ public abstract class BasicGameState implements GameState {
 	public boolean touchUp(int x, int y, int pointer, int button) {
 		return false;
 	}
-	public boolean touchMoved(int x, int y) {
+	public boolean mouseMoved(int x, int y) {
 		return false;
 	}
 	public boolean touchDragged(int x, int y, int pointer) {

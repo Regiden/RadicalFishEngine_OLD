@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.world.map;
-import org.newdawn.slick.Image;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.radicalfish.context.Resources;
 
 /**
@@ -60,17 +60,13 @@ public interface TileSet {
 	public String getResourceLocation();
 	
 	/**
-	 * Utility for Slick2D, use {@link TileSet#draw(int)} or {@link TileSet#draw(int, int)} for direct drawing.
-	 * 
 	 * @return the sub image of the TileSet at <code>index</code>.
 	 */
-	public Image getTileAt(int index);
+	public TextureRegion getTileAt(int index);
 	/**
-	 * Utility for Slick2D, use {@link TileSet#draw(int)} or {@link TileSet#draw(int, int)} for direct drawing.
-	 * 
 	 * @return the sub image of the TileSet at <code>x</code>, <code>y</code>.
 	 */
-	public Image getTileAt(int x, int y);
+	public TextureRegion getTileAt(int x, int y);
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

@@ -28,13 +28,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish;
-
-import java.awt.Rectangle;
 import java.io.Serializable;
 
 /**
  * A rectangle used for collision. This is a special implementation meant to be used for 2D games with a scale of two.
- * If you not using such a basic scale please use the {@link Rectangle} provided by Slick2D.
  * 
  * @author Stefan Lange
  * @version 1.0.0

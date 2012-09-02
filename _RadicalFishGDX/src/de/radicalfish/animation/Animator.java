@@ -30,8 +30,8 @@
 package de.radicalfish.animation;
 import java.io.Serializable;
 import java.util.HashMap;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import de.radicalfish.util.RadicalFishException;
 
 /**
  * Handles animations for entities.
@@ -68,87 +68,16 @@ public class Animator implements Serializable {
 			current.update(delta);
 		}
 	}
-	/**
-	 * Loads a set of animations from an XML file. the format of the XML must be as followed:
-	 * 
-	 * <pre>
-	 * {@code <animations>}
-	 * 	<b>// here you define the several animations you need with different parameters.
-	 * 	// The sheet name can be one of the resource class. if no sheet was found then it will be loaded
-	 * 	// but not added to the resource class. in this case the parameter "tw" and "th" must be set which sets 
-	 * 	// the tiles width and height of the sheet. those parameters must be int.
-	 * 	// Times should be an array which contains the time for each frame in milliseconds, separated by commas with no space.
-	 * 	// For frames goes the same. Each value in the array (must be int) serves as index for the sheet.
-	 * 	// 0 means the upper left, the first tile. 1 the right next to 0 and so on</b>
-	 * 
-	 * 	{@code <animation name="name" sheet="sheet name" times="100,100 frames="0,1" loops="true" pingpong="false" loopat=""/>
-	 * 	<animation name="name" sheet="long path" tw="16" th="16" times="100,100,200,100 frames="0,1,3,4"/>
-	 * ...
-	 * </animations>
-	 * }
-	 * </pre>
-	 * 
-	 * Some parameters can be missing. Those are: loops, pingpong and loopat.
-	 * <p>
-	 * 
-	 * @param context
-	 *            the context the game runs in.
-	 * @param pathXML
-	 *            the path to the XML, can be in the jar or outside of it
-	 * @param required
-	 *            the list of required names used for animations. if some are missing an exception will be raised. can
-	 *            be null to ignore it
-	 * @throws SlickException
-	 */
-//	public void loadAnimations(GameContext context, String pathXML, List<String> required) throws SlickException {
-//		try {
-//			if (context.getSettings().getProperty("debug.xmlanimations", false)) {
-//				time = System.nanoTime();
-//			}
-//			XMLParser xpp = new XMLParser(ResourceLoader.getResource(pathXML));
-//			
-//			xpp.ignoreOtherAttributes();
-//			xpp.nextTag();
-//			xpp.require(XmlPullParser.START_TAG, null, "animations");
-//			
-//			xpp.ignoreOtherAttributes();
-//			xpp.nextTag();
-//			while (!xpp.isEndTag()) {
-//				processElement(context.getResources(), xpp);
-//				xpp.ignoreOtherAttributes();
-//				xpp.nextTag();
-//			}
-//			
-//			// check if all animations that are required are there.
-//			if(required != null) {
-//				for(String name : required) {
-//					if(!animations.containsKey(name)) {
-//						throw new SlickException("required name not found int the animations list: " + name);
-//					}
-//				}
-//			}
-//			
-//			if (context.getSettings().getProperty("debug.xml_animations", false)) {
-//				Log.info("Animations were loaded from xml: " + pathXML);
-//				Logger.none("\t=> Time:   " + Utils.formatTime((System.nanoTime() - time)));
-//				Logger.none("\t=> Loaded: " + animations.size());
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			throw new SlickException(e.getMessage(), e.getCause());
-//		}
-//	}
 	
 	/**
 	 * Adds a new Animation to the Animator.
 	 * 
 	 * @param key
 	 *            the name for the animation.
-	 * @throws SlickException
 	 */
-	public void addAnimation(String key, Animation animation) throws SlickException {
+	public void addAnimation(String key, Animation animation) throws RadicalFishException {
 		if (animations.containsKey(key)) {
-			throw new SlickException("key already exits: " + key);
+			throw new RadicalFishException("key already exits: " + key);
 		}
 		if (animation == null) {
 			throw new NullPointerException("animation is null");
@@ -159,9 +88,9 @@ public class Animator implements Serializable {
 			current = animation;
 		}
 	}
-	public void removeAnimation(String key) throws SlickException {
+	public void removeAnimation(String key) throws RadicalFishException {
 		if (!animations.containsKey(key)) {
-			throw new SlickException("no such animation found: " + key);
+			throw new RadicalFishException("no such animation found: " + key);
 		}
 		
 	}
@@ -170,9 +99,8 @@ public class Animator implements Serializable {
 	 * Plays a specific animation mapped by the animator. It will make the animation mapped by <code>key</code> the
 	 * current animation. This calls start on the animation which means it restarts the animation.
 	 * 
-	 * @throws SlickException
 	 */
-	public void playAnimation(String key) throws SlickException {
+	public void playAnimation(String key) throws RadicalFishException {
 		playAnimation(key, true);
 	}
 	/**
@@ -181,11 +109,10 @@ public class Animator implements Serializable {
 	 * 
 	 * @param restart
 	 *            false if you want the new animation to be resumed instead of restarted
-	 * @throws SlickException
 	 */
-	public void playAnimation(String key, boolean restart) throws SlickException {
+	public void playAnimation(String key, boolean restart) throws RadicalFishException {
 		if (!animations.containsKey(key)) {
-			throw new SlickException("no such animation found: " + key);
+			throw new RadicalFishException("no such animation found: " + key);
 		}
 		
 		if (current != null) {
@@ -199,64 +126,6 @@ public class Animator implements Serializable {
 		}
 	}
 	
-	// INTERN
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-//	private void processElement(Resources resources, XMLParser xpp) throws Exception {
-//		xpp.require(XmlPullParser.START_TAG, null, "animation");
-//		
-//		String name = xpp.getAttributeNotNull("name");
-//		
-//		// try to load sprite sheet
-//		String temp = xpp.getAttributeValue(null, "sheet");
-//		SpriteSheet sheet = resources.getSpriteSheet(temp);
-//		if (sheet == null) {
-//			// load it from scratch
-//			int tw = xpp.parseIntFromAttribute("tw");
-//			int th = xpp.parseIntFromAttribute("th");
-//			sheet = new SpriteSheet(temp, tw, th);
-//		}
-//		
-//		int[] times = TextUtil.parseIntArray(xpp.getAttributeNotNull("times"));
-//		int[] frames = TextUtil.parseIntArray(xpp.getAttributeNotNull("frames"));
-//		
-//		Utils.notNull("times array", times);
-//		Utils.notNull("frames array", frames);
-//		if (times.length != frames.length) {
-//			throw new SlickException("Mismatch in times and frames length! times: " + times.length + " | frames: " + frames.length);
-//		}
-//		
-//		// ignorable params
-//		boolean loops = xpp.parseBoolFromAttribute("loops", false);
-//		boolean pingPong = xpp.parseBoolFromAttribute("pingpong", false);
-//		int loopAt = xpp.parseIntFromAttribute("loopat", -1);
-//		
-//		Animation animation = new Animation();
-//		animation.setLoops(loops);
-//		animation.setPingPong(pingPong);
-//		if (loopAt >= 0) {
-//			animation.setLoopsAt(true, loopAt);
-//		}
-//		for (int i = 0, x = 0, y = 0; i < frames.length; i++) {
-//			// tileX = id % currentSheet.tilesAcross;
-//			// tileY = id / currentSheet.tilesDown;
-//			if (frames[i] < 0) {
-//				throw new SlickException("sheet index can not be below 0: " + frames[i]);
-//			}
-//			if (times[i] < 0) {
-//				throw new SlickException("time can not be below 0: " + times[i]);
-//			}
-//			
-//			x = frames[i] % sheet.getHorizontalCount();
-//			y = frames[i] / sheet.getVerticalCount();
-//			
-//			animation.addFrame(sheet.getSubImage(x, y), times[i]);
-//		}
-//		addAnimation(name, animation);
-//		
-//		// jump the end tag of animation!
-//		xpp.nextTag();
-//		xpp.require(XmlPullParser.END_TAG, null, "animation");
-//	}
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -275,7 +144,7 @@ public class Animator implements Serializable {
 	/**
 	 * @return the current image (frame) in the current animation if any.
 	 */
-	public Image getCurrentImage() {
+	public Sprite getCurrentImage() {
 		if(current != null) {
 			return current.getCurrentSprite();
 		}

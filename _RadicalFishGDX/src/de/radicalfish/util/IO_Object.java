@@ -4,8 +4,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.util.ResourceLoader;
 
 /**
  * This class serializes-, saves-, de-serializes- and loads objects. Not sure if this works well under Android, iOS, Web
@@ -24,9 +22,8 @@ public class IO_Object {
 	 *            the object which shall be saved
 	 * @param path
 	 *            where to save the object.
-	 * @throws SlickException
 	 */
-	public static void save(Object o, String path) throws SlickException {
+	public static void save(Object o, String path) throws RadicalFishException {
 		ObjectOutputStream outStream;
 		try {
 			outStream = new ObjectOutputStream(new FileOutputStream(path));
@@ -34,7 +31,7 @@ public class IO_Object {
 			outStream.flush();
 			outStream.close();
 		} catch (Exception ex) {
-			throw new SlickException(ex.getMessage(), ex.getCause());
+			throw new RadicalFishException(ex.getMessage(), ex.getCause());
 		}
 	}
 	/**
@@ -43,9 +40,8 @@ public class IO_Object {
 	 * @param path
 	 *            Where to find the object.
 	 * @return A object representing some class without cast.
-	 * @throws SlickException
 	 */
-	public static Object load(String path) throws SlickException {
+	public static Object load(String path) throws RadicalFishException {
 		Object o = new Object();
 		ObjectInputStream inStream;
 		try {
@@ -54,7 +50,7 @@ public class IO_Object {
 			inStream.close();
 			return o;
 		} catch (Exception ex) {
-			throw new SlickException(ex.getMessage(), ex.getCause());
+			throw new RadicalFishException(ex.getMessage(), ex.getCause());
 		}
 	}
 	/**
@@ -63,9 +59,8 @@ public class IO_Object {
 	 * @param path
 	 *            where to find the object.
 	 * @return A object representing some class without cast.
-	 * @throws SlickException
 	 */
-	public static Object loadFromClassPath(String path) throws SlickException {
+	public static Object loadFromClassPath(String path) throws RadicalFishException {
 		Object o = new Object();
 		InputStream in = IO_Object.class.getClassLoader().getResourceAsStream(path);
 		ObjectInputStream inStream;
@@ -75,7 +70,7 @@ public class IO_Object {
 			inStream.close();
 			return o;
 		} catch (Exception ex) {
-			throw new SlickException(ex.getMessage(), ex.getCause());
+			throw new RadicalFishException(ex.getMessage(), ex.getCause());
 		}
 		
 	}
@@ -85,9 +80,8 @@ public class IO_Object {
 	 * @param path
 	 *            the path to the object.
 	 * @return A object representing a class automatically casted
-	 * @throws SlickException
 	 */
-	public static <T> T loadAs(String path) throws SlickException {
+	public static <T> T loadAs(String path) throws RadicalFishException {
 		return loadAs(ResourceLoader.getResourceAsStream(path));
 	}
 	/**
@@ -96,10 +90,9 @@ public class IO_Object {
 	 * @param stream
 	 *            the stream from which we should load
 	 * @return A object representing a class automatically casted
-	 * @throws SlickException
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T loadAs(InputStream stream) throws SlickException {
+	public static <T> T loadAs(InputStream stream) throws RadicalFishException {
 		T object = null;
 		ObjectInputStream inStream;
 		try {
@@ -108,7 +101,7 @@ public class IO_Object {
 			inStream.close();
 			return object;
 		} catch (Exception ex) {
-			throw new SlickException(ex.getMessage(), ex.getCause());
+			throw new RadicalFishException(ex.getMessage(), ex.getCause());
 		}
 	}
 	

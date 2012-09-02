@@ -29,8 +29,8 @@
  */
 package de.radicalfish.animation;
 import java.util.ArrayList;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import de.radicalfish.util.RadicalFishException;
 
 /**
  * An animation class with extends features compared to {@link Animation}.
@@ -149,7 +149,7 @@ public class Animation {
 	 * @param duration
 	 *            the duration of this frame.
 	 */
-	public void addFrame(Image image, int duration) {
+	public void addFrame(Sprite image, int duration) {
 		if (frames.isEmpty())
 			nextStep = duration;
 		
@@ -170,7 +170,7 @@ public class Animation {
 	/**
 	 * @return the current sprite
 	 */
-	public Image getCurrentSprite() {
+	public Sprite getCurrentSprite() {
 		return frames.get(currentFrame).sprite;
 	}
 	/**
@@ -200,9 +200,8 @@ public class Animation {
 	 *            true if we want to loop at a certain point
 	 * @param loopPos
 	 *            the loop point to set.
-	 * @throws SlickException
 	 */
-	public void setLoopsAt(boolean loopAt, int loopPos) throws SlickException {
+	public void setLoopsAt(boolean loopAt, int loopPos) throws RadicalFishException {
 		if (loopPos < frames.size()) {
 			if (loopAt) {
 				loopsAt = true;
@@ -212,18 +211,17 @@ public class Animation {
 				loopPos = -1;
 			}
 		} else
-			throw new SlickException("loopPos ist greater then frames number: " + loopPos);
+			throw new RadicalFishException("loopPos ist greater then frames number: " + loopPos);
 	}
 	/**
 	 * @param currentFrame
 	 *            the current frame
-	 * @throws SlickException
 	 */
-	public void setCurrentFrame(int currentFrame) throws SlickException {
+	public void setCurrentFrame(int currentFrame) throws RadicalFishException {
 		if (currentFrame < frames.size())
 			this.currentFrame = currentFrame;
 		else
-			throw new SlickException("currentFrames ist greater then frames number: " + currentFrame);
+			throw new RadicalFishException("currentFrames ist greater then frames number: " + currentFrame);
 	}
 	/**
 	 * @param loops
@@ -244,11 +242,11 @@ public class Animation {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	private class Frame {
 		/** The image of this frame. */
-		public Image sprite;
+		public Sprite sprite;
 		/** The duration of this frame. */
 		public int duration;
 		
-		public Frame(Image image, int duration) {
+		public Frame(Sprite image, int duration) {
 			this.sprite = image;
 			this.duration = duration;
 		}

@@ -40,12 +40,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.util.ResourceLoader;
+import com.badlogic.gdx.math.Vector2;
 import de.radicalfish.Grid;
 import de.radicalfish.animation.Animator;
 import de.radicalfish.debug.Logger;
+import de.radicalfish.util.RadicalFishException;
+import de.radicalfish.util.ResourceLoader;
 import de.radicalfish.util.Utils;
 import de.radicalfish.world.Entity;
 
@@ -102,16 +102,15 @@ public class MapIO {
 	 *            the map to save, cannot be null.
 	 * @param zip
 	 *            true if we want to use GZIP to compress the content of the file.
-	 * @throws SlickException
 	 */
-	public static void writeMap(String path, Map map, boolean zip) throws SlickException {
+	public static void writeMap(String path, Map map, boolean zip) throws RadicalFishException {
 		Utils.notNull("path", path);
 		Utils.notNull("map", map);
 		
 		try {
 			writeMap(new FileOutputStream(path), map, zip);
 		} catch (Exception e) {
-			throw new SlickException(e.getMessage(), e.getCause());
+			throw new RadicalFishException(e.getMessage(), e.getCause());
 		}
 	}
 	/**
@@ -123,9 +122,8 @@ public class MapIO {
 	 *            the map to save, cannot be null
 	 * @param zip
 	 *            true if we want to use GZIP to compress the content of the file.
-	 * @throws SlickException
 	 */
-	public static void writeMap(OutputStream stream, Map map, boolean zip) throws SlickException {
+	public static void writeMap(OutputStream stream, Map map, boolean zip) throws RadicalFishException {
 		Utils.notNull("stream", stream);
 		Utils.notNull("map", map);
 		
@@ -159,16 +157,16 @@ public class MapIO {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new SlickException(e.getMessage());
+			throw new RadicalFishException(e.getMessage());
 		}
 	}
 	
-	public static <T extends Map> T readMap(String path, boolean unzip, MapIOReader callback) throws SlickException {
+	public static <T extends Map> T readMap(String path, boolean unzip, MapIOReader callback) throws RadicalFishException {
 		Utils.notNull("path", path);
 		return readMap(ResourceLoader.getResourceAsStream(path), unzip, callback);
 	}
 	@SuppressWarnings("unchecked")
-	public static <T extends Map> T readMap(InputStream stream, boolean unzip, MapIOReader callback) throws SlickException {
+	public static <T extends Map> T readMap(InputStream stream, boolean unzip, MapIOReader callback) throws RadicalFishException {
 		Utils.notNull("stream", stream);
 		Utils.notNull("callback", callback);
 		
@@ -199,7 +197,7 @@ public class MapIO {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new SlickException(e.getMessage(), e.getCause());
+			throw new RadicalFishException(e.getMessage(), e.getCause());
 		}
 	}
 	
@@ -555,7 +553,7 @@ public class MapIO {
 		dos.writeFloat(grid.x);
 		dos.writeFloat(grid.y);
 	}
-	private static void writeVector(DataOutputStream dos, Vector2f vector) throws IOException {
+	private static void writeVector(DataOutputStream dos, Vector2 vector) throws IOException {
 		dos.writeFloat(vector.x);
 		dos.writeFloat(vector.y);
 	}

@@ -29,10 +29,10 @@
  */
 package de.radicalfish.world.map;
 import java.util.List;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.graphics.Graphics;
+import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.EntitySystem;
 import de.radicalfish.world.World;
 
@@ -56,7 +56,7 @@ public interface Map {
 	 * @param world
 	 *            the world the game plays in
 	 */
-	public void init(GameContext context, World world);
+	public void init(GameContext context, World world) throws RadicalFishException;
 	/**
 	 * Updates the map. This should also update all entities on the map.
 	 * 
@@ -67,7 +67,7 @@ public interface Map {
 	 * @param delta
 	 *            the {@link GameDelta} object holding the delta value
 	 */
-	public void update(GameContext context, World world, GameDelta delta) throws SlickException;
+	public void update(GameContext context, World world, GameDelta delta) throws RadicalFishException;
 	/**
 	 * Renders the map. This should also render all the entities. You can use the {@link EntitySystem}s to store
 	 * entities.
@@ -78,9 +78,8 @@ public interface Map {
 	 *            the world the game plays in
 	 * @param g
 	 *            the graphics context to draw to
-	 * @throws SlickException
 	 */
-	public void render(GameContext context, World world, Graphics g) throws SlickException;
+	public void render(GameContext context, World world, Graphics g) throws RadicalFishException;
 	/**
 	 * Unloads all content. This can be used to flush {@link EntitySystem}s from entities and make one map object for
 	 * all maps to save memory.

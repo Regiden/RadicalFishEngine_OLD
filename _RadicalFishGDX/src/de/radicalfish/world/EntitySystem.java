@@ -29,9 +29,9 @@
  */
 package de.radicalfish.world;
 import java.util.List;
-import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.util.RadicalFishException;
 
 /**
  * System to manage entities in the world
@@ -51,9 +51,8 @@ public interface EntitySystem {
 	 *            the context the games runs in
 	 * @param world
 	 *            the world the game plays in
-	 * @throws SlickException
 	 */
-	public void init(GameContext context, World world) throws SlickException;
+	public void init(GameContext context, World world) throws RadicalFishException;
 	/**
 	 * Updates all entities in this system.
 	 * 
@@ -64,7 +63,7 @@ public interface EntitySystem {
 	 * @param delta
 	 *            the {@link GameDelta} object holding the delta value
 	 */
-	public void update(GameContext context, World world, GameDelta delta) throws SlickException;
+	public void update(GameContext context, World world, GameDelta delta) throws RadicalFishException;
 	
 	// ADDING & CHECKING
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -78,35 +77,33 @@ public interface EntitySystem {
 	 * 
 	 * @return the entity added.
 	 */
-	public Entity addEntity(Entity e, GameContext context, World world) throws SlickException;
+	public Entity addEntity(Entity e, GameContext context, World world) throws RadicalFishException;
 	/**
 	 * Removes an Entity from the world by it's object.
 	 * 
 	 * @return the entity removed.
-	 * @throws SlickException
 	 */
-	public Entity removeEntity(Entity e) throws SlickException;
+	public Entity removeEntity(Entity e) throws RadicalFishException;
 	/**
 	 * Removes an Entity from the world by it's id (If ID's are used).
 	 * 
 	 * @return the entity removed.
 	 */
-	public Entity removeEntity(int id) throws SlickException;
+	public Entity removeEntity(int id) throws RadicalFishException;
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
 	 * @return all entities contained in this system.
 	 */
-	public List<Entity> getEntities() throws SlickException;
+	public List<Entity> getEntities() throws RadicalFishException;
 	/**
 	 * @return an Entity by ID. ID's should be unique, meaning that only one entity should have a specific id.
-	 * @throws SlickException
 	 */
-	public Entity getEntity(int id) throws SlickException;
+	public Entity getEntity(int id) throws RadicalFishException;
 	/**
 	 * @return the entity by it's name. Can be more then one hence a lsit will be returned.
 	 */
-	public List<Entity> getEntities(String name) throws SlickException;
+	public List<Entity> getEntities(String name) throws RadicalFishException;
 	
 }

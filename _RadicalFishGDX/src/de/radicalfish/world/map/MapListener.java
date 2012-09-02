@@ -28,9 +28,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.world.map;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
 import de.radicalfish.context.GameContext;
+import de.radicalfish.graphics.Graphics;
+import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.World;
 
 /**
@@ -53,7 +53,6 @@ public interface MapListener {
 	 *            the Graphics context to draw to
 	 * @param layer
 	 *            the layer which was drawn
-	 * @throws SlickException
 	 */
-	public void onLayerComplete(GameContext context, World world, Graphics g, int layer) throws SlickException;
+	public void onLayerComplete(GameContext context, World world, Graphics g, int layer) throws RadicalFishException;
 }

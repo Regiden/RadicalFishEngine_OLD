@@ -30,16 +30,15 @@
 package de.radicalfish.world;
 import java.io.Serializable;
 import java.util.Locale;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Vector2f;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import de.radicalfish.Grid;
 import de.radicalfish.Rectangle2D;
 import de.radicalfish.animation.Animator;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.graphics.Graphics;
+import de.radicalfish.util.RadicalFishException;
 
 /**
  * An abstract basic Entity holding some default fields. Most field are public to ensure fast usage in sub-classes an
@@ -60,19 +59,18 @@ public abstract class Entity implements Serializable {
 	
 	private static final long serialVersionUID = 100L;
 	
-	private static Image MISSINGSPRITE;
 	private static final Rectangle2D BOUNDS = new Rectangle2D();
 	
 	private Color flashColor = new Color(1f, 1f, 1f, 1f);
 	
-	protected Vector2f position = new Vector2f();
-	protected Vector2f velocity = new Vector2f();
-	protected Vector2f acceleration = new Vector2f(1, 1);
-	protected Vector2f old = new Vector2f();
-	protected Vector2f screen = new Vector2f();
-	protected Vector2f offset = new Vector2f(); // starting from the top-left of the collision box
-	protected Vector2f offscreen = new Vector2f(200, 200);
-	protected Vector2f direction = new Vector2f(0, 0);
+	protected Vector2 position = new Vector2();
+	protected Vector2 velocity = new Vector2();
+	protected Vector2 acceleration = new Vector2(1, 1);
+	protected Vector2 old = new Vector2();
+	protected Vector2 screen = new Vector2();
+	protected Vector2 offset = new Vector2(); // starting from the top-left of the collision box
+	protected Vector2 offscreen = new Vector2(200, 200);
+	protected Vector2 direction = new Vector2(0, 0);
 	
 	protected Rectangle2D collisionbox = new Rectangle2D();
 	protected Grid grid = new Grid();
@@ -101,34 +99,6 @@ public abstract class Entity implements Serializable {
 		}
 	}
 	
-	// STATIC METHODS
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * @return a default image with the size of 32x32. Useful for testing.
-	 * @throws SlickException
-	 */
-	public static Image getMissingImage() throws SlickException {
-		if (MISSINGSPRITE == null) {
-			MISSINGSPRITE = new Image("de/radicalfish/assets/missingsprite.png", false, Image.FILTER_NEAREST);
-		}
-		return MISSINGSPRITE;
-	}
-	/**
-	 * Checks if the given <code>image</code> is null and returns the missing image constant if so.
-	 * 
-	 * @param image
-	 *            the Image to test
-	 * @return the missing sprite if <code>image</code> is null, otherwise <code>image</code>.
-	 * @throws SlickException
-	 */
-	public static Image checkMissing(Image image) throws SlickException {
-		if (image == null) {
-			return getMissingImage();
-		} else {
-			return image;
-		}
-	}
-	
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
@@ -140,7 +110,7 @@ public abstract class Entity implements Serializable {
 	 * @param world
 	 *            the world in which the entity lives
 	 */
-	public abstract void init(GameContext context, World world) throws SlickException;
+	public abstract void init(GameContext context, World world) throws RadicalFishException;
 	/**
 	 * Updates the entity. this should be called instead of <code>doUpdate</code>. <code>doUpdate</code> gets called by
 	 * this method after automatically checking if the entity needs an update. If this is not wanted this method can be
@@ -155,7 +125,7 @@ public abstract class Entity implements Serializable {
 	 * @param delta
 	 *            the {@link GameDelta} object containing the delta values.
 	 */
-	public final void update(GameContext context, World world, GameDelta delta) throws SlickException {
+	public final void update(GameContext context, World world, GameDelta delta) throws RadicalFishException {
 		if (isActive()) {
 			old.set(position);
 			
@@ -176,9 +146,9 @@ public abstract class Entity implements Serializable {
 	 * @param world
 	 *            the world in which the entity lives
 	 * @param delta
-	 *            tthe {@link GameDelta} object containing the delta values.
+	 *            the {@link GameDelta} object containing the delta values.
 	 */
-	public abstract void doUpdate(GameContext context, World world, GameDelta delta) throws SlickException;
+	public abstract void doUpdate(GameContext context, World world, GameDelta delta) throws RadicalFishException;
 	/**
 	 * Renders the entity. this should be called instead of <code>doRender</code>. <code>doRender</code> gets called by
 	 * this method after automatically checking if the entity needs to render. If this is not wanted this method can be
@@ -191,7 +161,7 @@ public abstract class Entity implements Serializable {
 	 * @param g
 	 *            the graphics context to draw to
 	 */
-	public final void render(GameContext context, World world, Graphics g) throws SlickException {
+	public final void render(GameContext context, World world, Graphics g) throws RadicalFishException {
 		if (isVisible()) {
 			// check if we out of screen, if so no need to render
 			if (!isOffscreen(context)) {
@@ -209,7 +179,7 @@ public abstract class Entity implements Serializable {
 	 * @param g
 	 *            the graphics context to draw to
 	 */
-	public abstract void doRender(GameContext context, World world, Graphics g) throws SlickException;
+	public abstract void doRender(GameContext context, World world, Graphics g) throws RadicalFishException;
 	/**
 	 * Can be called by an entity system if an entity is removed from the system and should release all it resources.
 	 * 
@@ -218,7 +188,7 @@ public abstract class Entity implements Serializable {
 	 * @param world
 	 *            the world in which the entity lives
 	 */
-	protected void destroy(GameContext context, World world) throws SlickException {}
+	protected void destroy(GameContext context, World world) throws RadicalFishException {}
 	
 	// COLLISION
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -256,24 +226,12 @@ public abstract class Entity implements Serializable {
 	// OVERRIDE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Renders the current sprite as flash effect. Note that isFlash must return true in order for this method to work.
-	 * 
-	 * @param image
-	 *            the sprite to render
-	 */
-	public void renderFlash(Image image, float x, float y) {
-		if (isFlash()) {
-			flashColor.a = flashValue;
-			image.drawFlash(x, x, image.getWidth(), image.getHeight(), flashColor);
-		}
-	}
-	/**
 	 * Calculates the screen position based on the camera position
 	 * 
 	 * @param cameraPosition
 	 *            the current position of the camera in the world.
 	 */
-	public void calculateScreenPosition(Vector2f cameraPosition) {
+	public void calculateScreenPosition(Vector2 cameraPosition) {
 		screen.x = (int) (position.x - cameraPosition.x);
 		screen.y = (int) (position.y - cameraPosition.y);
 	}
@@ -322,7 +280,7 @@ public abstract class Entity implements Serializable {
 	public void calculateDirection() {
 		direction.x = position.x - old.x;
 		direction.y = position.y - old.y;
-		direction.normalise();
+		direction.nor();
 	}
 	/**
 	 * Checks if the entity is off screen based on the off screen test ranges.
@@ -392,35 +350,43 @@ public abstract class Entity implements Serializable {
 	
 	// GETTER POSITIONS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return the flash color. the alpha value will be set to the current flash (which is 0 if not flashed).
+	 */
+	public Color getFlashColor() {
+		flashColor.a = flashValue;
+		return flashColor;
+	}
+	
 	public Grid getGridPosition() {
 		return grid;
 	}
-	public Vector2f getPosition() {
+	public Vector2 getPosition() {
 		return position;
 	}
-	public Vector2f getVelocity() {
+	public Vector2 getVelocity() {
 		return velocity;
 	}
-	public Vector2f getAcceleration() {
+	public Vector2 getAcceleration() {
 		return acceleration;
 	}
 	/**
 	 * @return the offset used for collision.
 	 */
-	public Vector2f getOffset() {
+	public Vector2 getOffset() {
 		return offset;
 	}
-	public Vector2f getScreenPosition() {
+	public Vector2 getScreenPosition() {
 		return screen;
 	}
 	/**
 	 * @return the position set before <code>doUpdate</code> is called. Used for collision to detect the direction of
 	 *         collision.
 	 */
-	public Vector2f getOldPosition() {
+	public Vector2 getOldPosition() {
 		return old;
 	}
-	public Vector2f getOffscreenRanges() {
+	public Vector2 getOffscreenRanges() {
 		return offscreen;
 	}
 	/**
@@ -432,7 +398,7 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * if x or y in the direction vector is 0, no movement happened.
 	 */
-	public Vector2f getDirection() {
+	public Vector2 getDirection() {
 		return direction;
 	}
 	

@@ -33,7 +33,6 @@ import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.GameContainer;
 import de.radicalfish.GameInput;
 import de.radicalfish.state.StateBasedGame;
-import de.radicalfish.text.FontRenderer;
 
 /**
  * Context of a game, e.g. settings method for getting game container and stuff.
@@ -90,10 +89,6 @@ public interface GameContext extends Disposable {
 	 * @return the variables shared across the game.
 	 */
 	public GameVariables getGameVariables();
-	/**
-	 * @return the font renderer to use.
-	 */
-	public FontRenderer getFontRenderer();
 	/**
 	 * @return the default font to use.
 	 */

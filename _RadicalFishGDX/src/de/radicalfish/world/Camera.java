@@ -28,10 +28,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.world;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.geom.Vector2f;
+import com.badlogic.gdx.math.Vector2;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.graphics.Graphics;
 
 /**
  * A Interface for cameras with some default methods a camera should have.
@@ -83,7 +83,7 @@ public interface Camera {
 	/**
 	 * @return the current position of the camera.
 	 */
-	public Vector2f getCurrent();
+	public Vector2 getCurrent();
 	/**
 	 * @return the current x position of the camera.
 	 */
@@ -95,7 +95,7 @@ public interface Camera {
 	/**
 	 * @return the target position of the camera.
 	 */
-	public Vector2f getTarget();
+	public Vector2 getTarget();
 	/**
 	 * @return the target x position of the camera.
 	 */

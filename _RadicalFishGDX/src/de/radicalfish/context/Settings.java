@@ -28,9 +28,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.context;
-import java.util.Properties;
-import org.newdawn.slick.SlickException;
+import java.util.Map;
 import com.badlogic.gdx.Files;
+import de.radicalfish.util.RadicalFishException;
 
 /**
  * small interfaces for some simple settings.
@@ -53,18 +53,28 @@ public interface Settings {
 	/**
 	 * Loads the settings.
 	 */
-	public void loadSettings(String path) throws SlickException;
+	public void loadSettings(String name) throws RadicalFishException;
 	/**
 	 * Saves the settings.
 	 */
-	public void saveSettings(String path) throws SlickException;
+	public void saveSettings() throws RadicalFishException;
 	/**
 	 * Can be used to print out the settings.
 	 */
 	public void printSettings();
 	
+	/**
+	 * @return true if the given <code>key</code> is in the settings file.
+	 */
+	public boolean contains(String key);
+	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return a map containing all mapped keys/fields.
+	 */
+	public Map<String, ?> getAll();
+	
 	/**
 	 * @return the objects which holds the details about the game's graphics.
 	 */
@@ -129,10 +139,6 @@ public interface Settings {
 	 * @return the property associated with the key casted to float or the default if the key does not exist.
 	 */
 	public float getProperty(String key, float defaultValue);
-	/**
-	 * @return all properties set in settings.
-	 */
-	public Properties getProperties();
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -185,4 +191,31 @@ public interface Settings {
 	 *            the value of the property
 	 */
 	public void setProperty(String key, String value);
+	/**
+	 * Adds or sets a property dynamically to the settings.
+	 * 
+	 * @param key
+	 *            the key of the property
+	 * @param value
+	 *            the value of the property
+	 */
+	public void setProperty(String key, float value);
+	/**
+	 * Adds or sets a property dynamically to the settings.
+	 * 
+	 * @param key
+	 *            the key of the property
+	 * @param value
+	 *            the value of the property
+	 */
+	public void setProperty(String key, int value);
+	/**
+	 * Adds or sets a property dynamically to the settings.
+	 * 
+	 * @param key
+	 *            the key of the property
+	 * @param value
+	 *            the value of the property
+	 */
+	public void setProperty(String key, boolean value);
 }

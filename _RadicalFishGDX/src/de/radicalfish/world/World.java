@@ -29,11 +29,10 @@
  */
 package de.radicalfish.world;
 import java.util.List;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
 import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.graphics.Graphics;
 import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.map.Map;
 
@@ -56,7 +55,6 @@ public interface World extends Disposable {
 	 * 
 	 * @param context
 	 *            the context the game plays in
-	 * @throws SlickException
 	 */
 	public void init(GameContext context) throws RadicalFishException;
 	/**
@@ -91,7 +89,6 @@ public interface World extends Disposable {
 	 * 
 	 * @param name
 	 *            the name of the system
-	 * @throws SlickException
 	 */
 	public void addEntitySystem(String name, EntitySystem system) throws RadicalFishException;
 	/**

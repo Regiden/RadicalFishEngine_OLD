@@ -114,7 +114,7 @@ public class Logger {
 			appendLog(LOGTYPE.ERROR, message);
 		}
 	}
-	public static void error(String message, Exception e) {
+	public static void error(String message, Throwable e) {
 		if (logging) {
 			logError("ERROR", message, e);
 			appendLog(LOGTYPE.ERROR, message);
@@ -152,7 +152,7 @@ public class Logger {
 			System.err.println(tag + message);
 		}
 	}
-	public static void logError(String tag, String message, Exception e) {
+	public static void logError(String tag, String message, Throwable e) {
 		if (Gdx.app != null) {
 			Gdx.app.error(tag, message, e);
 		} else {
