@@ -178,7 +178,7 @@ public class Graphics implements Disposable {
 		setScale(popTransform.scaleX, popTransform.scaleY);
 		gContext.position.set(popTransform.posX, popTransform.posY, popTransform.posZ);
 		pool.free(popTransform);
-		if(apply) {
+		if (apply) {
 			apply();
 		}
 	}
@@ -268,10 +268,13 @@ public class Graphics implements Disposable {
 	 * You must <code>apply</code> all transformation for this too! also the {@link SpriteBatch} must be started!
 	 */
 	public void drawRect(float x, float y, float width, float height) {
+		Color temp = spriteBatch.getColor();
+		spriteBatch.setColor(shapeColor);
 		spriteBatch.draw(texture, x, y, width, linewidth);
-		spriteBatch.draw(texture, x + width, y, linewidth, height);
+		spriteBatch.draw(texture, x + width, y, linewidth, height + 1);
 		spriteBatch.draw(texture, x + width, y + height, -width, linewidth);
 		spriteBatch.draw(texture, x, y + height, linewidth, -height);
+		spriteBatch.setColor(temp);
 	}
 	/**
 	 * Draws a line from <code>x, y</code> to <code>x2, y2</code>. This function uses a texture loaded from the engine.
@@ -292,7 +295,10 @@ public class Graphics implements Disposable {
 		vertexLine(10, x2 + dx - dy, y2 + dy + dx, color, 1, 1);
 		vertexLine(15, x2 + dx + dy, y2 + dy - dx, color, 0, 1);
 		
+		Color temp = spriteBatch.getColor();
+		spriteBatch.setColor(shapeColor);
 		spriteBatch.draw(texture, lineVerts, 0, lineVerts.length);
+		spriteBatch.setColor(temp);
 	}
 	
 	// INTERN
