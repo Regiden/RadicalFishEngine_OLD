@@ -76,40 +76,54 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		STRECH, FIX
 	}
 	
+	/** The default font we use. */
+	public BitmapFont defaultFont;
 	protected SpriteBatch batch;
-	protected BitmapFont defaultFont;
 	protected DisplayMode currentDisplayMode;
 	
+	/** The {@link Game} handled by the {@link GameContainer}. */
+	public final Game game;
 	protected DebugCallback debugCallBack;
 	protected GameInput input;
 	protected Graphics graphics;
-	protected Game game;
 	protected VIEWTYPE viewtype = VIEWTYPE.FIX;
 	
 	protected String title = "";
 	protected String fontPath = "", fontDefPath = "";
 	
-	protected float delta;
-	protected int fps;
+	/** last measured delta (updated per frame). */
+	public float delta;
+	/** last measured fps (updated per frame). */
+	public int fps;
 	
-	private int width = 800;
-	private int height = 600;
+	/** the width of the game container. */
+	public int width = 800;
+	/** the height of the game container. */
+	public int height = 600;
+	
 	private int batchSize = 2000;
+	
+	/** True if we want to use smooth delta (default is false). */
+	public boolean smoothDelta = false;
+	/** True if the transform should be reseted every frame (default is true). */
+	public boolean resetTransform = true;
+	/** True if the viewport (the size of the container) should be clipped or not (default is true). */
+	public boolean clipViewport = true;
+	/** True if we should shod the debug. */
+	public boolean showDebug = true;
+	/**
+	 * True if we should clear the screen every frame with the clear color set in
+	 * {@link Graphics#setClearColor(float, float, float)}. (default is true.
+	 */
+	public boolean clearScreen = true;
 	
 	private boolean created = false;
 	private boolean running = true;
-	private boolean clearScreen = true;
-	private boolean showDebug = true;
-	private boolean resetTransform = true;
 	private boolean canSetFullScreen = true;
 	private boolean fullscreen = false;
-	private boolean smoothDelta = false;
 	private boolean paused = false;
-	private boolean clipViewport = true;
 	private boolean vsync = true;
 	private boolean useGL20 = false;
-	
-	long lastFrameTime;
 	
 	/**
 	 * Creates a new GameContainer with the given parameters. fullscreen will be set to false.
@@ -565,6 +579,16 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return a {@link Preferences} with teh given <code>name</code>. returns null if the app was not yet created.
+	 */
+	public Preferences getPrefereces(String name) {
+		if (Gdx.app != null) {
+			return Gdx.app.getPreferences(name);
+		}
+		return null;
+	}
+	
 	/**
 	 * @return the system the application runs on, can be Android, Desktop, Applet, WebGL or iOS.
 	 */

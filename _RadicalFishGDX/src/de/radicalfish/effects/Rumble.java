@@ -44,7 +44,7 @@ import de.radicalfish.util.Utils;
  */
 public class Rumble {
 	
-	protected Vector2 offset;
+	public Vector2 offset;
 	
 	protected Array<RumbleHandle> handles;
 	protected HashMap<String, RumbleHandle> namedHandles;

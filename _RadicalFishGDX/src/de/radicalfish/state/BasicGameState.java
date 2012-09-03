@@ -44,7 +44,7 @@ import de.radicalfish.world.World;
  */
 public abstract class BasicGameState implements GameState {
 	
-	private int ID;
+	public int ID;
 	
 	/**
 	 * Creates a new {@link BasicGameState} for easy to use states.

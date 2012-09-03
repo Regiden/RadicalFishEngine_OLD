@@ -61,7 +61,8 @@ public class Graphics implements Disposable {
 		}
 	};
 	
-	private SpriteBatch spriteBatch;
+	/** The {@link SpriteBatch} used as default.*/
+	public SpriteBatch spriteBatch;
 	private Color clearColor, shapeColor;
 	private Texture texture;
 	private Vector3 origin;

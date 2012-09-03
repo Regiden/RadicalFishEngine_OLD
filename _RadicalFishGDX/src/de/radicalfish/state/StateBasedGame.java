@@ -66,13 +66,22 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	
 	private IntMap<GameState> states = new IntMap<GameState>();
 	
-	private GameContainer container;
-	private GameState currentState, nextState, previousState;
-	private Transition enterTransition, leaveTransition;
-	private GameContext context;
-	private World world;
+	/** the current {@link GameState} we update/render. */
+	public GameState currentState;
+	/** The {@link GameContext} we use. */
+	public GameContext context;
+	/** The {@link World} we use. */
+	public World world;
 	
-	private boolean pauseUpdate = false, pauseRender = false;
+	private GameContainer container;
+	private GameState nextState, previousState;
+	private Transition enterTransition, leaveTransition;
+	
+	/** True if we want to pause updating the current game state. */
+	public boolean pauseUpdate = false;
+	/** True if we want to pause rendering the current game state. */
+	public boolean pauseRender = false;
+	
 	private boolean usingDefaultContext = false;
 	
 	// METHODS

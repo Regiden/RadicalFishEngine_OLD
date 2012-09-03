@@ -43,7 +43,7 @@ package de.radicalfish.effects;
  */
 public class ToneModel {
 	
-	private float red, green, blue, chroma, redOvershoot, greenOvershoot, blueOvershoot, chromaOvershoot;
+	public float red, green, blue, chroma, redOvershoot, greenOvershoot, blueOvershoot, chromaOvershoot;
 	
 	/**
 	 * Default, all value set to 1.0f. Overshoots are set to 0.
