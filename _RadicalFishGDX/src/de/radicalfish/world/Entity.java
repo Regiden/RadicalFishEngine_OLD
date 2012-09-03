@@ -31,9 +31,9 @@ package de.radicalfish.world;
 import java.io.Serializable;
 import java.util.Locale;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import de.radicalfish.Grid;
-import de.radicalfish.Rectangle2D;
 import de.radicalfish.animation.Animator;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
@@ -59,7 +59,7 @@ public abstract class Entity implements Serializable {
 	
 	private static final long serialVersionUID = 100L;
 	
-	private static final Rectangle2D BOUNDS = new Rectangle2D();
+	private static final Rectangle BOUNDS = new Rectangle();
 	
 	private Color flashColor = new Color(1f, 1f, 1f, 1f);
 	
@@ -72,7 +72,7 @@ public abstract class Entity implements Serializable {
 	protected Vector2 offscreen = new Vector2(200, 200);
 	protected Vector2 direction = new Vector2(0, 0);
 	
-	protected Rectangle2D collisionbox = new Rectangle2D();
+	protected Rectangle collisionbox = new Rectangle();
 	protected Grid grid = new Grid();
 	
 	protected Animator animator = new Animator();
@@ -195,7 +195,7 @@ public abstract class Entity implements Serializable {
 	/**
 	 * @return the collision box used for collision.
 	 */
-	public Rectangle2D getCollisionBox() {
+	public Rectangle getCollisionBox() {
 		return collisionbox;
 	}
 	/**
@@ -220,7 +220,7 @@ public abstract class Entity implements Serializable {
 	 */
 	public boolean touches(float x, float y) {
 		calculateCollisionBox(BOUNDS);
-		return BOUNDS.contains(x, y) && !BOUNDS.isEmpty();
+		return BOUNDS.contains(x, y);
 	}
 	
 	// OVERRIDE
@@ -259,11 +259,11 @@ public abstract class Entity implements Serializable {
 	 *            a target if needed to save memory
 	 * @return <code>target</code> with the collsion values inside or a new Rectanlge2D if <code>target</code> is null.
 	 */
-	public Rectangle2D calculateCollisionBox(Rectangle2D target) {
+	public Rectangle calculateCollisionBox(Rectangle target) {
 		if (target == null) {
-			target = new Rectangle2D(0, 0, 0, 0);
+			target = new Rectangle(0, 0, 0, 0);
 		}
-		target.setBounds(position.x + offset.x, position.y + offset.y, getCollisionWidth(), getCollisionHeight());
+		target.set(position.x + offset.x, position.y + offset.y, getCollisionWidth(), getCollisionHeight());
 		return target;
 	}
 	/**
