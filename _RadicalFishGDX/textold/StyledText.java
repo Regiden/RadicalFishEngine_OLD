@@ -112,11 +112,5 @@ public class StyledText {
 		for (StyleCommand command : commands)
 			command.reset();
 	}
-	/**
-	 * Clears out all commands.
-	 */
-	public void clar() {
-		for(int i = 0; i < commands.size(); i++)
-			commands.clear();
-	}
+
 }

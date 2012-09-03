@@ -29,20 +29,14 @@
  */
 package de.radicalfish.tests;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.radicalfish.Game;
 import de.radicalfish.GameContainer;
-import de.radicalfish.context.Settings;
-import de.radicalfish.context.defaults.DefaultSettings;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.state.transitions.FadeTransition;
-import de.radicalfish.state.transitions.FadeTransition.FADETYPE;
 import de.radicalfish.tests.utils.RadicalFishTest;
+import de.radicalfish.text.StyleInfo;
 import de.radicalfish.util.RadicalFishException;
 
 /**
@@ -50,137 +44,36 @@ import de.radicalfish.util.RadicalFishException;
  */
 public class GameTest implements Game, RadicalFishTest {
 	
-	private Sprite sprite;
+	private TextureRegion sprite;
 	private Texture part;
 	
-	private float scale;
-	private Vector2 position, velocity;
-	
-	private FadeTransition fade;
+	private StyleInfo info;
 	
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void init(GameContainer container) throws RadicalFishException {
-		part = new Texture(Gdx.files.internal("data/particle.png"));
-		sprite = new Sprite(part);
+		part = new Texture(Gdx.files.internal("data/block.png"));
+		sprite = new TextureRegion(part);
 		sprite.flip(false, true);
-		sprite.setOrigin(16, 16);
 		
-		position = new Vector2();
-		velocity = new Vector2();
-		scale = 1.0f;
-		
-		sprite.setColor(1, 0, 0, 1);
-		fade = new FadeTransition(Color.RED, FADETYPE.FADE_OUT, 2.0f);
-		
-		Settings s = new DefaultSettings();
-		s.printSettings();
-		
+		info = new StyleInfo();
+		info.origin.set(16, 16);
+		info.scale.set(2, 2);
+		info.size.set(32, 32);
 	}
 	
 	public void update(GameContainer container, float delta) throws RadicalFishException {
 		handleInput(delta);
-		fade.update(container, delta);
 	}
 	public void render(GameContainer container, Graphics g) throws RadicalFishException {
 		SpriteBatch batch = g.getSpriteBatch();
 		
-		sprite.setPosition(position.x, position.y);
-		sprite.setScale(scale);
-		
-		g.translate(10, 10);
-		g.apply();
-		
 		batch.begin();
-		sprite.draw(batch);
+		batch.draw(sprite.getTexture(), info.createVertices(sprite, 100, 100), 0, 20);
 		batch.end();
-		
-		fade.postRender(container, g);
 	}
 	
-	private void handleInput(float delta) {
-		if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-			scale += 0.02f;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
-			scale -= 0.02f;
-		}
-		
-		boolean lrpress = false;
-		boolean udpress = false;
-		
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			velocity.x -= 400f * delta;
-			lrpress = true;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			velocity.x += 400f * delta;
-			lrpress = true;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			velocity.y += 400f * delta;
-			udpress = true;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			velocity.y -= 400f * delta;
-			udpress = true;
-		}
-		
-		if(velocity.x >= 2000f) {
-			velocity.x = 2000f;
-		}
-		if(velocity.y >= 2000f) {
-			velocity.y = 2000f;
-		}
-		
-		position.x += velocity.x * delta;
-		position.y += velocity.y * delta;
-		
-		if (!lrpress) {
-			if(velocity.x > 0) {
-				velocity.x -= 400f * delta;
-				if(velocity.x < 0) {
-					velocity.x = 0;
-				}
-			} else {
-				velocity.x += 400f * delta;
-				if(velocity.x > 0) {
-					velocity.x = 0;
-				}
-			}
-			
-		}
-		if (!udpress) {
-			if(velocity.y > 0) {
-				velocity.y -= 400f * delta;
-				if(velocity.y < 0) {
-					velocity.y = 0;
-				}
-			} else {
-				velocity.y += 400f * delta;
-				if(velocity.y > 0) {
-					velocity.y = 0;
-				}
-			}
-			
-		}
-		
-		if(position.x < 0) {
-			position.x = 0;
-			velocity.x *= -0.7;
-		} else if(position.x >= 800 - 32) {
-			position.x = 800 - 32;
-			velocity.x *= -0.7;
-		}
-		if(position.y < 0) {
-			position.y = 0;
-			velocity.y *= -0.7;
-		} else if(position.y >= 600 - 32) {
-			position.y = 600 - 32;
-			velocity.y *= -0.7;
-		}
-		
-	}
+	private void handleInput(float delta) {}
 	
 	// OTHER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
