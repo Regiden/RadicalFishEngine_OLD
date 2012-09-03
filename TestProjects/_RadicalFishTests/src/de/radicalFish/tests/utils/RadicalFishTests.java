@@ -113,6 +113,9 @@ public class RadicalFishTests {
 		return classes;
 	}
 	private static boolean isValid(Class<?> base, Class<?>[] classes) {
+		if (base.equals(SimpleTest.class)) {
+			return false;
+		}
 		if (base.getSuperclass() != null && base.getSuperclass().equals(SimpleTest.class)) {
 			return true;
 		}

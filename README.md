@@ -2,7 +2,7 @@
 
 =================
 
-An 2D engine build on top of libgdx (see https://github.com/libgdx/libgdx). The goal of this engine is to provide and easy to use framework which abstracts
+An 2D engine build on top of [libgdx][2]. The goal of this engine is to provide and easy to use framework which abstracts
 handling the low-level functions (Already mostly done by libgdx). 
 
 The engine is currently under heavy development, so there will be bugs :) The following features are not compelety implemented. We also plan to implement more features as we go.
@@ -36,4 +36,5 @@ Current Features
     * backed by TWL http://twl.l33tlabs.org/
     * a lot of Widgets already done
 
-[1]:  https://raw.github.com/Regiden/RadicalFishEngine/master/TestProjects/_RadicalFishTests-android/assets/data/logo.png
+[1]: https://raw.github.com/Regiden/RadicalFishEngine/master/TestProjects/_RadicalFishTests-android/assets/data/logo.png
+[2]: https://github.com/libgdx/libgdx

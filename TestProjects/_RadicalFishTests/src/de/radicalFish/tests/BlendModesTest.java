@@ -89,6 +89,7 @@ public class BlendModesTest extends SimpleTest {
 		SpriteBatch batch = g.getSpriteBatch();
 		batch.begin();
 		
+		logo.setRotation(rotation);
 		logo.setPosition(container.getWidth() / 2 - logo.getWidth() / 2, container.getHeight() / 2 - logo.getHeight() / 2);
 		logo.draw(batch);
 		
@@ -97,7 +98,7 @@ public class BlendModesTest extends SimpleTest {
 			particle.draw(batch);
 		}
 		
-		
+		logo.setRotation(0);
 		logo.setPosition(position.x, position.y);
 		logo.draw(batch);
 		
