@@ -88,11 +88,13 @@ public class StyledLine {
 	 * 
 	 * @param container
 	 *            the container the game runs in
+	 * @param style
+	 *            the {@link StyleInfo} to change.
 	 * @throws RadicalFishException
 	 */
-	public void finish(GameContainer container) throws RadicalFishException {
+	public void finish(GameContainer container, StyleInfo style) throws RadicalFishException {
 		for (int i = 0; i < finish.size; i++) {
-			finish.get(i).finish(container);
+			finish.get(i).finish(container, style);
 		}
 		finish.clear();
 	}

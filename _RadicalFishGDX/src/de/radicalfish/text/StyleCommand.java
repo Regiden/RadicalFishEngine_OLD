@@ -28,20 +28,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.text;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.radicalfish.GameContainer;
-import de.radicalfish.graphics.Graphics;
 import de.radicalfish.util.RadicalFishException;
 
 /**
  * This class is the base of all {@link StyleCommand}s. It offers an charpoint from which the command should be
  * executed. of course the {@link Font} must offer the feature to use {@link StyleCommand}s.
- * <p>
- * A command can 'override' the drawing of a single character if required. for this the C'tor
- * {@link StyleCommand#StyleCommand(int, boolean)} should be used. A {@link Font} should check for the boolean via
- * {@link StyleCommand#isOverrideExecute()} and call the
- * {@link StyleCommand#execute(GameContainer, Graphics, TextureRegion, Font)} if it's true.
  * 
  * @author Stefan Lange
  * @version 0.5.0
@@ -50,7 +43,6 @@ import de.radicalfish.util.RadicalFishException;
 public abstract class StyleCommand {
 	
 	public int charpoint;
-	public boolean overrideExecute;
 	
 	/**
 	 * Creates a new {@link StyleCommand} with the point on the text line to execute the command.
@@ -59,20 +51,7 @@ public abstract class StyleCommand {
 	 *            the character point at which the command should be executed
 	 */
 	public StyleCommand(int charpoint) {
-		this(charpoint, false);
-	}
-	/**
-	 * Creates a new {@link StyleCommand} with the point on the text line to execute the command.
-	 * 
-	 * @param charpoint
-	 *            the character point at which the command should be executed
-	 * @param overrideExecute
-	 *            true if the the {@link StyleCommand#execute(GameContainer, Graphics, TextureRegion)} method should be
-	 *            called. if false the character will be drawn with the default {@link SpriteBatch}.
-	 */
-	public StyleCommand(int charpoint, boolean overrideExecute) {
 		this.charpoint = charpoint;
-		this.overrideExecute = overrideExecute;
 	}
 	
 	// METHODS
@@ -89,7 +68,8 @@ public abstract class StyleCommand {
 	public abstract void update(GameContainer container, float delta) throws RadicalFishException;
 	
 	/**
-	 * Will be called to apply the command to the {@link StyleInfo} given as parameter.
+	 * Will be called to apply the command to the {@link StyleInfo} given as parameter. After this the
+	 * {@link TextureRegion} will be drawn based in the {@link StyleInfo}.
 	 * 
 	 * @param container
 	 *            the container the game runs in.
@@ -100,13 +80,16 @@ public abstract class StyleCommand {
 	public abstract void execute(GameContainer container, StyleInfo style) throws RadicalFishException;
 	
 	/**
-	 * Releases any resources used by this command (eg. you use a custom shader).
+	 * Releases any resources used by this command (eg. you use a custom shader). Can also be used to reset values on
+	 * the style info.
 	 * 
 	 * @param container
 	 *            the container the game runs in.
+	 * @param style
+	 *            the {@link StyleInfo} to change. will be used to draw the character.
 	 * @throws RadicalFishException
 	 */
-	public abstract void finish(GameContainer container) throws RadicalFishException;
+	public abstract void finish(GameContainer container, StyleInfo style) throws RadicalFishException;
 	
 	/**
 	 * Resets the {@link StyleCommand}.
@@ -120,12 +103,5 @@ public abstract class StyleCommand {
 	 */
 	public int getCharPoint() {
 		return charpoint;
-	}
-	/**
-	 * @return true the the {@link StyleCommand#execute(GameContainer, Graphics, TextureRegion)} will be called instead
-	 *         of a simple draw via the {@link SpriteBatch}.
-	 */
-	public boolean isOverrideExecute() {
-		return overrideExecute;
 	}
 }

@@ -64,7 +64,7 @@ import de.radicalfish.util.Version;
  * @version 0.5.0
  * @since 08.08.2012
  */
-public class GameContainer implements ApplicationListener, InputProcessor {
+public class GameContainer implements ApplicationListener {
 	
 	// TODO add aspect
 	/**
@@ -260,7 +260,6 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		
 		// set gdx stuff
 		input = new GameInput();
-		input.addInputProcessor(this);
 		canSetFullScreen = supportsFullscreen();
 		setFullScreen(fullscreen);
 		Gdx.graphics.setVSync(vsync);
@@ -728,30 +727,4 @@ public class GameContainer implements ApplicationListener, InputProcessor {
 		return Gdx.graphics.getHeight();
 	}
 	
-	// INPUT
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public boolean keyDown(int keycode) {
-		return false;
-	}
-	public boolean keyUp(int keycode) {
-		return false;
-	}
-	public boolean keyTyped(char character) {
-		return false;
-	}
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		return false;
-	}
-	public boolean scrolled(int amount) {
-		return false;
-	}
-	public boolean mouseMoved(int screenX, int screenY) {
-		return false;
-	}
 }

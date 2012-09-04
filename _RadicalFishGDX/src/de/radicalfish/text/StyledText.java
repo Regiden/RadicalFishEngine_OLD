@@ -81,12 +81,14 @@ public class StyledText {
 	 * 
 	 * @param container
 	 *            the container the game runs in
+	 * @param style
+	 *            the {@link StyleInfo} to change.
 	 * @param line
 	 *            the index of the current line.
 	 * @throws RadicalFishException
 	 */
-	public void finish(GameContainer container, int line) throws RadicalFishException {
-		commands.get(line).finish(container);
+	public void finish(GameContainer container, StyleInfo style, int line) throws RadicalFishException {
+		commands.get(line).finish(container, style);
 	}
 	
 	/**

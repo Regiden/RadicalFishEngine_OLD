@@ -75,16 +75,16 @@ public class StyleInfo {
 	private static final float white = Color.WHITE.toFloatBits();
 	
 	/** the vertices used do draw the region in the {@link SpriteBatch}. */
-	public float[] verts = new float[20];
+	public final float[] verts = new float[20];
 	
 	/** The position to add to the current character position */
-	public Vector2 offset = new Vector2(0, 0);
+	public final Vector2 offset = new Vector2(0, 0);
 	/** The size of the region (will be auto set for every character). */
-	public Vector2 size = new Vector2(0, 0);
+	public final Vector2 size = new Vector2(0, 0);
 	/** The origin of the region (will be auto set for every character to the center of the region). */
-	public Vector2 origin = new Vector2(0, 0);
+	public final Vector2 origin = new Vector2(0, 0);
 	/** The scale of the region (default is 1, 1). */
-	public Vector2 scale = new Vector2(1, 1);
+	public final Vector2 scale = new Vector2(1, 1);
 	
 	/** The top left color. */
 	public float colorTopLeft = white;
@@ -246,6 +246,15 @@ public class StyleInfo {
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Sets the color to all corners.
+	 */
+	public void setColor(float color) {
+		colorTopLeft = color;
+		colorTopRight = color;
+		colorBottomLeft = color;
+		colorBottomRight = color;
+	}
 	/**
 	 * Sets the color to all corners.
 	 */

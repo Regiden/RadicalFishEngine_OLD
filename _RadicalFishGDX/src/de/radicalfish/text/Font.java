@@ -52,13 +52,13 @@ public interface Font extends Disposable {
 	 * 
 	 * @throws RadicalFishException
 	 */
-	public void draw(SpriteBatch batch, CharSequence text, float x, float y) throws RadicalFishException;
+	public void draw(SpriteBatch batch, String text, float x, float y) throws RadicalFishException;
 	/**
 	 * Draws the given <code>text</code> at <code>x</code>, <code>y</code>.
 	 * 
 	 * @throws RadicalFishException
 	 */
-	public void draw(SpriteBatch batch, CharSequence text, float x, float y, int startIndex, int endIndex) throws RadicalFishException;
+	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex) throws RadicalFishException;
 	
 	/**
 	 * Draws the given <code>text</code> at <code>x</code>, <code>y</code> with a styled feature.
@@ -68,7 +68,7 @@ public interface Font extends Disposable {
 	 * 
 	 * @throws RadicalFishException
 	 */
-	public void draw(SpriteBatch batch, CharSequence text, float x, float y, GameContainer c, StyledLine style) throws RadicalFishException;
+	public void draw(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style) throws RadicalFishException;
 	/**
 	 * Draws the given <code>text</code> at <code>x</code>, <code>y</code> with a styled feature.
 	 * 
@@ -77,7 +77,7 @@ public interface Font extends Disposable {
 	 * 
 	 * @throws RadicalFishException
 	 */
-	public void draw(SpriteBatch batch, CharSequence text, float x, float y, int startIndex, int endIndex, GameContainer c, StyledLine style)
+	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex, GameContainer c, StyledLine style)
 			throws RadicalFishException;
 	
 	/**
@@ -85,13 +85,13 @@ public interface Font extends Disposable {
 	 * 
 	 * @throws RadicalFishException
 	 */
-	public void drawMultiLine(SpriteBatch batch, CharSequence text, float x, float y) throws RadicalFishException;
+	public void drawMultiLine(SpriteBatch batch, String text, float x, float y) throws RadicalFishException;
 	/**
 	 * Draws the given multi line <code>text</code> at <code>x</code>, <code>y</code>.
 	 * 
 	 * @throws RadicalFishException
 	 */
-	public void drawMultiLine(SpriteBatch batch, CharSequence text, float x, float y, float alignWidth, HAlignment alignment)
+	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float alignWidth, HAlignment alignment)
 			throws RadicalFishException;
 	
 	/**
@@ -102,7 +102,7 @@ public interface Font extends Disposable {
 	 * 
 	 * @throws RadicalFishException
 	 */
-	public void drawMultiLine(SpriteBatch batch, CharSequence text, float x, float y, GameContainer c, StyledText style)
+	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledText style)
 			throws RadicalFishException;
 	/**
 	 * Draws the given <code>text</code> at <code>x</code>, <code>y</code> with a styled feature.
@@ -112,7 +112,7 @@ public interface Font extends Disposable {
 	 * 
 	 * @throws RadicalFishException
 	 */
-	public void drawMultiLine(SpriteBatch batch, CharSequence text, float x, float y, float alignWidth, HAlignment alignment, GameContainer c,
+	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float alignWidth, HAlignment alignment, GameContainer c,
 			StyledText style) throws RadicalFishException;
 	
 	/**
@@ -121,7 +121,7 @@ public interface Font extends Disposable {
 	 * 
 	 * @throws RadicalFishException
 	 */
-	public void drawNumbers(SpriteBatch batch, CharSequence text, float x, float y) throws RadicalFishException;
+	public void drawNumbers(SpriteBatch batch, String text, float x, float y) throws RadicalFishException;
 	/**
 	 * Draws the <code>text</code> at <code>x</code>, <code>y</code> with a styled feature. This method can be used if
 	 * you want special handling for number.
@@ -130,7 +130,7 @@ public interface Font extends Disposable {
 	 *            the list of commands to style the text in
 	 * @throws RadicalFishException
 	 */
-	public void drawNumbers(SpriteBatch batch, CharSequence text, float x, float y, GameContainer c, StyledLine style)
+	public void drawNumbers(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style)
 			throws RadicalFishException;
 	
 	// SETTER
@@ -160,19 +160,19 @@ public interface Font extends Disposable {
 	/**
 	 * @return the bounds of the given <code>text</code>. this method should respect multi line texts.
 	 */
-	public TextBounds getBounds(CharSequence text);
+	public TextBounds getBounds(String text);
 	
 	/**
-	 * @return the width of the given <code>text</code>.
+	 * @return the width of the given <code>text</code>. This should respect multi line texts.
 	 */
-	public float getWidth(CharSequence text);
+	public float getWidth(String text);
 	/**
 	 * 
-	 * @return the height of the given <code>text</code>.
+	 * @return the height of the given <code>text</code>. This should respect multi line texts.
 	 */
-	public float getHeight(CharSequence text);
+	public float getHeight(String text);
 	/**
-	 * @return the maximum height single line can have.
+	 * @return the maximum height a single line can have.
 	 */
 	public float getLineHeight();
 	
