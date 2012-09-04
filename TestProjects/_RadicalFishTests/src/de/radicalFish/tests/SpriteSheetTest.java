@@ -95,18 +95,18 @@ public class SpriteSheetTest extends SimpleTest {
 			g.scale(2);
 			g.apply();
 			
-			batch.draw(sheet.getSprite(0, 0), 100, 100, 8, 8, 16, 16, sca[0], sca[0], rot[0]);
-			batch.draw(sheet.getSprite(1, 0), 117, 100, 8, 8, 16, 16, sca[1], sca[1], rot[1]);
-			batch.draw(sheet.getSprite(1, 1), 117, 117, 8, 8, 16, 16, sca[2], sca[2], rot[2]);
-			batch.draw(sheet.getSprite(0, 1), 100, 117, 8, 8, 16, 16, sca[3], sca[3], rot[3]);
+			batch.draw(sheet.getSubImage(0, 0), 100, 100, 8, 8, 16, 16, sca[0], sca[0], rot[0]);
+			batch.draw(sheet.getSubImage(1, 0), 117, 100, 8, 8, 16, 16, sca[1], sca[1], rot[1]);
+			batch.draw(sheet.getSubImage(1, 1), 117, 117, 8, 8, 16, 16, sca[2], sca[2], rot[2]);
+			batch.draw(sheet.getSubImage(0, 1), 100, 117, 8, 8, 16, 16, sca[3], sca[3], rot[3]);
 			
 			g.scale(2);
 			g.apply();
 			
-			batch.draw(sheet.getSprite(0, 0), 100, 100, 8, 8, 16, 16, sca[0], sca[0], -rot[0]);
-			batch.draw(sheet.getSprite(1, 0), 117, 100, 8, 8, 16, 16, sca[1], sca[1], -rot[1]);
-			batch.draw(sheet.getSprite(1, 1), 117, 117, 8, 8, 16, 16, sca[2], sca[2], -rot[2]);
-			batch.draw(sheet.getSprite(0, 1), 100, 117, 8, 8, 16, 16, sca[3], sca[3], -rot[3]);
+			batch.draw(sheet.getSubImage(0, 0), 100, 100, 8, 8, 16, 16, sca[0], sca[0], -rot[0]);
+			batch.draw(sheet.getSubImage(1, 0), 117, 100, 8, 8, 16, 16, sca[1], sca[1], -rot[1]);
+			batch.draw(sheet.getSubImage(1, 1), 117, 117, 8, 8, 16, 16, sca[2], sca[2], -rot[2]);
+			batch.draw(sheet.getSubImage(0, 1), 100, 117, 8, 8, 16, 16, sca[3], sca[3], -rot[3]);
 			
 		}
 		batch.end();

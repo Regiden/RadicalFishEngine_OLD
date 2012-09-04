@@ -32,7 +32,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.util.RadicalFishException;
+import de.radicalfish.util.Utils;
 
 /**
  * A sprite sheet splits a {@link Texture} into tiled pieces and gives cached or not-cached {@link TextureRegion}s you
@@ -42,15 +44,23 @@ import de.radicalfish.util.RadicalFishException;
  * @version 1.0.0
  * @since 03.09.2012
  */
-public class SpriteSheet {
+public class SpriteSheet implements Disposable {
 	
-	private Texture base;
-	private TextureRegion[][] subImages;
+	/** The base texture all sub regions share. */
+	public final Texture base;
+	private TextureRegion[][] regions;
 	
-	private int tw, th;
-	private int tilesAcross, tilesDown;
+	/** The width of one tile. */
+	public final int tw;
+	/** The height of one tile. */
+	public final int th;
+	/** Number of tiles across the sheet. */
+	public final int tilesAcross;
+	/** Number of tiles down the sheet. */
+	public final int tilesDown;
 	
-	private boolean cached;
+	/** True if the {@link SpriteSheet} uses cached {@link TextureRegion}s. */
+	public final boolean cached;
 	
 	// C'TOR
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -142,6 +152,7 @@ public class SpriteSheet {
 	 * @throws RadicalFishException
 	 */
 	public SpriteSheet(Texture texture, int tw, int th, boolean chached) throws RadicalFishException {
+		Utils.notNull("texture", texture);
 		this.tw = tw;
 		this.th = th;
 		this.cached = chached;
@@ -151,15 +162,15 @@ public class SpriteSheet {
 		init();
 	}
 	
-	// DRAW METHODS
+	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
 	 * @param index
 	 *            the index of the tile
 	 * @return a cached (if cached was turned on) or un-cached {@link TextureRegion} kept in this sheet.
 	 */
-	public TextureRegion getSprite(int index) {
-		return getSprite(index & tilesAcross, index / tilesDown);
+	public TextureRegion getSubImage(int index) {
+		return getSubImage(index % tilesAcross, index / tilesAcross);
 	}
 	/**
 	 * @param x
@@ -168,46 +179,43 @@ public class SpriteSheet {
 	 *            the y index of the {@link TextureRegion}
 	 * @return a cached (if cached was turned on) or un-cached {@link TextureRegion} kept in this sheet.
 	 */
-	public TextureRegion getSprite(int x, int y) {
+	public TextureRegion getSubImage(int x, int y) {
 		if (cached) {
-			return subImages[x][y];
+			return regions[x][y];
 		} else {
-			return new TextureRegion(base, x * tw, y * th, tw, th);
+			TextureRegion reg = new TextureRegion(base, x * tw, y * th, tw, th);
+			reg.flip(false, true);
+			return reg;
 		}
+	}
+	
+	public void dispose() {
+		base.dispose();
 	}
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	protected void init() throws RadicalFishException {
-		if (tilesAcross < 1 || tilesDown < 1) {
-			throw new RadicalFishException("Number of tiles is smaller then 1 (Wront tiles width/height?)");
-		}
-		
-		if (cached) {
-			subImages = new TextureRegion[tilesAcross][tilesDown];
-			for (int i = 0; i < subImages.length; i++) {
-				for (int j = 0; j < subImages[0].length; j++) {
-					TextureRegion reg = new TextureRegion(base);
-					reg.setRegion(i * tw, j * th, tw, th);
-					reg.flip(false, true);
-					subImages[i][j] = reg;
-				}
-			}
-		}
-	}
-	
-	// SETTER
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * True if we want to use cached {@link TextureRegion}s. If cached is already true nothing happens.
+	 * Loads the cached sub images if enabled.
 	 * 
 	 * @throws RadicalFishException
 	 */
-	public void setCached(boolean cached) throws RadicalFishException {
-		if (this.cached) {
-			return;
+	protected void init() throws RadicalFishException {
+		if (tilesAcross < 1 || tilesDown < 1) {
+			throw new RadicalFishException("Number of tiles is smaller then 1 (Wrong tiles width/height?)");
 		}
-		init();
+		
+		if (cached) {
+			regions = new TextureRegion[tilesAcross][tilesDown];
+			for (int i = 0; i < regions.length; i++) {
+				for (int j = 0; j < regions[0].length; j++) {
+					TextureRegion reg = new TextureRegion(base);
+					reg.setRegion(i * tw, j * th, tw, th);
+					reg.flip(false, true);
+					regions[i][j] = reg;
+				}
+			}
+		}
 	}
 	
 	// GETTER
