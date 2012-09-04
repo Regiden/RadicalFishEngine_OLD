@@ -56,7 +56,6 @@ public final class Arrays2D {
 		
 		return tiles;
 	}
-	
 	/**
 	 * Copies the content from <code>array1</code> into <code>array2</code>.
 	 */
@@ -67,5 +66,13 @@ public final class Arrays2D {
 			}
 		}
 	}
-	
+	/** Does what the methods says, yepp. */
+	public static void printIntArray(int array[][]) {
+		for (int i = 0; i < array.length; i++) {
+			for (int j = 0; j < array[0].length; j++) {
+				System.out.print(array[i][j] + ", ");
+			}
+			System.out.println();
+		}
+	}
 }
