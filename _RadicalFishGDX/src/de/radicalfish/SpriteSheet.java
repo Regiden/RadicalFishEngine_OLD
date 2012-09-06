@@ -39,6 +39,9 @@ import de.radicalfish.util.Utils;
 /**
  * A sprite sheet splits a {@link Texture} into tiled pieces and gives cached or not-cached {@link TextureRegion}s you
  * can access via an index.
+ * <p>
+ * By default the {@link TextureRegion} will be loaded with y down. You can change this via
+ * {@link SpriteSheet#flip(boolean, boolean)}.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -164,6 +167,22 @@ public class SpriteSheet implements Disposable {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Flips each {@link TextureRegion} on the x-axis or y-axis.
+	 * 
+	 * @param xflip
+	 *            true if the x-axis should be flipped
+	 * @param yflip
+	 *            true if the y-axis should be flipped
+	 */
+	public void flip(boolean xflip, boolean yflip) {
+		for (int y = 0; y < tilesDown; y++) {
+			for (int x = 0; x < tilesAcross; x++) {
+				regions[x][y].flip(xflip, yflip);
+			}
+		}
+	}
+	
 	/**
 	 * @param index
 	 *            the index of the tile
