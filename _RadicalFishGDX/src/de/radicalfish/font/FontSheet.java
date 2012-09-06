@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.text;
+package de.radicalfish.font;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -79,7 +79,24 @@ public class FontSheet implements Disposable {
 	 * @throws RadicalFishException
 	 */
 	public FontSheet(String internalPath, int[][] tw, int th) throws RadicalFishException {
-		this(Gdx.files.internal(internalPath), tw, th);
+		this(Gdx.files.internal(internalPath), tw, th, true);
+	}
+	/**
+	 * Creates a new {@link FontSheet} from an internal {@link FileHandle}.
+	 * 
+	 * @param internalPath
+	 *            the internal path
+	 * @param tw
+	 *            the widths for each tile the first index (eg. tw[i]) is the vertical index and the second index (eg.
+	 *            tw[i][tilewidth]). So all widths are in a horizontal line.
+	 * @param th
+	 *            the height of a tile
+	 * @param flipy
+	 *            true if y should be flipped
+	 * @throws RadicalFishException
+	 */
+	public FontSheet(String internalPath, int[][] tw, int th, boolean flipy) throws RadicalFishException {
+		this(Gdx.files.internal(internalPath), tw, th, flipy);
 	}
 	/**
 	 * Creates a new {@link FontSheet} from a {@link FileHandle}.
@@ -93,7 +110,23 @@ public class FontSheet implements Disposable {
 	 * @throws RadicalFishException
 	 */
 	public FontSheet(FileHandle handle, int[][] tw, int th) throws RadicalFishException {
-		this(new Texture(handle), tw, th);
+		this(new Texture(handle), tw, th, true);
+	}
+	/**
+	 * Creates a new {@link FontSheet} from a {@link FileHandle}.
+	 * 
+	 * @param handle
+	 *            the handle to load from.
+	 * @param tw
+	 *            the widths for each tile
+	 * @param th
+	 *            the height of a tile
+	 * @param flipy
+	 *            true if y should be flipped
+	 * @throws RadicalFishException
+	 */
+	public FontSheet(FileHandle handle, int[][] tw, int th, boolean flipy) throws RadicalFishException {
+		this(new Texture(handle), tw, th, flipy);
 	}
 	/**
 	 * Creates a new {@link FontSheet} from a texture.
@@ -107,6 +140,22 @@ public class FontSheet implements Disposable {
 	 * @throws RadicalFishException
 	 */
 	public FontSheet(Texture base, int[][] tw, int th) throws RadicalFishException {
+		this(base, tw, th, true);
+	}
+	/**
+	 * Creates a new {@link FontSheet} from a texture.
+	 * 
+	 * @param base
+	 *            the base texture to use
+	 * @param tw
+	 *            the widths for each tile
+	 * @param th
+	 *            the height of a tile
+	 * @param flipy
+	 *            true if y should be flipped
+	 * @throws RadicalFishException
+	 */
+	public FontSheet(Texture base, int[][] tw, int th, boolean flipy) throws RadicalFishException {
 		Utils.notNull("texture", base);
 		Utils.notNull("tw", tw);
 		
@@ -116,7 +165,7 @@ public class FontSheet implements Disposable {
 		tilesAcross = tw[0].length;
 		tilesDown = tw.length;
 		
-		init();
+		init(flipy);
 		
 		int localMax = 0;
 		for (int x = 0; x < tilesAcross; x++) {
@@ -155,7 +204,7 @@ public class FontSheet implements Disposable {
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private void init() throws RadicalFishException {
+	private void init(boolean flip) throws RadicalFishException {
 		if (tilesAcross < 1 || tilesDown < 1) {
 			throw new RadicalFishException("Number of tiles is smaller then 1 (Wrong tiles width/height?)");
 		}
@@ -169,7 +218,9 @@ public class FontSheet implements Disposable {
 				}
 				hcount = y * th;
 				TextureRegion reg = new TextureRegion(base, wcount, hcount, tw[y][x], th);
-				reg.flip(false, true);
+				if(flip) {
+					reg.flip(false, true);
+				}
 				regions[x][y] = reg;
 			}
 		}

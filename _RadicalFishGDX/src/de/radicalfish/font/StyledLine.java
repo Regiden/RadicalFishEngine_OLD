@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.text;
+package de.radicalfish.font;
 import com.badlogic.gdx.utils.Array;
 import de.radicalfish.GameContainer;
 import de.radicalfish.util.RadicalFishException;

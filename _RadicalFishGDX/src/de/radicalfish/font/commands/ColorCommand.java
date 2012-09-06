@@ -27,12 +27,12 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.text.commands;
+package de.radicalfish.font.commands;
 import com.badlogic.gdx.graphics.Color;
 import de.radicalfish.GameContainer;
-import de.radicalfish.text.SpriteFont;
-import de.radicalfish.text.StyleCommand;
-import de.radicalfish.text.StyleInfo;
+import de.radicalfish.font.SpriteFont;
+import de.radicalfish.font.StyleCommand;
+import de.radicalfish.font.StyleInfo;
 import de.radicalfish.util.RadicalFishException;
 
 /**
@@ -59,7 +59,7 @@ public class ColorCommand extends StyleCommand {
 	 * @param charpoint
 	 *            the charpoint to start
 	 * @param perCharacter
-	 *            true if only the character at <code>charpoint</code>
+	 *            true if only the character at <code>charpoint</code> should be tinted
 	 */
 	public ColorCommand(Color color, int charpoint, boolean perCharacter) {
 		super(charpoint);

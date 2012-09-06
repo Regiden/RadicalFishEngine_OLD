@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.text;
+package de.radicalfish.font;
 import com.badlogic.gdx.utils.Array;
 import de.radicalfish.GameContainer;
 import de.radicalfish.util.RadicalFishException;
@@ -42,7 +42,7 @@ import de.radicalfish.util.RadicalFishException;
  */
 public class StyledText {
 	/** The array containing all commands for this line. */
-	public final Array<StyledLine> commands = new Array<StyledLine>();
+	public final Array<StyledLine> lines = new Array<StyledLine>();
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -58,7 +58,7 @@ public class StyledText {
 	 * @throws RadicalFishException
 	 */
 	public void update(GameContainer container, float delta, int line) throws RadicalFishException {
-		commands.get(line).update(container, delta);
+		lines.get(line).update(container, delta);
 	}
 	/**
 	 * Calls {@link StyledLine#execute(GameContainer, StyleInfo, int)} on the current line.
@@ -74,7 +74,7 @@ public class StyledText {
 	 * @throws RadicalFishException
 	 */
 	public void execute(GameContainer container, StyleInfo style, int line, int charpoint) throws RadicalFishException {
-		commands.get(line).execute(container, style, charpoint);
+		lines.get(line).execute(container, style, charpoint);
 	}
 	/**
 	 * Calls {@link StyledLine#finish(GameContainer)} on the current line.
@@ -88,15 +88,15 @@ public class StyledText {
 	 * @throws RadicalFishException
 	 */
 	public void finish(GameContainer container, StyleInfo style, int line) throws RadicalFishException {
-		commands.get(line).finish(container, style);
+		lines.get(line).finish(container, style);
 	}
 	
 	/**
 	 * Resets all {@link StyledLine}.
 	 */
 	public void reset() {
-		for (int i = 0; i < commands.size; i++) {
-			commands.get(i).reset();
+		for (int i = 0; i < lines.size; i++) {
+			lines.get(i).reset();
 		}
 	}
 	
@@ -104,13 +104,26 @@ public class StyledText {
 	 * Adds the given {@link StyledLine} to the list of commands.
 	 */
 	public void add(StyledLine command) {
-		commands.add(command);
+		lines.add(command);
 	}
 	/**
 	 * Removes the given {@link StyledLine} from the list of commands.
 	 */
 	public void remove(StyledLine command) {
-		commands.removeValue(command, true);
+		lines.removeValue(command, true);
+	}
+	
+	// GETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return the total number of commands contained in all lines.
+	 */
+	public int getTotalCommands() {
+		int size = 0;
+		for (int i = 0; i < lines.size; i++) {
+			size += lines.get(i).commands.size;
+		}
+		return size;
 	}
 	
 }
