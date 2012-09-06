@@ -29,19 +29,18 @@
  */
 package de.radicalfish.tests;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.radicalfish.Game;
 import de.radicalfish.GameContainer;
+import de.radicalfish.font.FontSheet;
+import de.radicalfish.font.SimpleStyleParser;
+import de.radicalfish.font.SpriteFont;
+import de.radicalfish.font.StyleInfo;
+import de.radicalfish.font.StyledLine;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.tests.utils.RadicalFishTest;
-import de.radicalfish.text.FontSheet;
-import de.radicalfish.text.SpriteFont;
-import de.radicalfish.text.StyleInfo;
-import de.radicalfish.text.StyledLine;
-import de.radicalfish.text.commands.ColorCommand;
 import de.radicalfish.util.RadicalFishException;
 
 /**
@@ -58,6 +57,8 @@ public class GameTest implements Game, RadicalFishTest {
 	
 	private StyledLine line;
 	
+	private String text = "[col:1,0,0,1]Te[scol:1,1,0,1]st";
+	
 	private final int[][] widths = new int[][] { { 3, 3, 5, 7, 5, 7, 7, 3, 4, 4, 5, 5, 4, 5, 3, 5 },
 			{ 5, 3, 5, 5, 5, 5, 5, 5, 5, 5, 3, 4, 5, 5, 5, 5 }, { 7, 5, 5, 5, 5, 5, 5, 5, 5, 3, 5, 5, 5, 7, 6, 5 },
 			{ 5, 5, 5, 5, 5, 5, 5, 7, 5, 5, 5, 4, 5, 4, 5, 5 } };
@@ -72,13 +73,13 @@ public class GameTest implements Game, RadicalFishTest {
 		info = new StyleInfo();
 		info.size.set(16, 16);
 		info.size.mul(2);
-		///info.size.set(32, 32);
 		
 		fontsheet = new FontSheet("data/font.png", widths, 11);
 		font = new SpriteFont(fontsheet, -1, ' ');
 		line = new StyledLine();
-		line.add(new ColorCommand(Color.RED.cpy(), 0, false));
 		
+		SimpleStyleParser p = SimpleStyleParser.INSTANCE;
+		text = p.parseLine(text, line);
 	}
 	public void update(GameContainer container, float delta) throws RadicalFishException {
 		handleInput(delta);
@@ -95,7 +96,7 @@ public class GameTest implements Game, RadicalFishTest {
 		{
 			batch.draw(sprite.getTexture(), info.createVertices(sprite, 200, 200), 0, 20);
 			
-			font.draw(batch, "TEST", 100, 100, container, line);
+			font.draw(batch, text.toUpperCase(), 100, 100, container, line);
 		}
 		batch.end();
 	}
