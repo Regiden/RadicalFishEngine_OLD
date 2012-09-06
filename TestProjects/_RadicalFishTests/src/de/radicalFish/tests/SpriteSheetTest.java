@@ -61,7 +61,7 @@ public class SpriteSheetTest extends SimpleTest {
 		for (int i = 0; i < sca.length; i++) {
 			sca[i] = MathUtils.random(0, 2.0f);
 		}
-		container.getGraphics().setClearColor(0.7f, 0.1f, 0.3f);
+		container.getGraphics().setClearColor(0.7f, 0.1f, 0.2f);
 	}
 	public void update(GameContainer container, float delta) throws RadicalFishException {
 		if(rotate) {

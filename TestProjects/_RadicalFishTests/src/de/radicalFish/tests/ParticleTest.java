@@ -112,7 +112,7 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 		
 		particles = new Particle[100000];
 		
-		size = 50000;
+		size = 10000;
 		
 		for (int i = 0; i < particles.length; i++) {
 			particles[i] = new Particle();
@@ -172,7 +172,7 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 				suckHard(i, delta, mouseX, mouseY);
 				spinHard(i, delta, mouseX, mouseY);
 			} else if (pressState == 3) {
-				suckHard(i, delta, mouseX, mouseY);
+				spinHard(i, delta, mouseX, mouseY);
 			}
 		}
 		updateTime += TimeUtils.nanoTime() - localTime;
@@ -313,6 +313,7 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 		// hack for the particles to check of they should get slower when no bttons press was made
 		h4c7orzBool = true;
 		pressState = 0;
+		
 		if (in.isButtonDown(Buttons.LEFT) && in.isButtonDown(Buttons.RIGHT)) {
 			pressState = 3;
 		} else if (in.isButtonDown(Buttons.LEFT)) {
