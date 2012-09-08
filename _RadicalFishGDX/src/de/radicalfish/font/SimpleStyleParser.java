@@ -81,7 +81,7 @@ public class SimpleStyleParser implements StyleParser {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public String parseLine(String text, StyledLine output) throws RadicalFishException {
+	public String parseLine(String text, StyledLine output) {
 		Utils.notNull("text", text);
 		
 		StyledLine con = output == null ? cachedLine : output;
@@ -93,7 +93,7 @@ public class SimpleStyleParser implements StyleParser {
 		
 		return text;
 	}
-	public String parseMultiLine(String text, StyledText output) throws RadicalFishException {
+	public String parseMultiLine(String text, StyledText output) {
 		Utils.notNull("text", text);
 		
 		StyledText con = output == null ? cachedText : output;
@@ -112,7 +112,7 @@ public class SimpleStyleParser implements StyleParser {
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private String _parse(String line, StyledLine output) throws RadicalFishException {
+	private String _parse(String line, StyledLine output) {
 		Matcher matcher = cp.matcher(line);
 		while (matcher.find()) {
 			String name;
@@ -134,7 +134,7 @@ public class SimpleStyleParser implements StyleParser {
 		return line;
 	}
 	
-	private StyleCommand createCommand(String name, String params, int charpoint) throws RadicalFishException {
+	private StyleCommand createCommand(String name, String params, int charpoint) {
 		if (name.equals("col")) {
 			return createColorCommand(param.split(params), false, charpoint);
 		} else if (name.equals("scol")) {
@@ -142,7 +142,7 @@ public class SimpleStyleParser implements StyleParser {
 		}
 		throw new RadicalFishException("Could not parse command: " + name + " with paramaters: " + params + " at charpoint: " + charpoint);
 	}
-	private ColorCommand createColorCommand(String[] params, boolean single, int charpoint) throws RadicalFishException {
+	private ColorCommand createColorCommand(String[] params, boolean single, int charpoint) {
 		if (params.length != 4) {
 			throw new RadicalFishException("Number of Parameters for color command must be 4 (r, g, b, a)");
 		}
@@ -150,7 +150,7 @@ public class SimpleStyleParser implements StyleParser {
 		return new ColorCommand(c, charpoint, single);
 	}
 	
-	private float parseFloat(String val) throws RadicalFishException {
+	private float parseFloat(String val) {
 		try {
 			return Float.parseFloat(val);
 		} catch (NumberFormatException e) {

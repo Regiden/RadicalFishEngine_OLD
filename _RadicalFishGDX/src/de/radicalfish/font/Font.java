@@ -34,7 +34,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.GameContainer;
-import de.radicalfish.util.RadicalFishException;
 
 /**
  * Base interface for all fonts used in this engine.
@@ -49,50 +48,37 @@ public interface Font extends Disposable {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
 	 * Draws the given <code>text</code> at <code>x</code>, <code>y</code>.
-	 * 
-	 * @throws RadicalFishException
 	 */
-	public void draw(SpriteBatch batch, String text, float x, float y) throws RadicalFishException;
+	public void draw(SpriteBatch batch, String text, float x, float y);
 	/**
 	 * Draws the given <code>text</code> at <code>x</code>, <code>y</code>.
-	 * 
-	 * @throws RadicalFishException
 	 */
-	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex) throws RadicalFishException;
+	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex);
 	
 	/**
 	 * Draws the given <code>text</code> at <code>x</code>, <code>y</code> with a styled feature.
 	 * 
 	 * @param style
 	 *            the list of commands to style the text in
-	 * 
-	 * @throws RadicalFishException
 	 */
-	public void draw(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style) throws RadicalFishException;
+	public void draw(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style);
 	/**
 	 * Draws the given <code>text</code> at <code>x</code>, <code>y</code> with a styled feature.
 	 * 
 	 * @param style
 	 *            the list of commands to style the text in
-	 * 
-	 * @throws RadicalFishException
 	 */
-	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex, GameContainer c, StyledLine style)
-			throws RadicalFishException;
+	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex, GameContainer c, StyledLine style);
 	
 	/**
 	 * Draws the given multi line <code>text</code> at <code>x</code>, <code>y</code>.
-	 * 
-	 * @throws RadicalFishException
 	 */
-	public void drawMultiLine(SpriteBatch batch, String text, float x, float y) throws RadicalFishException;
+	public void drawMultiLine(SpriteBatch batch, String text, float x, float y);
 	/**
 	 * Draws the given multi line <code>text</code> at <code>x</code>, <code>y</code>.
 	 * 
-	 * @throws RadicalFishException
 	 */
-	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float alignWidth, HAlignment alignment)
-			throws RadicalFishException;
+	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float alignWidth, HAlignment alignment);
 	
 	/**
 	 * Draws the given <code>text</code> at <code>x</code>, <code>y</code> with a styled feature.
@@ -100,38 +86,30 @@ public interface Font extends Disposable {
 	 * @param style
 	 *            the list of commands to style the text in
 	 * 
-	 * @throws RadicalFishException
 	 */
-	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledText style)
-			throws RadicalFishException;
+	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledText style);
 	/**
 	 * Draws the given <code>text</code> at <code>x</code>, <code>y</code> with a styled feature.
 	 * 
 	 * @param style
 	 *            the list of commands to style the text in
-	 * 
-	 * @throws RadicalFishException
 	 */
 	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float alignWidth, HAlignment alignment, GameContainer c,
-			StyledText style) throws RadicalFishException;
+			StyledText style);
 	
 	/**
 	 * Draws the <code>text</code> at <code>x</code>, <code>y</code>. This method can be used if you want special
 	 * handling for number.
-	 * 
-	 * @throws RadicalFishException
 	 */
-	public void drawNumbers(SpriteBatch batch, String text, float x, float y) throws RadicalFishException;
+	public void drawNumbers(SpriteBatch batch, String text, float x, float y);
 	/**
 	 * Draws the <code>text</code> at <code>x</code>, <code>y</code> with a styled feature. This method can be used if
 	 * you want special handling for number.
 	 * 
 	 * @param style
-	 *            the list of commands to style the text in
-	 * @throws RadicalFishException
+	 *            the list of commands to style the text in @
 	 */
-	public void drawNumbers(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style)
-			throws RadicalFishException;
+	public void drawNumbers(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style);
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

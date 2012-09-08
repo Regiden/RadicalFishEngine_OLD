@@ -201,7 +201,7 @@ public class Animation {
 	 * @param loopPos
 	 *            the loop point to set.
 	 */
-	public void setLoopsAt(boolean loopAt, int loopPos) throws RadicalFishException {
+	public void setLoopsAt(boolean loopAt, int loopPos) {
 		if (loopPos < frames.size()) {
 			if (loopAt) {
 				loopsAt = true;
@@ -217,7 +217,7 @@ public class Animation {
 	 * @param currentFrame
 	 *            the current frame
 	 */
-	public void setCurrentFrame(int currentFrame) throws RadicalFishException {
+	public void setCurrentFrame(int currentFrame) {
 		if (currentFrame < frames.size())
 			this.currentFrame = currentFrame;
 		else

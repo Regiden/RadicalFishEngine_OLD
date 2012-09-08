@@ -33,7 +33,6 @@ import de.radicalfish.GameContainer;
 import de.radicalfish.font.SpriteFont;
 import de.radicalfish.font.StyleCommand;
 import de.radicalfish.font.StyleInfo;
-import de.radicalfish.util.RadicalFishException;
 
 /**
  * A command which will change the color to tint the text in. If the <code>preCharacter</code> parameter in the C'Tor is
@@ -49,7 +48,7 @@ public class ColorCommand extends StyleCommand {
 	protected Color color;
 	
 	protected float c1, c2, c3, c4;
-	protected boolean perCharacter;
+	protected boolean singleChar;
 	
 	/**
 	 * Creates a new {@link ColorCommand}.
@@ -58,26 +57,26 @@ public class ColorCommand extends StyleCommand {
 	 *            the color to tint the character/text in
 	 * @param charpoint
 	 *            the charpoint to start
-	 * @param perCharacter
+	 * @param singleChar
 	 *            true if only the character at <code>charpoint</code> should be tinted
 	 */
-	public ColorCommand(Color color, int charpoint, boolean perCharacter) {
+	public ColorCommand(Color color, int charpoint, boolean singleChar) {
 		super(charpoint);
 		this.color = color;
-		this.perCharacter = perCharacter;
+		this.singleChar = singleChar;
 	}
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void execute(GameContainer container, StyleInfo style) throws RadicalFishException {
+	public void execute(GameContainer container, StyleInfo style) {
 		c1 = style.colorTopLeft;
 		c2 = style.colorTopRight;
 		c3 = style.colorBottomLeft;
 		c4 = style.colorBottomRight;
 		style.setColor(color);
 	}
-	public void finish(GameContainer container, StyleInfo style) throws RadicalFishException {
-		if (perCharacter) {
+	public void finish(GameContainer container, StyleInfo style) {
+		if (singleChar) {
 			style.colorTopLeft = c1;
 			style.colorTopRight = c2;
 			style.colorBottomLeft = c3;
@@ -87,7 +86,7 @@ public class ColorCommand extends StyleCommand {
 	
 	// UNUSED
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void update(GameContainer container, float delta) throws RadicalFishException {}
+	public void update(GameContainer container, float delta) {}
 	public void reset() {}
 	
 }

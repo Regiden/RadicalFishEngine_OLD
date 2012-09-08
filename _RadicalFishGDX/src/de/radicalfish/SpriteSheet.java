@@ -76,9 +76,8 @@ public class SpriteSheet implements Disposable {
 	 *            the width of a single tile
 	 * @param th
 	 *            the height of a single tile
-	 * @throws RadicalFishException
 	 */
-	public SpriteSheet(String internalPath, int tw, int th) throws RadicalFishException {
+	public SpriteSheet(String internalPath, int tw, int th) {
 		this(internalPath, tw, th, true);
 	}
 	/**
@@ -92,9 +91,8 @@ public class SpriteSheet implements Disposable {
 	 *            the height of a single tile
 	 * @param cached
 	 *            true if we want to cache all sub-tiles into {@link TextureRegion}s
-	 * @throws RadicalFishException
 	 */
-	public SpriteSheet(String internalPath, int tw, int th, boolean cached) throws RadicalFishException {
+	public SpriteSheet(String internalPath, int tw, int th, boolean cached) {
 		this(Gdx.files.internal(internalPath), tw, th, cached);
 	}
 	/**
@@ -106,9 +104,8 @@ public class SpriteSheet implements Disposable {
 	 *            the width of a single tile
 	 * @param th
 	 *            the height of a single tile
-	 * @throws RadicalFishException
 	 */
-	public SpriteSheet(FileHandle handle, int tw, int th) throws RadicalFishException {
+	public SpriteSheet(FileHandle handle, int tw, int th) {
 		this(handle, tw, th, true);
 	}
 	/**
@@ -122,9 +119,8 @@ public class SpriteSheet implements Disposable {
 	 *            the height of a single tile
 	 * @param cached
 	 *            true if we want to cache all sub-tiles into {@link TextureRegion}s
-	 * @throws RadicalFishException
 	 */
-	public SpriteSheet(FileHandle handle, int tw, int th, boolean cached) throws RadicalFishException {
+	public SpriteSheet(FileHandle handle, int tw, int th, boolean cached) {
 		this(new Texture(handle), tw, th, cached);
 	}
 	/**
@@ -136,9 +132,8 @@ public class SpriteSheet implements Disposable {
 	 *            the width of a single tile
 	 * @param th
 	 *            the height of a single tile
-	 * @throws RadicalFishException
 	 */
-	public SpriteSheet(Texture texture, int tw, int th) throws RadicalFishException {
+	public SpriteSheet(Texture texture, int tw, int th) {
 		this(texture, tw, th, true);
 	}
 	/**
@@ -152,9 +147,8 @@ public class SpriteSheet implements Disposable {
 	 *            the height of a single tile
 	 * @param cached
 	 *            true if we want to cache all sub-tiles into {@link TextureRegion}s
-	 * @throws RadicalFishException
 	 */
-	public SpriteSheet(Texture texture, int tw, int th, boolean chached) throws RadicalFishException {
+	public SpriteSheet(Texture texture, int tw, int th, boolean chached) {
 		Utils.notNull("texture", texture);
 		this.tw = tw;
 		this.th = th;
@@ -216,10 +210,8 @@ public class SpriteSheet implements Disposable {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
 	 * Loads the cached sub images if enabled.
-	 * 
-	 * @throws RadicalFishException
 	 */
-	protected void init() throws RadicalFishException {
+	protected void init()  {
 		if (tilesAcross < 1 || tilesDown < 1) {
 			throw new RadicalFishException("Number of tiles is smaller then 1 (Wrong tiles width/height?)");
 		}

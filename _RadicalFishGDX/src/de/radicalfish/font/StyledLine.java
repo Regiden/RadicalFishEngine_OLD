@@ -30,7 +30,6 @@
 package de.radicalfish.font;
 import com.badlogic.gdx.utils.Array;
 import de.radicalfish.GameContainer;
-import de.radicalfish.util.RadicalFishException;
 
 /**
  * A wrapper for a list of {@link StyleCommand}s in a single line of text.
@@ -55,9 +54,8 @@ public class StyledLine {
 	 *            the container the game runs in
 	 * @param delta
 	 *            the time since the last frame in seconds
-	 * @throws RadicalFishException
 	 */
-	public void update(GameContainer container, float delta) throws RadicalFishException {
+	public void update(GameContainer container, float delta)  {
 		for (int i = 0; i < commands.size; i++) {
 			commands.get(i).update(container, delta);
 		}
@@ -72,9 +70,8 @@ public class StyledLine {
 	 *            the {@link StyleInfo} to change.
 	 * @param charpoint
 	 *            the current character
-	 * @throws RadicalFishException
 	 */
-	public void execute(GameContainer container, StyleInfo style, int charpoint) throws RadicalFishException {
+	public void execute(GameContainer container, StyleInfo style, int charpoint)  {
 		for (int i = 0; i < commands.size; i++) {
 			StyleCommand sc = commands.get(i);
 			if (sc.charpoint == charpoint) {
@@ -90,9 +87,8 @@ public class StyledLine {
 	 *            the container the game runs in
 	 * @param style
 	 *            the {@link StyleInfo} to change.
-	 * @throws RadicalFishException
 	 */
-	public void finish(GameContainer container, StyleInfo style) throws RadicalFishException {
+	public void finish(GameContainer container, StyleInfo style)  {
 		for (int i = 0; i < finish.size; i++) {
 			finish.get(i).finish(container, style);
 		}

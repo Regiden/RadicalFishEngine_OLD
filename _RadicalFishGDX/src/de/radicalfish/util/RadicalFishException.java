@@ -29,7 +29,14 @@
  */
 package de.radicalfish.util;
 
-public class RadicalFishException extends Exception {
+/**
+ * Exception used by this engine. It's a {@link RuntimeException} so throw it where you want :)
+ * 
+ * @author Stefan Lange
+ * @version 1.0.0
+ * @since 08.09.2012
+ */
+public class RadicalFishException extends RuntimeException {
 	
 	private static final long serialVersionUID = 101L;
 	
@@ -42,6 +49,5 @@ public class RadicalFishException extends Exception {
 	public RadicalFishException(String message, Throwable throwable) {
 		super(message, throwable);
 	}
-	
 	
 }

@@ -33,7 +33,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.radicalfish.GameContainer;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.state.GameState;
-import de.radicalfish.util.RadicalFishException;
 
 /**
  * A transition which blends the scene in or out base on the {@link FADETYPE}.
@@ -91,7 +90,7 @@ public class FadeTransition implements Transition {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void update(GameContainer container, float delta) throws RadicalFishException {
+	public void update(GameContainer container, float delta) {
 		if (type == FADETYPE.FADE_IN) {
 			color.a -= delta / fadeTime;
 			if (color.a < 0) {
@@ -103,14 +102,14 @@ public class FadeTransition implements Transition {
 				color.a = 1;
 			}
 		}
-		if(done()) {
+		if (done()) {
 			timer += delta;
-			if(timer >= waitTime) {
+			if (timer >= waitTime) {
 				timer = waitTime;
 			}
 		}
 	}
-	public void postRender(GameContainer container, Graphics g) throws RadicalFishException {
+	public void postRender(GameContainer container, Graphics g) {
 		g.pushTransform();
 		g.setOrigin(0, 0);
 		g.resetTransform(true);
@@ -122,7 +121,7 @@ public class FadeTransition implements Transition {
 		g.setColor(color);
 		
 		g.fillRect(0, 0, container.getDisplayWidth(), container.getDisplayHeight());
-		if(color.a >= 1.0f) {
+		if (color.a >= 1.0f) {
 			g.fillRect(0, 0, container.getDisplayWidth(), container.getDisplayHeight());
 		}
 		batch.end();
@@ -151,6 +150,6 @@ public class FadeTransition implements Transition {
 	
 	// UNUSED
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void init(GameContainer container, GameState from, GameState to) throws RadicalFishException {}
-	public void preRender(GameContainer container, Graphics g) throws RadicalFishException {}
+	public void init(GameContainer container, GameState from, GameState to) {}
+	public void preRender(GameContainer container, Graphics g) {}
 }

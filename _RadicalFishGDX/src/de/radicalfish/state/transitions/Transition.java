@@ -31,13 +31,12 @@ package de.radicalfish.state.transitions;
 import de.radicalfish.GameContainer;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.state.GameState;
-import de.radicalfish.util.RadicalFishException;
 
 /**
  * A {@link Transition} is used to blend from one {@link GameState} to another.
  * 
  * @author Stefan Lange
- * @version 0.0.0
+ * @version 1.0.0
  * @since 17.08.2012
  */
 public interface Transition {
@@ -51,9 +50,8 @@ public interface Transition {
 	 *            the state we coming from
 	 * @param to
 	 *            the state we moving to
-	 * @throws RadicalFishException
 	 */
-	public void init(GameContainer container, GameState from, GameState to) throws RadicalFishException;
+	public void init(GameContainer container, GameState from, GameState to) ;
 	/**
 	 * Updates the transition.
 	 * 
@@ -61,9 +59,8 @@ public interface Transition {
 	 *            the container the game runs in
 	 * @param delta
 	 *            the time since the last frame in seconds
-	 * @throws RadicalFishException
 	 */
-	public void update(GameContainer container, float delta) throws RadicalFishException;
+	public void update(GameContainer container, float delta) ;
 	/**
 	 * Renders the transition before the existing state.
 	 * 
@@ -71,9 +68,8 @@ public interface Transition {
 	 *            the container the game runs in
 	 * @param g
 	 *            the wrapper for graphics
-	 * @throws RadicalFishException
 	 */
-	public void preRender(GameContainer container, Graphics g) throws RadicalFishException;
+	public void preRender(GameContainer container, Graphics g) ;
 	/**
 	 * Renders the transition after the existing state.
 	 * 
@@ -81,9 +77,8 @@ public interface Transition {
 	 *            the container the game runs in
 	 * @param g
 	 *            the wrapper for graphics
-	 * @throws RadicalFishException
 	 */
-	public void postRender(GameContainer container, Graphics g) throws RadicalFishException;
+	public void postRender(GameContainer container, Graphics g) ;
 	
 	/**
 	 * @return true if the transition is completed.

@@ -32,7 +32,6 @@ import java.util.List;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.Entity;
 import de.radicalfish.world.World;
 
@@ -58,7 +57,7 @@ public interface EntityLayer {
 	 * @param delta
 	 *            the {@link GameDelta} object holding the delta value
 	 */
-	public void update(GameContext context, World world, GameDelta delta) throws RadicalFishException;
+	public void update(GameContext context, World world, GameDelta delta);
 	/**
 	 * Renders the layer.
 	 * 
@@ -69,7 +68,7 @@ public interface EntityLayer {
 	 * @param g
 	 *            the graphics context to draw to
 	 */
-	public void render(GameContext context, World world, Graphics g) throws RadicalFishException;
+	public void render(GameContext context, World world, Graphics g);
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

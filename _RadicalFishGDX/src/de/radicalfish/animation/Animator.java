@@ -43,7 +43,7 @@ import de.radicalfish.util.RadicalFishException;
 public class Animator implements Serializable {
 	
 	private static final long serialVersionUID = 8460918241921046816L;
-
+	
 	// private static long time;
 	
 	private HashMap<String, Animation> animations;
@@ -75,7 +75,7 @@ public class Animator implements Serializable {
 	 * @param key
 	 *            the name for the animation.
 	 */
-	public void addAnimation(String key, Animation animation) throws RadicalFishException {
+	public void addAnimation(String key, Animation animation) {
 		if (animations.containsKey(key)) {
 			throw new RadicalFishException("key already exits: " + key);
 		}
@@ -88,7 +88,7 @@ public class Animator implements Serializable {
 			current = animation;
 		}
 	}
-	public void removeAnimation(String key) throws RadicalFishException {
+	public void removeAnimation(String key) {
 		if (!animations.containsKey(key)) {
 			throw new RadicalFishException("no such animation found: " + key);
 		}
@@ -100,7 +100,7 @@ public class Animator implements Serializable {
 	 * current animation. This calls start on the animation which means it restarts the animation.
 	 * 
 	 */
-	public void playAnimation(String key) throws RadicalFishException {
+	public void playAnimation(String key) {
 		playAnimation(key, true);
 	}
 	/**
@@ -110,7 +110,7 @@ public class Animator implements Serializable {
 	 * @param restart
 	 *            false if you want the new animation to be resumed instead of restarted
 	 */
-	public void playAnimation(String key, boolean restart) throws RadicalFishException {
+	public void playAnimation(String key, boolean restart) {
 		if (!animations.containsKey(key)) {
 			throw new RadicalFishException("no such animation found: " + key);
 		}
@@ -125,7 +125,6 @@ public class Animator implements Serializable {
 			current.resume();
 		}
 	}
-	
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -145,7 +144,7 @@ public class Animator implements Serializable {
 	 * @return the current image (frame) in the current animation if any.
 	 */
 	public Sprite getCurrentImage() {
-		if(current != null) {
+		if (current != null) {
 			return current.getCurrentSprite();
 		}
 		return null;

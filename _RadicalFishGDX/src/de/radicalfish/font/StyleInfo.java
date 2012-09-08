@@ -101,15 +101,18 @@ public class StyleInfo {
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Calculates the position of the current character.
+	 * Calculates the position of the current character. the uv coordinates should be taken from the region of the base
+	 * texture.
 	 * 
 	 * @param region
 	 *            the region we draw
 	 * @param x
 	 *            the position to draw the character to
+	 * @param y
+	 *            the position to draw the character to
 	 * @return the array containing the vertices.
 	 */
-	public float[] createVertices(TextureRegion region, float x, float y) {
+	public float[] createVertices(float u, float v, float u2, float v2, float x, float y) {
 		// bottom left and top right corner points relative to origin
 		final float worldOriginX = x + origin.x;
 		final float worldOriginY = y + origin.y;
@@ -184,11 +187,6 @@ public class StyleInfo {
 		x4 += worldOriginX;
 		y4 += worldOriginY;
 		
-		float u = region.getU();
-		float v = region.getV2();
-		float u2 = region.getU2();
-		float v2 = region.getV();
-		
 		verts[X1] = x1;
 		verts[Y1] = y1;
 		verts[C1] = colorTopLeft;
@@ -214,6 +212,20 @@ public class StyleInfo {
 		verts[V4] = v;
 		
 		return verts;
+	}
+	/**
+	 * Calculates the position of the current character.
+	 * 
+	 * @param region
+	 *            the region we draw
+	 * @param x
+	 *            the position to draw the character to
+	 * @param y
+	 *            the position to draw the character to
+	 * @return the array containing the vertices.
+	 */
+	public float[] createVertices(TextureRegion region, float x, float y) {
+		return createVertices(region.getU(), region.getV2(), region.getU2(), region.getV(), x, y);
 	}
 	
 	/**

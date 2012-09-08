@@ -28,7 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.font;
-import de.radicalfish.util.RadicalFishException;
 
 /**
  * Base interface for a parser which parses a given String for {@link StyleCommand}s.
@@ -46,7 +45,7 @@ public interface StyleParser {
 	 *            the container to put all {@link StyleCommand}s into, should be empty
 	 * @return the parsed string (without the text commands).
 	 */
-	public String parseLine(String text, StyledLine output) throws RadicalFishException;
+	public String parseLine(String text, StyledLine output);
 	/**
 	 * @param text
 	 *            the input text containing the text and the commands so parse
@@ -55,6 +54,6 @@ public interface StyleParser {
 	 *            should be empty
 	 * @return the parsed string (without the text commands).
 	 */
-	public String parseMultiLine(String text, StyledText output) throws RadicalFishException;
+	public String parseMultiLine(String text, StyledText output);
 	
 }

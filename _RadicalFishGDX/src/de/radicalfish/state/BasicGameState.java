@@ -31,7 +31,6 @@ package de.radicalfish.state;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.World;
 
 /**
@@ -55,19 +54,19 @@ public abstract class BasicGameState implements GameState {
 	
 	// ABSRACT METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public abstract void init(GameContext context, World world) throws RadicalFishException;
-	public abstract void update(GameContext context, World world, GameDelta delta) throws RadicalFishException;
-	public abstract void render(GameContext context, World world, Graphics g) throws RadicalFishException;
+	public abstract void init(GameContext context, World world);
+	public abstract void update(GameContext context, World world, GameDelta delta);
+	public abstract void render(GameContext context, World world, Graphics g);
 	
 	// OVERRIDE METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void entering(GameContext context, World world, GameState form) throws RadicalFishException {}
-	public void entered(GameContext context, World world, GameState form) throws RadicalFishException {}
-	public void leaving(GameContext context, World world, GameState to) throws RadicalFishException {}
-	public void left(GameContext context, World world, GameState to) throws RadicalFishException {}
+	public void entering(GameContext context, World world, GameState form) {}
+	public void entered(GameContext context, World world, GameState form) {}
+	public void leaving(GameContext context, World world, GameState to) {}
+	public void left(GameContext context, World world, GameState to) {}
 	
-	public void pause(GameContext context, World world) throws RadicalFishException {}
-	public void resume(GameContext context, World world) throws RadicalFishException {}
+	public void pause(GameContext context, World world) {}
+	public void resume(GameContext context, World world) {}
 	public void dispose() {}
 	
 	// OVERRIDE INPUT METHODS

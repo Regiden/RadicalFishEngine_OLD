@@ -79,9 +79,8 @@ public class FontSheet implements Disposable {
 	 *            tw[i][tilewidth]). So all widths are in a horizontal line.
 	 * @param th
 	 *            the height of a tile
-	 * @throws RadicalFishException
 	 */
-	public FontSheet(String internalPath, int[][] tw, int th) throws RadicalFishException {
+	public FontSheet(String internalPath, int[][] tw, int th) {
 		this(Gdx.files.internal(internalPath), tw, th);
 	}
 	/**
@@ -93,9 +92,8 @@ public class FontSheet implements Disposable {
 	 *            the widths for each tile
 	 * @param th
 	 *            the height of a tile
-	 * @throws RadicalFishException
 	 */
-	public FontSheet(FileHandle handle, int[][] tw, int th) throws RadicalFishException {
+	public FontSheet(FileHandle handle, int[][] tw, int th) {
 		this(new Texture(handle), tw, th);
 	}
 	/**
@@ -107,9 +105,8 @@ public class FontSheet implements Disposable {
 	 *            the widths for each tile
 	 * @param th
 	 *            the height of a tile
-	 * @throws RadicalFishException
 	 */
-	public FontSheet(Texture base, int[][] tw, int th) throws RadicalFishException {
+	public FontSheet(Texture base, int[][] tw, int th) {
 		Utils.notNull("texture", base);
 		Utils.notNull("tw", tw);
 		
@@ -174,7 +171,7 @@ public class FontSheet implements Disposable {
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private void init() throws RadicalFishException {
+	private void init() {
 		if (tilesAcross < 1 || tilesDown < 1) {
 			throw new RadicalFishException("Number of tiles is smaller then 1 (Wrong tiles width/height?)");
 		}

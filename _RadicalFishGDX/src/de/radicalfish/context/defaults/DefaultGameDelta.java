@@ -50,7 +50,7 @@ public class DefaultGameDelta implements GameDelta {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void update(GameContext context, World world, float delta) throws RadicalFishException {
+	public void update(GameContext context, World world, float delta) {
 		normalDelta = delta;
 		this.delta = normalDelta * factor;
 	}

@@ -102,18 +102,17 @@ public class SpriteFont implements Font {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void draw(SpriteBatch batch, String text, float x, float y) throws RadicalFishException {
+	public void draw(SpriteBatch batch, String text, float x, float y) {
 		draw(batch, text, x, y, 0, text.length(), null, null);
 	}
-	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex) throws RadicalFishException {
+	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex) {
 		draw(batch, text, x, y, startIndex, endIndex, null, null);
 	}
 	
-	public void draw(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style) throws RadicalFishException {
+	public void draw(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style) {
 		draw(batch, text, x, y, 0, text.length(), c, style);
 	}
-	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex, GameContainer c, StyledLine style)
-			throws RadicalFishException {
+	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex, GameContainer c, StyledLine style) {
 		float oldColor = batch.getColor().toFloatBits();
 		batch.setColor(color);
 		info.setColor(color);
@@ -121,26 +120,25 @@ public class SpriteFont implements Font {
 		batch.setColor(oldColor);
 	}
 	
-	public void drawMultiLine(SpriteBatch batch, String text, float x, float y) throws RadicalFishException {
+	public void drawMultiLine(SpriteBatch batch, String text, float x, float y) {
 		
 	}
-	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float alignWidth, HAlignment alignment)
-			throws RadicalFishException {
+	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float alignWidth, HAlignment alignment) {
 		
 	}
 	
-	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledText style) throws RadicalFishException {
+	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledText style) {
 		
 	}
 	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float alignWidth, HAlignment alignment, GameContainer c,
-			StyledText style) throws RadicalFishException {
+			StyledText style) {
 		
 	}
 	
-	public void drawNumbers(SpriteBatch batch, String text, float x, float y) throws RadicalFishException {
+	public void drawNumbers(SpriteBatch batch, String text, float x, float y) {
 		
 	}
-	public void drawNumbers(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style) throws RadicalFishException {
+	public void drawNumbers(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style) {
 		
 	}
 	
@@ -150,8 +148,7 @@ public class SpriteFont implements Font {
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private void drawLine(SpriteBatch batch, String str, float x, float y, int start, int end, GameContainer c, StyledLine s)
-			throws RadicalFishException {
+	private void drawLine(SpriteBatch batch, String str, float x, float y, int start, int end, GameContainer c, StyledLine s) {
 		try {
 			byte[] data = str.getBytes("US-ASCII");
 			int count = 0;
@@ -162,7 +159,7 @@ public class SpriteFont implements Font {
 					int xPos = (index % font.tilesAcross);
 					int yPos = (index / font.tilesAcross);
 					if ((i >= start) || (i <= end)) {
-						if(s != null) {
+						if (s != null) {
 							width = font.getTileWidthAt(xPos, yPos);
 							info.size.set(width, font.getTileHeight());
 							info.origin.set(width / 2, font.getTileHeight() / 2);

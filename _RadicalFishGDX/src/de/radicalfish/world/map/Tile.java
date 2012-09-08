@@ -31,7 +31,6 @@ package de.radicalfish.world.map;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.World;
 
 /**
@@ -56,7 +55,7 @@ public interface Tile {
 	 * @param delta
 	 *            the {@link GameDelta} object holding the delta value
 	 */
-	public void update(GameContext context, World world, GameDelta delta) throws RadicalFishException;
+	public void update(GameContext context, World world, GameDelta delta);
 	/**
 	 * Renders the tile.
 	 * 
@@ -67,7 +66,7 @@ public interface Tile {
 	 * @param g
 	 *            the graphics context to draw to
 	 */
-	public void render(GameContext context, World world, Graphics g) throws RadicalFishException;
+	public void render(GameContext context, World world, Graphics g);
 	
 	// GETTER & SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

@@ -30,7 +30,6 @@
 package de.radicalfish;
 import com.badlogic.gdx.InputProcessor;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.util.RadicalFishException;
 
 /**
  * Basic Implementation of the {@link Game} Interface. It implements the {@link InputProcessor}. Simply override one of
@@ -44,12 +43,12 @@ public abstract class BasicGame implements Game, InputProcessor {
 	
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public abstract void init(GameContainer container) throws RadicalFishException;
-	public abstract void update(GameContainer container, float delta) throws RadicalFishException;
-	public abstract void render(GameContainer container, Graphics g) throws RadicalFishException;
+	public abstract void init(GameContainer container);
+	public abstract void update(GameContainer container, float delta);
+	public abstract void render(GameContainer container, Graphics g);
 	
-	public void pause(GameContainer container) throws RadicalFishException {}
-	public void resume(GameContainer container) throws RadicalFishException {}
+	public void pause(GameContainer container) {}
+	public void resume(GameContainer container) {}
 	
 	public void dispose() {}
 	

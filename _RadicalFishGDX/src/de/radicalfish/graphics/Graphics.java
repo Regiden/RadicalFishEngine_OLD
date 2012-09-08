@@ -167,10 +167,8 @@ public class Graphics implements Disposable {
 	 * 
 	 * @param apply
 	 *            true if the popped transform should be applied directly
-	 * 
-	 * @throws RadicalFishException
 	 */
-	public void popTransform(boolean apply) throws RadicalFishException {
+	public void popTransform(boolean apply) {
 		if (transformStack.size == 0) {
 			throw new RadicalFishException("Pop failed! No Transform is in the stack (forgot a pushTransform()?)");
 		}

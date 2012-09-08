@@ -30,7 +30,6 @@
 package de.radicalfish.font;
 import com.badlogic.gdx.utils.Array;
 import de.radicalfish.GameContainer;
-import de.radicalfish.util.RadicalFishException;
 
 /**
  * A wrapper for a list of {@link StyledLine}s in a multi line text. the {@link StyledLine}s must be added in the order
@@ -41,6 +40,7 @@ import de.radicalfish.util.RadicalFishException;
  * @since 03.09.2012
  */
 public class StyledText {
+	
 	/** The array containing all commands for this line. */
 	public final Array<StyledLine> lines = new Array<StyledLine>();
 	
@@ -55,9 +55,8 @@ public class StyledText {
 	 *            the time since the last frame in seconds
 	 * @param line
 	 *            the line index of the current line
-	 * @throws RadicalFishException
 	 */
-	public void update(GameContainer container, float delta, int line) throws RadicalFishException {
+	public void update(GameContainer container, float delta, int line)  {
 		lines.get(line).update(container, delta);
 	}
 	/**
@@ -71,9 +70,8 @@ public class StyledText {
 	 *            the current line index.
 	 * @param charpoint
 	 *            the current character
-	 * @throws RadicalFishException
 	 */
-	public void execute(GameContainer container, StyleInfo style, int line, int charpoint) throws RadicalFishException {
+	public void execute(GameContainer container, StyleInfo style, int line, int charpoint)  {
 		lines.get(line).execute(container, style, charpoint);
 	}
 	/**
@@ -85,9 +83,8 @@ public class StyledText {
 	 *            the {@link StyleInfo} to change.
 	 * @param line
 	 *            the index of the current line.
-	 * @throws RadicalFishException
 	 */
-	public void finish(GameContainer container, StyleInfo style, int line) throws RadicalFishException {
+	public void finish(GameContainer container, StyleInfo style, int line)  {
 		lines.get(line).finish(container, style);
 	}
 	

@@ -33,8 +33,8 @@ import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 
 /**
- * This Logger can be used to avoid using {@link Gdx#app} code. It also supports a listener to inform a class about
- * changes to the log. The class is used by the engine as logging tool.
+ * This Logger is used to have a global logger for this engine. With this you can log in all classes and just turn on or
+ * turn off logging. You can still use the {@link com.badlogic.gdx.utils.Logger} from libgdx.
  * 
  * @author Stefan Lange
  * @version 1.1.0
@@ -142,20 +142,21 @@ public class Logger {
 		if (Gdx.app != null) {
 			Gdx.app.log(tag, message);
 		} else {
-			System.out.println(tag + message);
+			System.out.println(tag + ": " + message);
 		}
 	}
 	public static void logError(String tag, String message) {
 		if (Gdx.app != null) {
 			Gdx.app.error(tag, message);
 		} else {
-			System.err.println(tag + message);
+			System.err.println(tag + ": " + message);
 		}
 	}
 	public static void logError(String tag, String message, Throwable e) {
 		if (Gdx.app != null) {
 			Gdx.app.error(tag, message, e);
 		} else {
+			System.err.println(tag + ": " + message);
 			e.printStackTrace();
 		}
 	}

@@ -30,7 +30,6 @@
 package de.radicalfish.context;
 import java.util.Map;
 import com.badlogic.gdx.Files;
-import de.radicalfish.util.RadicalFishException;
 
 /**
  * small interfaces for some simple settings.
@@ -53,11 +52,11 @@ public interface Settings {
 	/**
 	 * Loads the settings.
 	 */
-	public void loadSettings(String name) throws RadicalFishException;
+	public void loadSettings(String name);
 	/**
 	 * Saves the settings.
 	 */
-	public void saveSettings() throws RadicalFishException;
+	public void saveSettings();
 	/**
 	 * Can be used to print out the settings.
 	 */

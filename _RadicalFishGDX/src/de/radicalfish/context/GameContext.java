@@ -32,6 +32,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.GameContainer;
 import de.radicalfish.GameInput;
+import de.radicalfish.assets.Assets;
 import de.radicalfish.state.StateBasedGame;
 
 /**
@@ -94,7 +95,7 @@ public interface GameContext extends Disposable {
 	 */
 	public BitmapFont getFont();
 	/**
-	 * @return the resource manager for the game. can be null if not needed.
+	 * @return the assets manager for the game. can be null if not needed.
 	 */
-	public Resources getResources();
+	public Assets getAssets();
 }

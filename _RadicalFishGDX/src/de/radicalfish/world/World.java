@@ -33,7 +33,6 @@ import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.map.Map;
 
 /**
@@ -56,7 +55,7 @@ public interface World extends Disposable {
 	 * @param context
 	 *            the context the game plays in
 	 */
-	public void init(GameContext context) throws RadicalFishException;
+	public void init(GameContext context);
 	/**
 	 * Updates the world. No parameter for World here since we call this on the world anyway.
 	 * 
@@ -65,7 +64,7 @@ public interface World extends Disposable {
 	 * @param delta
 	 *            the {@link GameDelta} object holding the delta value
 	 */
-	public void update(GameContext context, GameDelta delta) throws RadicalFishException;
+	public void update(GameContext context, GameDelta delta);
 	/**
 	 * Renders the world. No parameter for World here since we call this on the world anyway.
 	 * 
@@ -74,30 +73,28 @@ public interface World extends Disposable {
 	 * @param g
 	 *            the graphics context to draw to
 	 */
-	public void render(GameContext context, Graphics g) throws RadicalFishException;
+	public void render(GameContext context, Graphics g);
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
 	 * Adds a {@link CollisionManager} by name.
-	 * 
-	 * @throws RadicalFishException
 	 */
-	public void addCollisionManager(String name, CollisionManager manager) throws RadicalFishException;
+	public void addCollisionManager(String name, CollisionManager manager);
 	/**
 	 * Adds an {@link EntitySystem} to the world.
 	 * 
 	 * @param name
 	 *            the name of the system
 	 */
-	public void addEntitySystem(String name, EntitySystem system) throws RadicalFishException;
+	public void addEntitySystem(String name, EntitySystem system);
 	/**
 	 * Removes and {@link EntitySystem} for the world.
 	 * 
 	 * @param name
 	 *            the name of the system
 	 */
-	public void removeEntitySystem(String name) throws RadicalFishException;
+	public void removeEntitySystem(String name);
 	
 	/**
 	 * Sets the camera to use for this world.

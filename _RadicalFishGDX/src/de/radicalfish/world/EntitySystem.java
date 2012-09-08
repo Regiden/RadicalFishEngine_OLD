@@ -31,7 +31,6 @@ package de.radicalfish.world;
 import java.util.List;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.util.RadicalFishException;
 
 /**
  * System to manage entities in the world
@@ -52,7 +51,7 @@ public interface EntitySystem {
 	 * @param world
 	 *            the world the game plays in
 	 */
-	public void init(GameContext context, World world) throws RadicalFishException;
+	public void init(GameContext context, World world);
 	/**
 	 * Updates all entities in this system.
 	 * 
@@ -63,7 +62,7 @@ public interface EntitySystem {
 	 * @param delta
 	 *            the {@link GameDelta} object holding the delta value
 	 */
-	public void update(GameContext context, World world, GameDelta delta) throws RadicalFishException;
+	public void update(GameContext context, World world, GameDelta delta);
 	
 	// ADDING & CHECKING
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -77,33 +76,33 @@ public interface EntitySystem {
 	 * 
 	 * @return the entity added.
 	 */
-	public Entity addEntity(Entity e, GameContext context, World world) throws RadicalFishException;
+	public Entity addEntity(Entity e, GameContext context, World world);
 	/**
 	 * Removes an Entity from the world by it's object.
 	 * 
 	 * @return the entity removed.
 	 */
-	public Entity removeEntity(Entity e) throws RadicalFishException;
+	public Entity removeEntity(Entity e);
 	/**
 	 * Removes an Entity from the world by it's id (If ID's are used).
 	 * 
 	 * @return the entity removed.
 	 */
-	public Entity removeEntity(int id) throws RadicalFishException;
+	public Entity removeEntity(int id);
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
 	 * @return all entities contained in this system.
 	 */
-	public List<Entity> getEntities() throws RadicalFishException;
+	public List<Entity> getEntities();
 	/**
 	 * @return an Entity by ID. ID's should be unique, meaning that only one entity should have a specific id.
 	 */
-	public Entity getEntity(int id) throws RadicalFishException;
+	public Entity getEntity(int id);
 	/**
 	 * @return the entity by it's name. Can be more then one hence a lsit will be returned.
 	 */
-	public List<Entity> getEntities(String name) throws RadicalFishException;
+	public List<Entity> getEntities(String name);
 	
 }

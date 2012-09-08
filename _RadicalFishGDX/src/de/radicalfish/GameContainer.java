@@ -138,9 +138,8 @@ public class GameContainer implements ApplicationListener {
 	 *            the height of the game (the window)
 	 * @param useGL20
 	 *            true if we use GL20
-	 * @throws RadicalFishException
 	 */
-	public GameContainer(String title, Game game, int width, int height, boolean useGL20) throws RadicalFishException {
+	public GameContainer(String title, Game game, int width, int height, boolean useGL20) {
 		this(title, game, width, height, useGL20, false);
 	}
 	/**
@@ -158,9 +157,8 @@ public class GameContainer implements ApplicationListener {
 	 *            true if we use GL20
 	 * @param fullscreen
 	 *            true if fullscreen should be used (set it in the configuration to have a nicer start)
-	 * @throws RadicalFishException
 	 */
-	public GameContainer(String title, Game game, int width, int height, boolean useGL20, boolean fullscreen) throws RadicalFishException {
+	public GameContainer(String title, Game game, int width, int height, boolean useGL20, boolean fullscreen) {
 		this.game = game;
 		this.width = width;
 		this.height = height;
@@ -193,49 +191,33 @@ public class GameContainer implements ApplicationListener {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
 	 * Gets called to call init on the {@link Game} implementation. Override for your own code.
-	 * 
-	 * @throws RadicalFishException
 	 */
-	protected void fireInit() throws RadicalFishException {
+	protected void fireInit() {
 		game.init(this);
 	}
 	/**
 	 * Gets called to call update on the {@link Game} implementation. Override for your own code.
-	 * 
-	 * @throws RadicalFishException
 	 */
-	protected void fireUpdate() throws RadicalFishException {
+	protected void fireUpdate() {
 		game.update(this, delta);
 	}
 	/**
 	 * Gets called to call render on the {@link Game} implementation. Override for your own code.
-	 * 
-	 * @throws RadicalFishException
 	 */
-	protected void fireRender() throws RadicalFishException {
+	protected void fireRender() {
 		game.render(this, graphics);
 	}
 	/**
 	 * Gets called to call pause on the {@link Game} implementation. Override for your own code.
 	 */
 	protected void firePause() {
-		try {
-			game.pause(this);
-		} catch (RadicalFishException e) {
-			e.printStackTrace();
-			Gdx.app.exit();
-		}
+		game.pause(this);
 	}
 	/**
 	 * Gets called to call resume on the {@link Game} implementation. Override for your own code.
 	 */
 	protected void fireResume() {
-		try {
-			game.resume(this);
-		} catch (RadicalFishException e) {
-			e.printStackTrace();
-			Gdx.app.exit();
-		}
+		game.resume(this);
 	}
 	/**
 	 * Gets called to call dispose on the {@link Game} implementation. Override for your own code.
@@ -289,14 +271,9 @@ public class GameContainer implements ApplicationListener {
 		}
 		
 		// call init on the game implementation and the debug callback
-		try {
-			fireInit();
-			if (debugCallBack != null) {
-				debugCallBack.init(this);
-			}
-		} catch (RadicalFishException e) {
-			e.printStackTrace();
-			Gdx.app.exit();
+		fireInit();
+		if (debugCallBack != null) {
+			debugCallBack.init(this);
 		}
 		
 		created = false;
@@ -485,9 +462,8 @@ public class GameContainer implements ApplicationListener {
 	 *            the path to the image file (must be internal path)
 	 * @param fontDefPath
 	 *            the path of the def file (must be internal path)
-	 * @throws RadicalFishException
 	 */
-	public void setDefaultFont(String fontPath, String fontDefPath) throws RadicalFishException {
+	public void setDefaultFont(String fontPath, String fontDefPath) {
 		Utils.notNull("font path", fontPath);
 		Utils.notNull("dont def path", fontDefPath);
 		

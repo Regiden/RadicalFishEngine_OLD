@@ -1,5 +1,4 @@
 package de.radicalfish.world.map;
-import de.radicalfish.context.Resources;
 import de.radicalfish.world.Entity;
 
 /**

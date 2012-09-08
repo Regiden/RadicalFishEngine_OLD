@@ -29,7 +29,6 @@
  */
 package de.radicalfish.world.map;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import de.radicalfish.context.Resources;
 
 /**
  * A TileSet is a sheet which contains all tiles on a layer.

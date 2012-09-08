@@ -39,6 +39,7 @@ import com.badlogic.gdx.Input.Peripheral;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.utils.ObjectIntMap;
 
 /**
  * Wraps the {@link Input} implementation to support Slick2D like keyPressed and keyDown methods. It effectively hides
@@ -78,6 +79,8 @@ public class GameInput implements InputProcessor {
 		} catch (Exception e) {}
 	}
 	private static final int keyCount = counter;
+	
+	private ObjectIntMap<String> mappings = new ObjectIntMap<String>();
 	
 	private Input input;
 	private InputMultiplexer listener;
@@ -151,6 +154,41 @@ public class GameInput implements InputProcessor {
 	 */
 	public boolean isButtonDown(int button) {
 		return input.isButtonPressed(button);
+	}
+	
+	/**
+	 * Binds a key to a name. If the mapping already exists it will be overwritten. This works for keys, not for
+	 * buttons!
+	 * 
+	 * @param name
+	 *            the name to bind
+	 * @param key
+	 *            the key to bind with the <code>name</code>
+	 */
+	public void bindKey(String name, int key) {
+		mappings.put(name, key);
+	}
+	/**
+	 * Checks if the key mapped wit the <code>name</code>.
+	 * 
+	 * @return rue if the key in mapped by <code>name</code> was pressed.
+	 */
+	public boolean isKeyPressed(String name) {
+		return isKeyPressed(mappings.get(name, 0));
+	}
+	/**
+	 * Checks if the key mapped wit the <code>name</code>.
+	 * 
+	 * @return rue if the key in mapped by <code>name</code> was pressed.
+	 */
+	public boolean isKeyDown(String name) {
+		return isKeyDown(mappings.get(name, 0));
+	}
+	/**
+	 * Clears all bindings.
+	 */
+	public void clearBindings() {
+		mappings.clear();
 	}
 	
 	// INPUT CLASS METHOD

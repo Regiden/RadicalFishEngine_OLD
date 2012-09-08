@@ -28,8 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.world;
-import java.io.Serializable;
-import java.util.Locale;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -38,7 +36,6 @@ import de.radicalfish.animation.Animator;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.util.RadicalFishException;
 
 /**
  * An abstract basic Entity holding some default fields. Most field are public to ensure fast usage in sub-classes an
@@ -55,9 +52,7 @@ import de.radicalfish.util.RadicalFishException;
  * @version 0.6.0
  * @since 03.06.2012
  */
-public abstract class Entity implements Serializable {
-	
-	private static final long serialVersionUID = 100L;
+public abstract class Entity  {
 	
 	private static final Rectangle BOUNDS = new Rectangle();
 	
@@ -95,7 +90,7 @@ public abstract class Entity implements Serializable {
 	 */
 	public Entity() {
 		if (this.getClass() != null) {
-			name = this.getClass().getSimpleName().toLowerCase(Locale.ENGLISH);
+			name = this.getClass().getSimpleName().toLowerCase();
 		}
 	}
 	
@@ -110,7 +105,7 @@ public abstract class Entity implements Serializable {
 	 * @param world
 	 *            the world in which the entity lives
 	 */
-	public abstract void init(GameContext context, World world) throws RadicalFishException;
+	public abstract void init(GameContext context, World world);
 	/**
 	 * Updates the entity. this should be called instead of <code>doUpdate</code>. <code>doUpdate</code> gets called by
 	 * this method after automatically checking if the entity needs an update. If this is not wanted this method can be
@@ -125,7 +120,7 @@ public abstract class Entity implements Serializable {
 	 * @param delta
 	 *            the {@link GameDelta} object containing the delta values.
 	 */
-	public final void update(GameContext context, World world, GameDelta delta) throws RadicalFishException {
+	public final void update(GameContext context, World world, GameDelta delta) {
 		if (isActive()) {
 			old.set(position);
 			
@@ -148,7 +143,7 @@ public abstract class Entity implements Serializable {
 	 * @param delta
 	 *            the {@link GameDelta} object containing the delta values.
 	 */
-	public abstract void doUpdate(GameContext context, World world, GameDelta delta) throws RadicalFishException;
+	public abstract void doUpdate(GameContext context, World world, GameDelta delta);
 	/**
 	 * Renders the entity. this should be called instead of <code>doRender</code>. <code>doRender</code> gets called by
 	 * this method after automatically checking if the entity needs to render. If this is not wanted this method can be
@@ -161,7 +156,7 @@ public abstract class Entity implements Serializable {
 	 * @param g
 	 *            the graphics context to draw to
 	 */
-	public final void render(GameContext context, World world, Graphics g) throws RadicalFishException {
+	public final void render(GameContext context, World world, Graphics g) {
 		if (isVisible()) {
 			// check if we out of screen, if so no need to render
 			if (!isOffscreen(context)) {
@@ -179,7 +174,7 @@ public abstract class Entity implements Serializable {
 	 * @param g
 	 *            the graphics context to draw to
 	 */
-	public abstract void doRender(GameContext context, World world, Graphics g) throws RadicalFishException;
+	public abstract void doRender(GameContext context, World world, Graphics g);
 	/**
 	 * Can be called by an entity system if an entity is removed from the system and should release all it resources.
 	 * 
@@ -188,7 +183,7 @@ public abstract class Entity implements Serializable {
 	 * @param world
 	 *            the world in which the entity lives
 	 */
-	protected void destroy(GameContext context, World world) throws RadicalFishException {}
+	protected void destroy(GameContext context, World world) {}
 	
 	// COLLISION
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

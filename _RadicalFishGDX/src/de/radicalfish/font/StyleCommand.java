@@ -30,7 +30,6 @@
 package de.radicalfish.font;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.radicalfish.GameContainer;
-import de.radicalfish.util.RadicalFishException;
 
 /**
  * This class is the base of all {@link StyleCommand}s. It offers an charpoint from which the command should be
@@ -63,9 +62,8 @@ public abstract class StyleCommand {
 	 *            the container the game runs in
 	 * @param delta
 	 *            the time since the last frame.
-	 * @throws RadicalFishException
 	 */
-	public abstract void update(GameContainer container, float delta) throws RadicalFishException;
+	public abstract void update(GameContainer container, float delta) ;
 	
 	/**
 	 * Will be called to apply the command to the {@link StyleInfo} given as parameter. After this the
@@ -75,9 +73,8 @@ public abstract class StyleCommand {
 	 *            the container the game runs in.
 	 * @param style
 	 *            the {@link StyleInfo} to change. will be used to draw the character.
-	 * @throws RadicalFishException
 	 */
-	public abstract void execute(GameContainer container, StyleInfo style) throws RadicalFishException;
+	public abstract void execute(GameContainer container, StyleInfo style) ;
 	
 	/**
 	 * Releases any resources used by this command (eg. you use a custom shader). Can also be used to reset values on
@@ -87,9 +84,8 @@ public abstract class StyleCommand {
 	 *            the container the game runs in.
 	 * @param style
 	 *            the {@link StyleInfo} to change. will be used to draw the character.
-	 * @throws RadicalFishException
 	 */
-	public abstract void finish(GameContainer container, StyleInfo style) throws RadicalFishException;
+	public abstract void finish(GameContainer container, StyleInfo style) ;
 	
 	/**
 	 * Resets the {@link StyleCommand}.

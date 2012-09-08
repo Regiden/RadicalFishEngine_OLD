@@ -30,7 +30,6 @@
 package de.radicalfish.world.map;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.World;
 
 /**
@@ -54,5 +53,5 @@ public interface MapListener {
 	 * @param layer
 	 *            the layer which was drawn
 	 */
-	public void onLayerComplete(GameContext context, World world, Graphics g, int layer) throws RadicalFishException;
+	public void onLayerComplete(GameContext context, World world, Graphics g, int layer);
 }

@@ -34,6 +34,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.radicalfish.Game;
 import de.radicalfish.GameContainer;
+import de.radicalfish.GameInput;
+import de.radicalfish.SpriteSheet;
+import de.radicalfish.assets.Assets;
+import de.radicalfish.assets.SpriteSheetLoader.SpriteSheetParameter;
 import de.radicalfish.font.FontSheet;
 import de.radicalfish.font.SimpleStyleParser;
 import de.radicalfish.font.SpriteFont;
@@ -57,6 +61,8 @@ public class GameTest implements Game, RadicalFishTest {
 	
 	private StyledLine line;
 	
+	private Assets assets;
+	
 	private String text = "[col:1,0,0,1]Te[scol:1,1,0,1]st";
 	
 	private final int[][] widths = new int[][] { { 3, 3, 5, 7, 5, 7, 7, 3, 4, 4, 5, 5, 4, 5, 3, 5 },
@@ -66,6 +72,8 @@ public class GameTest implements Game, RadicalFishTest {
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void init(GameContainer container) throws RadicalFishException {
+		assets = new Assets();
+		Texture.setAssetManager(assets);
 		part = new Texture(Gdx.files.internal("data/block.png"));
 		sprite = new TextureRegion(part, 16, 16);
 		sprite.flip(false, true);
@@ -80,14 +88,19 @@ public class GameTest implements Game, RadicalFishTest {
 		
 		SimpleStyleParser p = SimpleStyleParser.INSTANCE;
 		text = p.parseLine(text, line);
+		
+		assets.setLogging(true);
+		assets.load("data/block.png", Texture.class);
+		assets.load("sp1", SpriteSheet.class, new SpriteSheetParameter("data/block.png", 16, 16));
+		assets.load("sp2", SpriteSheet.class, new SpriteSheetParameter("data/block.png", 16, 16));
 	}
 	public void update(GameContainer container, float delta) throws RadicalFishException {
-		handleInput(delta);
+		assets.update();
+		handleInput(container.getInput(), delta);
 		
 		line.update(container, delta);
 	}
 	public void render(GameContainer container, Graphics g) throws RadicalFishException {
-		
 		g.setClearColor(0.7f, 0.1f, 0.3f);
 		
 		SpriteBatch batch = g.getSpriteBatch();
@@ -96,12 +109,21 @@ public class GameTest implements Game, RadicalFishTest {
 		{
 			batch.draw(sprite.getTexture(), info.createVertices(sprite, 200, 200), 0, 20);
 			
+			g.fillRect(100, 50, assets.getProgress() * 200, 20);
+			g.drawRect(100, 50, 200, 20);
+			
+			
 			font.draw(batch, text.toUpperCase(), 100, 100, container, line);
+			
+			
 		}
 		batch.end();
+		
 	}
 	
-	private void handleInput(float delta) {}
+	private void handleInput(GameInput input, float delta) {
+		
+	}
 	
 	// OTHER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

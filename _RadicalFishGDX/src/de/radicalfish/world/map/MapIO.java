@@ -103,7 +103,7 @@ public class MapIO {
 	 * @param zip
 	 *            true if we want to use GZIP to compress the content of the file.
 	 */
-	public static void writeMap(String path, Map map, boolean zip) throws RadicalFishException {
+	public static void writeMap(String path, Map map, boolean zip) {
 		Utils.notNull("path", path);
 		Utils.notNull("map", map);
 		
@@ -123,7 +123,7 @@ public class MapIO {
 	 * @param zip
 	 *            true if we want to use GZIP to compress the content of the file.
 	 */
-	public static void writeMap(OutputStream stream, Map map, boolean zip) throws RadicalFishException {
+	public static void writeMap(OutputStream stream, Map map, boolean zip) {
 		Utils.notNull("stream", stream);
 		Utils.notNull("map", map);
 		
@@ -161,12 +161,12 @@ public class MapIO {
 		}
 	}
 	
-	public static <T extends Map> T readMap(String path, boolean unzip, MapIOReader callback) throws RadicalFishException {
+	public static <T extends Map> T readMap(String path, boolean unzip, MapIOReader callback) {
 		Utils.notNull("path", path);
 		return readMap(ResourceLoader.getResourceAsStream(path), unzip, callback);
 	}
 	@SuppressWarnings("unchecked")
-	public static <T extends Map> T readMap(InputStream stream, boolean unzip, MapIOReader callback) throws RadicalFishException {
+	public static <T extends Map> T readMap(InputStream stream, boolean unzip, MapIOReader callback) {
 		Utils.notNull("stream", stream);
 		Utils.notNull("callback", callback);
 		

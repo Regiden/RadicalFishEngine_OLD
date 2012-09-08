@@ -35,10 +35,10 @@ import com.badlogic.gdx.utils.IntMap;
 import de.radicalfish.ContextGame;
 import de.radicalfish.GameContainer;
 import de.radicalfish.GameInput;
+import de.radicalfish.assets.Assets;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.context.GameVariables;
-import de.radicalfish.context.Resources;
 import de.radicalfish.context.Settings;
 import de.radicalfish.context.defaults.DefaultGameDelta;
 import de.radicalfish.context.defaults.DefaultGameVariables;
@@ -100,9 +100,9 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	/**
 	 * Enters the state with the specific <code>ID</code>. if the states does not exits and exception will be thrown.
 	 * 
-	 * @throws RadicalFishException
+	 * @
 	 */
-	public void enterState(int ID) throws RadicalFishException {
+	public void enterState(int ID) {
 		enterState(ID, null, null);
 	}
 	/**
@@ -113,9 +113,9 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	 * @param enter
 	 *            the "In"-Transition to use (can be null)
 	 * 
-	 * @throws RadicalFishException
+	 *            @
 	 */
-	public void enterState(int ID, Transition leave, Transition enter) throws RadicalFishException {
+	public void enterState(int ID, Transition leave, Transition enter) {
 		if (!states.containsKey(ID)) {
 			throw new RadicalFishException("No GameState is registered with the ID: " + ID);
 		}
@@ -140,20 +140,20 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	 * Gets called to initialize the {@link GameContext}. If null is returned a default implementation will be created.
 	 * <p>
 	 * The default context will return null on the current getters:
-	 * <li> {@link GameContext#getResources()}</li>
+	 * <li> {@link GameContext#getAssets()}</li>
 	 * <li> {@link GameContext#getFontRenderer()}</li>
 	 * <hr>
 	 * 
 	 * @return an instance of the {@link GameContext} Interface.
 	 */
-	public abstract GameContext initGameContext(GameContainer container) throws RadicalFishException;
+	public abstract GameContext initGameContext(GameContainer container);
 	/**
 	 * Gets called to initialize the {@link World}. You may return null. The class will not create a default
 	 * implementation (would be hard to guess how you want your world, also not all games need a world).
 	 * 
 	 * @return an instance of the {@link World} Interface (if wanted).
 	 */
-	public abstract World initWorld(GameContainer container) throws RadicalFishException;
+	public abstract World initWorld(GameContainer container);
 	/**
 	 * Gets called after {@link StateBasedGame#initGameContext(GameContainer)} and
 	 * {@link StateBasedGame#initWorld(GameContainer)} to add all states.
@@ -162,7 +162,7 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	 * <p>
 	 * Use this code to initiate your game to. After this call the game will start running.
 	 */
-	public abstract void initStates(GameContext context) throws RadicalFishException;
+	public abstract void initStates(GameContext context);
 	
 	/**
 	 * Gets called before the update call to the current state.
@@ -172,10 +172,9 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	 * @param world
 	 *            the world the game plays in
 	 * @param delta
-	 *            the {@link GameDelta} object containing the delta values.
-	 * @throws RadicalFishException
+	 *            the {@link GameDelta} object containing the delta values. @
 	 */
-	protected void preUpdate(GameContext context, World world, GameDelta delta) throws RadicalFishException {}
+	protected void preUpdate(GameContext context, World world, GameDelta delta) {}
 	/**
 	 * Gets called after the update call to the current state.
 	 * 
@@ -184,10 +183,9 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	 * @param world
 	 *            the world the game plays in
 	 * @param delta
-	 *            the {@link GameDelta} object containing the delta values.
-	 * @throws RadicalFishException
+	 *            the {@link GameDelta} object containing the delta values. @
 	 */
-	protected void postUpdate(GameContext context, World world, GameDelta delta) throws RadicalFishException {}
+	protected void postUpdate(GameContext context, World world, GameDelta delta) {}
 	
 	/**
 	 * Gets called before the render call to the current state.
@@ -199,7 +197,7 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	 * @param g
 	 *            the wrapper for graphics
 	 */
-	protected void preRender(GameContext context, World world, Graphics g) throws RadicalFishException {}
+	protected void preRender(GameContext context, World world, Graphics g) {}
 	/**
 	 * Gets called after the render call to the current state.
 	 * 
@@ -210,11 +208,11 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	 * @param g
 	 *            the wrapper for graphics
 	 */
-	protected void postRender(GameContext context, World world, Graphics g) throws RadicalFishException {}
+	protected void postRender(GameContext context, World world, Graphics g) {}
 	
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public final void init(GameContainer container) throws RadicalFishException {
+	public final void init(GameContainer container) {
 		this.container = container;
 		context = initGameContext(container);
 		world = initWorld(container);
@@ -234,7 +232,7 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 			currentState.entered(context, world, null);
 		}
 	}
-	public final void update(GameContainer container, float delta) throws RadicalFishException {
+	public final void update(GameContainer container, float delta) {
 		if (usingDefaultContext) {
 			context.getGameDelta().update(context, world, delta);
 		}
@@ -278,7 +276,7 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 		
 		postUpdate(context, world, context.getGameDelta());
 	}
-	public final void render(GameContainer container, Graphics g) throws RadicalFishException {
+	public final void render(GameContainer container, Graphics g) {
 		preRender(context, world, g);
 		
 		if (leaveTransition != null) {
@@ -355,8 +353,8 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	
 	// OVERRIDE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void pause(GameContainer container) throws RadicalFishException {}
-	public void resume(GameContainer container) throws RadicalFishException {}
+	public void pause(GameContainer container) {}
+	public void resume(GameContainer container) {}
 	
 	/**
 	 * If you override this, call super.dispose. This will dispose the {@link GameContext} and the {@link World} for
@@ -441,14 +439,16 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 		private GameDelta delta;
 		private Settings settings;
 		private GameVariables varis;
+		private Assets assets;
 		
-		public DefaultGameContext(GameContainer container, StateBasedGame game) throws RadicalFishException {
+		public DefaultGameContext(GameContainer container, StateBasedGame game) {
 			this.container = container;
 			this.game = game;
 			
 			delta = new DefaultGameDelta();
 			settings = new DefaultSettings();
 			varis = new DefaultGameVariables();
+			assets = new Assets();
 		}
 		
 		// INTERFACE
@@ -489,8 +489,8 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 		public BitmapFont getFont() {
 			return container.getFont();
 		}
-		public Resources getResources() {
-			return null;
+		public Assets getAssets() {
+			return assets;
 		}
 		
 		public void dispose() {}

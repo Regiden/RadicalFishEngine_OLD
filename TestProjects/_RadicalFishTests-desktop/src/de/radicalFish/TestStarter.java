@@ -56,12 +56,7 @@ import de.radicalfish.tests.utils.RadicalFishTests;
 import de.radicalfish.util.RadicalFishException;
 
 /**
- * Use this calls to start any test! This idea comes for libgdx tests! it makes starting all the test easy as eating pie
- * :)
- * 
- * @author Stefan Lange
- * @version 0.0.0
- * @since 21.08.2012
+ * Use this class to start any test! This idea comes for libgdx tests! it makes starting all the test easier.
  */
 public class TestStarter extends JFrame {
 	private static final long serialVersionUID = 1L;

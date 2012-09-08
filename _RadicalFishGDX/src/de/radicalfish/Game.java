@@ -30,7 +30,6 @@
 package de.radicalfish;
 import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.util.RadicalFishException;
 
 /**
  * The main game interface that should be implemented by any game being developed using the {@link GameContainer}.
@@ -47,9 +46,8 @@ public interface Game extends Disposable {
 	 * 
 	 * @param container
 	 *            The container holding the game
-	 * @throws RadicalFishException
 	 */
-	public void init(GameContainer container) throws RadicalFishException;
+	public void init(GameContainer container) ;
 	/**
 	 * Updates the game. all logic code should be here.
 	 * 
@@ -57,9 +55,8 @@ public interface Game extends Disposable {
 	 *            The container holding the game
 	 * @param delta
 	 *            the time since the last frame in seconds!
-	 * @throws RadicalFishException
 	 */
-	public void update(GameContainer container, float delta) throws RadicalFishException;
+	public void update(GameContainer container, float delta) ;
 	/**
 	 * Renders the game. All drawing code should be here.
 	 * 
@@ -67,24 +64,21 @@ public interface Game extends Disposable {
 	 *            The container holding the game
 	 * @param g
 	 *            the wrapper for graphics
-	 * @throws RadicalFishException
 	 */
-	public void render(GameContainer container, Graphics g) throws RadicalFishException;
+	public void render(GameContainer container, Graphics g) ;
 	/**
 	 * Gets called if the app pauses (e.g. on android putting the app in background).
 	 * 
 	 * @param container
 	 *            The container holding the game
-	 * @throws RadicalFishException
 	 */
-	public void pause(GameContainer container) throws RadicalFishException;
+	public void pause(GameContainer container) ;
 	/**
 	 * Gets called if the app resumes (e.g. on android returning to the app).
 	 * 
 	 * @param container
 	 *            The container holding the game
-	 * @throws RadicalFishException
 	 */
-	public void resume(GameContainer container) throws RadicalFishException;
+	public void resume(GameContainer container) ;
 	
 }

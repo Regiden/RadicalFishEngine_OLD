@@ -74,28 +74,26 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	/**
 	 * Creates an empty settings object. the name of the {@link Preferences} used here will be defaults-rfe.xml. Logging
 	 * will be set to true.
-	 * 
-	 * @throws RadicalFishException
 	 */
-	public DefaultSettings() throws RadicalFishException {
+	public DefaultSettings() {
 		loadSettings("defaults-rfe.xml");
 		setLogging(true);
 	}
 	/**
 	 * Loads the settings file by the given <code>name</code>.
 	 */
-	public DefaultSettings(String name) throws RadicalFishException {
+	public DefaultSettings(String name) {
 		loadSettings(name);
 		Logger.setLogging(logging);
 	}
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void loadSettings(String name) throws RadicalFishException {
+	public void loadSettings(String name) {
 		loadPrefs(name);
 		
 	}
-	public void saveSettings() throws RadicalFishException {
+	public void saveSettings() {
 		try {
 			prefs.flush();
 		} catch (Exception e) {
@@ -138,7 +136,7 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	
 	// PRIVATE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private void loadPrefs(String name) throws RadicalFishException {
+	private void loadPrefs(String name) {
 		loadOS();
 		prefs = Gdx.app.getPreferences(name);
 		if (name.equals("defaults-rfe.xml")) {

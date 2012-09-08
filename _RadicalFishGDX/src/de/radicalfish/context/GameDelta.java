@@ -29,7 +29,6 @@
  */
 package de.radicalfish.context;
 import de.radicalfish.context.defaults.DefaultGameDelta;
-import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.World;
 
 /**
@@ -54,7 +53,7 @@ public interface GameDelta {
 	 * @param delta
 	 *            the unmodified time in seconds since the last frame
 	 */
-	public void update(GameContext context, World world, float delta) throws RadicalFishException;
+	public void update(GameContext context, World world, float delta);
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -74,11 +73,11 @@ public interface GameDelta {
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Sets the factor to multiply the delta value with. 
+	 * Sets the factor to multiply the delta value with.
 	 * 
 	 * @param speed
 	 *            the value to set (most likely in the range of 0-1)
 	 */
-	public void setSpeed(float speed) throws RadicalFishException;
+	public void setSpeed(float speed);
 	
 }
