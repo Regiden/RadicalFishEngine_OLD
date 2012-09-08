@@ -38,15 +38,17 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Logger;
 import de.radicalfish.SpriteSheet;
+import de.radicalfish.assets.FontSheetLoader.FontSheetParameter;
 import de.radicalfish.assets.SpriteSheetLoader.SpriteSheetParameter;
 import de.radicalfish.font.FontSheet;
+import de.radicalfish.font.SpriteFont;
 
 /**
  * Class for loading assets. This is basically the {@link AssetManager} with added {@link AssetLoader}.
  * <hr>
  * List of extra class loaders:
  * <li>{@link SpriteSheetLoader} : needs a {@link SpriteSheetParameter} when loading.</li>
- * <li>{@link SpriteSheetLoader} : needs a {@link SpriteSheetParameter} when loading.</li>
+ * <li>{@link FontSheetLoader} : needs a {@link FontSheetParameter} when loading.</li>
  * <hr>
  * Additionally there are methods to create unmanaged {@link Music} or {@link Sound} instances and switch logging off or
  * on.
@@ -66,6 +68,7 @@ public class Assets extends AssetManager {
 		super(resolver);
 		setLoader(SpriteSheet.class, new SpriteSheetLoader(resolver));
 		setLoader(FontSheet.class, new FontSheetLoader(resolver));
+		setLoader(SpriteFont.class, new SpriteFontLoader(resolver));
 		done = false;
 	}
 	
@@ -119,6 +122,7 @@ public class Assets extends AssetManager {
 			getLogger().setLevel(Logger.DEBUG);
 		}
 	}
+	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**

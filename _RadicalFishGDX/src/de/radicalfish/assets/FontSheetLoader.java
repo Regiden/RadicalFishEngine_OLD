@@ -60,7 +60,7 @@ public class FontSheetLoader extends SynchronousAssetLoader<FontSheet, FontSheet
 	}
 	public Array<AssetDescriptor> getDependencies(String fileName, FontSheetParameter parameter) {
 		if (parameter == null)
-			throw new IllegalArgumentException("Missing SpriteSheetParameter: " + fileName);
+			throw new IllegalArgumentException("Missing FontSheetParameter: " + fileName);
 		
 		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
 		deps.add(new AssetDescriptor(parameter.texpath, Texture.class));

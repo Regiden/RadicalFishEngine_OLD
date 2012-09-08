@@ -75,7 +75,11 @@ public class SpriteFont implements Font {
 	private float color = Color.WHITE.toFloatBits();
 	
 	/** The space between two characters. */
-	public final int charakterSpace;
+	public int charakterSpace;
+	
+	/** The space between two lines. */
+	public int lineSpace;
+	
 	/** The total number of characters in the file. */
 	public final int totalChars;
 	
@@ -90,13 +94,16 @@ public class SpriteFont implements Font {
 	 *            the {@link FontSheet} used to draw the characters
 	 * @param charakterSpace
 	 *            the space between two characters (can be negative)
+	 * @param lineSpace
+	 *            the space between two lines (can be negative)
 	 * @param startChar
 	 *            the starting char from the ASCII
 	 */
-	public SpriteFont(FontSheet font, int charakterSpace, char startChar) {
+	public SpriteFont(FontSheet font, int charakterSpace, int lineSpace, char startChar) {
 		this.startChar = startChar;
 		this.font = font;
 		this.charakterSpace = charakterSpace;
+		this.lineSpace = lineSpace;
 		totalChars = font.tilesAcross * font.tilesDown;
 	}
 	

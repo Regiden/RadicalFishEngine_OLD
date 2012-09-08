@@ -37,8 +37,9 @@ import de.radicalfish.GameContainer;
 import de.radicalfish.GameInput;
 import de.radicalfish.SpriteSheet;
 import de.radicalfish.assets.Assets;
+import de.radicalfish.assets.FontSheetLoader.FontSheetParameter;
+import de.radicalfish.assets.SpriteFontLoader.SpriteFontParameter;
 import de.radicalfish.assets.SpriteSheetLoader.SpriteSheetParameter;
-import de.radicalfish.font.FontSheet;
 import de.radicalfish.font.SimpleStyleParser;
 import de.radicalfish.font.SpriteFont;
 import de.radicalfish.font.StyleInfo;
@@ -56,7 +57,6 @@ public class GameTest implements Game, RadicalFishTest {
 	private Texture part;
 	
 	private StyleInfo info;
-	private FontSheet fontsheet;
 	private SpriteFont font;
 	
 	private StyledLine line;
@@ -73,7 +73,6 @@ public class GameTest implements Game, RadicalFishTest {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void init(GameContainer container) throws RadicalFishException {
 		assets = new Assets();
-		Texture.setAssetManager(assets);
 		part = new Texture(Gdx.files.internal("data/block.png"));
 		sprite = new TextureRegion(part, 16, 16);
 		sprite.flip(false, true);
@@ -82,17 +81,22 @@ public class GameTest implements Game, RadicalFishTest {
 		info.size.set(16, 16);
 		info.size.mul(2);
 		
-		fontsheet = new FontSheet("data/font.png", widths, 11);
-		font = new SpriteFont(fontsheet, -1, ' ');
+		assets.setLogging(true);
+		assets.load("data/block.png", Texture.class);
+		assets.load("sp1", SpriteSheet.class, new SpriteSheetParameter("data/block.png", 16, 16));
+		assets.load("sp2", SpriteSheet.class, new SpriteSheetParameter("data/block.png", 16, 16));
+		
+		FontSheetParameter fsp = new FontSheetParameter("data/font.png", widths, 11);
+		assets.load("spfont", SpriteFont.class, new SpriteFontParameter(fsp, -1, 0, ' '));
+		assets.finishLoading();
+		
+		font = assets.get("spfont", SpriteFont.class);
 		line = new StyledLine();
 		
 		SimpleStyleParser p = SimpleStyleParser.INSTANCE;
 		text = p.parseLine(text, line);
 		
-		assets.setLogging(true);
-		assets.load("data/block.png", Texture.class);
-		assets.load("sp1", SpriteSheet.class, new SpriteSheetParameter("data/block.png", 16, 16));
-		assets.load("sp2", SpriteSheet.class, new SpriteSheetParameter("data/block.png", 16, 16));
+		System.out.println(Texture.getManagedStatus());
 	}
 	public void update(GameContainer container, float delta) throws RadicalFishException {
 		assets.update();
