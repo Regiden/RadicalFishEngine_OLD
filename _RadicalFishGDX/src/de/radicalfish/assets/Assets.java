@@ -29,6 +29,7 @@
  */
 package de.radicalfish.assets;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
@@ -36,6 +37,8 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Logger;
 import de.radicalfish.SpriteSheet;
 import de.radicalfish.assets.FontSheetLoader.FontSheetParameter;
@@ -50,6 +53,9 @@ import de.radicalfish.font.SpriteFont;
  * <li>{@link SpriteSheetLoader} : needs a {@link SpriteSheetParameter} when loading.</li>
  * <li>{@link FontSheetLoader} : needs a {@link FontSheetParameter} when loading.</li>
  * <hr>
+ * For these loader the fileName can be anything. The important part are the parameters, where you specify the
+ * dependencies.
+ * <p>
  * Additionally there are methods to create unmanaged {@link Music} or {@link Sound} instances and switch logging off or
  * on.
  * 
@@ -58,6 +64,8 @@ import de.radicalfish.font.SpriteFont;
  * @since 08.09.2012
  */
 public class Assets extends AssetManager {
+	
+	private final Array<Preferences> preferences = new Array<Preferences>();
 	
 	private boolean done;
 	
@@ -69,10 +77,11 @@ public class Assets extends AssetManager {
 		setLoader(SpriteSheet.class, new SpriteSheetLoader(resolver));
 		setLoader(FontSheet.class, new FontSheetLoader(resolver));
 		setLoader(SpriteFont.class, new SpriteFontLoader(resolver));
+		setLoader(ShaderProgram.class, new ShaderLoader(resolver));
 		done = false;
 	}
 	
-	// METHODS
+	// OVERRIDE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public synchronized boolean update() {
 		boolean done = false;
@@ -83,6 +92,19 @@ public class Assets extends AssetManager {
 			this.done = done;
 		}
 		return done;
+	}
+	
+	// METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * 
+	 * @return a managed {@link Preferences} implementation. It can be used to store application settings across runs.
+	 *         The returned instance
+	 */
+	public Preferences createPreferences(String name) {
+		Preferences pref = Gdx.app.getPreferences(name);
+		preferences.add(pref);
+		return pref;
 	}
 	
 	/**
@@ -125,6 +147,13 @@ public class Assets extends AssetManager {
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return the number of preferences managed by this class.
+	 */
+	public int getNumberOfPreferences() {
+		return preferences.size;
+	}
+	
 	/**
 	 * @return true if the loading is done. This will be set to true if the {@link AssetManager#update()} returns true
 	 *         (if you unload content you must call to update the done flag).
