@@ -32,11 +32,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.badlogic.gdx.graphics.Color;
 import de.radicalfish.font.commands.ColorCommand;
+import de.radicalfish.font.commands.StyleCommand;
 import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.util.Utils;
 
 /**
- * A simple parser for styles. The format is easy to use. a text command must start with a [] container. A simple
+ * A simple text parser for styles. The format is easy to use. a text command must start with a [] container. A simple
  * examples which would color a character when parsed with this parser:
  * 
  * <pre>
@@ -51,18 +52,25 @@ import de.radicalfish.util.Utils;
  * <hr>
  * Here is a list for the supported commands:
  * <li>scol: tints a single character. 4 parameter must be given for the color as float values. eg. [scol:1,1,1,1]</li>
- * 
  * <li>col: tints all characters from the command on. 4 parameter as float values. eg. [col:1,1,1,1]</li>
+ * <li>x: resets the state of the {@link StyleInfo} used for transformation
+ * <ul>
+ * <li>[x:c] to reset the color in all 4 corners (to white)</li>
+ * <li>[x:a] for alpha value of the color in all 4 corners (to 1.0f)</li>
+ * <li>[x:g] for the size,rotation etc</li>
+ * <li>[x] to reset all</li>
+ * </ul>
+ * </li>
  * <hr>
  * 
  * @author Stefan Lange
  * @version 0.5.0
  * @since 06.09.2012
  */
-public class SimpleStyleParser implements StyleParser {
+public class StyleParser {
 	
-	/** A simple instance of the {@link SimpleStyleParser}. */
-	public static final SimpleStyleParser INSTANCE = new SimpleStyleParser();
+	/** A simple instance of the {@link StyleParser}. */
+	public static final StyleParser INSTANCE = new StyleParser();
 	
 	private static final Pattern param = Pattern.compile(",");
 	private static final Pattern lineSep = Pattern.compile("\r\n");

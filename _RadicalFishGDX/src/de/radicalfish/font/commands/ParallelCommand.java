@@ -28,64 +28,55 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.font.commands;
-import com.badlogic.gdx.graphics.Color;
+
+import com.badlogic.gdx.utils.Array;
 import de.radicalfish.GameContainer;
-import de.radicalfish.font.SpriteFont;
 import de.radicalfish.font.StyleInfo;
 
 /**
- * A command which will change the color to tint the text in. If the <code>preCharacter</code> parameter in the C'Tor is
- * true, only the character at the given charpoint will be tinted. If not all following characters will be tinted in
- * that color (At least thats how {@link SpriteFont} handles it).
+ * A command which executes all commands added in the parallel group. Note that only the <code>charpoint</code> set in
+ * this class will be used. All added commands will be executed when the charpoint as been reached.
  * 
  * @author Stefan Lange
  * @version 1.0.0
- * @since 04.09.2012
+ * @since 13.09.2012
  */
-public class ColorCommand extends StyleCommand {
+public class ParallelCommand extends StyleCommand {
 	
-	protected final Color color;
-	protected final boolean singleChar;
-	
-	private Color c1 = new Color(), c2 = new Color(), c3 = new Color(), c4 = new Color();
+	/** The commands to execute parallel. */
+	public final Array<StyleCommand> commands = new Array<StyleCommand>();
 	
 	/**
-	 * Creates a new {@link ColorCommand}.
+	 * Creates a new {@link ParallelCommand}.
 	 * 
-	 * @param color
-	 *            the color to tint the character/text in
 	 * @param charpoint
-	 *            the charpoint to start
-	 * @param singleChar
-	 *            true if only the character at <code>charpoint</code> should be tinted
+	 *            the point at chich to start the parallel group.
 	 */
-	public ColorCommand(Color color, int charpoint, boolean singleChar) {
+	public ParallelCommand(int charpoint) {
 		super(charpoint);
-		this.color = color;
-		this.singleChar = singleChar;
 	}
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void execute(GameContainer container, StyleInfo style) {
-		c1.set(style.colorTopLeft);
-		c2.set(style.colorTopRight);
-		c3.set(style.colorBottomLeft);
-		c4.set(style.colorBottomRight);
-		style.setColor(color);
-	}
-	public void finish(GameContainer container, StyleInfo style) {
-		if (singleChar) {
-			style.colorTopLeft.set(c1);
-			style.colorTopRight.set(c2);
-			style.colorBottomLeft.set(c3);
-			style.colorBottomRight.set(c4);
+	public void update(GameContainer container, float delta) {
+		for (int i = 0; i < commands.size; i++) {
+			commands.get(i).update(container, delta);
 		}
 	}
-	
-	// UNUSED
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void update(GameContainer container, float delta) {}
-	public void reset() {}
-	
+	public void execute(GameContainer container, StyleInfo style) {
+		for (int i = 0; i < commands.size; i++) {
+			commands.get(i).execute(container, style);
+		}
+	}
+	public void finish(GameContainer container, StyleInfo style) {
+		for (int i = 0; i < commands.size; i++) {
+			commands.get(i).finish(container, style);
+		}
+	}
+	public void reset() {
+		for (int i = 0; i < commands.size; i++) {
+			commands.get(i).reset();
+		}
+		
+	}
 }

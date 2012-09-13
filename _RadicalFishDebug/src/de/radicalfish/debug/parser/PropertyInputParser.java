@@ -64,15 +64,11 @@ public class PropertyInputParser implements InputParser {
 		
 		keys = new ArrayList<String>();
 		compList = new ArrayList<String>();
-		Iterator<String> set = settings.getAll().keySet().iterator();
+		Iterator<String> set = settings.getAllSettings().keySet().iterator();
 		
 		while (set.hasNext()) {
 			keys.add(set.next());
 		}
-		
-		// add extras
-		keys.add("log");
-		keys.add("debugging");
 	}
 	
 	// INTERFACE
@@ -81,17 +77,11 @@ public class PropertyInputParser implements InputParser {
 		if (message.startsWith("set")) {
 			String pair[] = split.split(message);
 			if (pair.length == 3) {
-				String temp = checkDefaultSettings(pair[1], pair[2]);
-				
-				if (temp.equals("")) {
-					if (settings.contains(pair[1])) {
-						settings.setProperty(pair[1], pair[2]);
-						return makeSuccessMessage(pair[1], "" + pair[2]);
-					} else {
-						return makeErrorMessage("No such Property: " + pair[1]);
-					}
+				if (settings.contains(pair[1])) {
+					settings.setProperty(pair[1], pair[2]);
+					return makeSuccessMessage(pair[1], "" + pair[2]);
 				} else {
-					return temp;
+					return makeErrorMessage("No such Property: " + pair[1]);
 				}
 			} else {
 				return makeErrorMessage("Invalid parameter length. Use the format: \"set propertyname value\"");
@@ -121,64 +111,6 @@ public class PropertyInputParser implements InputParser {
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private String checkDefaultSettings(String name, String value) {
-		if (name.equals("fullscreen")) {
-			settings.setFullscreen(value.equals("true"));
-			return makeSuccessMessage(name, "" + value.equals("true"));
-		}
-		if (name.equals("logging") || name.equals("log")) {
-			settings.setLogging(value.equals("true"));
-			return makeSuccessMessage(name, "" + value.equals("true"));
-		}
-		if (name.equals("debugging") || name.equals("debug")) {
-			settings.setDebugging(value.equals("true"));
-			return makeSuccessMessage(name, "" + value.equals("true"));
-		}
-		if (name.equals("vsync")) {
-			settings.setVSync(value.equals("true"));
-			return makeSuccessMessage(name, "" + value.equals("true"));
-		}
-		if (name.equals("smootdelta")) {
-			settings.setSmoothDelta(value.equals("true"));
-			return makeSuccessMessage(name, "" + value.equals("true"));
-		}
-		if (name.toLowerCase().equals("sound3d")) {
-			settings.setSound3D(value.equals("true"));
-			return makeSuccessMessage(name, "" + value.equals("true"));
-		}
-		
-		if (name.equals("music")) {
-			float temp = castFloat(value);
-			
-			if (temp < 0) {
-				return makeErrorMessage("could not parse value to float: " + value);
-			} else {
-				settings.setMusicVolume(temp);
-				return makeSuccessMessage(name, value);
-			}
-			
-		}
-		if (name.equals("sound")) {
-			float temp = castFloat(value);
-			
-			if (temp < 0) {
-				return makeErrorMessage("could not parse value to float: " + value);
-			} else {
-				settings.setSoundVolume(temp);
-				return makeSuccessMessage(name, value);
-			}
-			
-		}
-		return "";
-	}
-	
-	private float castFloat(String value) {
-		float temp = -1;
-		try {
-			temp = Float.parseFloat(value);
-		} catch (NumberFormatException e) {}
-		return temp;
-	}
 	
 	private String makeErrorMessage(String error) {
 		return "<div style=\"font:error\" >" + error + "</div>";

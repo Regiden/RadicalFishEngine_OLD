@@ -40,7 +40,7 @@ import de.radicalfish.assets.Assets;
 import de.radicalfish.assets.FontSheetLoader.FontSheetParameter;
 import de.radicalfish.assets.SpriteFontLoader.SpriteFontParameter;
 import de.radicalfish.assets.SpriteSheetLoader.SpriteSheetParameter;
-import de.radicalfish.font.SimpleStyleParser;
+import de.radicalfish.font.StyleParser;
 import de.radicalfish.font.SpriteFont;
 import de.radicalfish.font.StyleInfo;
 import de.radicalfish.font.StyledLine;
@@ -63,7 +63,7 @@ public class GameTest implements Game, RadicalFishTest {
 	
 	private Assets assets;
 	
-	private String text = "[col:1,0,0,1]Te[scol:1,1,0,1]st";
+	private String text = "[col:1,0,0,1]Te[scol:1,1,0,1][x:c]st";
 	
 	private final int[][] widths = new int[][] { { 3, 3, 5, 7, 5, 7, 7, 3, 4, 4, 5, 5, 4, 5, 3, 5 },
 			{ 5, 3, 5, 5, 5, 5, 5, 5, 5, 5, 3, 4, 5, 5, 5, 5 }, { 7, 5, 5, 5, 5, 5, 5, 5, 5, 3, 5, 5, 5, 7, 6, 5 },
@@ -93,7 +93,7 @@ public class GameTest implements Game, RadicalFishTest {
 		font = assets.get("spfont", SpriteFont.class);
 		line = new StyledLine();
 		
-		SimpleStyleParser p = SimpleStyleParser.INSTANCE;
+		StyleParser p = StyleParser.INSTANCE;
 		text = p.parseLine(text, line);
 		
 		System.out.println(Texture.getManagedStatus());

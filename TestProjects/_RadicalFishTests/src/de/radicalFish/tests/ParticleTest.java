@@ -33,7 +33,6 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
@@ -48,11 +47,12 @@ import de.radicalfish.effects.Rumble.RUMBLE_SPEED;
 import de.radicalfish.effects.Rumble.RumbleHandle;
 import de.radicalfish.effects.ToneModel;
 import de.radicalfish.effects.ToneShader;
+import de.radicalfish.font.Font;
 import de.radicalfish.graphics.BlendMode;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.tests.utils.RadicalFishTest;
-import de.radicalfish.util.VectorUtil;
 import de.radicalfish.util.RadicalFishException;
+import de.radicalfish.util.VectorUtil;
 
 /**
  * A quick test which shows the performance of the engine. Use the Mouse (or Fingers) to drag the particles towards the
@@ -179,7 +179,7 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 	}
 	public void render(GameContainer container, Graphics g) throws RadicalFishException {
 		SpriteBatch batch = g.getSpriteBatch();
-		BitmapFont font = container.getFont();
+		Font font = container.getFont();
 		
 		localTime = TimeUtils.nanoTime();
 		

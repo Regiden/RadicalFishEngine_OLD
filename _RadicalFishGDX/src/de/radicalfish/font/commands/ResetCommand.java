@@ -28,64 +28,78 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.font.commands;
-import com.badlogic.gdx.graphics.Color;
+
 import de.radicalfish.GameContainer;
-import de.radicalfish.font.SpriteFont;
 import de.radicalfish.font.StyleInfo;
 
 /**
- * A command which will change the color to tint the text in. If the <code>preCharacter</code> parameter in the C'Tor is
- * true, only the character at the given charpoint will be tinted. If not all following characters will be tinted in
- * that color (At least thats how {@link SpriteFont} handles it).
+ * This can be used to reset a change made to the {@link StyleInfo}. Currently the following reset possibilities are
+ * available:
+ * <p>
+ * <li>RESET.ALL : resets both color (to white) and the geometry</li>
+ * <li>RESET.COLOR : resets only the color (to white) on all corners</li>
+ * <li>RESET.ALPHA : resets the alpha value of all color corners</li>
+ * <li>RESET.GEOM : resets the geometry of the characters (position, rotation etc.)</li>
+ * <hr>
+ * The reset will be applied on at the given <code>charpoint</code>.
  * 
  * @author Stefan Lange
  * @version 1.0.0
- * @since 04.09.2012
+ * @since 13.09.2012
  */
-public class ColorCommand extends StyleCommand {
+public class ResetCommand extends StyleCommand {
 	
-	protected final Color color;
-	protected final boolean singleChar;
+	/** The type the reset command can have. */
+	public enum RESET {
+		ALL, COLOR, ALPHA, GEOM
+	}
 	
-	private Color c1 = new Color(), c2 = new Color(), c3 = new Color(), c4 = new Color();
+	protected final RESET type;
 	
 	/**
-	 * Creates a new {@link ColorCommand}.
+	 * Creates a new {@link ResetCommand}.
 	 * 
-	 * @param color
-	 *            the color to tint the character/text in
+	 * @param type
+	 *            the type to the command what to reset.
 	 * @param charpoint
 	 *            the charpoint to start
-	 * @param singleChar
-	 *            true if only the character at <code>charpoint</code> should be tinted
 	 */
-	public ColorCommand(Color color, int charpoint, boolean singleChar) {
+	public ResetCommand(RESET type, int charpoint) {
 		super(charpoint);
-		this.color = color;
-		this.singleChar = singleChar;
+		this.type = type;
 	}
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void execute(GameContainer container, StyleInfo style) {
-		c1.set(style.colorTopLeft);
-		c2.set(style.colorTopRight);
-		c3.set(style.colorBottomLeft);
-		c4.set(style.colorBottomRight);
-		style.setColor(color);
-	}
-	public void finish(GameContainer container, StyleInfo style) {
-		if (singleChar) {
-			style.colorTopLeft.set(c1);
-			style.colorTopRight.set(c2);
-			style.colorBottomLeft.set(c3);
-			style.colorBottomRight.set(c4);
+		switch (type) {
+			case ALL:
+				style.reset();
+				break;
+			case COLOR:
+				style.resetColor();
+				break;
+			case GEOM:
+				style.resetGeom();
+				break;
+			case ALPHA:
+				style.colorTopLeft.a = 1.0f;
+				style.colorTopRight.a = 1.0f;
+				style.colorBottomLeft.a = 1.0f;
+				style.colorBottomRight.a = 1.0f;
+				break;
 		}
 	}
 	
 	// UNUSED
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void update(GameContainer container, float delta) {}
-	public void reset() {}
-	
+	public void update(GameContainer container, float delta) {
+		
+	}
+	public void finish(GameContainer container, StyleInfo style) {
+		
+	}
+	public void reset() {
+		
+	}
 }

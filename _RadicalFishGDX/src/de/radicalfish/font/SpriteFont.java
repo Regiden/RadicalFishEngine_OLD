@@ -36,6 +36,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.NumberUtils;
 import de.radicalfish.GameContainer;
+import de.radicalfish.font.commands.ResetCommand;
 import de.radicalfish.util.RadicalFishException;
 
 /**
@@ -52,6 +53,9 @@ import de.radicalfish.util.RadicalFishException;
  * 
  * <pre>
  * This would only display upper case characters and the starting character would be ' '.
+ * <p>
+ * {@link SpriteFont} does NOT reset transformations this means you must add a {@link ResetCommand} if you want to apply a command only for 
+ * some letters.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -174,7 +178,6 @@ public class SpriteFont implements Font {
 							float[] array = info.createVertices(font.getSubImage(xPos, yPos), x + count, y);
 							batch.draw(font.base, array, 0, array.length);
 							s.finish(c, info);
-							info.resetGeom();
 						} else {
 							batch.draw(font.getSubImage(xPos, yPos), x + count, y);
 						}

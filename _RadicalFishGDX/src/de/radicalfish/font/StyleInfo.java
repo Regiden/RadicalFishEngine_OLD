@@ -53,6 +53,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.NumberUtils;
+import de.radicalfish.font.commands.StyleCommand;
 
 /**
  * This class holds the information about position, origin, scaling, rotation and color for a single character. It will
@@ -60,8 +62,7 @@ import com.badlogic.gdx.math.Vector2;
  * the current {@link TextureRegion}. That said this also means the size will be set to the size of the
  * {@link TextureRegion}.
  * <p>
- * In this method you add new values to any of the fields which will be used to draw the {@link TextureRegion}. After a
- * character has been drawn the info will be reseted.
+ * In this method you add new values to any of the fields which will be used to draw the {@link TextureRegion}. 
  * <p>
  * You can use the class to draw a texture too. just set the values like you want and call
  * {@link StyleInfo#createVertices(TextureRegion, float, float)} to get the vertices.
@@ -71,8 +72,6 @@ import com.badlogic.gdx.math.Vector2;
  * @since 03.09.2012
  */
 public class StyleInfo {
-	
-	private static final float white = Color.WHITE.toFloatBits();
 	
 	/** the vertices used do draw the region in the {@link SpriteBatch}. */
 	public final float[] verts = new float[20];
@@ -87,13 +86,15 @@ public class StyleInfo {
 	public final Vector2 scale = new Vector2(1, 1);
 	
 	/** The top left color. */
-	public float colorTopLeft = white;
+	public Color colorTopLeft = Color.WHITE.cpy();
 	/** The top right color. */
-	public float colorTopRight = white;
+	public Color colorTopRight = Color.WHITE.cpy();
 	/** The bottom left color. */
-	public float colorBottomLeft = white;
+	public Color colorBottomLeft = Color.WHITE.cpy();
 	/** The bottom right color. */
-	public float colorBottomRight = white;
+	public Color colorBottomRight = Color.WHITE.cpy();
+	
+	private static Color temp = new Color(Color.WHITE);
 	
 	/** The rotation of the character. */
 	public float rotation = 0.0f;
@@ -189,25 +190,25 @@ public class StyleInfo {
 		
 		verts[X1] = x1;
 		verts[Y1] = y1;
-		verts[C1] = colorTopLeft;
+		verts[C1] = colorTopLeft.toFloatBits();
 		verts[U1] = u;
 		verts[V1] = v;
 		
 		verts[X2] = x2;
 		verts[Y2] = y2;
-		verts[C2] = colorBottomLeft;
+		verts[C2] = colorBottomLeft.toFloatBits();
 		verts[U2] = u;
 		verts[V2] = v2;
 		
 		verts[X3] = x3;
 		verts[Y3] = y3;
-		verts[C3] = colorBottomRight;
+		verts[C3] = colorBottomRight.toFloatBits();
 		verts[U3] = u2;
 		verts[V3] = v2;
 		
 		verts[X4] = x4;
 		verts[Y4] = y4;
-		verts[C4] = colorTopRight;
+		verts[C4] = colorTopRight.toFloatBits();
 		verts[U4] = u2;
 		verts[V4] = v;
 		
@@ -250,10 +251,10 @@ public class StyleInfo {
 	 * Resets the color values to the default (which is white).
 	 */
 	public void resetColor() {
-		colorTopLeft = white;
-		colorTopRight = white;
-		colorBottomLeft = white;
-		colorBottomRight = white;
+		colorTopLeft.set(1, 1, 1, 1);
+		colorTopRight.set(1, 1, 1, 1);
+		colorBottomLeft.set(1, 1, 1, 1);
+		colorBottomRight.set(1, 1, 1, 1);
 	}
 	
 	// SETTER
@@ -261,39 +262,61 @@ public class StyleInfo {
 	/**
 	 * Sets the color to all corners.
 	 */
-	public void setColor(float color) {
-		colorTopLeft = color;
-		colorTopRight = color;
-		colorBottomLeft = color;
-		colorBottomRight = color;
+	public void setColor(Color color) {
+		colorTopLeft.set(color);
+		colorTopRight.set(color);
+		colorBottomLeft.set(color);
+		colorBottomRight.set(color);
 	}
 	/**
 	 * Sets the color to all corners.
 	 */
-	public void setColor(Color color) {
-		float c = color.toFloatBits();
-		colorTopLeft = c;
-		colorTopRight = c;
-		colorBottomLeft = c;
-		colorBottomRight = c;
+	public void setColor(float color) {
+		int intBits = NumberUtils.floatToIntColor(color);
+		temp.r = (intBits & 0xff) / 255f;
+		temp.g = ((intBits >>> 8) & 0xff) / 255f;
+		temp.b = ((intBits >>> 16) & 0xff) / 255f;
+		temp.a = ((intBits >>> 24) & 0xff) / 255f;
+		colorTopLeft.set(temp);
+		colorTopRight.set(temp);
+		colorBottomLeft.set(temp);
+		colorBottomRight.set(temp);
 	}
+	/**
+	 * Sets the color to all corners.
+	 * 
+	 * @param alpha1
+	 *            true if the alpha value of the color is 1.0 to work around the packed color problem.
+	 */
+	public void setColor(float color, boolean alpha1) {
+		int intBits = NumberUtils.floatToIntColor(color);
+		temp.r = (intBits & 0xff) / 255f;
+		temp.g = ((intBits >>> 8) & 0xff) / 255f;
+		temp.b = ((intBits >>> 16) & 0xff) / 255f;
+		temp.a = alpha1 ? 1.0f : ((intBits >>> 24) & 0xff) / 255f;
+		colorTopLeft.set(temp);
+		colorTopRight.set(temp);
+		colorBottomLeft.set(temp);
+		colorBottomRight.set(temp);
+	}
+	
 	/**
 	 * Sets the color for a gradient from left to right.
 	 */
 	public void setHorizontalGradient(Color left, Color right) {
-		colorTopLeft = left.toFloatBits();
-		colorTopRight = right.toFloatBits();
-		colorBottomLeft = left.toFloatBits();
-		colorBottomRight = right.toFloatBits();
+		colorTopLeft.set(left);
+		colorTopRight.set(right);
+		colorBottomLeft.set(left);
+		colorBottomRight.set(right);
 	}
 	/**
 	 * Sets the color for a gradient from top to bottom.
 	 */
 	public void setVerticalGradient(Color top, Color bottom) {
-		colorTopLeft = top.toFloatBits();
-		colorTopRight = top.toFloatBits();
-		colorBottomLeft = bottom.toFloatBits();
-		colorBottomRight = bottom.toFloatBits();
+		colorTopLeft.set(top);
+		colorTopRight.set(top);
+		colorBottomLeft.set(bottom);
+		colorBottomRight.set(bottom);
 	}
 	
 }

@@ -30,6 +30,7 @@
 package de.radicalfish.font;
 import com.badlogic.gdx.utils.Array;
 import de.radicalfish.GameContainer;
+import de.radicalfish.font.commands.StyleCommand;
 
 /**
  * A wrapper for a list of {@link StyleCommand}s in a single line of text.
