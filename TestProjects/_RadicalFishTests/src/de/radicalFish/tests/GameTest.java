@@ -63,7 +63,7 @@ public class GameTest implements Game, RadicalFishTest {
 	
 	private Assets assets;
 	
-	private String text = "[col:1,0,0,1]Te[scol:1,1,0,1][x:c]st";
+	private String text = "[col:1,0,0,1]Te[scol:1,1,0,1]st [x:color]Bla lalalala";
 	
 	private final int[][] widths = new int[][] { { 3, 3, 5, 7, 5, 7, 7, 3, 4, 4, 5, 5, 4, 5, 3, 5 },
 			{ 5, 3, 5, 5, 5, 5, 5, 5, 5, 5, 3, 4, 5, 5, 5, 5 }, { 7, 5, 5, 5, 5, 5, 5, 5, 5, 3, 5, 5, 5, 7, 6, 5 },

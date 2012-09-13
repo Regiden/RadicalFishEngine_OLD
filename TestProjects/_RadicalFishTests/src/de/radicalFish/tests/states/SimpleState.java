@@ -37,7 +37,7 @@ import de.radicalfish.font.Font;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.state.BasicGameState;
 import de.radicalfish.state.transitions.FadeTransition;
-import de.radicalfish.state.transitions.FadeTransition.FADETYPE;
+import de.radicalfish.state.transitions.FadeTransition.FADE;
 import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.world.World;
 
@@ -57,8 +57,8 @@ public class SimpleState extends BasicGameState {
 		GameInput input = context.getInput();
 		
 		if (input.isKeyPressed(Keys.ENTER)) {
-			context.getGame().enterState((getID() + 1) % 2, new FadeTransition(Color.BLACK, FADETYPE.FADE_OUT, 2.0f, 1.0f),
-					new FadeTransition(Color.BLACK, FADETYPE.FADE_IN, 2.0f));
+			context.getGame().enterState((getID() + 1) % 2, new FadeTransition(Color.BLACK, FADE.OUT, 2.0f, 1.0f),
+					new FadeTransition(Color.BLACK, FADE.IN, 2.0f));
 		}
 	}
 	public void render(GameContext context, World world, Graphics g) throws RadicalFishException {

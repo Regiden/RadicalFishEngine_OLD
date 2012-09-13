@@ -35,7 +35,7 @@ import de.radicalfish.graphics.Graphics;
 import de.radicalfish.state.GameState;
 
 /**
- * A transition which blends the scene in or out base on the {@link FADETYPE}.
+ * A transition which blends the scene in or out base on the {@link FADE}.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -46,12 +46,12 @@ public class FadeTransition implements Transition {
 	private static Color temp = new Color();
 	
 	/** The type of the fade. */
-	public enum FADETYPE {
-		FADE_IN, FADE_OUT
+	public enum FADE {
+		IN, OUT
 	}
 	
 	private Color color;
-	private FADETYPE type;
+	private FADE type;
 	private float fadeTime, waitTime, timer;
 	
 	/**
@@ -64,7 +64,7 @@ public class FadeTransition implements Transition {
 	 * @param fadeTime
 	 *            the time of the fade in seconds
 	 */
-	public FadeTransition(Color color, FADETYPE type, float fadeTime) {
+	public FadeTransition(Color color, FADE type, float fadeTime) {
 		this(color, type, fadeTime, 0.0f);
 	}
 	/**
@@ -80,9 +80,9 @@ public class FadeTransition implements Transition {
 	 *            the time to wait after the basic transition is done (Used to wait some time before going to the next
 	 *            transition)
 	 */
-	public FadeTransition(Color color, FADETYPE type, float fadeTime, float waitTime) {
+	public FadeTransition(Color color, FADE type, float fadeTime, float waitTime) {
 		this.color = color.cpy();
-		this.color.a = (type == FADETYPE.FADE_IN ? 1f : 0f);
+		this.color.a = (type == FADE.IN ? 1f : 0f);
 		this.type = type;
 		this.fadeTime = fadeTime;
 		this.waitTime = waitTime;
@@ -91,7 +91,7 @@ public class FadeTransition implements Transition {
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void update(GameContainer container, float delta) {
-		if (type == FADETYPE.FADE_IN) {
+		if (type == FADE.IN) {
 			color.a -= delta / fadeTime;
 			if (color.a < 0) {
 				color.a = 0;
@@ -131,7 +131,7 @@ public class FadeTransition implements Transition {
 	}
 	
 	public boolean isFinished() {
-		if (type == FADETYPE.FADE_IN) {
+		if (type == FADE.IN) {
 			return (color.a <= 0) && (timer >= waitTime);
 		} else {
 			return (color.a >= 1) && (timer >= waitTime);
@@ -141,7 +141,7 @@ public class FadeTransition implements Transition {
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	private boolean done() {
-		if (type == FADETYPE.FADE_IN) {
+		if (type == FADE.IN) {
 			return (color.a <= 0);
 		} else {
 			return (color.a >= 1);

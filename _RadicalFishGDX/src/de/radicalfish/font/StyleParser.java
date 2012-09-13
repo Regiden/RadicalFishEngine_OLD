@@ -28,11 +28,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.font;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.badlogic.gdx.graphics.Color;
 import de.radicalfish.font.commands.ColorCommand;
+import de.radicalfish.font.commands.FadeCommand;
+import de.radicalfish.font.commands.ResetCommand;
+import de.radicalfish.font.commands.ResetCommand.RESET;
 import de.radicalfish.font.commands.StyleCommand;
+import de.radicalfish.state.transitions.FadeTransition.FADE;
 import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.util.Utils;
 
@@ -55,12 +60,18 @@ import de.radicalfish.util.Utils;
  * <li>col: tints all characters from the command on. 4 parameter as float values. eg. [col:1,1,1,1]</li>
  * <li>x: resets the state of the {@link StyleInfo} used for transformation
  * <ul>
- * <li>[x:c] to reset the color in all 4 corners (to white)</li>
- * <li>[x:a] for alpha value of the color in all 4 corners (to 1.0f)</li>
- * <li>[x:g] for the size,rotation etc</li>
- * <li>[x] to reset all</li>
+ * <li>[x:color] to reset the color in all 4 corners (to white)</li>
+ * <li>[x:all] for alpha value of the color in all 4 corners (to 1.0f)</li>
+ * <li>[x:geom] for the size,rotation etc</li>
+ * <li>[x:alpha] to reset all</li>
  * </ul>
- * </li>
+ * <li>fade: fades a set of characters. 3 Parameters:
+ * <ul>
+ * <li>first: duration of the fade in seconds</li>
+ * <li>second: type of fade ('in' or 'out'), if wrong 'out' will be taken
+ * <li>example: [fade:2.0,out] fades out the character within 2 seconds.</li>
+ * </ul>
+ * </li> 
  * <hr>
  * 
  * @author Stefan Lange
@@ -125,6 +136,7 @@ public class StyleParser {
 		while (matcher.find()) {
 			String name;
 			String command = matcher.group();
+			
 			int index = line.indexOf(command);
 			line = line.replace(command, "");
 			
@@ -139,14 +151,23 @@ public class StyleParser {
 			
 			output.add(createCommand(name, command, index));
 		}
+		System.out.println(matcher.toMatchResult().toString());
 		return line;
 	}
 	
 	private StyleCommand createCommand(String name, String params, int charpoint) {
+		System.out.println("name:   " + name);
+		System.out.println("params: " + params);
+		
+		
 		if (name.equals("col")) {
 			return createColorCommand(param.split(params), false, charpoint);
 		} else if (name.equals("scol")) {
 			return createColorCommand(param.split(params), true, charpoint);
+		} else if (name.equals("fade")) {
+			return createFadeCommand(param.split(params), charpoint);
+		} else if (name.equals("x")) {
+			return createResetCommand(param.split(params), charpoint);
 		}
 		throw new RadicalFishException("Could not parse command: " + name + " with paramaters: " + params + " at charpoint: " + charpoint);
 	}
@@ -156,6 +177,32 @@ public class StyleParser {
 		}
 		Color c = new Color(parseFloat(params[0]), parseFloat(params[1]), parseFloat(params[2]), parseFloat(params[3]));
 		return new ColorCommand(c, charpoint, single);
+	}
+	private FadeCommand createFadeCommand(String[] params, int charpoint) {
+		if (params.length != 2) {
+			throw new RadicalFishException("Number of Parameters for fade command must be 2 (duration, type)");
+		}
+		
+		float duration = parseFloat(params[0]);
+		if(!params[1].equals("in") || !params[1].equals("out")) {
+			throw new RadicalFishException("second parameter of fade command is not valid (must be in or out) given: " + params[1]);
+		}
+		boolean type = params[1].equals("in");
+		
+		return new FadeCommand(type ? FADE.IN : FADE.OUT, duration, charpoint);
+	}
+	private ResetCommand createResetCommand(String[] params, int charpoint) {
+		if (params.length != 1) {
+			throw new RadicalFishException("Number of Parameters for reset command must be 1 (type)");
+		}
+		RESET res = null;
+		try {
+			res = RESET.valueOf(params[0].toUpperCase());
+		}catch(IllegalArgumentException e) {
+			throw new RadicalFishException("the given reset type is not in the enum: " + params[0]);
+		}
+		return new ResetCommand(res, charpoint);
+		
 	}
 	
 	private float parseFloat(String val) {

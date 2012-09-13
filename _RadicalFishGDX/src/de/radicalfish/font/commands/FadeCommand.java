@@ -31,10 +31,10 @@ package de.radicalfish.font.commands;
 
 import de.radicalfish.GameContainer;
 import de.radicalfish.font.StyleInfo;
-import de.radicalfish.state.transitions.FadeTransition.FADETYPE;
+import de.radicalfish.state.transitions.FadeTransition.FADE;
 
 /**
- * A command which fades in a single or a set of letters with a given time.
+ * A command which fades in a single character with a given time.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -42,10 +42,9 @@ import de.radicalfish.state.transitions.FadeTransition.FADETYPE;
  */
 public class FadeCommand extends StyleCommand {
 	
-	protected final FADETYPE type;
+	protected final FADE type;
 	
 	protected final float duration;
-	protected final boolean singleChar;
 	
 	private float time, alpha;
 	
@@ -60,15 +59,12 @@ public class FadeCommand extends StyleCommand {
 	 *            the duration of the fade in seconds.
 	 * @param charpoint
 	 *            the charpoint to start
-	 * @param singleChar
-	 *            true if only the character at <code>charpoint</code> should be faded.
 	 */
-	public FadeCommand(FADETYPE type, float duration, int charpoint, boolean singleChar) {
+	public FadeCommand(FADE type, float duration, int charpoint) {
 		super(charpoint);
 		
 		this.type = type;
 		this.duration = duration;
-		this.singleChar = singleChar;
 	}
 	
 	// METHODS
@@ -93,12 +89,10 @@ public class FadeCommand extends StyleCommand {
 		style.colorBottomRight.a = alpha;
 	}
 	public void finish(GameContainer container, StyleInfo style) {
-		if (singleChar) {
-			style.colorTopLeft.a = a1;
-			style.colorBottomRight.a = a2;
-			style.colorBottomLeft.a = a3;
-			style.colorBottomRight.a = a4;
-		}
+		style.colorTopLeft.a = a1;
+		style.colorBottomRight.a = a2;
+		style.colorBottomLeft.a = a3;
+		style.colorBottomRight.a = a4;
 	}
 	public void reset() {
 		time = 0.0f;

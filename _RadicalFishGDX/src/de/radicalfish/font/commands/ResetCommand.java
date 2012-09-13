@@ -97,7 +97,23 @@ public class ResetCommand extends StyleCommand {
 		
 	}
 	public void finish(GameContainer container, StyleInfo style) {
-		
+		switch (type) {
+			case ALL:
+				style.reset();
+				break;
+			case COLOR:
+				style.resetColor();
+				break;
+			case GEOM:
+				style.resetGeom();
+				break;
+			case ALPHA:
+				style.colorTopLeft.a = 1.0f;
+				style.colorTopRight.a = 1.0f;
+				style.colorBottomLeft.a = 1.0f;
+				style.colorBottomRight.a = 1.0f;
+				break;
+		}
 	}
 	public void reset() {
 		
