@@ -81,11 +81,11 @@ public class DebugPanel {
 		gui.updateTimers();
 		gui.invokeRunables();
 		gui.validateLayout();
-		
+		gui.setCursor();
 	}
 	public void render() {
 		gui.draw();
-		gui.setCursor();
+		
 	}
 	
 	public void addToRoot(Widget widget) {

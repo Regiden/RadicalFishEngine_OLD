@@ -33,7 +33,7 @@ import de.matthiasmann.twl.Scrollbar;
 /**
  * A simple slider.
  * 
- * @version 0.1 (first version)
+ * @version 1.0
  * @author Stefan Lange
  */
 public class Slider extends Scrollbar {

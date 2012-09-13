@@ -30,6 +30,7 @@
 package de.radicalfish.debug;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import org.lwjgl.Sys;
 import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
@@ -113,7 +114,7 @@ public class DeveloperConsole extends ResizableFrame implements LogListener {
 	
 	// INTERFACE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void logChanged(java.util.List<String> log, String lastAdded, Logger.LOGTYPE type) {
+	public void logChanged(List<String> log, String lastAdded, Logger.LOGTYPE type) {
 		if (logToConsole) {
 			// TODO
 		}
