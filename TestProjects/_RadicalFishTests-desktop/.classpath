@@ -9,7 +9,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/_RadicalFishDebug"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/_RadicalFishTests"/>
 	<classpathentry kind="lib" path="/gdx-audio/libs/gdx-audio-natives.jar"/>
-	<classpathentry kind="lib" path="libs/TWL.jar" sourcepath="/twl"/>
-	<classpathentry kind="lib" path="libs/xpp3-1.1.4c.jar"/>
+	<classpathentry kind="lib" path="/_RadicalFishDebug/libs/TWL.jar" sourcepath="/twl"/>
+	<classpathentry kind="lib" path="/_RadicalFishDebug/libs/xpp3-1.1.4c.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

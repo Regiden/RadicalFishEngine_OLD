@@ -762,7 +762,7 @@
     <theme name="table" ref="-defaults">
     
     
-        <param name="rowHeight"><int>font.lineHeight + 6</int></param>
+        <param name="rowHeight"><int>font.lineHeight + 7</int></param>
     
         <theme name="stringcellrenderer" ref="-defaults">
             <param name="border"><border>0</border></param>

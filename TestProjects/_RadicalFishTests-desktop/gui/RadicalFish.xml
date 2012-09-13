@@ -808,6 +808,7 @@
         <param name="scrollbarsAlwaysVisible"><bool>false</bool></param>
         <param name="border"><border>3</border></param>
         <param name="background"><image>test</image></param>
+        <param name="mouseCursor"><cursor>cursor.*</cursor></param>
     </theme>
 
     <theme name="colorarea" ref="-defaults">
