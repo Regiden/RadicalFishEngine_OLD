@@ -34,6 +34,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.GameContainer;
+import de.radicalfish.font.commands.StyleCommand;
 
 /**
  * Base interface for all fonts used in this engine.

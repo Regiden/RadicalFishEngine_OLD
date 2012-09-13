@@ -34,12 +34,13 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.radicalfish.debug.DebugCallback;
 import de.radicalfish.debug.Logger;
+import de.radicalfish.font.BMFont;
+import de.radicalfish.font.Font;
 import de.radicalfish.graphics.BlendMode;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.util.RadicalFishException;
@@ -77,7 +78,7 @@ public class GameContainer implements ApplicationListener {
 	}
 	
 	/** The default font we use. */
-	public BitmapFont defaultFont;
+	public Font defaultFont;
 	protected SpriteBatch batch;
 	protected DisplayMode currentDisplayMode;
 	
@@ -250,13 +251,6 @@ public class GameContainer implements ApplicationListener {
 		graphics = new Graphics(width, height, useGL20, batchSize);
 		batch = graphics.getSpriteBatch();
 		
-		// load default gdx font if now default font if defined.
-		if (!fontPath.equals("") && !fontDefPath.equals("")) {
-			defaultFont = new BitmapFont(Gdx.files.internal(fontPath), Gdx.files.internal(fontDefPath), true);
-		} else {
-			defaultFont = new BitmapFont(true);
-		}
-		
 		if (debugCallBack != null) {
 			if (Gdx.app.getType() != ApplicationType.Desktop) {
 				debugCallBack = null;
@@ -276,7 +270,13 @@ public class GameContainer implements ApplicationListener {
 			debugCallBack.init(this);
 		}
 		
-		created = false;
+		created = true;
+		
+		// load default font if no one was set
+		if (defaultFont == null) {
+			defaultFont = new BMFont(new BitmapFont(true));
+		}
+		
 	}
 	public void render() {
 		try {
@@ -453,33 +453,21 @@ public class GameContainer implements ApplicationListener {
 		this.title = title;
 		Gdx.graphics.setTitle(title + extras);
 	}
+	
 	/**
-	 * Sets the paths for the default font to use. Set it before launching the Application to directly load your
-	 * {@link BitmapFont}. You can change it while in the game loop to. This will unload the current {@link BitmapFont}
-	 * and load the new. If the paths a empty (""), the default GDX font will be loaded.
-	 * 
-	 * @param fontPath
-	 *            the path to the image file (must be internal path)
-	 * @param fontDefPath
-	 *            the path of the def file (must be internal path)
+	 * If you want to use a another {@link Font} as default, call this method in the init method of your {@link Game}
+	 * Implementation to load set the default font. If not set the engine will try to create a {@link BMFont} instance.
+	 * <p>
+	 * if the game is already created and you want switch the default font this will just switch the fonts.
 	 */
-	public void setDefaultFont(String fontPath, String fontDefPath) {
-		Utils.notNull("font path", fontPath);
-		Utils.notNull("dont def path", fontDefPath);
-		
-		this.fontPath = fontPath;
-		this.fontDefPath = fontDefPath;
-		
+	public void setDefaultFont(Font font) {
 		if (created) {
-			try {
-				defaultFont.dispose();
-				defaultFont = new BitmapFont(Gdx.files.internal(fontDefPath), Gdx.files.internal(fontPath), true);
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new RadicalFishException(e.getMessage());
-			}
+			defaultFont = font;
+		} else {
+			throw new RadicalFishException("Can not load a font when container is not created!");
 		}
 	}
+	
 	/**
 	 * Sets the {@link VIEWTYPE} to use.
 	 */
@@ -555,16 +543,6 @@ public class GameContainer implements ApplicationListener {
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * @return a {@link Preferences} with teh given <code>name</code>. returns null if the app was not yet created.
-	 */
-	public Preferences getPrefereces(String name) {
-		if (Gdx.app != null) {
-			return Gdx.app.getPreferences(name);
-		}
-		return null;
-	}
-	
-	/**
 	 * @return the system the application runs on, can be Android, Desktop, Applet, WebGL or iOS.
 	 */
 	public ApplicationType getSystem() {
@@ -589,18 +567,10 @@ public class GameContainer implements ApplicationListener {
 		return debugCallBack;
 	}
 	/**
-	 * 
-	 * @param name
-	 *            the name of the specific preference.
-	 * @return the preferences use to store data across runs.
+	 * @return the default font used by the container. This is null if called in the init method of the {@link Game}
+	 *         instance. 
 	 */
-	public Preferences getPreferences(String name) {
-		return Gdx.app.getPreferences(name);
-	}
-	/**
-	 * @return the default font used by the container.
-	 */
-	public BitmapFont getFont() {
+	public Font getFont() {
 		return defaultFont;
 	}
 	/**

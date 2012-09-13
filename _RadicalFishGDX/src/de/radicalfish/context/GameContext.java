@@ -28,11 +28,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.context;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.GameContainer;
 import de.radicalfish.GameInput;
 import de.radicalfish.assets.Assets;
+import de.radicalfish.font.Font;
 import de.radicalfish.state.StateBasedGame;
 
 /**
@@ -93,7 +93,7 @@ public interface GameContext extends Disposable {
 	/**
 	 * @return the default font to use.
 	 */
-	public BitmapFont getFont();
+	public Font getFont();
 	/**
 	 * @return the assets manager for the game. can be null if not needed.
 	 */

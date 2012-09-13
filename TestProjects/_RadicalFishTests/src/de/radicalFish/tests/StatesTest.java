@@ -28,10 +28,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.tests;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import de.radicalfish.GameContainer;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.font.Font;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.state.StateBasedGame;
 import de.radicalfish.tests.states.SimpleState;
@@ -64,7 +64,7 @@ public class StatesTest extends StateBasedGame implements RadicalFishTest {
 		
 	}
 	protected void postRender(GameContext context, World world, Graphics g) throws RadicalFishException {
-		BitmapFont font = context.getFont();
+		Font font = context.getFont();
 		
 		g.getSpriteBatch().begin();
 		font.draw(g.getSpriteBatch(), "Press Enter to move forward to the next state", 5, 35);

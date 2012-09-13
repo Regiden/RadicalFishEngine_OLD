@@ -36,117 +36,56 @@ import java.util.Map;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import de.radicalfish.context.GraphicDetails;
 import de.radicalfish.context.Settings;
 import de.radicalfish.debug.Logger;
-import de.radicalfish.util.RadicalFishException;
 
 /**
- * Simple implementation of {@link Settings} and {@link GraphicDetails}. The {@link Preferences} interface from libgdx
- * will be used here.
+ * Simple implementation of {@link Settings}. The {@link Preferences} interface from libgdx will be used here.
  * <p>
- * Note that values are loaded as soon as <code>loadSettings</code> is called. The C'Tor just loads the properties
- * without setting any values. Use the C'Tor without a parameter to create an empty settings implementation. all values
- * will be set to defaults (false for boolean and 1.0 for floats).
- * <p>
- * Common values will be auto set. For this all common properties must use the "pre" value of <code>common</code>
- * .property. The same goes for graphics with the <code>graphics</code>.property.
- * <p>
- * FBO support and Shader support works if GL20 is available.
+ * If you set a property which contains the string 'logging' the {@link Logger#setLogging(boolean)} method will be
+ * called with the value (the value should equal true or false. If not nothing happens).
  * 
  * @author Stefan Lange
  * @version 1.0.0
  * @since 15.03.2012
  */
-public class DefaultSettings implements Settings, GraphicDetails {
-	
-	private static boolean shaderSupported, fboSupported;
+public class DefaultSettings implements Settings {
 	
 	private Preferences prefs;
 	private String localStore, externalStore;
 	
 	private OperatingSystem system;
 	
-	private float musicVolume, soundVolume;
-	private boolean debug, logging, fullscreen, sound3D, vsync, smoothDelta;
-	private boolean postprocessing, animations, effects, shaders;
-	
 	/**
-	 * Creates an empty settings object. the name of the {@link Preferences} used here will be defaults-rfe.xml. Logging
-	 * will be set to true.
+	 * Creates a new {@link Settings} implementation from a {@link Preferences} instance.
 	 */
-	public DefaultSettings() {
-		loadSettings("defaults-rfe.xml");
-		setLogging(true);
-	}
-	/**
-	 * Loads the settings file by the given <code>name</code>.
-	 */
-	public DefaultSettings(String name) {
-		loadSettings(name);
-		Logger.setLogging(logging);
+	public DefaultSettings(Preferences prefs) {
+		create(prefs);
 	}
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void loadSettings(String name) {
-		loadPrefs(name);
-		
-	}
-	public void saveSettings() {
-		try {
-			prefs.flush();
-		} catch (Exception e) {
-			Logger.error(e.getMessage(), e.getCause());
-			throw new RadicalFishException(e.getMessage());
-		}
-	}
 	public void printSettings() {
 		Logger.none("Operating System:  " + system);
 		Logger.none("Local Storage:     " + localStore);
 		Logger.none("External Strorage: " + externalStore);
-		Logger.none("Common:");
-		Logger.none("\tDebug:        " + debug);
-		Logger.none("\tLogging:      " + logging);
-		Logger.none("\tFullscreen:   " + fullscreen);
-		Logger.none("\t3D Sound:     " + sound3D);
-		Logger.none("\tVsync:        " + vsync);
-		Logger.none("\tSmooth Delta: " + smoothDelta);
-		Logger.none("\tMusic Volume: " + musicVolume);
-		Logger.none("\tSound Volume: " + soundVolume);
-		
-		Logger.none("Graphics:");
-		Logger.none("\tSupport Shader: " + shaderSupported);
-		Logger.none("\tSupport FBO:    " + fboSupported);
-		Logger.none("\tShader:         " + shaders);
-		Logger.none("\tFBO:            " + postprocessing);
-		Logger.none("\tEffects:        " + effects);
-		Logger.none("\tAnimations:     " + animations);
-		Logger.none("Others:");
-		printAllUncommonProperties();
+		Logger.none("Properties: ");
+		printProperties();
 	}
 	
 	public boolean contains(String key) {
 		return prefs.contains(key);
 	}
-	
-	public Map<String, ?> getAll() {
-		return prefs.get();
+	public void remove(String key) {
+		prefs.remove(key);
 	}
 	
 	// PRIVATE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private void loadPrefs(String name) {
+	private void create(Preferences prefs) {
+		this.prefs = prefs;
 		loadOS();
-		prefs = Gdx.app.getPreferences(name);
-		if (name.equals("defaults-rfe.xml")) {
-			loadDefaults();
-		}
-		
-		loadCommonSettings();
-		loadGraphicDetails();
 		loadPaths();
-		checkGraphicDetails();
 	}
 	
 	private void loadOS() {
@@ -182,51 +121,12 @@ public class DefaultSettings implements Settings, GraphicDetails {
 				system = OperatingSystem.OTHER;
 		}
 	}
-	private void loadDefaults() {
-		prefs.putBoolean("common.fullscreen", false);
-		prefs.putBoolean("common.debug", false);
-		prefs.putBoolean("common.logging", true);
-		prefs.putBoolean("common.vsync", true);
-		prefs.putBoolean("common.sound3D", false);
-		prefs.putBoolean("common.smoothdelta", false);
-		
-		prefs.putFloat("common.music", 1.0f);
-		prefs.putFloat("common.sound", 1.0f);
-		
-		prefs.putBoolean("graphics.postprocessing", false);
-		prefs.putBoolean("graphics.animations", false);
-		prefs.putBoolean("graphics.shaders", false);
-		prefs.putBoolean("graphics.effects", false);
-		
-	}
-	private void loadGraphicDetails() {
-		postprocessing = prefs.getBoolean("graphics.postprocessing", false);
-		animations = prefs.getBoolean("graphics.animations", false);
-		shaders = prefs.getBoolean("graphics.shaders", false);
-		effects = prefs.getBoolean("graphics.effects", false);
-	}
-	private void loadCommonSettings() {
-		fullscreen = prefs.getBoolean("common.fullscreen", false);
-		debug = prefs.getBoolean("common.debug", false);
-		logging = prefs.getBoolean("common.logging", false);
-		sound3D = prefs.getBoolean("common.sound3D", false);
-		vsync = prefs.getBoolean("common.vsync", false);
-		smoothDelta = prefs.getBoolean("common.smoothdelta", false);
-		
-		musicVolume = prefs.getFloat("common.music", 1.0f);
-		soundVolume = prefs.getFloat("common.sound", 1.0f);
-	}
 	private void loadPaths() {
 		localStore = Gdx.files.getLocalStoragePath();
 		externalStore = Gdx.files.getExternalStoragePath();
 	}
 	
-	private void checkGraphicDetails() {
-		fboSupported = Gdx.graphics.isGL20Available();
-		shaderSupported = Gdx.graphics.isGL20Available();
-	}
-	
-	private void printAllUncommonProperties() {
+	private void printProperties() {
 		Iterator<String> keys = prefs.get().keySet().iterator();
 		String temp;
 		int longestKey = 0;
@@ -234,7 +134,7 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		List<String> list = new ArrayList<String>();
 		while (keys.hasNext()) {
 			temp = keys.next();
-			if (temp.contains(".") && !temp.startsWith("common") && !temp.startsWith("graphics")) {
+			if (temp.contains(".")) {
 				list.add(temp);
 				if (temp.length() > longestKey) {
 					longestKey = temp.length();
@@ -257,102 +157,42 @@ public class DefaultSettings implements Settings, GraphicDetails {
 		return s;
 	}
 	
-	private void checkForSimpleSettings(String key) {
-		checkForCommon(key);
-		checkForGraphics(key);
-	}
-	private void checkForCommon(String key) {
-		if (key.equals("common.debug")) {
-			setDebugging(getProperty(key, false));
-		} else if (key.equals("common.fullscreen")) {
-			setFullscreen(getProperty(key, false));
-		} else if (key.equals("common.sound3D")) {
-			setSound3D(getProperty(key, false));
-		} else if (key.equals("common.logging")) {
-			setLogging(getProperty(key, false));
-		} else if (key.equals("common.vsync")) {
-			setVSync(getProperty(key, false));
-		} else if (key.equals("common.smoothdelta")) {
-			setSmoothDelta(getProperty(key, false));
-		} else if (key.equals("common.music")) {
-			setMusicVolume(getProperty(key, 0.0f));
-		} else if (key.equals("common.sound")) {
-			setSoundVolume(getProperty(key, 0.0f));
-		}
-	}
-	private void checkForGraphics(String key) {
-		if (key.equals("graphics.effect")) {
-			setUseEffects(getProperty(key, false));
-		} else if (key.equals("graphics.animation")) {
-			setUseAnimations(getProperty(key, false));
-		} else if (key.equals("graphics.shaders")) {
-			setUseShader(getProperty(key, false));
-		} else if (key.equals("graphics.postprocessing")) {
-			setUsePostProcessing(getProperty(key, false));
-		}
+	// SETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public void setAllSettings(Map<String, ?> map) {
+		prefs.put(map);
 	}
 	
-	// GETTER GRAPHICS
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public boolean isFBOSupported() {
-		return fboSupported;
-	}
-	public boolean usePostProcessing() {
-		return postprocessing && fboSupported;
-	}
-	public boolean useAnimations() {
-		return animations;
-	}
-	public boolean useEffects() {
-		return effects;
-	}
-	public boolean isShaderSupported() {
-		return shaderSupported;
-	}
-	public boolean useShader() {
-		return shaders && shaderSupported;
-	}
-	
-	// SETTER GRAPHICS
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void setFBOSupported(boolean value) {
-		fboSupported = value;
-	};
-	public void setShaderSupported(boolean value) {
-		shaderSupported = value;
-	}
-	public void setUseShader(boolean value) {
-		if (isShaderSupported()) {
-			shaders = value;
-			prefs.putBoolean("graphics.shaders", value);
-		} else {
-			shaders = false;
-			prefs.putBoolean("graphics.shaders", false);
-		}
-	};
-	public void setUsePostProcessing(boolean value) {
-		if (isFBOSupported()) {
-			postprocessing = value;
-			prefs.putBoolean("graphics.postprocessing", value);
-		} else {
-			postprocessing = false;
-			prefs.putBoolean("graphics.postprocessing", false);
+	public void setProperty(String key, String value) {
+		prefs.putString(key, value);
+		if (key.contains("logging")) {
+			if (value.equals("true") || value.equals("false")) {
+				Logger.setLogging(value.equals("true"));
+			}
 		}
 	}
-	public void setUseAnimations(boolean value) {
-		animations = value;
-		prefs.putBoolean("graphics.animations", value);
+	public void setProperty(String key, boolean value) {
+		prefs.putBoolean(key, value);
+		if (key.contains("logging")) {
+			Logger.setLogging(value);
+		}
 	}
-	public void setUseEffects(boolean value) {
-		effects = value;
-		prefs.putBoolean("graphics.effects", value);
+	public void setProperty(String key, float value) {
+		prefs.putFloat(key, value);
+	}
+	public void setProperty(String key, int value) {
+		prefs.putInteger(key, value);
+	}
+	public void setProperty(String key, long value) {
+		prefs.putLong(key, value);
 	}
 	
-	// GETTER SETTINGS
+	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public GraphicDetails getGraphicDetails() {
-		return this;
+	public Map<String, ?> getAllSettings() {
+		return prefs.get();
 	}
+	
 	public OperatingSystem getSystem() {
 		return system;
 	}
@@ -376,85 +216,8 @@ public class DefaultSettings implements Settings, GraphicDetails {
 	public int getProperty(String key, int defaultValue) {
 		return prefs.getInteger(key, defaultValue);
 	}
-	
-	public float getSoundVolume() {
-		return soundVolume;
-	}
-	public float getMusicVolume() {
-		return musicVolume;
-	}
-	
-	public boolean isDebugging() {
-		return debug;
-	}
-	public boolean isLogging() {
-		return logging;
-	}
-	public boolean isFullscreen() {
-		return fullscreen;
-	}
-	public boolean isSound3D() {
-		return sound3D;
-	}
-	public boolean isVSync() {
-		return vsync;
-	}
-	public boolean isSmoothDelta() {
-		return smoothDelta;
-	}
-	
-	// SETTER SETTINGS
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void setProperty(String key, String value) {
-		prefs.putString(key, value);
-		checkForSimpleSettings(key);
-	}
-	public void setProperty(String key, boolean value) {
-		prefs.putBoolean(key, value);
-		checkForSimpleSettings(key);
-	}
-	public void setProperty(String key, float value) {
-		prefs.putFloat(key, value);
-		checkForSimpleSettings(key);
-	}
-	public void setProperty(String key, int value) {
-		prefs.putInteger(key, value);
-		checkForSimpleSettings(key);
-	}
-	
-	public void setFullscreen(boolean value) {
-		fullscreen = value;
-		prefs.putBoolean("common.fullscreen", value);
-	}
-	public void setDebugging(boolean value) {
-		debug = value;
-		prefs.putBoolean("common.debug", value);
-	}
-	public void setLogging(boolean value) {
-		logging = value;
-		prefs.putBoolean("common.logging", value);
-		Logger.setLogging(logging);
-	}
-	public void setVSync(boolean value) {
-		vsync = value;
-		prefs.putBoolean("common.vsync", value);
-	}
-	public void setSmoothDelta(boolean value) {
-		smoothDelta = value;
-		prefs.putBoolean("common.smoothdelta", value);
-	}
-	
-	public void setSound3D(boolean value) {
-		sound3D = value;
-		prefs.putBoolean("common.sound3D", value);
-	}
-	public void setMusicVolume(float value) {
-		musicVolume = value;
-		prefs.putFloat("common.music", value);
-	}
-	public void setSoundVolume(float value) {
-		soundVolume = value;
-		prefs.putFloat("common.sound", value);
+	public long getProperty(String key, long defaultValue) {
+		return prefs.getLong(key, defaultValue);
 	}
 	
 }

@@ -30,7 +30,6 @@
 package de.radicalfish.state;
 import java.util.Iterator;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.IntMap;
 import de.radicalfish.ContextGame;
 import de.radicalfish.GameContainer;
@@ -43,6 +42,7 @@ import de.radicalfish.context.Settings;
 import de.radicalfish.context.defaults.DefaultGameDelta;
 import de.radicalfish.context.defaults.DefaultGameVariables;
 import de.radicalfish.context.defaults.DefaultSettings;
+import de.radicalfish.font.Font;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.state.transitions.EmptyTransition;
 import de.radicalfish.state.transitions.Transition;
@@ -446,9 +446,9 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 			this.game = game;
 			
 			delta = new DefaultGameDelta();
-			settings = new DefaultSettings();
 			varis = new DefaultGameVariables();
 			assets = new Assets();
+			settings = new DefaultSettings(assets.createPreferences("defaults-rfe.xml"));
 		}
 		
 		// INTERFACE
@@ -486,14 +486,16 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 		public GameVariables getGameVariables() {
 			return varis;
 		}
-		public BitmapFont getFont() {
+		public Font getFont() {
 			return container.getFont();
 		}
 		public Assets getAssets() {
 			return assets;
 		}
 		
-		public void dispose() {}
+		public void dispose() {
+			assets.dispose();
+		}
 		
 	}
 }

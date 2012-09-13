@@ -30,10 +30,10 @@
 package de.radicalfish.tests.states;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import de.radicalfish.GameInput;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
+import de.radicalfish.font.Font;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.state.BasicGameState;
 import de.radicalfish.state.transitions.FadeTransition;
@@ -62,7 +62,7 @@ public class SimpleState extends BasicGameState {
 		}
 	}
 	public void render(GameContext context, World world, Graphics g) throws RadicalFishException {
-		BitmapFont font = context.getFont();
+		Font font = context.getFont();
 		
 		float width = font.getBounds(text).width;
 		

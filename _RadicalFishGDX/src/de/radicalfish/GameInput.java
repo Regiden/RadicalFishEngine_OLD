@@ -95,7 +95,6 @@ public class GameInput implements InputProcessor {
 		
 		pressed = new boolean[512];
 		buttons = new boolean[3];
-		
 		listener.addProcessor(this);
 	}
 	
