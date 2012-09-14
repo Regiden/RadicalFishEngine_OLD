@@ -75,7 +75,7 @@ public class StyledLine {
 	public void execute(GameContainer container, StyleInfo style, int charpoint)  {
 		for (int i = 0; i < commands.size; i++) {
 			StyleCommand sc = commands.get(i);
-			if (sc.charpoint == charpoint) {
+			if (sc.getCharPoint() == charpoint) {
 				sc.execute(container, style);
 				finish.add(sc);
 			}
