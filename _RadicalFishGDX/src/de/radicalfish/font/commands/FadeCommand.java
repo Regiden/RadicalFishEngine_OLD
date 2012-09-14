@@ -28,7 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.font.commands;
-
+import com.badlogic.gdx.math.MathUtils;
 import de.radicalfish.GameContainer;
 import de.radicalfish.font.StyleInfo;
 import de.radicalfish.state.transitions.FadeTransition.FADE;
@@ -78,19 +78,22 @@ public class FadeCommand extends StyleCommand {
 		}
 	}
 	public void execute(GameContainer container, StyleInfo style) {
+		if(type == FADE.OUT) {
+			alpha = MathUtils.clamp(1 - alpha, 0, 1);
+		}
 		a1 = style.colorTopLeft.a;
 		a2 = style.colorTopRight.a;
 		a3 = style.colorBottomLeft.a;
 		a4 = style.colorBottomRight.a;
 		
 		style.colorTopLeft.a = alpha;
-		style.colorBottomRight.a = alpha;
+		style.colorTopRight.a = alpha;
 		style.colorBottomLeft.a = alpha;
 		style.colorBottomRight.a = alpha;
 	}
 	public void finish(GameContainer container, StyleInfo style) {
 		style.colorTopLeft.a = a1;
-		style.colorBottomRight.a = a2;
+		style.colorTopRight.a = a2;
 		style.colorBottomLeft.a = a3;
 		style.colorBottomRight.a = a4;
 	}

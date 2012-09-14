@@ -28,7 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.font.commands;
-
 import de.radicalfish.GameContainer;
 import de.radicalfish.font.StyleInfo;
 
