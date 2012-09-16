@@ -37,6 +37,8 @@ import de.radicalfish.font.StyleInfo;
  * A command which will change the color to tint the text in. If the <code>preCharacter</code> parameter in the C'Tor is
  * true, only the character at the given charpoint will be tinted. If not all following characters will be tinted in
  * that color (At least thats how {@link SpriteFont} handles it).
+ * <p>
+ * Note this also changes the alpha value. any alpha related commands should be applied after a color command.
  * 
  * @author Stefan Lange
  * @version 1.0.0
