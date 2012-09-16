@@ -29,6 +29,7 @@
  */
 package de.radicalfish.tests;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -40,9 +41,9 @@ import de.radicalfish.assets.Assets;
 import de.radicalfish.assets.FontSheetLoader.FontSheetParameter;
 import de.radicalfish.assets.SpriteFontLoader.SpriteFontParameter;
 import de.radicalfish.assets.SpriteSheetLoader.SpriteSheetParameter;
-import de.radicalfish.font.StyleParser;
 import de.radicalfish.font.SpriteFont;
 import de.radicalfish.font.StyleInfo;
+import de.radicalfish.font.StyleParser;
 import de.radicalfish.font.StyledLine;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.tests.utils.RadicalFishTest;
@@ -63,7 +64,7 @@ public class GameTest implements Game, RadicalFishTest {
 	
 	private Assets assets;
 	
-	private String text = "[col:1,0,0,1]Te[scol:1,1,0,1]st [x:color]Bla lalalala";
+	private String text = "[repeat:(scol:1,0,0,1),4][group:(fade:1.0,out), 0.5, 4]FADE [col:1,0,0,1]Te[scol:1,1,0,1]st [x:color]Bla [col:1,0,1,1]lalalala";
 	
 	private final int[][] widths = new int[][] { { 3, 3, 5, 7, 5, 7, 7, 3, 4, 4, 5, 5, 4, 5, 3, 5 },
 			{ 5, 3, 5, 5, 5, 5, 5, 5, 5, 5, 3, 4, 5, 5, 5, 5 }, { 7, 5, 5, 5, 5, 5, 5, 5, 5, 3, 5, 5, 5, 7, 6, 5 },
@@ -97,6 +98,7 @@ public class GameTest implements Game, RadicalFishTest {
 		text = p.parseLine(text, line);
 		
 		System.out.println(Texture.getManagedStatus());
+		
 	}
 	public void update(GameContainer container, float delta) throws RadicalFishException {
 		assets.update();
@@ -126,7 +128,9 @@ public class GameTest implements Game, RadicalFishTest {
 	}
 	
 	private void handleInput(GameInput input, float delta) {
-		
+		if(input.isKeyPressed(Keys.R)) {
+			line.reset();
+		}
 	}
 	
 	// OTHER

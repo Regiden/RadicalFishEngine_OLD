@@ -28,12 +28,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.font;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.utils.Array;
 import de.radicalfish.font.commands.ColorCommand;
 import de.radicalfish.font.commands.FadeCommand;
+import de.radicalfish.font.commands.GroupCommand;
+import de.radicalfish.font.commands.RepeatCommand;
 import de.radicalfish.font.commands.ResetCommand;
 import de.radicalfish.font.commands.ResetCommand.RESET;
 import de.radicalfish.font.commands.StyleCommand;
@@ -71,8 +73,23 @@ import de.radicalfish.util.Utils;
  * <li>second: type of fade ('in' or 'out'), if wrong 'out' will be taken
  * <li>example: [fade:2.0,out] fades out the character within 2 seconds.</li>
  * </ul>
- * </li> 
+ * <li>group: groups a set of commands. 3 Parameters:
+ * <ul>
+ * <li>first: a command in a like other commands but in a () container.</li>
+ * <li>second: delay for each command to execute. (eg a fade effect where one char after another appears)</li>
+ * <li>third: number of characters to apply the effect.</li>
+ * <li>example: [group:(fade:1.0,out),0.5, 4] fades 4 char in 1 second with a 0.5 delay for each char.</li>
+ * </ul>
+ * </li>
+ * <li>repeat: repeats a set of commands. 2 Parameters:
+ * <ul>
+ * <li>first: a command in a like other commands but in a () container.</li>
+ * <li>second: number of characters to apply the effect.</li>
+ * <li>example: [repeat:(fade:1.0,out), 4] fades 4 char in 1 second.</li>
+ * </ul>
+ * </li> </li>
  * <hr>
+ * Use this Parser in case you have an Editor and you want to just provide some text with commands.
  * 
  * @author Stefan Lange
  * @version 0.5.0
@@ -83,9 +100,12 @@ public class StyleParser {
 	/** A simple instance of the {@link StyleParser}. */
 	public static final StyleParser INSTANCE = new StyleParser();
 	
-	private static final Pattern param = Pattern.compile(",");
-	private static final Pattern lineSep = Pattern.compile("\r\n");
-	private static final Pattern cp = Pattern.compile("\\[(\\w+)(?::([^,]+(?:,[^,]+?)*))?\\]");
+	// lookahead so nested brackets should work (SHOULD not sure I suck an regex)
+	private static final Pattern param = Pattern.compile(",(?![^()]*+\\))");
+	// should work on unix system that way
+	private static final Pattern lineSep = Pattern.compile("\r?\n");
+	// version 3.0 hopefully covers all needs
+	private static final Pattern cp = Pattern.compile("\\[(\\w+)(?::([^,\\]]+(?:,[^,\\]]+?)*))?\\]");
 	
 	/**
 	 * Contains all {@link StyleCommand}s after a {@link StyleParser#parseMultiLine(String, StyledText)} if the given
@@ -151,14 +171,12 @@ public class StyleParser {
 			
 			output.add(createCommand(name, command, index));
 		}
-		System.out.println(matcher.toMatchResult().toString());
 		return line;
 	}
 	
 	private StyleCommand createCommand(String name, String params, int charpoint) {
-		System.out.println("name:   " + name);
-		System.out.println("params: " + params);
-		
+		System.out.println(name);
+		System.out.println(params);
 		
 		if (name.equals("col")) {
 			return createColorCommand(param.split(params), false, charpoint);
@@ -168,43 +186,99 @@ public class StyleParser {
 			return createFadeCommand(param.split(params), charpoint);
 		} else if (name.equals("x")) {
 			return createResetCommand(param.split(params), charpoint);
-		}
+		} else if (name.equals("group")) {
+			return createGroupCommand(param.split(params), charpoint);
+		} else if (name.equals("repeat")) {
+			return createRepeatCommand(param.split(params), charpoint);
+		} 
 		throw new RadicalFishException("Could not parse command: " + name + " with paramaters: " + params + " at charpoint: " + charpoint);
 	}
-	private ColorCommand createColorCommand(String[] params, boolean single, int charpoint) {
+	private StyleCommand createColorCommand(String[] params, boolean single, int charpoint) {
 		if (params.length != 4) {
 			throw new RadicalFishException("Number of Parameters for color command must be 4 (r, g, b, a)");
 		}
 		Color c = new Color(parseFloat(params[0]), parseFloat(params[1]), parseFloat(params[2]), parseFloat(params[3]));
 		return new ColorCommand(c, charpoint, single);
 	}
-	private FadeCommand createFadeCommand(String[] params, int charpoint) {
+	private StyleCommand createFadeCommand(String[] params, int charpoint) {
 		if (params.length != 2) {
 			throw new RadicalFishException("Number of Parameters for fade command must be 2 (duration, type)");
 		}
 		
 		float duration = parseFloat(params[0]);
-		if(!params[1].equals("in") || !params[1].equals("out")) {
+		if (!params[1].equals("in") && !params[1].equals("out")) {
 			throw new RadicalFishException("second parameter of fade command is not valid (must be in or out) given: " + params[1]);
 		}
 		boolean type = params[1].equals("in");
 		
 		return new FadeCommand(type ? FADE.IN : FADE.OUT, duration, charpoint);
 	}
-	private ResetCommand createResetCommand(String[] params, int charpoint) {
+	private StyleCommand createResetCommand(String[] params, int charpoint) {
 		if (params.length != 1) {
 			throw new RadicalFishException("Number of Parameters for reset command must be 1 (type)");
 		}
 		RESET res = null;
 		try {
 			res = RESET.valueOf(params[0].toUpperCase());
-		}catch(IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			throw new RadicalFishException("the given reset type is not in the enum: " + params[0]);
 		}
 		return new ResetCommand(res, charpoint);
 		
 	}
+	private StyleCommand createGroupCommand(String[] params, int charpoint) {
+		if (params.length != 3) {
+			throw new RadicalFishException("Number of Parameters for group command must be 3 (command, delay, number of characters)");
+		}
+		
+		String name;
+		String command = params[0].substring(1, params[0].length() - 1);
+		if (command.contains(":")) {
+			name = command.substring(0, command.indexOf(":"));
+			command = command.substring(command.indexOf(":") + 1, command.length()).replace(" ", "");
+		} else {
+			name = command;
+			command = "";
+		}
+		
+		float delay = parseFloat(params[1]);
+		int times = parseInt(params[2]);
+		
+		Array<StyleCommand> c = new Array<StyleCommand>();
+		for (int i = 0; i < times; i++) {
+			c.add(createCommand(name, command, charpoint));
+		}
+		
+		return new GroupCommand(c, charpoint, delay);
+	}
+	private StyleCommand createRepeatCommand(String[] params, int charpoint) { 
+		if (params.length != 2) {
+			throw new RadicalFishException("Number of Parameters for group command must be 2 (command, number of characters)");
+		}
+		
+		String name;
+		String command = params[0].substring(1, params[0].length() - 1);
+		if (command.contains(":")) {
+			name = command.substring(0, command.indexOf(":"));
+			command = command.substring(command.indexOf(":") + 1, command.length()).replace(" ", "");
+		} else {
+			name = command;
+			command = "";
+		}
+		
+		int times = parseInt(params[1]);
+		
+		return new RepeatCommand(createCommand(name, command, charpoint), charpoint, times);
+	}
 	
+	
+	private int parseInt(String val) {
+		try {
+			return Integer.parseInt(val);
+		} catch (NumberFormatException e) {
+			throw new RadicalFishException("Could not parse int value parameter (Maybe a parameter is not a int where it should be).");
+		}
+	}
 	private float parseFloat(String val) {
 		try {
 			return Float.parseFloat(val);
