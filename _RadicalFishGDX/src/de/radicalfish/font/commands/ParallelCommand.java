@@ -43,7 +43,7 @@ import de.radicalfish.font.StyleInfo;
 public class ParallelCommand extends StyleCommand {
 	
 	/** The commands to execute parallel. */
-	public final Array<StyleCommand> commands = new Array<StyleCommand>();
+	protected final Array<StyleCommand> commands = new Array<StyleCommand>();
 	
 	/**
 	 * Creates a new {@link ParallelCommand}.
@@ -55,7 +55,7 @@ public class ParallelCommand extends StyleCommand {
 		super(charpoint);
 	}
 	
-	// METHODS
+	// OVERRIDE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void update(GameContainer container, float delta) {
 		for (int i = 0; i < commands.size; i++) {
@@ -77,5 +77,26 @@ public class ParallelCommand extends StyleCommand {
 			commands.get(i).reset();
 		}
 		
+	}
+	
+	// METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Adds a command to the parallel group.
+	 */
+	public void addCommand(StyleCommand command) {
+		commands.add(command);
+	}
+	/**
+	 * Removes a command from the parallel group.
+	 */
+	public void removeCommand(int index) {
+		commands.removeIndex(index);
+	}
+	/**
+	 * Removes a command from the parallel group.
+	 */
+	public void removeCommand(StyleCommand command) {
+		commands.removeValue(command, true);
 	}
 }
