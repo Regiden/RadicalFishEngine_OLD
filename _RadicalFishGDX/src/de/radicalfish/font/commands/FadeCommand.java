@@ -40,13 +40,10 @@ import de.radicalfish.state.transitions.FadeTransition.FADE;
  * @version 1.0.0
  * @since 13.09.2012
  */
-public class FadeCommand extends StyleCommand {
+public class FadeCommand extends TimeCommand {
 	
+	/** The type of the fade. */
 	protected final FADE type;
-	
-	protected final float duration;
-	
-	private float time, alpha;
 	
 	private float a1, a2, a3, a4;
 	
@@ -61,7 +58,7 @@ public class FadeCommand extends StyleCommand {
 	 *            the charpoint to start
 	 */
 	public FadeCommand(FADE type, float duration, int charpoint) {
-		super(charpoint);
+		super(charpoint, duration);
 		
 		this.type = type;
 		this.duration = duration;
@@ -69,16 +66,9 @@ public class FadeCommand extends StyleCommand {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void update(GameContainer container, float delta) {
-		if (time < duration) {
-			alpha = time / duration;
-			time += delta;
-		} else {
-			alpha = 1f;
-		}
-	}
-	public void execute(GameContainer container, StyleInfo style) {
-		if(type == FADE.OUT) {
+	
+	public void execute(GameContainer container, StyleInfo style, float alpha) {
+		if (type == FADE.OUT) {
 			alpha = MathUtils.clamp(1 - alpha, 0, 1);
 		}
 		a1 = style.colorTopLeft.a;
@@ -91,14 +81,14 @@ public class FadeCommand extends StyleCommand {
 		style.colorBottomLeft.a = alpha;
 		style.colorBottomRight.a = alpha;
 	}
-	public void finish(GameContainer container, StyleInfo style) {
+	public void finish(GameContainer container, StyleInfo style, float alpha) {
 		style.colorTopLeft.a = a1;
 		style.colorTopRight.a = a2;
 		style.colorBottomLeft.a = a3;
 		style.colorBottomRight.a = a4;
 	}
-	public void reset() {
-		time = 0.0f;
-	}
 	
+	// UNUSED
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public void update(GameContainer container, float delta, float alpha) {}
 }
