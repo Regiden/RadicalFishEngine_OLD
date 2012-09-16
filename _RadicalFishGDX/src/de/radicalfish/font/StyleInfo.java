@@ -62,7 +62,7 @@ import de.radicalfish.font.commands.StyleCommand;
  * the current {@link TextureRegion}. That said this also means the size will be set to the size of the
  * {@link TextureRegion}.
  * <p>
- * In this method you add new values to any of the fields which will be used to draw the {@link TextureRegion}. 
+ * In this method you add new values to any of the fields which will be used to draw the {@link TextureRegion}.
  * <p>
  * You can use the class to draw a texture too. just set the values like you want and call
  * {@link StyleInfo#createVertices(TextureRegion, float, float)} to get the vertices.
@@ -257,16 +257,33 @@ public class StyleInfo {
 		colorBottomRight.set(1, 1, 1, 1);
 	}
 	
+	// INTERN
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private void setColor(Color color, Color other, boolean alpha) {
+		color.r = other.r;
+		color.g = other.g;
+		color.b = other.b;
+		if (alpha) {
+			color.a = other.a;
+		}
+	}
+	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
 	 * Sets the color to all corners.
 	 */
 	public void setColor(Color color) {
-		colorTopLeft.set(color);
-		colorTopRight.set(color);
-		colorBottomLeft.set(color);
-		colorBottomRight.set(color);
+		setColor(color, true);
+	}
+	/**
+	 * Sets the color to all corners.
+	 */
+	public void setColor(Color color, boolean alpha) {
+		setColor(colorTopLeft, color, alpha);
+		setColor(colorTopRight, color, alpha);
+		setColor(colorBottomLeft, color, alpha);
+		setColor(colorBottomRight, color, alpha);
 	}
 	/**
 	 * Sets the color to all corners.
@@ -277,10 +294,10 @@ public class StyleInfo {
 		temp.g = ((intBits >>> 8) & 0xff) / 255f;
 		temp.b = ((intBits >>> 16) & 0xff) / 255f;
 		temp.a = ((intBits >>> 24) & 0xff) / 255f;
-		colorTopLeft.set(temp);
-		colorTopRight.set(temp);
-		colorBottomLeft.set(temp);
-		colorBottomRight.set(temp);
+		setColor(colorTopLeft, temp, true);
+		setColor(colorTopRight, temp, true);
+		setColor(colorBottomLeft, temp, true);
+		setColor(colorBottomRight, temp, true);
 	}
 	/**
 	 * Sets the color to all corners.
