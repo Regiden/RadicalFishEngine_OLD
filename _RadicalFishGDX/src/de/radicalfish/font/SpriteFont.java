@@ -127,6 +127,7 @@ public class SpriteFont implements Font {
 		float oldColor = batch.getColor().toFloatBits();
 		batch.setColor(color);
 		info.setColor(color);
+		info.reset();
 		drawLine(batch, text, x, y, startIndex, endIndex, c, style);
 		batch.setColor(oldColor);
 	}
