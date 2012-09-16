@@ -63,32 +63,29 @@ public abstract class StyleCommand {
 	 * @param container
 	 *            the container the game runs in
 	 * @param delta
-	 *            the time since the last frame.
+	 *            the time since the last frame
 	 */
 	public abstract void update(GameContainer container, float delta) ;
-	
 	/**
 	 * Will be called to apply the command to the {@link StyleInfo} given as parameter. After this the
 	 * {@link TextureRegion} will be drawn based in the {@link StyleInfo}.
 	 * 
 	 * @param container
-	 *            the container the game runs in.
+	 *            the container the game runs in
 	 * @param style
-	 *            the {@link StyleInfo} to change. will be used to draw the character.
+	 *            the {@link StyleInfo} to change. will be used to draw the character
 	 */
 	public abstract void execute(GameContainer container, StyleInfo style) ;
-	
 	/**
 	 * Releases any resources used by this command (eg. you use a custom shader). Can also be used to reset values on
 	 * the style info.
 	 * 
 	 * @param container
-	 *            the container the game runs in.
+	 *            the container the game runs in
 	 * @param style
-	 *            the {@link StyleInfo} to change. will be used to draw the character.
+	 *            the {@link StyleInfo} to change. will be used to draw the character
 	 */
 	public abstract void finish(GameContainer container, StyleInfo style) ;
-	
 	/**
 	 * Resets the {@link StyleCommand}.
 	 */
