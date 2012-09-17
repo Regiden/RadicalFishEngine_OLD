@@ -46,8 +46,11 @@ import de.radicalfish.font.StyleInfo;
  */
 public class ColorCommand extends StyleCommand {
 	
-	protected final Color color;
-	protected final boolean singleChar;
+	/** The color to apply. */
+	protected Color color;
+	
+	/** True if the effect will only be applied on one character */
+ 	protected final boolean singleChar;
 	
 	private Color c1 = new Color(), c2 = new Color(), c3 = new Color(), c4 = new Color();
 	

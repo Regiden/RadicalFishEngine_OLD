@@ -115,8 +115,8 @@ public class StyleInfo {
 	 */
 	public float[] createVertices(float u, float v, float u2, float v2, float x, float y) {
 		// bottom left and top right corner points relative to origin
-		final float worldOriginX = x + origin.x;
-		final float worldOriginY = y + origin.y;
+		final float worldOriginX = (x + offset.x) + origin.x;
+		final float worldOriginY = (y + offset.y) + origin.y;
 		float fx = -origin.x;
 		float fy = -origin.y;
 		float fx2 = size.x - origin.x;

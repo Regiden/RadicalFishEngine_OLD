@@ -35,6 +35,7 @@ import com.badlogic.gdx.utils.Array;
 import de.radicalfish.font.commands.ColorCommand;
 import de.radicalfish.font.commands.FadeCommand;
 import de.radicalfish.font.commands.GroupCommand;
+import de.radicalfish.font.commands.MoveCommand;
 import de.radicalfish.font.commands.RepeatCommand;
 import de.radicalfish.font.commands.ResetCommand;
 import de.radicalfish.font.commands.ResetCommand.RESET;
@@ -48,18 +49,18 @@ import de.radicalfish.util.Utils;
  * examples which would color a character when parsed with this parser:
  * 
  * <pre>
- * String test = "This Letter is Red: [scol:1.0,0.0,0.0,1.0]R.
+ * String test = "This Letter is Red: [sc:1.0,0.0,0.0,1.0]R.
  * </pre>
  * 
  * This would tint the last Letter in Red. As you can see a command always starts with a name (explained in the
  * following). Then a ':' comes which tells us that now all parameters come.
  * <p>
- * All parameters must be separated by a ',' (without whitespaces).
+ * All parameters must be separated by a ',' (without whitespace).
  * <p>
  * <hr>
  * Here is a list for the supported commands:
- * <li>scol: tints a single character. 4 parameter must be given for the color as float values. eg. [scol:1,1,1,1]</li>
- * <li>col: tints all characters from the command on. 4 parameter as float values. eg. [col:1,1,1,1]</li>
+ * <li>sc: tints a single character. 4 parameter must be given for the color as float values. eg. [sc:1,1,1,1]</li>
+ * <li>co: tints all characters from the command on. 4 parameter as float values. eg. [co:1,1,1,1]</li>
  * <li>x: resets the state of the {@link StyleInfo} used for transformation
  * <ul>
  * <li>[x:color] to reset the color in all 4 corners (to white)</li>
@@ -67,32 +68,47 @@ import de.radicalfish.util.Utils;
  * <li>[x:geom] for the size,rotation etc</li>
  * <li>[x:alpha] to reset all</li>
  * </ul>
- * <li>fade: fades a set of characters. 3 Parameters:
+ * <li>fd: fades a set of characters. 3 Parameters:
  * <ul>
  * <li>first: duration of the fade in seconds</li>
  * <li>second: type of fade ('in' or 'out'), if wrong 'out' will be taken
- * <li>example: [fade:2.0,out] fades out the character within 2 seconds.</li>
+ * <li>example: [fd:2.0,out] fades out the character within 2 seconds.</li>
  * </ul>
- * <li>group: groups a set of commands. 3 Parameters:
+ * <li>gp: groups a set of commands. 3 Parameters:
  * <ul>
  * <li>first: a command in a like other commands but in a () container.</li>
  * <li>second: delay for each command to execute. (eg a fade effect where one char after another appears)</li>
  * <li>third: number of characters to apply the effect.</li>
- * <li>example: [group:(fade:1.0,out),0.5, 4] fades 4 char in 1 second with a 0.5 delay for each char.</li>
+ * <li>example: [gp:(fd:1.0,out),0.5, 4] fades 4 char in 1 second with a 0.5 delay for each char.</li>
  * </ul>
  * </li>
- * <li>repeat: repeats a set of commands. 2 Parameters:
+ * <li>rp: repeats a set of commands. 2 Parameters:
  * <ul>
  * <li>first: a command in a like other commands but in a () container.</li>
  * <li>second: number of characters to apply the effect.</li>
- * <li>example: [repeat:(fade:1.0,out), 4] fades 4 char in 1 second.</li>
+ * <li>example: [rp:(fd:1.0,out), 4] fades 4 char in 1 second.</li>
+ * </ul>
+ * </li>
+ * <li>sm: moves a character to a offset. 3 Parameters:
+ * <ul>
+ * <li>first: the x offset to move to.</li>
+ * <li>second: the y offset to move to.</li>
+ * <li>third: the time the move takes. In seconds.</li>
+ * <li>example: [sm:10,10,2] moves a single character to a offset of 10,10 relative to the characters position.</li>
+ * </ul>
+ * </li>
+ * <li>mv: moves all characters to a offset. 3 Parameters:
+ * <ul>
+ * <li>first: the x offset to move to.</li>
+ * <li>second: the y offset to move to.</li>
+ * <li>third: the time the move takes. In seconds.</li>
+ * <li>example: [sv:10,10,2] moves all character to a offset of 10,10 relative to the characters positions.</li>
  * </ul>
  * </li> </li>
  * <hr>
- * Use this Parser in case you have an Editor and you want to just provide some text with commands.
  * 
  * @author Stefan Lange
- * @version 0.5.0
+ * @version 0.6.0
  * @since 06.09.2012
  */
 public class StyleParser {
@@ -142,8 +158,7 @@ public class StyleParser {
 		String[] lines = lineSep.split(text);
 		for (int i = 0; i < lines.length; i++) {
 			StyledLine line = new StyledLine();
-			
-			sb.append(parseLine(lines[i], line) + lineSep.pattern());
+			sb.append(parseLine(lines[i], line) + "\n");
 			output.add(line);
 		}
 		return sb.toString();
@@ -175,34 +190,35 @@ public class StyleParser {
 	}
 	
 	private StyleCommand createCommand(String name, String params, int charpoint) {
-		System.out.println(name);
-		System.out.println(params);
-		
-		if (name.equals("col")) {
+		if (name.equals("co")) {
 			return createColorCommand(param.split(params), false, charpoint);
-		} else if (name.equals("scol")) {
+		} else if (name.equals("sc")) {
 			return createColorCommand(param.split(params), true, charpoint);
-		} else if (name.equals("fade")) {
+		} else if (name.equals("fd")) {
 			return createFadeCommand(param.split(params), charpoint);
 		} else if (name.equals("x")) {
 			return createResetCommand(param.split(params), charpoint);
-		} else if (name.equals("group")) {
+		} else if (name.equals("gp")) {
 			return createGroupCommand(param.split(params), charpoint);
-		} else if (name.equals("repeat")) {
+		} else if (name.equals("rp")) {
 			return createRepeatCommand(param.split(params), charpoint);
+		} else if (name.equals("mv")) {
+			return createMoveCommand(param.split(params), charpoint, false);
+		} else if (name.equals("sm")) {
+			return createMoveCommand(param.split(params), charpoint, true);
 		} 
 		throw new RadicalFishException("Could not parse command: " + name + " with paramaters: " + params + " at charpoint: " + charpoint);
 	}
 	private StyleCommand createColorCommand(String[] params, boolean single, int charpoint) {
 		if (params.length != 4) {
-			throw new RadicalFishException("Number of Parameters for color command must be 4 (r, g, b, a)");
+			throw new RadicalFishException("Number of Parameters for color/scolor (co/sc) command must be 4 (r, g, b, a)");
 		}
 		Color c = new Color(parseFloat(params[0]), parseFloat(params[1]), parseFloat(params[2]), parseFloat(params[3]));
 		return new ColorCommand(c, charpoint, single);
 	}
 	private StyleCommand createFadeCommand(String[] params, int charpoint) {
 		if (params.length != 2) {
-			throw new RadicalFishException("Number of Parameters for fade command must be 2 (duration, type)");
+			throw new RadicalFishException("Number of Parameters for fade (fd) command must be 2 (duration, type)");
 		}
 		
 		float duration = parseFloat(params[0]);
@@ -215,13 +231,13 @@ public class StyleParser {
 	}
 	private StyleCommand createResetCommand(String[] params, int charpoint) {
 		if (params.length != 1) {
-			throw new RadicalFishException("Number of Parameters for reset command must be 1 (type)");
+			throw new RadicalFishException("Number of Parameters for reset (x) command must be 1 (type)");
 		}
 		RESET res = null;
 		try {
 			res = RESET.valueOf(params[0].toUpperCase());
 		} catch (IllegalArgumentException e) {
-			throw new RadicalFishException("the given reset type is not in the enum: " + params[0]);
+			throw new RadicalFishException("the given reset type is not in the enum: '" + params[0] + "'");
 		}
 		return new ResetCommand(res, charpoint);
 		
@@ -251,9 +267,9 @@ public class StyleParser {
 		
 		return new GroupCommand(c, charpoint, delay);
 	}
-	private StyleCommand createRepeatCommand(String[] params, int charpoint) { 
+	private StyleCommand createRepeatCommand(String[] params, int charpoint) {
 		if (params.length != 2) {
-			throw new RadicalFishException("Number of Parameters for group command must be 2 (command, number of characters)");
+			throw new RadicalFishException("Number of Parameters for repeat (rp) command must be 2 (command, number of characters)");
 		}
 		
 		String name;
@@ -270,7 +286,16 @@ public class StyleParser {
 		
 		return new RepeatCommand(createCommand(name, command, charpoint), charpoint, times);
 	}
-	
+	private StyleCommand createMoveCommand(String[] params, int charpoint, boolean single) {
+		if (params.length != 3) {
+			throw new RadicalFishException("Number of Parameters for move/smove (mv/sm) command must be 3 (x, y, time)");
+		}
+		
+		float x = parseFloat(params[0]);
+		float y = parseFloat(params[1]);
+		float time = parseFloat(params[2]);
+		return new MoveCommand(x, y, charpoint, time, single);
+	}
 	
 	private int parseInt(String val) {
 		try {

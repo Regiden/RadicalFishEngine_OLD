@@ -47,17 +47,17 @@ public class StyledText {
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Updates the current line.
+	 * Updates all lines.
 	 * 
 	 * @param container
 	 *            the container the game runs in
 	 * @param delta
 	 *            the time since the last frame in seconds
-	 * @param line
-	 *            the line index of the current line
 	 */
-	public void update(GameContainer container, float delta, int line)  {
-		lines.get(line).update(container, delta);
+	public void update(GameContainer container, float delta)  {
+		for (int i = 0; i < lines.size; i++) {
+			lines.get(i).update(container, delta);
+		}
 	}
 	/**
 	 * Calls {@link StyledLine#execute(GameContainer, StyleInfo, int)} on the current line.

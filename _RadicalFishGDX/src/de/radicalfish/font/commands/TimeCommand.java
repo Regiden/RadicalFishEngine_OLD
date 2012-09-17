@@ -28,19 +28,18 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.font.commands;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.radicalfish.GameContainer;
 import de.radicalfish.font.StyleInfo;
 
 /**
- * This abstract class adds a duration to a style command which tells us hoe long the command needs to change it's
- * state. The update, execute and finish methods have new parameters.
+ * This abstract class adds a duration to a style command which tells us how long the command needs to change it's
+ * state. The update, execute and finish methods have a new parameter.
  * <p>
  * The methods include the passed time since the command has been started (reset will of course reset the timer) in a
- * range of 0 - 1. 0 means the start of the command and 1 means the command is done. If the command is done the update
- * method will not be called anymore (use the {@link TimeCommand#TimeCommand(int, float, boolean)} C'Tor to still call
- * the update method if you need it.
+ * range of 0 - 1. 0 means the start of the command and 1 means the command is done.
+ * <p>
+ * Note that the update method will still be called when the time is over! Also if the duration 
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -49,13 +48,13 @@ import de.radicalfish.font.StyleInfo;
 public abstract class TimeCommand extends StyleCommand {
 	
 	/** The duration of this {@link TimeCommand}. */
-	public float duration;
+	public float duration = 0f;
 	
 	/** True if we are done. set it to true if your command is done sooner then the duration. */
-	public boolean done;
+	public boolean done = false;
 	
-	private float timer;
-	private float alpha;
+	private float timer = 0.0f;
+	private float alpha = 0.0f;
 	
 	/**
 	 * Creates a new {@link TimeCommand}. This C'Tor makes sure that the update methode will not be called when the
@@ -125,20 +124,17 @@ public abstract class TimeCommand extends StyleCommand {
 	// OVERRIDE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public final void update(GameContainer container, float delta) {
+		update(container, delta, alpha);
 		if (!done) {
-			update(container, delta, alpha);
-		}
-		if (!done) {
-			if (timer >= duration) {
-				done = true;
-			}
 			timer += delta;
-			if (timer > duration) {
+			if (timer >= duration) {
 				timer = duration;
+				done = true;
+				alpha = 1f;
+			} else {
+				alpha = timer / duration;
 			}
-			alpha = duration == 0 ? 1 : timer / duration;
 		}
-		
 	}
 	public final void execute(GameContainer container, StyleInfo style) {
 		execute(container, style, alpha);
