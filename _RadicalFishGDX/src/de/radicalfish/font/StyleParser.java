@@ -53,10 +53,7 @@ import de.radicalfish.util.Utils;
  * </pre>
  * 
  * This would tint the last Letter in Red. As you can see a command always starts with a name (explained in the
- * following). Then a ':' comes which tells us that now all parameters come.
- * <p>
- * All parameters must be separated by a ',' (without whitespace).
- * <p>
+ * following). Then a ':' following all parameters separated with a ','.
  * <hr>
  * Here is a list for the supported commands:
  * <li>sc: tints a single character. 4 parameter must be given for the color as float values. eg. [sc:1,1,1,1]</li>
@@ -108,7 +105,7 @@ import de.radicalfish.util.Utils;
  * <hr>
  * 
  * @author Stefan Lange
- * @version 0.6.0
+ * @version 1.0.0
  * @since 06.09.2012
  */
 public class StyleParser {

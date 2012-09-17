@@ -130,17 +130,6 @@ public class GroupCommand extends StyleCommand {
 		reset();
 	}
 	/**
-	 * The the command at a certain index. the index must be in bounds.
-	 */
-	public void setStyleComand(StyleCommand command, int index) {
-		if (commands.get(index) != null) {
-			commands.get(index).command = command;
-		} else {
-			commands.set(index, new Container(command));
-		}
-		reset();
-	}
-	/**
 	 * Removes an command from the list.
 	 */
 	public void remove(int index) {

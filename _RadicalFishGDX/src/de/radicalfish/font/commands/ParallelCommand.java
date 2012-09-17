@@ -93,10 +93,5 @@ public class ParallelCommand extends StyleCommand {
 	public void removeCommand(int index) {
 		commands.removeIndex(index);
 	}
-	/**
-	 * Removes a command from the parallel group.
-	 */
-	public void removeCommand(StyleCommand command) {
-		commands.removeValue(command, true);
-	}
+
 }
