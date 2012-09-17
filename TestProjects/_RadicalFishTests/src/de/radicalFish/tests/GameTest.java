@@ -44,7 +44,7 @@ import de.radicalfish.assets.SpriteSheetLoader.SpriteSheetParameter;
 import de.radicalfish.font.SpriteFont;
 import de.radicalfish.font.StyleInfo;
 import de.radicalfish.font.StyleParser;
-import de.radicalfish.font.StyledLine;
+import de.radicalfish.font.StyledText;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.tests.utils.RadicalFishTest;
 import de.radicalfish.util.RadicalFishException;
@@ -60,11 +60,11 @@ public class GameTest implements Game, RadicalFishTest {
 	private StyleInfo info;
 	private SpriteFont font;
 	
-	private StyledLine line;
+	private StyledText texCom;
 	
 	private Assets assets;
 	
-	private String text = "[repeat:(scol:1,0,0,1),4][group:(fade:1.0,out), 0.5, 4]FADE [col:1,0,0,1]Te[scol:1,1,0,1]st [x:color]Bla [col:1,0,1,1]lalalala";
+	private String text = "[rp:(sc:1,0,0,1),4][gp:(fd:1.0,out), 0.2, 4][gp:(sm:0,10,1), 0.2, 4]FADE[x:all] [co:1,0,0,1]Te[sc:1,1,0,1]st [x:color]Bla[co:1,0,1,1]lalalala";
 	
 	private final int[][] widths = new int[][] { { 3, 3, 5, 7, 5, 7, 7, 3, 4, 4, 5, 5, 4, 5, 3, 5 },
 			{ 5, 3, 5, 5, 5, 5, 5, 5, 5, 5, 3, 4, 5, 5, 5, 5 }, { 7, 5, 5, 5, 5, 5, 5, 5, 5, 3, 5, 5, 5, 7, 6, 5 },
@@ -92,19 +92,17 @@ public class GameTest implements Game, RadicalFishTest {
 		assets.finishLoading();
 		
 		font = assets.get("spfont", SpriteFont.class);
-		line = new StyledLine();
+		texCom = new StyledText();
 		
 		StyleParser p = StyleParser.INSTANCE;
-		text = p.parseLine(text, line);
-		
-		System.out.println(Texture.getManagedStatus());
+		text = p.parseMultiLine(text, texCom);
 		
 	}
 	public void update(GameContainer container, float delta) throws RadicalFishException {
 		assets.update();
 		handleInput(container.getInput(), delta);
 		
-		line.update(container, delta);
+		texCom.update(container, delta);
 	}
 	public void render(GameContainer container, Graphics g) throws RadicalFishException {
 		g.setClearColor(0.7f, 0.1f, 0.3f);
@@ -118,9 +116,7 @@ public class GameTest implements Game, RadicalFishTest {
 			g.fillRect(100, 50, assets.getProgress() * 200, 20);
 			g.drawRect(100, 50, 200, 20);
 			
-			
-			font.draw(batch, text.toUpperCase(), 100, 100, container, line);
-			
+			font.draw(batch, text.toUpperCase(), 100, 100, container, texCom);
 			
 		}
 		batch.end();
@@ -128,8 +124,8 @@ public class GameTest implements Game, RadicalFishTest {
 	}
 	
 	private void handleInput(GameInput input, float delta) {
-		if(input.isKeyPressed(Keys.R)) {
-			line.reset();
+		if (input.isKeyPressed(Keys.R)) {
+			texCom.reset();
 		}
 	}
 	
