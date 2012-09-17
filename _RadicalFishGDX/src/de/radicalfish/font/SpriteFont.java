@@ -63,7 +63,8 @@ import de.radicalfish.util.RadicalFishException;
  */
 public class SpriteFont implements Font {
 	
-	private static final Pattern split = Pattern.compile("\n");
+	// should work on unix system that way
+	private static final Pattern split = Pattern.compile("\r?\n");
 	
 	private final TextBounds bounds = new TextBounds();
 	private final StyleInfo info = new StyleInfo();
@@ -114,43 +115,44 @@ public class SpriteFont implements Font {
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void draw(SpriteBatch batch, String text, float x, float y) {
-		draw(batch, text, x, y, 0, text.length(), null, null);
+		drawMultiLine(batch, text, x, y, null, null);
+		
 	}
-	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex) {
-		draw(batch, text, x, y, startIndex, endIndex, null, null);
-	}
-	
-	public void draw(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style) {
-		draw(batch, text, x, y, 0, text.length(), c, style);
-	}
-	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex, GameContainer c, StyledLine style) {
-		float oldColor = batch.getColor().toFloatBits();
-		batch.setColor(color);
-		info.setColor(color);
-		info.reset();
-		drawLine(batch, text, x, y, startIndex, endIndex, c, style);
-		batch.setColor(oldColor);
+	public void draw(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledText style) {
+		drawMultiLine(batch, text, x, y, c, style);
 	}
 	
 	public void drawMultiLine(SpriteBatch batch, String text, float x, float y) {
-		
+		drawMultiLine(batch, text, x, y, null, null);
 	}
 	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float alignWidth, HAlignment alignment) {
 		
 	}
 	
 	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledText style) {
+		float oldColor = batch.getColor().toFloatBits();
+		batch.setColor(color);
+		info.setColor(color);
+		info.reset();
 		
-	}
-	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float alignWidth, HAlignment alignment, GameContainer c,
-			StyledText style) {
+		String[] lines = split.split(text);
+		float ypos = y;
+		StyledLine line = null;
+		for (int i = 0; i < lines.length; i++) {
+			if(style != null) {
+				if(i < style.lines.size ) {
+					line = style.lines.get(i);
+				} else {
+					line = null;
+				}
+			}
+			drawLine(batch, lines[i], x, ypos, 0, lines[i].length(), c, line);
+			ypos += getLineHeight() + lineSpace;
+		}
 		
+		batch.setColor(oldColor);
 	}
-	
-	public void drawNumbers(SpriteBatch batch, String text, float x, float y) {
-		
-	}
-	public void drawNumbers(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style) {
+	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float aw, HAlignment aa, GameContainer c, StyledText style) {
 		
 	}
 	
@@ -233,11 +235,7 @@ public class SpriteFont implements Font {
 		return 0;
 	}
 	public float getHeight(String text) {
-		if (text.contains("\n")) {
-			return font.getTileHeight() * split.split("\n").length;
-		} else {
-			return font.getTileHeight();
-		}
+		return font.getTileHeight() * split.split(text).length;
 	}
 	public float getLineHeight() {
 		return font.getTileHeight();

@@ -30,11 +30,10 @@
 package de.radicalfish.font;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.radicalfish.GameContainer;
-import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.util.Utils;
 
 /**
@@ -55,44 +54,25 @@ public class BMFont implements Font {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void draw(SpriteBatch batch, String text, float x, float y) throws RadicalFishException {
-		font.draw(batch, text, x, y);
-	}
-	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex) throws RadicalFishException {
-		font.draw(batch, text, x, y, startIndex, endIndex);
-	}
-	
-	public void draw(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style) throws RadicalFishException {
-		font.draw(batch, text, x, y);
-	}
-	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex, GameContainer c, StyledLine style)
-			throws RadicalFishException {
-		font.draw(batch, text, x, y, startIndex, endIndex);
-	}
-	
-	public void drawMultiLine(SpriteBatch batch, String text, float x, float y) throws RadicalFishException {
+	public void draw(SpriteBatch batch, String text, float x, float y) {
 		font.drawMultiLine(batch, text, x, y);
 	}
-	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float alignWidth, HAlignment alignment)
-			throws RadicalFishException {
+	public void draw(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledText style) {
+		font.drawMultiLine(batch, text, x, y);
+	}
+	
+	public void drawMultiLine(SpriteBatch batch, String text, float x, float y) {
+		font.drawMultiLine(batch, text, x, y);
+	}
+	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float alignWidth, HAlignment alignment) {
 		font.drawMultiLine(batch, text, x, y, alignWidth, alignment);
 	}
 	
-	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledText style)
-			throws RadicalFishException {
+	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledText style) {
 		font.drawMultiLine(batch, text, x, y);
 	}
-	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float alignWidth, HAlignment alignment, GameContainer c,
-			StyledText style) throws RadicalFishException {
-		font.drawMultiLine(batch, text, x, y, alignWidth, alignment);
-	}
-	
-	public void drawNumbers(SpriteBatch batch, String text, float x, float y) throws RadicalFishException {
-		font.draw(batch, text, x, y);
-	}
-	public void drawNumbers(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style)
-			throws RadicalFishException {
-		font.draw(batch, text, x, y);
+	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float aWidth, HAlignment a, GameContainer c, StyledText style) {
+		font.drawMultiLine(batch, text, x, y, aWidth, a);
 	}
 	
 	public void dispose() {

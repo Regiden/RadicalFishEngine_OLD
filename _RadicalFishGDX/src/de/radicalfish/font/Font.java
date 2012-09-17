@@ -48,28 +48,18 @@ public interface Font extends Disposable {
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Draws the given <code>text</code> at <code>x</code>, <code>y</code>.
+	 * Draws the given <code>text</code>. This method should be able to draw the text as multi line if it contains any
+	 * line separator.
 	 */
 	public void draw(SpriteBatch batch, String text, float x, float y);
 	/**
-	 * Draws the given <code>text</code> at <code>x</code>, <code>y</code>.
-	 */
-	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex);
-	
-	/**
-	 * Draws the given <code>text</code> at <code>x</code>, <code>y</code> with a styled feature.
+	 * Draws the given <code>text</code>. This method should be able to draw the text as multi line if it contains any
+	 * line separator.
 	 * 
 	 * @param style
 	 *            the list of commands to style the text in
 	 */
-	public void draw(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style);
-	/**
-	 * Draws the given <code>text</code> at <code>x</code>, <code>y</code> with a styled feature.
-	 * 
-	 * @param style
-	 *            the list of commands to style the text in
-	 */
-	public void draw(SpriteBatch batch, String text, float x, float y, int startIndex, int endIndex, GameContainer c, StyledLine style);
+	public void draw(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledText style);
 	
 	/**
 	 * Draws the given multi line <code>text</code> at <code>x</code>, <code>y</code>.
@@ -86,7 +76,6 @@ public interface Font extends Disposable {
 	 * 
 	 * @param style
 	 *            the list of commands to style the text in
-	 * 
 	 */
 	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledText style);
 	/**
@@ -97,20 +86,6 @@ public interface Font extends Disposable {
 	 */
 	public void drawMultiLine(SpriteBatch batch, String text, float x, float y, float alignWidth, HAlignment alignment, GameContainer c,
 			StyledText style);
-	
-	/**
-	 * Draws the <code>text</code> at <code>x</code>, <code>y</code>. This method can be used if you want special
-	 * handling for number.
-	 */
-	public void drawNumbers(SpriteBatch batch, String text, float x, float y);
-	/**
-	 * Draws the <code>text</code> at <code>x</code>, <code>y</code> with a styled feature. This method can be used if
-	 * you want special handling for number.
-	 * 
-	 * @param style
-	 *            the list of commands to style the text in @
-	 */
-	public void drawNumbers(SpriteBatch batch, String text, float x, float y, GameContainer c, StyledLine style);
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
