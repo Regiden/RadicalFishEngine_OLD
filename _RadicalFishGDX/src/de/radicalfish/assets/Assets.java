@@ -158,7 +158,7 @@ public class Assets extends AssetManager {
 	 * @return true if the loading is done. This will be set to true if the {@link AssetManager#update()} returns true
 	 *         (if you unload content you must call to update the done flag).
 	 */
-	public boolean isDone() {
+	public synchronized boolean isDone() {
 		return done;
 	}
 }
