@@ -29,9 +29,10 @@
  */
 package de.radicalfish.context;
 
+import com.badlogic.gdx.utils.Array;
+
 /**
- * getter and setter for primitive values shared across the game. how this should be implemented should be decided based
- * on the needs of the game.
+ * Getter and Setter for primitive values.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -42,6 +43,40 @@ public interface GameVariables {
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
+	 * @return the number of string primitives.
+	 */
+	public int getNumberOfStrings();
+	/**
+	 * @return the number of boolean primitives.
+	 */
+	public int getNumberOfBooleans();
+	/**
+	 * @return the number of integer primitives.
+	 */
+	public int getNumberOfInts();
+	/**
+	 * @return the number of float primitives.
+	 */
+	public int getNumberOfFloats();
+	
+	/**
+	 * @return an array with all string keys.
+	 */
+	public Array<String> getStringKeys();
+	/**
+	 * @return an array with all boolean keys.
+	 */
+	public Array<String> getBooleanKeys();
+	/**
+	 * @return an array with all integer keys.
+	 */
+	public Array<String> getIntKeys();
+	/**
+	 * @return an array with all float keys.
+	 */
+	public Array<String> getFloatKeys();
+	
+	/**
 	 * @return a String saved in the context of the game.
 	 */
 	public String getString(String key, String defaultValue);
@@ -50,7 +85,7 @@ public interface GameVariables {
 	 */
 	public boolean getBoolean(String key, boolean defaltValue);
 	/**
-	 * @return an integer save in the context of the game.
+	 * @return an integer saved in the context of the game.
 	 */
 	public int getInt(String key, int defaultValue);
 	/**

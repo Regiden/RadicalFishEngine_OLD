@@ -28,6 +28,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.context.defaults;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectIntMap;
 import com.badlogic.gdx.utils.ObjectMap;
 import de.radicalfish.context.GameVariables;
@@ -64,6 +65,32 @@ public class DefaultGameVariables implements GameVariables {
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public int getNumberOfStrings() {
+		return strings.size;
+	}
+	public int getNumberOfBooleans() {
+		return bools.size;
+	}
+	public int getNumberOfInts() {
+		return ints.size;
+	}
+	public int getNumberOfFloats() {
+		return floats.size;
+	}
+	
+	public Array<String> getBooleanKeys() {
+		return bools.keys().toArray();
+	}
+	public Array<String> getStringKeys() {
+		return strings.keys().toArray();
+	}
+	public Array<String> getFloatKeys() {
+		return floats.keys().toArray();
+	}
+	public Array<String> getIntKeys() {
+		return ints.keys().toArray();
+	}
+	
 	/**
 	 * If the key does not exist if will be created with the default value false. This means the parameter
 	 * <code>defaultValue</code> in this implementation is ignored.
