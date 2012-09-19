@@ -30,12 +30,12 @@
 package de.radicalfish.tests.states;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
-import de.radicalfish.GameInput;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.font.Font;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.state.BasicGameState;
+import de.radicalfish.state.StateBasedGame;
 import de.radicalfish.state.transitions.FadeTransition;
 import de.radicalfish.state.transitions.FadeTransition.FADE;
 import de.radicalfish.util.RadicalFishException;
@@ -45,21 +45,18 @@ public class SimpleState extends BasicGameState {
 	
 	private String text;
 	
+	private StateBasedGame game;
+	
 	public SimpleState(int ID) {
 		super(ID);
 		text = "This is the state with the ID: " + ID;
 	}
 	
 	public void init(GameContext context, World world) throws RadicalFishException {
-		
+		game = context.getGame();
 	}
 	public void update(GameContext context, World world, GameDelta delta) throws RadicalFishException {
-		GameInput input = context.getInput();
 		
-		if (input.isKeyPressed(Keys.ENTER)) {
-			context.getGame().enterState((getID() + 1) % 2, new FadeTransition(Color.BLACK, FADE.OUT, 2.0f, 1.0f),
-					new FadeTransition(Color.BLACK, FADE.IN, 2.0f));
-		}
 	}
 	public void render(GameContext context, World world, Graphics g) throws RadicalFishException {
 		Font font = context.getFont();
@@ -69,6 +66,16 @@ public class SimpleState extends BasicGameState {
 		g.getSpriteBatch().begin();
 		font.draw(g.getSpriteBatch(), text, 800 / 2 - width / 2, 600 / 2 - font.getLineHeight() / 2);
 		g.getSpriteBatch().end();
+	}
+	
+	
+	public boolean keyDown(int keycode) {
+		if(keycode == Keys.ENTER) {
+			game.enterState((getID() + 1) % 2, new FadeTransition(Color.BLACK, FADE.OUT, 2.0f, 1.0f),
+					new FadeTransition(Color.BLACK, FADE.IN, 2.0f));
+			return true;
+		}
+		return super.keyDown(keycode);
 	}
 	
 }

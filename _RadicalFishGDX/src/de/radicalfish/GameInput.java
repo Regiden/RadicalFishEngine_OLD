@@ -40,6 +40,7 @@ import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.ObjectIntMap;
+import de.radicalfish.debug.DebugCallback;
 
 /**
  * Wraps the {@link Input} implementation to support Slick2D like keyPressed and keyDown methods. It effectively hides
@@ -108,6 +109,15 @@ public class GameInput implements InputProcessor {
 		Arrays.fill(buttons, false);
 	}
 	
+	/**
+	 * Inserts the {@link InputProcessor} on the first index of the processors. If you ad a second one it will override
+	 * the previous and the second one will be the new first listener which receives input.
+	 * <p>
+	 * This method will be used by the {@link GameContainer} when a {@link DebugCallback} was set and is valid.
+	 */
+	public void addPrimaryListener(InputProcessor processor) {
+		listener.addProcessor(0, processor);
+	}
 	/**
 	 * Adds an {@link InputProcessor} to the {@link GameInput}.
 	 */

@@ -28,7 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.state;
-import java.util.Iterator;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.IntMap;
 import de.radicalfish.ContextGame;
@@ -222,10 +221,8 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 		}
 		
 		initStates(context);
-		
-		Iterator<GameState> ite = states.values();
-		while (ite.hasNext()) {
-			ite.next().init(context, world);
+		for(GameState s : states.values()) {
+			s.init(context, world);
 		}
 		
 		if (currentState != null) {

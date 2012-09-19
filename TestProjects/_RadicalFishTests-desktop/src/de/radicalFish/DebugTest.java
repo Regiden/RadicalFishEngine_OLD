@@ -16,6 +16,7 @@ import de.radicalfish.context.Settings;
 import de.radicalfish.debug.DebugAdapter;
 import de.radicalfish.debug.DebugPanel;
 import de.radicalfish.debug.DeveloperConsole;
+import de.radicalfish.debug.GameVariablesEditor;
 import de.radicalfish.debug.PerformanceListener;
 import de.radicalfish.debug.SettingsEditor;
 import de.radicalfish.debug.ToolBox;
@@ -32,6 +33,7 @@ public class DebugTest extends DebugAdapter {
 	
 	private ToolBox toolbox;
 	private DebugPanel debug;
+	private GameVariablesEditor gvmonitor;
 	
 	private GameContext context;
 	private Settings settings;
@@ -70,6 +72,11 @@ public class DebugTest extends DebugAdapter {
 		if (hasContext) {
 			settings = context.getSettings();
 			loadSettings();
+			
+			context.getGameVariables().putBoolean("test", true);
+			context.getGameVariables().putBoolean("test2", true);
+			context.getGameVariables().putInt("bla", 23123);
+			context.getGameVariables().putInt("bla2", 23123);
 		}
 		settings.printSettings();
 		
@@ -87,10 +94,15 @@ public class DebugTest extends DebugAdapter {
 				}
 			}
 		}
+		
+		if(container.getInput().isKeyPressed(Keys.A)) {
+			if(hasContext) {
+				context.getGameVariables().putBoolean("test." + context.getGameVariables().getNumberOfBooleans(), true);
+			}
+		}
 		debug.update();
 	}
 	public void render(GameContainer container, Graphics g) {
-		
 		debug.render();
 	}
 	
@@ -142,6 +154,12 @@ public class DebugTest extends DebugAdapter {
 		}
 		
 		final SettingsEditor set = new SettingsEditor(settings);
+		if(hasContext) {
+			gvmonitor = new GameVariablesEditor(context.getGameVariables());
+		} else {
+			gvmonitor = new GameVariablesEditor();
+		}
+		
 		
 		Label fps = new Label("FPS:");
 		FPSCounter fpsCounter = new FPSCounter();
@@ -157,6 +175,11 @@ public class DebugTest extends DebugAdapter {
 		toolbox.addButton("Settings", new Runnable() {
 			public void run() {
 				set.setVisible(!set.isVisible());
+			}
+		});
+		toolbox.addButton("Variables", new Runnable() {
+			public void run() {
+				gvmonitor.setVisible(!gvmonitor.isVisible());
 			}
 		});
 		
@@ -178,6 +201,7 @@ public class DebugTest extends DebugAdapter {
 		
 		debug.addToRoot(dev);
 		debug.addToRoot(set);
+		debug.addToRoot(gvmonitor);
 		debug.addToRoot(toolbox);
 	}
 	

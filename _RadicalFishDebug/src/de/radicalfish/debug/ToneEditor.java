@@ -50,6 +50,8 @@ public class ToneEditor extends ResizableFrame {
 	
 	private static final String NAME = "name", VALUE = "value", SEP = "SEP", LABEL = "label";
 	
+	private ToneModel model;
+	
 	private Slider red, green, blue, chroma;
 	private Columns seperatorColumns, sliderColumns;
 	
@@ -59,6 +61,7 @@ public class ToneEditor extends ResizableFrame {
 		createPanel(new ToneModel());
 	}
 	public ToneEditor(ToneModel toneModel) {
+		model = toneModel;
 		createPanel(toneModel);
 	}
 	
@@ -197,6 +200,9 @@ public class ToneEditor extends ResizableFrame {
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public ToneModel getToneModel() {
+		return model;
+	}
 	public RPGMakerToneArea getColorArea() {
 		return colorarea;
 	}

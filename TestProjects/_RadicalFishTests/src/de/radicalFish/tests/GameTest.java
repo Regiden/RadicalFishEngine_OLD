@@ -33,6 +33,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 import de.radicalfish.Game;
 import de.radicalfish.GameContainer;
 import de.radicalfish.GameInput;
@@ -89,13 +90,19 @@ public class GameTest implements Game, RadicalFishTest {
 		
 		FontSheetParameter fsp = new FontSheetParameter("data/font.png", widths, 11);
 		assets.load("spfont", SpriteFont.class, new SpriteFontParameter(fsp, -1, 0, ' '));
+		
 		assets.finishLoading();
+		
+		Array<String> keys = assets.getKeys();
+		System.out.println(keys);
+		
 		
 		font = assets.get("spfont", SpriteFont.class);
 		texCom = new StyledText();
 		
 		StyleParser p = StyleParser.INSTANCE;
 		text = p.parseMultiLine(text, texCom);
+		
 		
 	}
 	public void update(GameContainer container, float delta) throws RadicalFishException {

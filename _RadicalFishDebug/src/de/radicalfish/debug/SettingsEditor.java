@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.PropertySheet;
+import de.matthiasmann.twl.PropertySheet.PropertyEditor;
 import de.matthiasmann.twl.PropertySheet.PropertyEditorFactory;
 import de.matthiasmann.twl.ResizableFrame;
 import de.matthiasmann.twl.ScrollPane;
@@ -350,7 +351,7 @@ public class SettingsEditor extends ResizableFrame {
 	
 	// INTERN CLASSES
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private class IntegerEditor implements de.matthiasmann.twl.PropertySheet.PropertyEditor, Runnable {
+	public static class IntegerEditor implements PropertyEditor, Runnable {
 		
 		private final Property<Integer> property;
 		private final ValueAdjusterInt adjuster;
@@ -385,17 +386,17 @@ public class SettingsEditor extends ResizableFrame {
 		}
 		public boolean positionWidget(int x, int y, int width, int height) {
 			adjuster.setPosition(x + 2, y);
-			adjuster.setSize(width - 2, height);
+			adjuster.setSize(width, height);
 			return true;
 		}
 		
 	}
-	private class IntegerFactory implements PropertyEditorFactory<Integer> {
-		public de.matthiasmann.twl.PropertySheet.PropertyEditor createEditor(Property<Integer> property) {
+	public static class IntegerFactory implements PropertyEditorFactory<Integer> {
+		public PropertyEditor createEditor(Property<Integer> property) {
 			return new IntegerEditor(property);
 		}
 	}
-	private class FloatEditor implements de.matthiasmann.twl.PropertySheet.PropertyEditor, Runnable {
+	public static class FloatEditor implements PropertyEditor, Runnable {
 		
 		private final Property<Float> property;
 		private final ValueAdjusterFloat adjuster;
@@ -403,8 +404,9 @@ public class SettingsEditor extends ResizableFrame {
 		
 		public FloatEditor(Property<Float> property) {
 			this.property = property;
-			model = new SimpleFloatModel(0.0f, 1.0f, property.getPropertyValue());
+			model = new SimpleFloatModel(0.0f, Float.MAX_VALUE, property.getPropertyValue());
 			adjuster = new ValueAdjusterFloat(model);
+			adjuster.setStepSize(0.1f);
 			model.addCallback(this);
 			valueChanged();
 		}
@@ -435,12 +437,12 @@ public class SettingsEditor extends ResizableFrame {
 		}
 		
 	}
-	private class FloatFactory implements PropertyEditorFactory<Float> {
-		public de.matthiasmann.twl.PropertySheet.PropertyEditor createEditor(Property<Float> property) {
+	public static class FloatFactory implements PropertyEditorFactory<Float> {
+		public PropertyEditor createEditor(Property<Float> property) {
 			return new FloatEditor(property);
 		}
 	}
-	private class BooleanEditor implements de.matthiasmann.twl.PropertySheet.PropertyEditor, Runnable {
+	public static class BooleanEditor implements PropertyEditor, Runnable {
 		private final ToggleButton checkbox;
 		private final Property<Boolean> property;
 		
@@ -479,8 +481,8 @@ public class SettingsEditor extends ResizableFrame {
 		}
 		
 	}
-	private class BooleanFactory implements PropertyEditorFactory<Boolean> {
-		public de.matthiasmann.twl.PropertySheet.PropertyEditor createEditor(Property<Boolean> property) {
+	public static class BooleanFactory implements PropertyEditorFactory<Boolean> {
+		public PropertyEditor createEditor(Property<Boolean> property) {
 			return new BooleanEditor(property);
 		}
 	}

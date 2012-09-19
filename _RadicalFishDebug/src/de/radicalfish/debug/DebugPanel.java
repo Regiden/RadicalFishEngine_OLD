@@ -123,7 +123,7 @@ public class DebugPanel {
 			gui.applyTheme(theme);
 			
 			TWLInputForwarder inputForwarder = new TWLInputForwarder(gui);
-			container.getInput().addInputProcessor(inputForwarder);
+			container.getInput().addPrimaryListener(inputForwarder);
 			
 			Logger.info("Debug successfully loaded!");
 		} catch (Throwable e) {

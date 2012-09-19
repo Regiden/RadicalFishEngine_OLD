@@ -28,15 +28,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish;
-
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import de.radicalfish.tests.GameTest;
-import de.radicalfish.util.RadicalFishException;
 
 public class DirectTest {
 
-	public static void main(String[] args) throws RadicalFishException {
+	public static void main(String[] args) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "RadicalFishTests";
 		config.useGL20 = true;

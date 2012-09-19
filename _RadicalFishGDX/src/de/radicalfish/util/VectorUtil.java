@@ -84,4 +84,5 @@ public final class VectorUtil {
 		}
 		return vec;
 	}
+
 }

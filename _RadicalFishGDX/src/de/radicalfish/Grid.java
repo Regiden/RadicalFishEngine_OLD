@@ -29,9 +29,8 @@
  */
 package de.radicalfish;
 
-
 /**
- * A single grid with a x and y position, can have sub positions (values are float)
+ * A single grid with a x and y position, can have sub positions (values are float).
  * 
  * @author Stefan Lange
  * @version 1.0.0

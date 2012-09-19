@@ -30,7 +30,6 @@
 package de.radicalfish.debug;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import org.lwjgl.Sys;
 import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.Button;
@@ -56,8 +55,9 @@ import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
  * @version 0.0.0
  * @since 14.05.2012
  */
-public class DeveloperConsole extends ResizableFrame implements LogListener {
+public class DeveloperConsole extends ResizableFrame {
 	
+	/** The maximum number of results for auto completion. */
 	public static int MAX_AUTOCOMPLETION_RESULTS = 50;
 	
 	private StringBuilder lineBuffer;
@@ -70,11 +70,9 @@ public class DeveloperConsole extends ResizableFrame implements LogListener {
 	
 	private ArrayList<InputParser> callbacks;
 	
-	private boolean logToConsole;
 	
 	public DeveloperConsole() {
 		callbacks = new ArrayList<InputParser>();
-		logToConsole = true;
 		createPanel();
 	}
 	
@@ -112,13 +110,6 @@ public class DeveloperConsole extends ResizableFrame implements LogListener {
 		textAreaModel.setHtml("");
 	}
 	
-	// INTERFACE
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void logChanged(List<String> log, String lastAdded, Logger.LOGTYPE type) {
-		if (logToConsole) {
-			// TODO
-		}
-	}
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -217,16 +208,6 @@ public class DeveloperConsole extends ResizableFrame implements LogListener {
 			scrollPane.validateLayout();
 			scrollPane.setScrollPositionY(scrollPane.getMaxScrollPosY());
 		}
-	}
-	
-	// SETTER & GETTER
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * @param value
-	 *            true if normal logging should be displayed on the console.
-	 */
-	public void setLogToConsole(boolean value) {
-		logToConsole = value;
 	}
 	
 	// PRIVATE CLASSES
