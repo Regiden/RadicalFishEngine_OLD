@@ -333,7 +333,7 @@
     <fontDef name="link" filename="font3.fnt" color="#517EDA" underlineOffset="3">
         <fontParam if="hover" color="#2553B0"/>
     </fontDef>
-    <fontDef name="error" filename="font3.fnt" color="#FF3535">
+    <fontDef name="error" filename="font3.fnt" color="#E71B25">
     </fontDef>
     <fontDef name="green" filename="font3.fnt" color="#15A32E">
     </fontDef>
@@ -465,6 +465,7 @@
         <param name="border"><border>background.border</border></param>
         <param name="font"><font>buttons</font></param>
         <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+        <param name="mouseCursor"><cursor>cursor.*</cursor></param>
     </theme>
     <theme name="togglebutton" ref="-defaults">
         <param name="background"><image>button.select</image></param>
@@ -486,6 +487,14 @@
         <param name="mouseCursor"><cursor>cursor.text</cursor></param>
         <param name="maxWidth"><int>32767</int></param>
     </theme>
+    <theme name="editfield-errorinfowindow" ref="-defaults">
+        <param name="background"><image>box.border.normal</image></param>
+        <param name="border"><border>2,3,3,0</border></param>
+        <theme name="label" ref="label">
+            <param name="font"><font>error</font></param>
+        </theme>
+    </theme>
+
     <theme name="logfield" ref="editfield">
         <param name="border"><border>0</border></param>
         <param name="background"><image>none</image></param>
@@ -571,6 +580,7 @@
         <param name="useMouseWheel"><bool>true</bool></param>
         <param name="width"><int>100</int></param>
         <param name="maxWidth"><int>32767</int></param>
+        <param name="mouseCursor"><cursor>cursor.*</cursor></param>
     </theme>
 
 
@@ -798,7 +808,6 @@
             <map>
             </map>
         </param>
-        <param name="columnResizeCursor"><cursor>cursor.resizecolumn</cursor></param>
     
     
     
@@ -908,6 +917,20 @@
         <param name="minHeight"><int>150</int></param>
     </theme>
 
+    <theme name="gamevariables-frame" ref="resizableframe-title">
+        <param name="minWidth"><int>200</int></param>
+        <param name="minHeight"><int>200</int></param>
+    </theme>
+    <theme name="gm-table" ref="table">
+        <param name="columnHeaderHeight"><int>20</int></param>
+        <param name="minWidth"><int>200</int></param>
+    </theme>
+    <theme name="gm-editfield" ref="editfield">
+        <param name="columns"><int>8</int></param>
+    </theme>
+
+
+
     <theme name="devconsole" ref="-defaults">
         <param name="border"><border>2</border></param>
     </theme>
@@ -924,6 +947,16 @@
     <theme name="buttonBox" ref="resizableframe">
         <param name="border"><border>4,2,2,0</border></param>
         <param name="background"><image>box.border.bottom</image></param>
+    </theme>
+    <theme name="tabbedpane" ref="-defaults">
+        <theme name="container" ref="-defaults"/>
+        <theme name="tabbox" ref="boxlayout">
+            <param name="spacing"><int>0</int></param>
+            <theme name="tabbutton" ref="button">
+                <param name="textAlignment"><enum type="alignment">CENTER</enum></param>
+            </theme>
+            <param name="alignment"><enum type="alignment">FILL</enum></param>
+        </theme>
     </theme>
 
 
