@@ -53,7 +53,9 @@ import de.radicalfish.debug.DebugCallback;
  */
 public class GameInput implements InputProcessor {
 	
+	private static final String[] ANYKEY = new String[] { "ANYKEY" };
 	private final static String[][] keynames = new String[256][2];
+	
 	private static int counter = 0;
 	static {
 		Field[] fields = Keys.class.getFields();
@@ -548,8 +550,6 @@ public class GameInput implements InputProcessor {
 	
 	// STATIC METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private static final String[] ANYKEY = new String[] { "ANYKEY" };
-	
 	/**
 	 * @return the names of the keycode. Some keys have 2 names, the length of the array is always 2. (returns null if
 	 *         the keycode is unnamed)
@@ -558,8 +558,20 @@ public class GameInput implements InputProcessor {
 		if (keycode == -1) {
 			return ANYKEY;
 		}
+		
+		if (keycode < 0 || keycode >= keynames.length) {
+			return new String[] { "" };
+		}
+		
 		return keynames[keycode];
 	}
+	/**
+	 * @return the names of the keycode as String. For this the {@link Arrays#toString(Object[])} method will be used.
+	 */
+	public static String getKeyNameAsString(int keycode) {
+		return Arrays.toString(getKeyName(keycode));
+	}
+	
 	/**
 	 * @return the number of keys supported.
 	 */
