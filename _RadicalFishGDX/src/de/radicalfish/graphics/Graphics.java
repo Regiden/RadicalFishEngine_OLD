@@ -61,8 +61,7 @@ public class Graphics implements Disposable {
 		}
 	};
 	
-	/** The {@link SpriteBatch} used as default.*/
-	public SpriteBatch spriteBatch;
+	private SpriteBatch spriteBatch, defaultBatch;
 	private Color clearColor, shapeColor;
 	private Texture texture;
 	private Vector3 origin;
@@ -95,6 +94,7 @@ public class Graphics implements Disposable {
 		} else {
 			spriteBatch = new SpriteBatch(batchSize);
 		}
+		defaultBatch = spriteBatch;
 		blendMode = BlendMode.NORMAL;
 		
 		// create a simple white pixel
@@ -354,10 +354,15 @@ public class Graphics implements Disposable {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
 	 * Sets a custom {@link SpriteBatch}. Can be used to set your own batch. The batch will get automatically disposed
-	 * on exit.
+	 * on exit. set null to return to the default batch!
 	 */
 	public void setSpriteBatch(SpriteBatch spriteBatch) {
-		this.spriteBatch = spriteBatch;
+		if (spriteBatch == null) {
+			this.spriteBatch = defaultBatch;
+		} else {
+			this.spriteBatch = spriteBatch;
+		}
+		
 	}
 	
 	/**
