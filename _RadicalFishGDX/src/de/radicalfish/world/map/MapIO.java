@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import com.badlogic.gdx.math.Vector2;
-import de.radicalfish.Grid;
 import de.radicalfish.animation.Animator;
 import de.radicalfish.debug.Logger;
 import de.radicalfish.util.RadicalFishException;
@@ -512,7 +511,7 @@ public class MapIO {
 		dos.writeInt(entity.getID());
 		
 		// write positions, velocity, acceleration
-		writeGrid(dos, entity.getGridPosition());
+		writeVector(dos, entity.getGridPosition());
 		writeVector(dos, entity.getPosition());
 		writeVector(dos, entity.getOldPosition());
 		writeVector(dos, entity.getScreenPosition());
@@ -548,10 +547,6 @@ public class MapIO {
 	private static void writeString(DataOutputStream dos, String string) throws IOException {
 		dos.writeInt(string.length());
 		dos.writeBytes(string);
-	}
-	private static void writeGrid(DataOutputStream dos, Grid grid) throws IOException {
-		dos.writeFloat(grid.x);
-		dos.writeFloat(grid.y);
 	}
 	private static void writeVector(DataOutputStream dos, Vector2 vector) throws IOException {
 		dos.writeFloat(vector.x);
