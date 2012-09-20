@@ -39,7 +39,7 @@ import de.radicalfish.state.StateBasedGame;
 import de.radicalfish.state.transitions.FadeTransition;
 import de.radicalfish.state.transitions.FadeTransition.FADE;
 import de.radicalfish.util.RadicalFishException;
-import de.radicalfish.world.World;
+import de.radicalfish.world.GameWorld;
 
 public class SimpleState extends BasicGameState {
 	
@@ -52,13 +52,13 @@ public class SimpleState extends BasicGameState {
 		text = "This is the state with the ID: " + ID;
 	}
 	
-	public void init(GameContext context, World world) throws RadicalFishException {
+	public void init(GameContext context, GameWorld world) throws RadicalFishException {
 		game = context.getGame();
 	}
-	public void update(GameContext context, World world, GameDelta delta) throws RadicalFishException {
+	public void update(GameContext context, GameWorld world, GameDelta delta) throws RadicalFishException {
 		
 	}
-	public void render(GameContext context, World world, Graphics g) throws RadicalFishException {
+	public void render(GameContext context, GameWorld world, Graphics g) throws RadicalFishException {
 		Font font = context.getFont();
 		
 		float width = font.getBounds(text).width;

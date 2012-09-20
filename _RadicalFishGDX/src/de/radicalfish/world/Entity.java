@@ -31,7 +31,6 @@ package de.radicalfish.world;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import de.radicalfish.Grid;
 import de.radicalfish.animation.Animator;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
@@ -68,7 +67,7 @@ public abstract class Entity  {
 	protected Vector2 direction = new Vector2(0, 0);
 	
 	protected Rectangle collisionbox = new Rectangle();
-	protected Grid grid = new Grid();
+	protected Vector2 grid = new Vector2(0, 0);
 	
 	protected Animator animator = new Animator();
 	
@@ -105,7 +104,7 @@ public abstract class Entity  {
 	 * @param world
 	 *            the world in which the entity lives
 	 */
-	public abstract void init(GameContext context, World world);
+	public abstract void init(GameContext context, GameWorld world);
 	/**
 	 * Updates the entity. this should be called instead of <code>doUpdate</code>. <code>doUpdate</code> gets called by
 	 * this method after automatically checking if the entity needs an update. If this is not wanted this method can be
@@ -120,7 +119,7 @@ public abstract class Entity  {
 	 * @param delta
 	 *            the {@link GameDelta} object containing the delta values.
 	 */
-	public final void update(GameContext context, World world, GameDelta delta) {
+	public final void update(GameContext context, GameWorld world, GameDelta delta) {
 		if (isActive()) {
 			old.set(position);
 			
@@ -143,7 +142,7 @@ public abstract class Entity  {
 	 * @param delta
 	 *            the {@link GameDelta} object containing the delta values.
 	 */
-	public abstract void doUpdate(GameContext context, World world, GameDelta delta);
+	public abstract void doUpdate(GameContext context, GameWorld world, GameDelta delta);
 	/**
 	 * Renders the entity. this should be called instead of <code>doRender</code>. <code>doRender</code> gets called by
 	 * this method after automatically checking if the entity needs to render. If this is not wanted this method can be
@@ -156,7 +155,7 @@ public abstract class Entity  {
 	 * @param g
 	 *            the graphics context to draw to
 	 */
-	public final void render(GameContext context, World world, Graphics g) {
+	public final void render(GameContext context, GameWorld world, Graphics g) {
 		if (isVisible()) {
 			// check if we out of screen, if so no need to render
 			if (!isOffscreen(context)) {
@@ -174,7 +173,7 @@ public abstract class Entity  {
 	 * @param g
 	 *            the graphics context to draw to
 	 */
-	public abstract void doRender(GameContext context, World world, Graphics g);
+	public abstract void doRender(GameContext context, GameWorld world, Graphics g);
 	/**
 	 * Can be called by an entity system if an entity is removed from the system and should release all it resources.
 	 * 
@@ -183,7 +182,7 @@ public abstract class Entity  {
 	 * @param world
 	 *            the world in which the entity lives
 	 */
-	protected void destroy(GameContext context, World world) {}
+	protected void destroy(GameContext context, GameWorld world) {}
 	
 	// COLLISION
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -353,7 +352,7 @@ public abstract class Entity  {
 		return flashColor;
 	}
 	
-	public Grid getGridPosition() {
+	public Vector2 getGridPosition() {
 		return grid;
 	}
 	public Vector2 getPosition() {

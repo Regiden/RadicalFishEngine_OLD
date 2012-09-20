@@ -37,7 +37,7 @@ import de.radicalfish.state.StateBasedGame;
 import de.radicalfish.tests.states.SimpleState;
 import de.radicalfish.tests.utils.RadicalFishTest;
 import de.radicalfish.util.RadicalFishException;
-import de.radicalfish.world.World;
+import de.radicalfish.world.GameWorld;
 
 public class StatesTest extends StateBasedGame implements RadicalFishTest {
 	
@@ -46,7 +46,7 @@ public class StatesTest extends StateBasedGame implements RadicalFishTest {
 	public GameContext initGameContext(GameContainer container) throws RadicalFishException {
 		return null;
 	}
-	public World initWorld(GameContainer container) throws RadicalFishException {
+	public GameWorld initWorld(GameContainer container) throws RadicalFishException {
 		return null;
 	}
 	public void initStates(GameContext context) throws RadicalFishException {
@@ -56,14 +56,14 @@ public class StatesTest extends StateBasedGame implements RadicalFishTest {
 	
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	protected void preUpdate(GameContext context, World world, GameDelta delta) throws RadicalFishException {
+	protected void preUpdate(GameContext context, GameWorld world, GameDelta delta) throws RadicalFishException {
 	}
-	protected void postUpdate(GameContext context, World world, GameDelta delta) throws RadicalFishException {
+	protected void postUpdate(GameContext context, GameWorld world, GameDelta delta) throws RadicalFishException {
 	}
-	protected void preRender(GameContext context, World world, Graphics g) throws RadicalFishException {
+	protected void preRender(GameContext context, GameWorld world, Graphics g) throws RadicalFishException {
 		
 	}
-	protected void postRender(GameContext context, World world, Graphics g) throws RadicalFishException {
+	protected void postRender(GameContext context, GameWorld world, Graphics g) throws RadicalFishException {
 		Font font = context.getFont();
 		
 		g.getSpriteBatch().begin();
@@ -75,7 +75,7 @@ public class StatesTest extends StateBasedGame implements RadicalFishTest {
 	// OVERRIDE FOR TESTS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void initContainer(GameContainer container) {
-		container.setSmoothDelta(true);
+		container.setSmoothDeltas(true);
 	}
 	public String getTitle() {
 		return "States Test";

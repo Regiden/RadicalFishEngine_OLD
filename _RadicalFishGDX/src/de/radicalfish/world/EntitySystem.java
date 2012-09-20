@@ -51,7 +51,7 @@ public interface EntitySystem {
 	 * @param world
 	 *            the world the game plays in
 	 */
-	public void init(GameContext context, World world);
+	public void init(GameContext context, GameWorld world);
 	/**
 	 * Updates all entities in this system.
 	 * 
@@ -62,7 +62,7 @@ public interface EntitySystem {
 	 * @param delta
 	 *            the {@link GameDelta} object holding the delta value
 	 */
-	public void update(GameContext context, World world, GameDelta delta);
+	public void update(GameContext context, GameWorld world, GameDelta delta);
 	
 	// ADDING & CHECKING
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -76,7 +76,7 @@ public interface EntitySystem {
 	 * 
 	 * @return the entity added.
 	 */
-	public Entity addEntity(Entity e, GameContext context, World world);
+	public Entity addEntity(Entity e, GameContext context, GameWorld world);
 	/**
 	 * Removes an Entity from the world by it's object.
 	 * 

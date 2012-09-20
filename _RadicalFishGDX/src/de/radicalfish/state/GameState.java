@@ -33,7 +33,7 @@ import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.world.World;
+import de.radicalfish.world.GameWorld;
 
 /**
  * Interface for a game state. It extends the {@link InputProcessor} interface. All input gets forwarded by the
@@ -53,7 +53,7 @@ public interface GameState extends InputProcessor, Disposable {
 	 * @param world
 	 *            the world the game plays in
 	 */
-	public void init(GameContext context, World world);
+	public void init(GameContext context, GameWorld world);
 	/**
 	 * Updates all logic of the state.
 	 * 
@@ -64,7 +64,7 @@ public interface GameState extends InputProcessor, Disposable {
 	 * @param delta
 	 *            the {@link GameDelta} object containing the delta values.
 	 */
-	public void update(GameContext context, World world, GameDelta delta);
+	public void update(GameContext context, GameWorld world, GameDelta delta);
 	/**
 	 * Renders all entities of the state.
 	 * 
@@ -75,7 +75,7 @@ public interface GameState extends InputProcessor, Disposable {
 	 * @param g
 	 *            the wrapper for graphics
 	 */
-	public void render(GameContext context, World world, Graphics g);
+	public void render(GameContext context, GameWorld world, Graphics g);
 	
 	/**
 	 * Gets called after the "Out"-Transition is done. can be used to load files while the screen is faded or position
@@ -88,7 +88,7 @@ public interface GameState extends InputProcessor, Disposable {
 	 * @param form
 	 *            the {@link GameState} from which we enter this state (can be null if this is the first state)
 	 */
-	public void entering(GameContext context, World world, GameState form);
+	public void entering(GameContext context, GameWorld world, GameState form);
 	/**
 	 * Gets called after the "In"-Transition is done.
 	 * 
@@ -99,7 +99,7 @@ public interface GameState extends InputProcessor, Disposable {
 	 * @param form
 	 *            the {@link GameState} from which we enter this state (can be null if this is the first state)
 	 */
-	public void entered(GameContext context, World world, GameState form);
+	public void entered(GameContext context, GameWorld world, GameState form);
 	/**
 	 * Gets called before the "Out"-Transition is starts.
 	 * 
@@ -110,7 +110,7 @@ public interface GameState extends InputProcessor, Disposable {
 	 * @param to
 	 *            the state we moving to.
 	 */
-	public void leaving(GameContext context, World world, GameState to);
+	public void leaving(GameContext context, GameWorld world, GameState to);
 	/**
 	 * Gets called before the "In"-Transition is starts. Use it to unload content for this state.
 	 * 
@@ -121,7 +121,7 @@ public interface GameState extends InputProcessor, Disposable {
 	 * @param to
 	 *            the state we moving to.
 	 */
-	public void left(GameContext context, World world, GameState to);
+	public void left(GameContext context, GameWorld world, GameState to);
 	
 	/**
 	 * Gets called if the app pauses (e.g. on android putting the app in background).
@@ -131,7 +131,7 @@ public interface GameState extends InputProcessor, Disposable {
 	 * @param world
 	 *            the world the game plays in
 	 */
-	public void pause(GameContext context, World world);
+	public void pause(GameContext context, GameWorld world);
 	/**
 	 * Gets called if the app resumes (e.g. on android returning to the app).
 	 * 
@@ -140,7 +140,7 @@ public interface GameState extends InputProcessor, Disposable {
 	 * @param world
 	 *            the world the game plays in
 	 */
-	public void resume(GameContext context, World world);
+	public void resume(GameContext context, GameWorld world);
 	
 	/**
 	 * @return the ID of this state.

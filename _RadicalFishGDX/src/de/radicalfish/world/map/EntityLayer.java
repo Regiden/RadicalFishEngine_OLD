@@ -33,7 +33,7 @@ import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.world.Entity;
-import de.radicalfish.world.World;
+import de.radicalfish.world.GameWorld;
 
 /**
  * An EntityLayer is a special layer on which a set of entities sit. A map only supports one entity layer and the
@@ -57,7 +57,7 @@ public interface EntityLayer {
 	 * @param delta
 	 *            the {@link GameDelta} object holding the delta value
 	 */
-	public void update(GameContext context, World world, GameDelta delta);
+	public void update(GameContext context, GameWorld world, GameDelta delta);
 	/**
 	 * Renders the layer.
 	 * 
@@ -68,7 +68,7 @@ public interface EntityLayer {
 	 * @param g
 	 *            the graphics context to draw to
 	 */
-	public void render(GameContext context, World world, Graphics g);
+	public void render(GameContext context, GameWorld world, Graphics g);
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

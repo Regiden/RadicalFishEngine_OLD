@@ -52,7 +52,7 @@ public interface CollisionManager {
 	 *            the entity to check
 	 * @return true if the entity collided.
 	 */
-	public boolean checkCollision(GameContext context, World world, Entity entity);
+	public boolean checkCollision(GameContext context, GameWorld world, Entity entity);
 	/**
 	 * Checks he collision on the specific <code>entity</code>.
 	 * 
@@ -66,7 +66,7 @@ public interface CollisionManager {
 	 *            true if callbacks of the entity should be invoked.
 	 * @return true if the entity collided.
 	 */
-	public boolean checkCollision(GameContext context, World world, Entity entity, boolean invokeCallbacks);
+	public boolean checkCollision(GameContext context, GameWorld world, Entity entity, boolean invokeCallbacks);
 	
 	
 }

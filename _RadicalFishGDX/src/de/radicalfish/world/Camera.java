@@ -54,7 +54,7 @@ public interface Camera {
 	 * @param delta
 	 *            the {@link GameDelta} object holding the delta value.
 	 */
-	public void update(GameContext context, World world, GameDelta delta);
+	public void update(GameContext context, GameWorld world, GameDelta delta);
 	/**
 	 * Translate the context to the camera point if needed.
 	 * 
@@ -65,7 +65,7 @@ public interface Camera {
 	 * @param g
 	 *            the graphics context to apply the translation to
 	 */
-	public void translate(GameContext context, World world, Graphics g);
+	public void translate(GameContext context, GameWorld world, Graphics g);
 	/**
 	 * Translate the context to the camera point if needed for tiled maps.
 	 * 
@@ -76,7 +76,7 @@ public interface Camera {
 	 * @param g
 	 *            the graphics context to apply the translation to
 	 */
-	public void translateMap(GameContext context, World world, Graphics g);
+	public void translateMap(GameContext context, GameWorld world, Graphics g);
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -120,7 +120,7 @@ public interface Camera {
 	 * @param y
 	 *            the y position
 	 */
-	public void setCurrent(World world, float x, float y);
+	public void setCurrent(GameWorld world, float x, float y);
 	/**
 	 * @param world
 	 *            the world the game runs in, can be used to check the bounds if needed
@@ -131,7 +131,7 @@ public interface Camera {
 	 * @param time
 	 *            the time to move. can be <= 0 to use linear interpolation
 	 */
-	public void setTarget(World world, float x, float y, int time);
+	public void setTarget(GameWorld world, float x, float y, int time);
 	/**
 	 * @param speed
 	 *            the speed to move the camera.
@@ -148,7 +148,7 @@ public interface Camera {
 	 * @param y
 	 *            the y position of the point to center to
 	 */
-	public void centerCurrent(World world, float x, float y);
+	public void centerCurrent(GameWorld world, float x, float y);
 	/**
 	 * Centers the camera to the entity.
 	 * 
@@ -159,6 +159,6 @@ public interface Camera {
 	 * @param y
 	 *            the y position of the point to center to
 	 */
-	public void centerTarget(World world, float x, float y, int time);
+	public void centerTarget(GameWorld world, float x, float y, int time);
 	
 }

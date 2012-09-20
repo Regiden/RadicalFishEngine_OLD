@@ -29,7 +29,7 @@
  */
 package de.radicalfish.context;
 import de.radicalfish.context.defaults.DefaultGameDelta;
-import de.radicalfish.world.World;
+import de.radicalfish.world.GameWorld;
 
 /**
  * Interface which should handle manipulating delta by a speed value. Useful for slow down effects.
@@ -44,7 +44,7 @@ public interface GameDelta {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
 	 * Updates the game speed changes if needed. Make sure you pass the the normal delta in here. see
-	 * {@link DefaultGameDelta#update(GameContext, World, float)}.
+	 * {@link DefaultGameDelta#update(GameContext, GameWorld, float)}.
 	 * 
 	 * @param context
 	 *            the context the game runs in
@@ -53,7 +53,7 @@ public interface GameDelta {
 	 * @param delta
 	 *            the unmodified time in seconds since the last frame
 	 */
-	public void update(GameContext context, World world, float delta);
+	public void update(GameContext context, GameWorld world, float delta);
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯

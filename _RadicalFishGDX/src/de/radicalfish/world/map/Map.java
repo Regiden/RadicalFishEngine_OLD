@@ -33,10 +33,10 @@ import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.world.EntitySystem;
-import de.radicalfish.world.World;
+import de.radicalfish.world.GameWorld;
 
 /**
- * Interface for maps returned by the {@link World}.
+ * Interface for maps returned by the {@link GameWorld}.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -55,7 +55,7 @@ public interface Map {
 	 * @param world
 	 *            the world the game plays in
 	 */
-	public void init(GameContext context, World world);
+	public void init(GameContext context, GameWorld world);
 	/**
 	 * Updates the map. This should also update all entities on the map.
 	 * 
@@ -66,7 +66,7 @@ public interface Map {
 	 * @param delta
 	 *            the {@link GameDelta} object holding the delta value
 	 */
-	public void update(GameContext context, World world, GameDelta delta);
+	public void update(GameContext context, GameWorld world, GameDelta delta);
 	/**
 	 * Renders the map. This should also render all the entities. You can use the {@link EntitySystem}s to store
 	 * entities.
@@ -78,7 +78,7 @@ public interface Map {
 	 * @param g
 	 *            the graphics context to draw to
 	 */
-	public void render(GameContext context, World world, Graphics g);
+	public void render(GameContext context, GameWorld world, Graphics g);
 	/**
 	 * Unloads all content. This can be used to flush {@link EntitySystem}s from entities and make one map object for
 	 * all maps to save memory.
@@ -88,7 +88,7 @@ public interface Map {
 	 * @param world
 	 *            the world the game plays in
 	 */
-	public void destroy(GameContext context, World world);
+	public void destroy(GameContext context, GameWorld world);
 	
 	/**
 	 * Adds an {@link MapListener} to the map.

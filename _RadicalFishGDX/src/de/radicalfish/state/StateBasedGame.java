@@ -30,10 +30,10 @@
 package de.radicalfish.state;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.IntMap;
-import de.radicalfish.ContextGame;
 import de.radicalfish.GameContainer;
 import de.radicalfish.GameInput;
 import de.radicalfish.assets.Assets;
+import de.radicalfish.context.ContextGame;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.context.GameVariables;
@@ -47,7 +47,7 @@ import de.radicalfish.state.transitions.EmptyTransition;
 import de.radicalfish.state.transitions.Transition;
 import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.util.Utils;
-import de.radicalfish.world.World;
+import de.radicalfish.world.GameWorld;
 
 /**
  * A game which handles a set of {@link GameState}s. The class always updates and renders one state but exposes access
@@ -69,8 +69,8 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	public GameState currentState;
 	/** The {@link GameContext} we use. */
 	public GameContext context;
-	/** The {@link World} we use. */
-	public World world;
+	/** The {@link GameWorld} we use. */
+	public GameWorld world;
 	
 	private GameContainer container;
 	private GameState nextState, previousState;
@@ -147,17 +147,17 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	 */
 	public abstract GameContext initGameContext(GameContainer container);
 	/**
-	 * Gets called to initialize the {@link World}. You may return null. The class will not create a default
+	 * Gets called to initialize the {@link GameWorld}. You may return null. The class will not create a default
 	 * implementation (would be hard to guess how you want your world, also not all games need a world).
 	 * 
-	 * @return an instance of the {@link World} Interface (if wanted).
+	 * @return an instance of the {@link GameWorld} Interface (if wanted).
 	 */
-	public abstract World initWorld(GameContainer container);
+	public abstract GameWorld initWorld(GameContainer container);
 	/**
 	 * Gets called after {@link StateBasedGame#initGameContext(GameContainer)} and
 	 * {@link StateBasedGame#initWorld(GameContainer)} to add all states.
 	 * <p>
-	 * After this call all states get a call to the {@link GameState#init(GameContext, World)} method.
+	 * After this call all states get a call to the {@link GameState#init(GameContext, GameWorld)} method.
 	 * <p>
 	 * Use this code to initiate your game to. After this call the game will start running.
 	 */
@@ -173,7 +173,7 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	 * @param delta
 	 *            the {@link GameDelta} object containing the delta values. @
 	 */
-	protected void preUpdate(GameContext context, World world, GameDelta delta) {}
+	protected void preUpdate(GameContext context, GameWorld world, GameDelta delta) {}
 	/**
 	 * Gets called after the update call to the current state.
 	 * 
@@ -184,7 +184,7 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	 * @param delta
 	 *            the {@link GameDelta} object containing the delta values. @
 	 */
-	protected void postUpdate(GameContext context, World world, GameDelta delta) {}
+	protected void postUpdate(GameContext context, GameWorld world, GameDelta delta) {}
 	
 	/**
 	 * Gets called before the render call to the current state.
@@ -196,7 +196,7 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	 * @param g
 	 *            the wrapper for graphics
 	 */
-	protected void preRender(GameContext context, World world, Graphics g) {}
+	protected void preRender(GameContext context, GameWorld world, Graphics g) {}
 	/**
 	 * Gets called after the render call to the current state.
 	 * 
@@ -207,7 +207,7 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	 * @param g
 	 *            the wrapper for graphics
 	 */
-	protected void postRender(GameContext context, World world, Graphics g) {}
+	protected void postRender(GameContext context, GameWorld world, Graphics g) {}
 	
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -354,7 +354,7 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	public void resume(GameContainer container) {}
 	
 	/**
-	 * If you override this, call super.dispose. This will dispose the {@link GameContext} and the {@link World} for
+	 * If you override this, call super.dispose. This will dispose the {@link GameContext} and the {@link GameWorld} for
 	 * you.
 	 */
 	public void dispose() {
@@ -398,7 +398,7 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	/**
 	 * @return the world the game plays in. can be null if you did not provide one!
 	 */
-	public World getWorld() {
+	public GameWorld getWorld() {
 		return world;
 	}
 	

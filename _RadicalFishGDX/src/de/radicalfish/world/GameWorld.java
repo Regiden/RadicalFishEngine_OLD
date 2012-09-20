@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Stefan Lange
+ * Copyright (c) 2011, Stefan Lange
  * 
  * All rights reserved.
  * 
@@ -27,89 +27,119 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.world.map;
+package de.radicalfish.world;
+import java.util.List;
+import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.world.GameWorld;
+import de.radicalfish.world.map.Map;
 
 /**
- * Interface for layers contained in a {@link Map}.
+ * Describes a world the game plays in. A world will give the map the game currently plays on and all EntitySystems that
+ * are used by the game. A world will <b>not be automatically updated and rendered!</b>.
+ * <p>
+ * You must call update and render somewhere on your own and also decided what should be rendered.
  * 
  * @author Stefan Lange
- * @version 1.0.0
- * @since 15.06.2012
+ * @version 0.5.0
+ * @since 11.03.2012
  */
-public interface Layer {
+public interface GameWorld extends Disposable {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	
 	/**
-	 * Updates the layer.
+	 * Initiate this world.
+	 * 
+	 * @param context
+	 *            the context the game plays in
+	 */
+	public void init(GameContext context);
+	/**
+	 * Updates the world. No parameter for World here since we call this on the world anyway.
 	 * 
 	 * @param context
 	 *            the context the game runs in
-	 * @param world
-	 *            the world the game plays in
 	 * @param delta
 	 *            the {@link GameDelta} object holding the delta value
 	 */
-	public void update(GameContext context, GameWorld world, GameDelta delta);
+	public void update(GameContext context, GameDelta delta);
 	/**
-	 * Renders the layer.
+	 * Renders the world. No parameter for World here since we call this on the world anyway.
 	 * 
 	 * @param context
 	 *            the context the game runs in
-	 * @param world
-	 *            the world the game plays in
 	 * @param g
 	 *            the graphics context to draw to
 	 */
-	public void render(GameContext context, GameWorld world, Graphics g);
-	
-	// GETTER
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * @return the name if this layer
-	 */
-	public String getName();
-	/**
-	 * @return the {@link TileSet} used for this layer if any. Can be null if not used.
-	 */
-	public TileSet getTileSet();
-	
-	/**
-	 * @return the tile data.
-	 */
-	public Tile[][] getTiles();
-	/**
-	 * @return the tile id at <code>x</code>, <code>y</code>.
-	 */
-	public Tile getTileAt(int x, int y);
+	public void render(GameContext context, Graphics g);
 	
 	// SETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
-	 * Sets the name of the layer.
+	 * Adds a {@link CollisionManager} by name.
 	 */
-	public void setName(String name);
+	public void addCollisionManager(String name, CollisionManager manager);
 	/**
-	 * Sets the {@link TileSet} to use.
+	 * Adds an {@link EntitySystem} to the world.
+	 * 
+	 * @param name
+	 *            the name of the system
 	 */
-	public void setTileSet(TileSet set);
+	public void addEntitySystem(String name, EntitySystem system);
+	/**
+	 * Removes and {@link EntitySystem} for the world.
+	 * 
+	 * @param name
+	 *            the name of the system
+	 */
+	public void removeEntitySystem(String name);
 	
 	/**
-	 * Sets the tiles int this layer.
+	 * Sets the camera to use for this world.
 	 */
-	public void setTiles(Tile[][] tiles);
+	public void setCamera(Camera camera);
 	/**
-	 * Sets the id of a tile at <code>x</code>, <code>y</code>.
+	 * Sets the current map to use.
 	 */
-	public void setTileAt(int x, int y, int id);
-	/**
-	 * Cchanges the tile at <code>x</code>, <code>y</code>.
-	 */
-	public void setTileAt(int x, int y, Tile tile);
+	public void setMap(Map map);
 	
+	/**
+	 * Sets the the gravity this world has (mostly pixel per seconds).
+	 */
+	public void setGravity(float gravity);
+	
+	// GETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return the CollisionManager defined by <code>name</code>.
+	 */
+	public CollisionManager getCollisionManager(String name);
+	/**
+	 * @return a list of all system in use.
+	 */
+	public List<EntitySystem> getEntitySystems();
+	/**
+	 * @return the EntitySystem defined by <code>name</code>.
+	 */
+	public EntitySystem getEntitySystem(String name);
+	
+	/**
+	 * @return the camera in use.
+	 */
+	public Camera getCamera();
+	/**
+	 * @return the map the world currently plays in.
+	 */
+	public Map getMap();
+	
+	/**
+	 * @return the gravity of this world.
+	 */
+	public float getGravity();
+	/**
+	 * @return the size of a tile.
+	 */
+	public int getTileSize();
 }

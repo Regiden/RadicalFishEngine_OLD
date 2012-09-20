@@ -31,7 +31,7 @@ package de.radicalfish.context.defaults;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.util.RadicalFishException;
-import de.radicalfish.world.World;
+import de.radicalfish.world.GameWorld;
 
 /**
  * An Implementation of the {@link GameDelta} Interface which supports easing to a target speed.
@@ -50,7 +50,7 @@ public class DefaultGameDelta implements GameDelta {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void update(GameContext context, World world, float delta) {
+	public void update(GameContext context, GameWorld world, float delta) {
 		normalDelta = delta;
 		this.delta = normalDelta * factor;
 	}

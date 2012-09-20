@@ -31,7 +31,7 @@ package de.radicalfish.state;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.world.World;
+import de.radicalfish.world.GameWorld;
 
 /**
  * A simple abstract implementation of the {@link GameState}. Use this to hide code you may not want and only override
@@ -54,19 +54,19 @@ public abstract class BasicGameState implements GameState {
 	
 	// ABSRACT METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public abstract void init(GameContext context, World world);
-	public abstract void update(GameContext context, World world, GameDelta delta);
-	public abstract void render(GameContext context, World world, Graphics g);
+	public abstract void init(GameContext context, GameWorld world);
+	public abstract void update(GameContext context, GameWorld world, GameDelta delta);
+	public abstract void render(GameContext context, GameWorld world, Graphics g);
 	
 	// OVERRIDE METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public void entering(GameContext context, World world, GameState form) {}
-	public void entered(GameContext context, World world, GameState form) {}
-	public void leaving(GameContext context, World world, GameState to) {}
-	public void left(GameContext context, World world, GameState to) {}
+	public void entering(GameContext context, GameWorld world, GameState form) {}
+	public void entered(GameContext context, GameWorld world, GameState form) {}
+	public void leaving(GameContext context, GameWorld world, GameState to) {}
+	public void left(GameContext context, GameWorld world, GameState to) {}
 	
-	public void pause(GameContext context, World world) {}
-	public void resume(GameContext context, World world) {}
+	public void pause(GameContext context, GameWorld world) {}
+	public void resume(GameContext context, GameWorld world) {}
 	public void dispose() {}
 	
 	// OVERRIDE INPUT METHODS
