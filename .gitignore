@@ -6,6 +6,7 @@
 
 # Folders #
 bin/
+wiki_resources/
 
 /TestProjects/_RadicalFishTests-html/.gwt
 /TestProjects/_RadicalFishTests-html/gwt-unitCache
