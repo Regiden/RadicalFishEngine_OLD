@@ -517,7 +517,7 @@ public class GameContainer implements ApplicationListener {
 	/**
 	 * True if the delta value should be smoothed out.
 	 */
-	public void setSmoothDelta(boolean smoothDelta) {
+	public void setSmoothDeltas(boolean smoothDelta) {
 		this.smoothDelta = smoothDelta;
 	}
 	/**

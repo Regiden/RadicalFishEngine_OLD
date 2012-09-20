@@ -91,7 +91,7 @@ public abstract class SimpleTest implements RadicalFishTest, InputProcessor {
 	// TESTS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void initContainer(GameContainer container) {
-		container.setSmoothDelta(true);
+		container.setSmoothDeltas(true);
 	}
 	public String getTitle() {
 		return title;
