@@ -30,7 +30,7 @@
 package de.radicalfish;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import de.radicalfish.tests.GameTest;
+import de.radicalfish.tests.other.SimpleGame;
 
 public class DirectTest {
 
@@ -38,11 +38,12 @@ public class DirectTest {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "RadicalFishTests";
 		config.useGL20 = true;
-		config.width = 800;
-		config.height = 600;
+		config.width = 640;
+		config.height = 480;
 		config.useCPUSynch = false;
 		
-		GameContainer app = new GameContainer(config.title, new GameTest(), config.width, config.height, config.useGL20);
+		GameContainer app = new GameContainer(config.title, new SimpleGame(), config.width, config.height, config.useGL20);
+		app.setSmoothDeltas(true);
 		new LwjglApplication(app, config);
 	}
 }
