@@ -33,8 +33,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import de.radicalfish.GameContainer;
-import de.radicalfish.SpriteSheet;
 import de.radicalfish.graphics.Graphics;
+import de.radicalfish.graphics.SpriteSheet;
 import de.radicalfish.tests.utils.SimpleTest;
 import de.radicalfish.util.RadicalFishException;
 

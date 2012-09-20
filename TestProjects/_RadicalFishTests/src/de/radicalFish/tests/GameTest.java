@@ -37,7 +37,6 @@ import com.badlogic.gdx.utils.Array;
 import de.radicalfish.Game;
 import de.radicalfish.GameContainer;
 import de.radicalfish.GameInput;
-import de.radicalfish.SpriteSheet;
 import de.radicalfish.assets.Assets;
 import de.radicalfish.assets.FontSheetLoader.FontSheetParameter;
 import de.radicalfish.assets.SpriteFontLoader.SpriteFontParameter;
@@ -47,6 +46,7 @@ import de.radicalfish.font.StyleInfo;
 import de.radicalfish.font.StyleParser;
 import de.radicalfish.font.StyledText;
 import de.radicalfish.graphics.Graphics;
+import de.radicalfish.graphics.SpriteSheet;
 import de.radicalfish.tests.utils.RadicalFishTest;
 import de.radicalfish.util.RadicalFishException;
 
@@ -145,7 +145,7 @@ public class GameTest implements Game, RadicalFishTest {
 	// TEST METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void initContainer(GameContainer container) {
-		container.setSmoothDelta(true);
+		container.setSmoothDeltas(true);
 	}
 	
 	public String getTitle() {

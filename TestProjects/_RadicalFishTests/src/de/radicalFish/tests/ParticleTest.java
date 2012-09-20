@@ -362,7 +362,7 @@ public class ParticleTest extends BasicGame implements RadicalFishTest {
 	// TEST METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void initContainer(GameContainer container) {
-		container.setSmoothDelta(true);
+		container.setSmoothDeltas(true);
 		container.setBatchSize(10000);
 	}
 	

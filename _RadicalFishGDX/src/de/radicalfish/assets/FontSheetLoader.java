@@ -35,9 +35,9 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.SynchronousAssetLoader;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
-import de.radicalfish.SpriteSheet;
 import de.radicalfish.assets.FontSheetLoader.FontSheetParameter;
 import de.radicalfish.font.FontSheet;
+import de.radicalfish.graphics.SpriteSheet;
 
 /**
  * A Loader for {@link SpriteSheet}s. Passing a Parameter specifies the width and height of a tile. Meaning you MUST

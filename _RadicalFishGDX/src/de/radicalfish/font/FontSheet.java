@@ -33,7 +33,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
-import de.radicalfish.SpriteSheet;
+import de.radicalfish.graphics.SpriteSheet;
 import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.util.Utils;
 

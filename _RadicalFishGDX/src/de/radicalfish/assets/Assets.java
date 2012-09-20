@@ -40,11 +40,11 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Logger;
-import de.radicalfish.SpriteSheet;
 import de.radicalfish.assets.FontSheetLoader.FontSheetParameter;
 import de.radicalfish.assets.SpriteSheetLoader.SpriteSheetParameter;
 import de.radicalfish.font.FontSheet;
 import de.radicalfish.font.SpriteFont;
+import de.radicalfish.graphics.SpriteSheet;
 
 /**
  * Class for loading assets. This is basically the {@link AssetManager} with added {@link AssetLoader}.
