@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.FPSCounter;
 import de.matthiasmann.twl.Label;
+import de.radicalfish.context.ContextGame;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.Settings;
 import de.radicalfish.debug.DebugAdapter;
@@ -51,7 +52,7 @@ public class DebugTest extends DebugAdapter {
 		
 		GameContainer app = new GameContainer(config.title, new StatesTest(), config.width, config.height, config.useGL20);
 		app.setDebugCallBack(this);
-		app.setSmoothDelta(true);
+		app.setSmoothDeltas(true);
 		new LwjglApplication(app, config);
 	}
 	public static void main(String[] args) {
