@@ -3,7 +3,6 @@ package de.radicalfish;
 import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import de.radicalfish.tests.other.SpriteBatchError;
 
 public class MainActivity extends AndroidApplication {
 	@Override
@@ -12,6 +11,6 @@ public class MainActivity extends AndroidApplication {
 		
 		AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
 		cfg.useGL20 = false;
-		initialize(new SpriteBatchError(800, 600), cfg);
+		initialize(null, cfg);
 	}
 }
