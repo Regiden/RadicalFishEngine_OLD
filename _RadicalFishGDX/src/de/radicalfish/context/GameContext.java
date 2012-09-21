@@ -33,6 +33,7 @@ import de.radicalfish.GameContainer;
 import de.radicalfish.GameInput;
 import de.radicalfish.assets.Assets;
 import de.radicalfish.font.Font;
+import de.radicalfish.graphics.Graphics;
 import de.radicalfish.state.StateBasedGame;
 
 /**
@@ -78,6 +79,10 @@ public interface GameContext extends Disposable {
 	 * @return the input handler.
 	 */
 	public GameInput getInput();
+	/**
+	 * @return the graphics instance used by the game.
+	 */
+	public Graphics getGraphics();
 	/**
 	 * @return the game's settings.
 	 */

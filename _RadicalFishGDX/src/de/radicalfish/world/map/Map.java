@@ -29,6 +29,7 @@
  */
 package de.radicalfish.world.map;
 import java.util.List;
+import com.badlogic.gdx.utils.Disposable;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.graphics.Graphics;
@@ -42,7 +43,7 @@ import de.radicalfish.world.GameWorld;
  * @version 1.0.0
  * @since 15.06.2012
  */
-public interface Map {
+public interface Map extends Disposable {
 	
 	// METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -79,16 +80,6 @@ public interface Map {
 	 *            the graphics context to draw to
 	 */
 	public void render(GameContext context, GameWorld world, Graphics g);
-	/**
-	 * Unloads all content. This can be used to flush {@link EntitySystem}s from entities and make one map object for
-	 * all maps to save memory.
-	 * 
-	 * @param context
-	 *            the context the game runs in
-	 * @param world
-	 *            the world the game plays in
-	 */
-	public void destroy(GameContext context, GameWorld world);
 	
 	/**
 	 * Adds an {@link MapListener} to the map.

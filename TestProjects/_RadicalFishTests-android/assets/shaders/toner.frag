@@ -26,9 +26,9 @@ void main() {
 	fragment.g = range(fragment.g * rgbc.g, rgbcOver.g);
 	fragment.b = range(fragment.b * rgbc.b, rgbcOver.b);
 	
-	// add chroma ba using the gray scale caluclaion and lerp them over every color channel
+	// add chroma by using the gray scale caluclaion and lerp them over every color channel
 	// the alpha channel of the rgbc uniform holds the chroma value
-	float gray = fragment.r * 0.30 + fragment.g * 0.59 +fragment. b * 0.11;
+	float gray = fragment.r * 0.30 + fragment.g * 0.59 + fragment. b * 0.11;
 	
 	fragment.r = lerp(fragment.r, gray, rgbc.a);
 	fragment.g = lerp(fragment.g, gray, rgbc.a);

@@ -474,6 +474,9 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 		public GameInput getInput() {
 			return container.getInput();
 		}
+		public Graphics getGraphics() {
+			return container.getGraphics();
+		}
 		public Settings getSettings() {
 			return settings;
 		}

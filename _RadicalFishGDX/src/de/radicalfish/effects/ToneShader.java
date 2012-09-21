@@ -36,6 +36,11 @@ import de.radicalfish.util.Utils;
 /**
  * A simple effect which manipulates the tone of the sprite via the {@link ToneModel}. It uses an {@link ShaderProgram}
  * so you can use it in a {@link SpriteBatch}.
+ * <p>
+ * 2 files are needed for that in your internal path in a folder named "shaders":
+ * <li>simple.vert: the vertex shader, you can fine the file in the android test project under assets!</li>
+ * <li>toner.frag: the fragment shader, you can fine the file in the android test project under assets!</li>
+ * <hr>
  * 
  * @author Stefan Lange
  * @version 1.0.0

@@ -28,7 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.debug;
-
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.Array;
 import de.radicalfish.GameContainer;
