@@ -28,7 +28,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.util;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
@@ -40,6 +43,34 @@ import com.badlogic.gdx.files.FileHandle;
  * @since 28.08.2012
  */
 public class ResourceLoader {
+	
+	private static final File root = new File(".");
+	
+	/**
+	 * Use this on desktop to get a resource from the class path or file system
+	 * 
+	 * @return the url from the path
+	 */
+	public static URL getURL(String path) {
+		URL url = null;
+		
+		url = tryClassPath(path);
+		if(url != null) {
+			return url;
+		}
+		url = tryFileSystem(path);
+		return url;
+	}
+	/**
+	 * Use this on desktop to get an {@link InputStream} for a resource from the class path or file system.
+	 * equal to {@link ResourceLoader#getURL(String).openStream()};
+	 * 
+	 * @return the url from the path
+	 * @throws IOException 
+	 */
+	public static InputStream getStream(String path) throws IOException {
+		return getURL(path).openStream();
+	}
 	
 	/**
 	 * Will first try to load the resource form the internal path. If that fails it will try the external path.
@@ -60,6 +91,27 @@ public class ResourceLoader {
 	 */
 	public static InputStream getResourceAsStream(String path) {
 		return getResource(path).read();
+	}
+	
+	// INTERN
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private static URL tryClassPath(String ref) {
+		String cpRef = ref.replace('\\', '/');
+		return ResourceLoader.class.getClassLoader().getResource(cpRef);
+	}
+	public static URL tryFileSystem(String ref) {
+		try {
+			File file = new File(root, ref);
+			if (!file.exists()) {
+				file = new File(ref);
+			}
+			if (!file.exists()) {
+				return null;
+			}
+			return file.toURI().toURL();
+		} catch (IOException e) {
+			return null;
+		}
 	}
 	
 }
