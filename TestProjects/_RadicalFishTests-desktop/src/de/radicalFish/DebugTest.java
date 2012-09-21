@@ -79,7 +79,6 @@ public class DebugTest extends DebugAdapter {
 			context.getGameVariables().putInt("bla", 23123);
 			context.getGameVariables().putInt("bla2", 23123);
 		}
-		settings.printSettings();
 		
 		debug = new DebugPanel(container);
 		debug.setVisible(false);
@@ -93,12 +92,6 @@ public class DebugTest extends DebugAdapter {
 				if (debug.getCurrentFocusOwner() != null) {
 					debug.getCurrentFocusOwner().requestKeyboardFocus();
 				}
-			}
-		}
-		
-		if(container.getInput().isKeyPressed(Keys.A)) {
-			if(hasContext) {
-				context.getGameVariables().putBoolean("test." + context.getGameVariables().getNumberOfBooleans(), true);
 			}
 		}
 		debug.update();

@@ -50,6 +50,7 @@ public class StatesTest extends StateBasedGame implements RadicalFishTest {
 		return null;
 	}
 	public void initStates(GameContext context) throws RadicalFishException {
+		context.getContainer().getGraphics().setClearColor(0.7f, 0.1f, 0.2f);
 		addState(new SimpleState(0));
 		addState(new SimpleState(1));
 	}

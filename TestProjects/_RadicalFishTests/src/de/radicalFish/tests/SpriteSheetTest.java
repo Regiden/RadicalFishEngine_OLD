@@ -92,6 +92,9 @@ public class SpriteSheetTest extends SimpleTest {
 			container.getFont().draw(batch, "This is a 2x2 SpriteSheet with tw and th set to 16", 100, 160);
 			container.getFont().draw(batch, "The texture is 32x32 pixel. cached is: " + sheet.isCached(), 100, 296);
 			
+			
+			batch.draw(sheet.base, 100, 100, 32, 32, 0, 0, 32, 32, false, g.isYDown());
+			
 			g.scale(2);
 			g.apply();
 			
