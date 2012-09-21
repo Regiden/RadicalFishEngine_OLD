@@ -71,8 +71,6 @@ public class GameVariablesEditor extends ResizableFrame {
 	
 	private int size_bools, size_strings, size_ints, size_floats;
 	
-	private int tabindex;
-	
 	public GameVariablesEditor() {
 		this(null);
 	}
@@ -176,32 +174,6 @@ public class GameVariablesEditor extends ResizableFrame {
 			}
 		});
 		
-		// hacky way to get some info of the current tab index...
-		tpane.getActiveTab().addCallback(new Runnable() {
-			public void run() {
-				tabindex = 0;
-			}
-		});
-		tpane.cycleTabs(1);
-		tpane.getActiveTab().addCallback(new Runnable() {
-			public void run() {
-				tabindex = 1;
-			}
-		});
-		tpane.cycleTabs(1);
-		tpane.getActiveTab().addCallback(new Runnable() {
-			public void run() {
-				tabindex = 2;
-			}
-		});
-		tpane.cycleTabs(1);
-		tpane.getActiveTab().addCallback(new Runnable() {
-			public void run() {
-				tabindex = 3;
-			}
-		});
-		tpane.cycleTabs(1);
-		
 		Group h = cl.createSequentialGroup().addWidget(key, Alignment.CENTER).addGap(3, 3, 3).addWidget(value, Alignment.CENTER)
 				.addGap(4, 4, 4).addWidget(button).addGap(6, 6, 6);
 		Group v = cl.createParallelGroup().addWidget(key, Alignment.FILL).addWidget(value, Alignment.FILL).addWidget(button, Alignment.CENTER);
@@ -242,7 +214,7 @@ public class GameVariablesEditor extends ResizableFrame {
 			}
 		}
 		for (int i = 0; i < strings.getPropertyList().getNumProperties(); i++) {
-			Property<String> prop = (Property<String>) floats.getPropertyList().getProperty(i);
+			Property<String> prop = (Property<String>) strings.getPropertyList().getProperty(i);
 			if(varis.getString(prop.getName(), "") != prop.getPropertyValue()) {
 				prop.setPropertyValue(varis.getString(prop.getName(), ""));
 			}
@@ -348,6 +320,7 @@ public class GameVariablesEditor extends ResizableFrame {
 	}
 	
 	private void submit(String key, String value, final EditField field) {
+		System.out.println(tpane.getActiveTabIndex());
 		if (varis == null) {
 			this.key.setText("");
 			this.value.setText("");
@@ -364,13 +337,15 @@ public class GameVariablesEditor extends ResizableFrame {
 			this.value.setErrorMessage(null);
 		}
 		
-		if (tabindex == 0) {
+		
+		
+		if (tpane.getActiveTabIndex() == 0) {
 			submitBoolean(key, value, field);
-		} else if (tabindex == 1) {
+		} else if (tpane.getActiveTabIndex() == 1) {
 			submitString(key, value, field);
-		} else if (tabindex == 2) {
+		} else if (tpane.getActiveTabIndex() == 2) {
 			submitInt(key, value, field);
-		} else if (tabindex == 3) {
+		} else if (tpane.getActiveTabIndex() == 3) {
 			submitFloat(key, value, field);
 		}
 		
@@ -379,7 +354,7 @@ public class GameVariablesEditor extends ResizableFrame {
 	}
 	private void submitBoolean(String key, String value, EditField field) {
 		if (!value.equals("true") && !value.equals("false")) {
-			field.setErrorMessage("Boolean Property must be true or false!");
+			field.setErrorMessage("Boolean property must be true or false!");
 			this.value.setText("");
 			return;
 		} else {
