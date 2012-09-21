@@ -38,24 +38,21 @@ import com.badlogic.gdx.math.Vector3;
  * scaling, translating the whole context.
  * 
  * @author Stefan Lange
- * @version 0.0.0
+ * @version 1.0.0
  * @since 09.08.2012
  */
 public class GraphicsContext extends OrthographicCamera {
 	
-	private final Vector3 temp;
+	private static final Vector3 temp = new Vector3();
+	private static float y, height;
 	
-	private float scaleX, scaleY;
+	private float scaleX = 1.0f, scaleY = 1.0f;
+	private boolean ydown = true;
 	
 	public GraphicsContext(int viewportWidth, int viewportHeight) {
-		scaleX = 1.0f;
-		scaleY = 1.0f;
-		temp = new Vector3();
-		
 		this.viewportWidth = viewportWidth;
 		this.viewportHeight = viewportHeight;
 		this.near = 0;
-		
 	}
 	
 	// METHODS
@@ -74,26 +71,14 @@ public class GraphicsContext extends OrthographicCamera {
 		scaleX *= x;
 		scaleY *= y;
 	}
-	/**
-	 * sets the scale on both axis.
-	 */
-	public void setScale(float scale) {
-		scaleX = scale;
-		scaleY = scale;
-	}
-	/**
-	 * Sets <code>x</code> and <code>y</code> to the x scale and y scale.
-	 */
-	public void setScale(float x, float y) {
-		scaleX = x;
-		scaleY = y;
-	}
 	
 	// OVERRIDE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void update() {
 		checkScale();
-		projection.setToOrtho(0, viewportWidth / scaleX, viewportHeight / scaleY, 0, Math.abs(near), Math.abs(far));
+		y = ydown ? viewportHeight / scaleY : 0;
+		height = ydown ? 0 : viewportHeight / scaleY;
+		projection.setToOrtho(0, viewportWidth / scaleX, y, height, Math.abs(near), Math.abs(far));
 		view.setToLookAt(position, temp.set(position).add(direction), up);
 		combined.set(projection);
 		Matrix4.mul(combined.val, view.val);
@@ -101,7 +86,7 @@ public class GraphicsContext extends OrthographicCamera {
 		Matrix4.inv(invProjectionView.val);
 		frustum.update(invProjectionView);
 	}
-	public void setToOrtho (float viewportWidth, float viewportHeight) {
+	public void setToOrtho(float viewportWidth, float viewportHeight) {
 		this.viewportWidth = viewportWidth;
 		this.viewportHeight = viewportHeight;
 		update();
@@ -118,8 +103,40 @@ public class GraphicsContext extends OrthographicCamera {
 		}
 	}
 	
+	// SETTER
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Sets the y direction of the viewport. true stand for y-down while false stand for y-up.
+	 */
+	public void setYDown(boolean ydown) {
+		this.ydown = ydown;
+		update();
+	}
+	
+	/**
+	 * sets the scale on both axis.
+	 */
+	public void setScale(float scale) {
+		scaleX = scale;
+		scaleY = scale;
+	}
+	/**
+	 * Sets <code>x</code> and <code>y</code> to the x scale and y scale.
+	 */
+	public void setScale(float x, float y) {
+		scaleX = x;
+		scaleY = y;
+	}
+	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return true if the viewport direction is y-down, false otherwise.
+	 */
+	public boolean isYDown() {
+		return ydown;
+	}
+	
 	public float getScaleX() {
 		return scaleX;
 	}

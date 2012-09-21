@@ -50,7 +50,7 @@ import de.radicalfish.util.RadicalFishException;
  * A wrapper for translating the context, drawing sprites with the {@link SpriteBatch} and drawing primitives.
  * 
  * @author Stefan Lange
- * @version 0.8.0
+ * @version 1.0.0
  * @since 08.08.2012
  */
 public class Graphics implements Disposable {
@@ -473,6 +473,13 @@ public class Graphics implements Disposable {
 		spriteBatch.setBlendFunction(src, dst);
 	}
 	
+	/**
+	 * Sets the y direction of the viewport. true stand for y-down while false stand for y-up.
+	 */
+	public void setYDown(boolean ydown) {
+		gContext.setYDown(ydown);
+	}
+	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
@@ -519,6 +526,13 @@ public class Graphics implements Disposable {
 	 */
 	public float getScaleY() {
 		return gContext.getScaleY();
+	}
+	
+	/**
+	 * @return true if the viewport direction is y-down, false otherwise.
+	 */
+	public boolean isYDown() {
+		return gContext.isYDown();
 	}
 	
 	// INTERN CLASSES
