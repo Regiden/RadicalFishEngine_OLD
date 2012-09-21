@@ -60,7 +60,7 @@ import de.radicalfish.graphics.SpriteSheet;
  * on.
  * 
  * @author Stefan Lange
- * @version 0.2.0
+ * @version 0.5.0
  * @since 08.09.2012
  */
 public class Assets extends AssetManager {

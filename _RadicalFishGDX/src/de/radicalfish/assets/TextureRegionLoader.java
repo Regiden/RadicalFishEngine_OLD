@@ -47,10 +47,6 @@ import de.radicalfish.assets.TextureRegionLoader.TextureRegionLoaderParameter;
  * <p>
  * You can use {@link TextureRegionLoaderParameter#TextureRegionLoaderParameter(String, Rectangle)} to shorten the code
  * since the {@link Rectangle} values will be used to define the region.
- * 
- * @author Stefan Lange
- * @version 1.0.0
- * @since 12.09.2012
  */
 public class TextureRegionLoader extends SynchronousAssetLoader<TextureRegion, TextureRegionLoaderParameter> {
 	

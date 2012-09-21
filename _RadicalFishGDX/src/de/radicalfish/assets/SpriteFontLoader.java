@@ -46,10 +46,6 @@ import de.radicalfish.font.SpriteFont;
  * You can name the SpriteFont like you want, the dependency will be loaded if needed. it must be set in the parameters.
  * You can set a {@link FontSheetParameter} if the {@link FontSheet} was not loaded. With this the FontSheet will be
  * loaded as dependency. This FontSheet will be loaded with the name of the {@link SpriteFont} + "_fs".
- * 
- * @author Stefan Lange
- * @version 1.0.0
- * @since 08.09.2012
  */
 public class SpriteFontLoader extends SynchronousAssetLoader<SpriteFont, SpriteFontParameter> {
 	

@@ -35,7 +35,7 @@ import com.badlogic.gdx.graphics.GL20;
  * Simple enum for blend modes with method apply a blend mode. Note that {@link BlendMode#SUB} only works for GL20!
  * 
  * @author Stefan Lange
- * @version 0.1.7
+ * @version 1.0.0
  * @since 21.08.2012
  */
 public enum BlendMode {

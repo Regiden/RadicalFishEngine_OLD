@@ -49,7 +49,7 @@ import de.radicalfish.util.Utils;
  * add {@link ResizableFrame}.
  * 
  * @author Stefan Lange
- * @version 0.5.0
+ * @version 1.0.0
  * @since 15.08.2012
  */
 public class DebugPanel {
@@ -85,7 +85,6 @@ public class DebugPanel {
 	}
 	public void render() {
 		gui.draw();
-		
 	}
 	
 	public void addToRoot(Widget widget) {
@@ -96,10 +95,7 @@ public class DebugPanel {
 	// INTERN METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	private void createGUI(GameContainer container, String path) throws RadicalFishException {
-		Logger.info("Initiating Debug...");
-		
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-		
 		try {
 			root = new TWLRootPane();
 			root.setTheme("");
@@ -124,8 +120,6 @@ public class DebugPanel {
 			
 			TWLInputForwarder inputForwarder = new TWLInputForwarder(gui);
 			container.getInput().addPrimaryListener(inputForwarder);
-			
-			Logger.info("Debug successfully loaded!");
 		} catch (Throwable e) {
 			throw new RadicalFishException("Could not initialize TWL GUI", e);
 		} finally {

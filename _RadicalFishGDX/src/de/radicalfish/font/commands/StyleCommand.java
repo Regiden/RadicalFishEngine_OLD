@@ -38,7 +38,7 @@ import de.radicalfish.font.StyleInfo;
  * executed. of course the {@link Font} must offer the feature to use {@link StyleCommand}s.
  * 
  * @author Stefan Lange
- * @version 0.5.0
+ * @version 1.0.0
  * @since 08.12.2011
  */
 public abstract class StyleCommand {

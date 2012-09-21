@@ -28,7 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.assets;
-
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
@@ -46,10 +45,6 @@ import de.radicalfish.util.RadicalFishException;
  * <p>
  * Like in the other loaders provided by the engine the file name can be any name. The important part are the paths set
  * in the {@link ShaderLoaderParameter}. A parameter must be given otherwise the loader will throw an exception.
- * 
- * @author Stefan Lange
- * @version 1.0.0
- * @since 12.09.2012
  */
 public class ShaderLoader extends AsynchronousAssetLoader<ShaderProgram, ShaderLoaderParameter> {
 	

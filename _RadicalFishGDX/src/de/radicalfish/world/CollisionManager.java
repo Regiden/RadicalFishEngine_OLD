@@ -34,7 +34,7 @@ import de.radicalfish.context.GameContext;
  * A collision manager is responsible
  * 
  * @author Stefan Lange
- * @version 0.0.0
+ * @version 1.0.0
  * @since 16.06.2012
  */
 public interface CollisionManager {

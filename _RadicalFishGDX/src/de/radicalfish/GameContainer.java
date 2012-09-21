@@ -62,7 +62,7 @@ import de.radicalfish.util.Version;
  * is the container is paused, it will not call any update or render code.
  * 
  * @author Stefan Lange
- * @version 0.5.0
+ * @version 1.0.0
  * @since 08.08.2012
  */
 public class GameContainer implements ApplicationListener {
@@ -118,6 +118,7 @@ public class GameContainer implements ApplicationListener {
 	 */
 	public boolean clearScreen = true;
 	
+	private boolean createYUp = false;
 	private boolean created = false;
 	private boolean running = true;
 	private boolean canSetFullScreen = true;
@@ -239,7 +240,7 @@ public class GameContainer implements ApplicationListener {
 		Logger.info(new Date() + " System: " + logSystemOS());
 		Logger.info(new Date() + " Original DisplayMode: " + Gdx.graphics.getDesktopDisplayMode());
 		currentDisplayMode = getCurrentDisplayMode();
-		Logger.info(new Date() + " Current DisplayMode: " + currentDisplayMode);
+		Logger.info(new Date() + " Target DisplayMode: " + currentDisplayMode);
 		
 		// set gdx stuff
 		input = new GameInput();
@@ -249,6 +250,9 @@ public class GameContainer implements ApplicationListener {
 		
 		// init Graphics context which should work like the one in Slick2D
 		graphics = new Graphics(width, height, useGL20, batchSize);
+		if (createYUp) {
+			graphics.setYDown(false);
+		}
 		batch = graphics.getSpriteBatch();
 		
 		if (debugCallBack != null) {
@@ -274,7 +278,7 @@ public class GameContainer implements ApplicationListener {
 		
 		// load default font if no one was set
 		if (defaultFont == null) {
-			defaultFont = new BMFont(new BitmapFont(true));
+			defaultFont = new BMFont(new BitmapFont(graphics.isYDown()));
 		}
 		
 	}
@@ -303,7 +307,11 @@ public class GameContainer implements ApplicationListener {
 					Gdx.gl.glClearColor(0, 0, 0, 1);
 					Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 					Gdx.gl.glEnable(GL10.GL_SCISSOR_TEST);
-					Gdx.gl.glScissor(0, Gdx.graphics.getHeight() - height, width, height);
+					if (graphics.isYDown()) {
+						Gdx.gl.glScissor(0, Gdx.graphics.getHeight() - height, width, height);
+					} else {
+						Gdx.gl.glScissor(0, 0, width, height);
+					}
 					graphics.setClearColor(graphics.getClearColor());
 				}
 				
@@ -318,7 +326,6 @@ public class GameContainer implements ApplicationListener {
 				
 				// reset all to make each frame normal
 				if (resetTransform) {
-					// TODO fix to center and shit?
 					graphics.resetTransform(true);
 				}
 				
@@ -327,8 +334,8 @@ public class GameContainer implements ApplicationListener {
 				// render fps
 				if (showDebug) {
 					batch.begin();
-					defaultFont.draw(batch, "Fps: " + fps, 5, 5);
-					defaultFont.draw(batch, "Delta: " + (int) (delta * 1000) + "ms", 5, 20);
+					defaultFont.draw(batch, "Fps: " + fps, 5, (!graphics.isYDown() ? height - 5 : 5));
+					defaultFont.draw(batch, "Delta: " + (int) (delta * 1000) + "ms", 5, (!graphics.isYDown() ? height - 20 : 20));
 					batch.end();
 				}
 				
@@ -540,6 +547,19 @@ public class GameContainer implements ApplicationListener {
 		Gdx.graphics.setVSync(vsync);
 	}
 	
+	/**
+	 * Sets the y direction of the viewport. true stand for y-down while false stand for y-up. Default is y-down.
+	 * <p>
+	 * Set it before starting the game to start with a y-up viewport.
+	 */
+	public void setYDown(boolean ydown) {
+		if (!created) {
+			createYUp = !ydown;
+		} else {
+			graphics.setYDown(ydown);
+		}
+	}
+	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	/**
@@ -568,7 +588,7 @@ public class GameContainer implements ApplicationListener {
 	}
 	/**
 	 * @return the default font used by the container. This is null if called in the init method of the {@link Game}
-	 *         instance. 
+	 *         instance.
 	 */
 	public Font getFont() {
 		return defaultFont;
@@ -671,6 +691,16 @@ public class GameContainer implements ApplicationListener {
 	 */
 	public int getDisplayHeight() {
 		return Gdx.graphics.getHeight();
+	}
+	
+	/**
+	 * @return true if the viewport direction is y-down, false otherwise.
+	 */
+	public boolean isYDown() {
+		if (!created) {
+			return !createYUp;
+		}
+		return graphics.isYDown();
 	}
 	
 }

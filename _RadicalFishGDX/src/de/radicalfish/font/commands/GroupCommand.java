@@ -32,8 +32,6 @@ import com.badlogic.gdx.utils.Array;
 import de.radicalfish.GameContainer;
 import de.radicalfish.font.StyleInfo;
 
-// TODO fix doc for changes from repeat command to group command
-
 /**
  * A command that executes a group of commands starting from the given charpoint. the listm ust be ordered which means
  * that

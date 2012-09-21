@@ -37,7 +37,7 @@ import de.radicalfish.util.RadicalFishException;
  * Handles animations for entities.
  * 
  * @author Stefan Lange
- * @version 0.5.0
+ * @version 1.0.0
  * @since 11.06.2012
  */
 public class Animator implements Serializable {

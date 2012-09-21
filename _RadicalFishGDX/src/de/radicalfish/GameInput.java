@@ -48,7 +48,7 @@ import de.radicalfish.debug.DebugCallback;
  * copies from {@link Input} from libGDX. all credits goes to the creator of libGDX here :)
  * 
  * @author Stefan Lange
- * @version 0.1.1
+ * @version 1.0.0
  * @since 10.08.2012
  */
 public class GameInput implements InputProcessor {
