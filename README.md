@@ -2,11 +2,9 @@
 
 =================
 
-An 2D engine build on top of [libgdx][2]. The goal of this engine is to provide and easy to use framework which abstracts
-handling the low-level functions (Already mostly done by libgdx). 
+A 2D engine build on top of [libgdx][2]. The goal of this engine is to provide and easy to use framework which abstracts handling the low-level functions (Already mostly done by libgdx) for you. 
 
 The engine is currently under heavy development, so there will be bugs :) The following features are not compelety implemented. We also plan to implement more features as we go.
-
 
 Current Features
 ----------------
@@ -36,12 +34,14 @@ Current Features
     * backed by TWL http://twl.l33tlabs.org/
     * a lot of Widgets already done
 
-[1]: https://raw.github.com/Regiden/RadicalFishEngine/master/TestProjects/_RadicalFishTests-android/assets/data/logo.png
-[2]: https://github.com/libgdx/libgdx
+------
+
+If you search for a point to start and learn the basics of the **RadicalFishEngine** take a look at the `README.md` file in the main packge: [Click Me!][3]
+
 
 Boring Legal Stuff
 -------------
-Not much to tell you here. Every class has a short legal text. It's a BSD license so go and use or modify the engine. I even want you to contribute :) 
+Not much to tell you here. Every class has a short legal text. It's a BSD license so go and use or modify the classes. I even want you to contribute :) 
 
 Here is a copy of the license:
 ```
@@ -73,3 +73,7 @@ modification, are permitted provided that the following conditions are met:
  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
+
+[1]: https://raw.github.com/Regiden/RadicalFishEngine/master/TestProjects/_RadicalFishTests-android/assets/data/logo.png
+[2]: https://github.com/libgdx/libgdx
+[3]: https://github.com/Regiden/RadicalFishEngine/tree/master/_RadicalFishGDX/src/de/radicalfish
