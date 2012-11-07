@@ -11,21 +11,22 @@ import com.badlogic.gdx.utils.Array;
 import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.FPSCounter;
 import de.matthiasmann.twl.Label;
-import de.radicalfish.context.ContextGame;
 import de.radicalfish.context.GameContext;
+import de.radicalfish.context.GameWithContext;
 import de.radicalfish.context.Settings;
+import de.radicalfish.debug.AssetsViewer;
 import de.radicalfish.debug.DebugAdapter;
 import de.radicalfish.debug.DebugPanel;
 import de.radicalfish.debug.DeveloperConsole;
+import de.radicalfish.debug.EngineSettingsEditor;
 import de.radicalfish.debug.GameVariablesEditor;
 import de.radicalfish.debug.PerformanceListener;
 import de.radicalfish.debug.SettingsEditor;
 import de.radicalfish.debug.ToolBox;
-import de.radicalfish.debug.parser.PropertyInputParser;
-import de.radicalfish.debug.parser.URLInputParser;
+import de.radicalfish.debug.inputparser.PropertyInputParser;
+import de.radicalfish.debug.inputparser.URLInputParser;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.state.StateBasedGame;
-import de.radicalfish.tests.StatesTest;
+import de.radicalfish.tests.GameTest;
 import de.radicalfish.util.RadicalFishException;
 
 public class DebugTest extends DebugAdapter {
@@ -35,6 +36,7 @@ public class DebugTest extends DebugAdapter {
 	private ToolBox toolbox;
 	private DebugPanel debug;
 	private GameVariablesEditor gvmonitor;
+	private AssetsViewer av;
 	
 	private GameContext context;
 	private Settings settings;
@@ -45,12 +47,12 @@ public class DebugTest extends DebugAdapter {
 	public DebugTest() {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Debug Test";
-		config.useGL20 = false;
+		config.useGL20 = true;
 		config.width = 800;
 		config.height = 600;
 		config.useCPUSynch = false; // to true on release, else minimizing window will freak out
 		
-		GameContainer app = new GameContainer(config.title, new StatesTest(), config.width, config.height, config.useGL20);
+		GameContainer app = new GameContainer(config.title, new GameTest(), config.width, config.height, config.useGL20);
 		app.setDebugCallBack(this);
 		app.setSmoothDeltas(true);
 		new LwjglApplication(app, config);
@@ -63,8 +65,8 @@ public class DebugTest extends DebugAdapter {
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void init(GameContainer container) {
 		// if the game from the container is ContextGame, we can get the context
-		if (container.game instanceof ContextGame) {
-			context = ((StateBasedGame) container.game).getGameContext();
+		if (container.game instanceof GameWithContext) {
+			context = ((GameWithContext) container.game).getGameContext();
 			hasContext = true;
 		}
 		
@@ -136,24 +138,29 @@ public class DebugTest extends DebugAdapter {
 			throw new RadicalFishException(e.getMessage());
 		}
 		
-		// add all the values 
+		// add all the values
 		settings.setAllSettings(map);
 	}
 	
 	private void buildGUI(final GameContainer container) {
 		final DeveloperConsole dev = new DeveloperConsole();
 		dev.addInputParser(new URLInputParser());
-		if(hasContext) {
+		final EngineSettingsEditor ese = new EngineSettingsEditor(container);
+		
+		if (hasContext) {
 			dev.addInputParser(new PropertyInputParser(settings));
 		}
 		
 		final SettingsEditor set = new SettingsEditor(settings);
-		if(hasContext) {
+		if (hasContext) {
 			gvmonitor = new GameVariablesEditor(context.getGameVariables());
 		} else {
 			gvmonitor = new GameVariablesEditor();
 		}
 		
+		if (hasContext) {
+			av = new AssetsViewer(context.getAssets());
+		}
 		
 		Label fps = new Label("FPS:");
 		FPSCounter fpsCounter = new FPSCounter();
@@ -176,6 +183,16 @@ public class DebugTest extends DebugAdapter {
 				gvmonitor.setVisible(!gvmonitor.isVisible());
 			}
 		});
+		toolbox.addButton("Assets", new Runnable() {
+			public void run() {
+				av.setVisible(!av.isVisible());
+			}
+		});
+		toolbox.addButton("Engine", new Runnable() {
+			public void run() {
+				ese.setVisible(!ese.isVisible());
+			}
+		});
 		
 		toolbox.addFiller();
 		toolbox.addSeparator();
@@ -190,13 +207,20 @@ public class DebugTest extends DebugAdapter {
 				container.exit();
 			}
 		});
-		
 		toolbox.createToolbox();
+		
+		ese.setVisible(true);
+		av.setVisible(false);
+		dev.setVisible(false);
+		set.setVisible(false);
+		gvmonitor.setVisible(false);
 		
 		debug.addToRoot(dev);
 		debug.addToRoot(set);
 		debug.addToRoot(gvmonitor);
 		debug.addToRoot(toolbox);
+		debug.addToRoot(av);
+		debug.addToRoot(ese);
 	}
 	
 	// SETTER
