@@ -2,6 +2,8 @@
 <!DOCTYPE themes PUBLIC "-//www.matthiasmann.de//TWL-Theme//EN" "http://hg.l33tlabs.org/twl/raw-file/tip/src/de/matthiasmann/twl/theme/theme.dtd">
 <themes>
     <images file="gui.png">
+        <area name="arrow-down" xywh="169,17,13,17" center="true"/>
+        <area name="default-overlay" xywh="90,18,3,3" splitx="L1,R1" splity="T1,B1" tiled="true" tint="#88FFFFFF"/>
         <area name="textarea" xywh="72,69,12,12" splitx="L4,R4" splity="T4,B4"/>
         <area name="white" xywh="53,1,1,1"/>
     
@@ -11,6 +13,7 @@
     
         <area name="pixel.toolbox" xywh="3,2,1,1" inset="-2,0,-4,0"/>
         <area name="hsplitter" xywh="66,8,3,3" inset="2,0" splity="T1,B1"/>
+        <area name="vsplitter" xywh="61,6,3,3" splitx="L1,R1" inset="0,2"/>
     
         <area name="cursor.cross" xywh="78,28,7,7"/>
     
@@ -51,6 +54,7 @@
             <alias ref="box.down" if="selected" tint="#B2B2B2"/>
             <alias ref="box.high" border="3,4,4,5"/>
         </select>
+    
         <area name="edit.cursor" xywh="55,2,3,10" inset="0,1"/>
         <alias name="edit.selection" ref="white" tint="#80000000"/>
         <animation name="edit.cursor.animation" timeSource="hover">
@@ -288,6 +292,73 @@
             <alias ref="treebutton-plus"/>
         </select>
         <area name="test" xywh="85,35,12,12" splitx="L2,R2" splity="T2,B2" tiled="true"/>
+        <area name="arrow-spoiler" xywh="85,69,8,12" center="true"/>
+        <area name="arrow-spoilerdown" xywh="93,69,11,8" center="true"/>
+        <select name="button.arrow">
+            <composed if="selected">
+                <alias ref="box.down"/>
+                <alias ref="arrow-spoilerdown"/>
+            </composed>
+            <composed if="pressed">
+                <alias ref="box.down"/>
+                <alias ref="arrow-spoilerdown"/>
+            </composed>
+            <composed>
+                <alias ref="box.high"/>
+                <alias ref="arrow-spoiler"/>
+            </composed>
+        </select>
+        <grid name="spoiler-header" weightsX="0,1,0" weightsY="0,1,0">
+            <area xywh="170,2,3,3" tiled="true"/>
+            <area xywh="174,2,2,3" tiled="true"/>
+            <area xywh="177,2,3,3" tiled="true"/>
+            <area xywh="170,6,3,2" tiled="true"/>
+            <area xywh="174,6,2,2" tiled="true"/>
+            <area xywh="177,6,3,2" tiled="true"/>
+            <area xywh="172,2,3,1" tiled="true"/>
+            <area xywh="174,2,2,1" tiled="true"/>
+            <area xywh="175,2,3,1" tiled="true"/>
+        </grid>
+        <grid name="spoiler-container" weightsX="0,1,0" weightsY="1,0">
+            <area xywh="170,6,1,2"/>
+            <area xywh="174,6,2,2"/>
+            <area xywh="179,6,1,2"/>
+            <area xywh="173,11,1,1"/>
+            <area xywh="173,11,2,1"/>
+            <area xywh="174,11,1,1"/>
+        </grid>
+        <area name="submenu-arrow" xywh="85,69,7,11"/>
+        <select name="popup-menubutton">
+            <alias ref="black" if="(hover | hasOpenMenus) + !disabled + !empty" tint="#88FFFFFF"/>
+            <alias ref="none"/>
+        </select>
+        <grid name="popup-submenu.overlay" weightsX="1,0" weightsY="1">
+            <alias ref="none"/>
+            <select>
+                <alias ref="submenu-arrow" if="(hover | hasOpenPopups) + !disabled" inset="1,0,-1,0" sizeOverwriteH="9" center="true" tint="#808080"/>
+                <alias ref="submenu-arrow" tint="#4C4C4C" inset="1,0,-1,0" sizeOverwriteH="9" center="true"/>
+            </select>
+        </grid>
+        <composed name="popup-radiobutton">
+            <alias ref="popup-menubutton"/>
+            <alias ref="radiobox" inset="0,2,0,0"/>
+        </composed>
+        <composed name="popuo.checkbox">
+            <alias ref="popup-menubutton"/>
+            <alias ref="checkbox" inset="0,2,0,0"/>
+        </composed>
+        <grid name="popup-white" weightsX="0,1" weightsY="1">
+            <alias ref="white" sizeOverwriteH="18" inset="2,2,3,0"/>
+            <alias ref="none"/>
+        </grid>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -323,6 +394,7 @@
     <fontDef name="normal" filename="font3.fnt" color="#FFFFFF" default="true" offsetX="0">
         <fontParam if="error" color="red"/>
         <fontParam if="warning" color="orange"/>
+        <fontParam if="okay" color="#15A32E"/>
         <fontParam if="textSelection" color="#FFFFFF"/>
         <fontParam if="disabled" color="#8F8F8F"/>
     </fontDef>
@@ -333,7 +405,7 @@
     <fontDef name="link" filename="font3.fnt" color="#517EDA" underlineOffset="3">
         <fontParam if="hover" color="#2553B0"/>
     </fontDef>
-    <fontDef name="error" filename="font3.fnt" color="#FF3535">
+    <fontDef name="error" filename="font3.fnt" color="#E71B25">
     </fontDef>
     <fontDef name="green" filename="font3.fnt" color="#15A32E">
     </fontDef>
@@ -683,6 +755,7 @@
         <theme name="vscrollbar" ref="vscrollbar">
             <param name="background"><image>vscrollbar.intern</image></param>
         </theme>
+        <param name="maxHeight"><int>200</int></param>
     
     </theme>
 
@@ -690,6 +763,7 @@
         <param name="border"><border>0,3,0,0</border></param>
         <param name="background"><image>combobox.background</image></param>
         <param name="minWidth"><int>120</int></param>
+        <param name="maxWidth"><int>32767</int></param>
         <theme name="button" ref="-defaults">
             <param name="background"><image>vscrollbar.downbutton</image></param>
             <param name="minWidth"><int>16</int></param>
@@ -740,6 +814,11 @@
             <param name="border"><border>2</border></param>
             <param name="mouseCursor"><cursor>arrow.left</cursor></param>
         </theme>
+        <theme name="splitterVertical" ref="-defaults">
+            <param name="background"><image>vsplitter</image></param>
+            <param name="border"><border>2</border></param>
+            <param name="mouseCursor"><cursor>arrow.bottom</cursor></param>
+        </theme>
     </theme>
 
 
@@ -766,7 +845,7 @@
         <param name="mouseCursor.link"><cursor>cursor.finger</cursor></param>
     </theme>
     <theme name="treecellrenderer" ref="-defaults">
-        <param name="treeIndent"><int>14</int></param>
+        <param name="treeIndent"><int>10</int></param>
         <param name="treeButtonSize"><dimension>14,9</dimension></param>
     </theme>
     <theme name="table" ref="-defaults">
@@ -778,6 +857,7 @@
             <param name="border"><border>0</border></param>
             <param name="font"><font>normal</font></param>
         </theme>
+    
         <theme name="TreeLeafCellRenderer" ref="treecellrenderer"/>
         <theme name="TreeNodeCellRenderer" ref="treecellrenderer">
         </theme>
@@ -801,6 +881,31 @@
         <param name="row"><image>table.row.*</image></param>
         <param name="minWidth"><int>326</int></param>
         <param name="minHeight"><int>100</int></param>
+        <param name="inputMap"><inputMapDef ref="-defaultInputMap">
+                <action name="toggleSelectionOnLeadRow">ctrl SPACE</action>
+                <action name="selectNextRow">DOWN</action>
+                <action name="selectPreviousRow">UP</action>
+                <action name="selectNextPage">NEXT</action>
+                <action name="selectPreviousPage">PRIOR</action>
+                <action name="selectFirstRow">HOME</action>
+                <action name="selectLastRow">END</action>
+                <action name="extendSelectionToNextRow">shift DOWN</action>
+                <action name="extendSelectionToPreviousRow">shift UP</action>
+                <action name="extendSelectionToNextPage">shift NEXT</action>
+                <action name="extendSelectionToPreviousPage">shift PRIOR</action>
+                <action name="extendSelectionToFirstRow">shift HOME</action>
+                <action name="extendSelectionToLastRow">shift END</action>
+                <action name="moveLeadToNextRow">ctrl DOWN</action>
+                <action name="moveLeadToPreviousRow">ctrl UP</action>
+                <action name="moveLeadToNextPage">ctrl NEXT</action>
+                <action name="moveLeadToPreviousPage">ctrl PRIOR</action>
+                <action name="moveLeadToFirstRow">ctrl HOME</action>
+                <action name="moveLeadToLastRow">ctrl END</action>
+                <action name="expandLeadRow">RIGHT</action>
+                <action name="expandLeadRow14499449928126">RIGHT</action>
+                <action name="collapseLeadRow">LEFT</action>
+            <action name="changeMe">F12</action>
+            </inputMapDef></param>
         <theme name="ComboBoxCellRenderer" ref="-defaults">
             <param name="comboBoxHeight"><int>18</int></param>
         </theme>
@@ -819,6 +924,7 @@
         <param name="background"><image>test</image></param>
         <param name="mouseCursor"><cursor>cursor.*</cursor></param>
     </theme>
+
 
     <theme name="colorarea" ref="-defaults">
         <param name="border"><border>2</border></param>
@@ -921,10 +1027,35 @@
         <param name="minWidth"><int>200</int></param>
         <param name="minHeight"><int>200</int></param>
     </theme>
+    <theme name="assets-frame" ref="resizableframe-title"/>
+    <theme name="scrollpane-assets" ref="scrollpane">
+        <param name="background"><image>none</image></param>
+        <param name="scrollbarsAlwaysVisible"><bool>false</bool></param>
+        <param name="minHeight"><int>120</int></param>
+        <param name="border"><border>0</border></param>
+    </theme>
+
+    <theme name="table-assets" ref="table">
+        <theme name="stringcellrenderer" ref="-defaults">
+            <param name="border"><border>0,6,0,0</border></param>
+            <param name="font"><font>normal</font></param>
+            <param name="minHeight"><int>font.lineHeight + 7</int></param>
+        </theme>
+        <param name="minWidth"><int>200</int></param>
+        <param name="minHeight"><int>70</int></param>
+        <param name="columnHeaderWidth"><int>100</int></param>
+        <param name="columnWidths">
+            <map>
+                <param name="3"><int>0</int></param>
+            </map>
+        </param>
+    </theme>
+
     <theme name="gm-table" ref="table">
         <param name="columnHeaderHeight"><int>20</int></param>
         <param name="minWidth"><int>200</int></param>
     </theme>
+
     <theme name="gm-editfield" ref="editfield">
         <param name="columns"><int>8</int></param>
     </theme>
@@ -964,4 +1095,125 @@
     <theme name="previewwidgets" ref="-defaults">
         <param name="defaultGap"><dimension>2,2</dimension></param>
     </theme>
+    <theme name="spoiler" ref="borderlayout">
+        <theme name="headerbox" ref="-defaults">
+            <theme name="headerbutton" ref="togglebutton">
+                <param name="background"><image>button.arrow</image></param>
+                <param name="border"><border>10,7,6,9</border></param>
+            </theme>
+            <param name="background"><image>spoiler-header</image></param>
+            <param name="border"><border>4,4,3,4</border></param>
+            <param name="namedGaps">
+                <map>
+                    <param name="headerbox-spacing"><gap>11,11</gap></param>
+                </map>
+            </param>
+        </theme>
+        <theme name="container" ref="-defaults">
+            <param name="background"><image>spoiler-container</image></param>
+            <param name="border"><border>2,3,3,3</border></param>
+        </theme>
+        <param name="maxWidth"><int>32767</int></param>
+        <param name="hgap"><int>0</int></param>
+        <param name="vgap"><int>0</int></param>
+        <param name="minWidth"><int>200</int></param>
+    </theme>
+    <theme name="spoiler-assets" ref="borderlayout">
+        <theme name="headerbox" ref="-defaults">
+            <theme name="headerbutton" ref="togglebutton">
+                <param name="background"><image>button.arrow</image></param>
+                <param name="border"><border>10,7,6,9</border></param>
+            </theme>
+            <param name="background"><image>spoiler-header</image></param>
+            <param name="border"><border>4,4,3,4</border></param>
+            <param name="namedGaps">
+                <map>
+                    <param name="headerbox-spacing"><gap>11,11</gap></param>
+                </map>
+            </param>
+        </theme>
+        <theme name="container" ref="-defaults">
+            <param name="background"><image>spoiler-container</image></param>
+            <param name="border"><border>2,3,3,3</border></param>
+        </theme>
+        <param name="maxWidth"><int>32767</int></param>
+        <param name="hgap"><int>0</int></param>
+        <param name="vgap"><int>0</int></param>
+        <param name="minWidth"><int>200</int></param>
+    </theme>
+    <theme name="detailswidget" ref="-defaults">
+        <param name="border"><border>0,1,0,0</border></param>
+        <theme name="label" ref="label"/>
+    </theme>
+    <theme name="popupmenubutton" ref="button">
+        <param name="border"><border>4,4,3,4</border></param>
+        <param name="textAlignment"><enum type="alignment">LEFT</enum></param>
+        <param name="font"><font>normal</font></param>
+        <param name="background"><image>popup-menubutton</image></param>
+    </theme>
+    <theme name="popupsubmenubutton" ref="popupmenubutton">
+        <param name="border"><border>4,4,3,12</border></param>
+    </theme>
+    <theme name="popupradiobutton" ref="popupmenubutton">
+        <param name="border"><border>4,21,3,4</border></param>
+        <param name="background"><image>popup-radiobutton</image></param>
+    </theme>
+    <theme name="popupcheckbox" ref="popupmenubutton">
+        <param name="border"><border>4,21,3,4</border></param>
+        <param name="background"><image>popuo.checkbox</image></param>
+    </theme>
+    <theme name="popupcolorbutton" ref="popupmenubutton">
+        <param name="border"><border>4,21,4,4</border></param>
+        <param name="background"><image>popuo.checkbox</image></param>
+        <param name="white"><image>popup-white</image></param>
+    </theme>
+
+
+
+
+    <theme name="menumanager" ref="-defaults">
+        <theme name="menupopup" ref="-defaults">
+            <theme name="button" ref="popupmenubutton"/>
+            <theme name="submenu" ref="popupsubmenubutton">
+                <param name="overlay"><image>popup-submenu.overlay</image></param>
+            </theme>
+            
+            <param name="background"><image>box.border.normal</image></param>
+            <param name="border"><border>2</border></param>
+            <theme name="spacer" ref="-defaults">
+                <param name="background"><image>pixel.separator</image></param>
+                <param name="maxWidth"><int>32767</int></param>
+                <param name="minHeight"><int>1</int></param>
+            </theme>
+            <theme name="radiobtn" ref="popupradiobutton"/>
+            <theme name="checkbox" ref="popupcheckbox"/>
+            <theme name="colorbtn" ref="popupcolorbutton"/>
+            <param name="namedGaps"><map>
+                    <param name="menuitem"><gap>1</gap></param>
+                </map></param>
+        
+        </theme>
+    </theme>
+    <theme name="arrowdown" ref="-defaults">
+        <param name="background"><image>arrow-down</image></param>
+        <param name="minWidth"><int>13</int></param>
+        <param name="minHeight"><int>17</int></param>
+    </theme>
+    <theme name="popup-assets" ref="-defaults">
+        <param name="background"><image>box.border.normal</image></param>
+        <param name="border"><border>4</border></param>
+    </theme>
+    <theme name="topleveltreetablesearchwindow" ref="-defaults">
+        <param name="background"><image>box.border.normal</image></param>
+        <param name="border"><border>3,5,4,4</border></param>
+        <theme name="dialoglayout" ref="-defaults"/>
+    </theme>
+
+
+
+
+
+
+
+
 </themes>
