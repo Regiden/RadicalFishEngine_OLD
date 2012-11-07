@@ -29,7 +29,6 @@
  */
 package de.radicalfish.debug;
 import com.badlogic.gdx.utils.Array;
-import de.matthiasmann.twl.Alignment;
 import de.matthiasmann.twl.BorderLayout;
 import de.matthiasmann.twl.BorderLayout.Location;
 import de.matthiasmann.twl.Button;
@@ -39,6 +38,7 @@ import de.matthiasmann.twl.EditField;
 import de.matthiasmann.twl.EditField.Callback;
 import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.GUI;
+import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.PropertySheet;
 import de.matthiasmann.twl.ResizableFrame;
 import de.matthiasmann.twl.ScrollPane;
@@ -49,13 +49,17 @@ import de.matthiasmann.twl.model.Property;
 import de.matthiasmann.twl.model.SimpleProperty;
 import de.matthiasmann.twl.model.SimplePropertyList;
 import de.radicalfish.context.GameVariables;
+import de.radicalfish.context.defaults.DefaultGameVariables;
 import de.radicalfish.debug.SettingsEditor.BooleanFactory;
 import de.radicalfish.debug.SettingsEditor.FloatFactory;
 import de.radicalfish.debug.SettingsEditor.IntegerFactory;
 
 /**
- * A widget to monitor any primitves mapped in {@link GameVariables}. Changes to the values will be reflected on the
+ * A widget to monitor any primitives mapped in {@link GameVariables}. Changes to the values will be reflected on the
  * {@link GameVariables} instance provided in the C'Tor.
+ * <p>
+ * Add new values in real time by typing in the key and the value and submit to the current selected tab (ints,
+ * booleans, floats or Strings).
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -63,7 +67,7 @@ import de.radicalfish.debug.SettingsEditor.IntegerFactory;
  */
 public class GameVariablesEditor extends ResizableFrame {
 	
-	private GameVariables varis;
+	private final GameVariables varis;
 	
 	private TabbedPane tpane;
 	private PropertySheet bools, strings, ints, floats;
@@ -71,8 +75,12 @@ public class GameVariablesEditor extends ResizableFrame {
 	
 	private int size_bools, size_strings, size_ints, size_floats;
 	
+	/**
+	 * Do not use this C'Tor. It's only there for testing the widget in the ThemeEditor. This creates an instance of
+	 * {@link DefaultGameVariables} with non content.
+	 */
 	public GameVariablesEditor() {
-		this(null);
+		this(new DefaultGameVariables());
 	}
 	public GameVariablesEditor(GameVariables varis) {
 		this.varis = varis;
@@ -84,29 +92,27 @@ public class GameVariablesEditor extends ResizableFrame {
 	protected void paintWidget(GUI gui) {
 		super.paintWidget(gui);
 		
-		if (varis != null) {
-			if (size_bools < varis.getNumberOfBooleans()) {
-				size_bools = varis.getNumberOfBooleans();
-				loadBools();
-				bools.validateLayout();
-			}
-			if (size_ints < varis.getNumberOfInts()) {
-				size_ints = varis.getNumberOfInts();
-				loadIntegers();
-				ints.validateLayout();
-			}
-			if (size_floats < varis.getNumberOfFloats()) {
-				size_floats = varis.getNumberOfFloats();
-				loadFloats();
-				floats.validateLayout();
-			}
-			if (size_strings < varis.getNumberOfStrings()) {
-				size_strings = varis.getNumberOfStrings();
-				loadStrings();
-				strings.validateLayout();
-			}
-			pullChanges();
+		if (size_bools < varis.getNumberOfBooleans()) {
+			size_bools = varis.getNumberOfBooleans();
+			loadBools();
+			bools.validateLayout();
 		}
+		if (size_ints < varis.getNumberOfInts()) {
+			size_ints = varis.getNumberOfInts();
+			loadIntegers();
+			ints.validateLayout();
+		}
+		if (size_floats < varis.getNumberOfFloats()) {
+			size_floats = varis.getNumberOfFloats();
+			loadFloats();
+			floats.validateLayout();
+		}
+		if (size_strings < varis.getNumberOfStrings()) {
+			size_strings = varis.getNumberOfStrings();
+			loadStrings();
+			strings.validateLayout();
+		}
+		pullChanges();
 	}
 	
 	// INTERN
@@ -174,12 +180,19 @@ public class GameVariablesEditor extends ResizableFrame {
 			}
 		});
 		
-		Group h = cl.createSequentialGroup().addWidget(key, Alignment.CENTER).addGap(3, 3, 3).addWidget(value, Alignment.CENTER)
-				.addGap(4, 4, 4).addWidget(button).addGap(6, 6, 6);
-		Group v = cl.createParallelGroup().addWidget(key, Alignment.FILL).addWidget(value, Alignment.FILL).addWidget(button, Alignment.CENTER);
+		Group hm = cl.createParallelGroup();
+		Group vm = cl.createSequentialGroup();
 		
-		cl.setHorizontalGroup(h);
-		cl.setVerticalGroup(v);
+		Label l1 = new Label("Key: ");
+		Label l2 = new Label("Value: ");
+		
+		hm = cl.createSequentialGroup().addGroup(cl.createParallelGroup(l1, key)).addGap(3).addGroup(cl.createParallelGroup(l2, value))
+				.addGap(3).addWidget(button).addGap(5);
+		vm = cl.createParallelGroup().addGroup(cl.createSequentialGroup(l1).addGap(2).addWidget(key))
+				.addGroup(cl.createSequentialGroup(l2).addGap(2).addWidget(value)).addGroup(cl.createSequentialGroup().addGap().addWidget(button));
+		
+		cl.setHorizontalGroup(hm);
+		cl.setVerticalGroup(vm);
 		
 		bl.add(cl, Location.SOUTH);
 		
@@ -197,35 +210,31 @@ public class GameVariablesEditor extends ResizableFrame {
 	private void pullChanges() {
 		for (int i = 0; i < bools.getPropertyList().getNumProperties(); i++) {
 			Property<Boolean> prop = (Property<Boolean>) bools.getPropertyList().getProperty(i);
-			if(varis.getBoolean(prop.getName(), false) != prop.getPropertyValue()) {
+			if (varis.getBoolean(prop.getName(), false) != prop.getPropertyValue()) {
 				prop.setPropertyValue(varis.getBoolean(prop.getName(), false));
 			}
 		}
 		for (int i = 0; i < ints.getPropertyList().getNumProperties(); i++) {
 			Property<Integer> prop = (Property<Integer>) ints.getPropertyList().getProperty(i);
-			if(varis.getInt(prop.getName(), 0) != prop.getPropertyValue()) {
+			if (varis.getInt(prop.getName(), 0) != prop.getPropertyValue()) {
 				prop.setPropertyValue(varis.getInt(prop.getName(), 0));
 			}
 		}
 		for (int i = 0; i < floats.getPropertyList().getNumProperties(); i++) {
 			Property<Float> prop = (Property<Float>) floats.getPropertyList().getProperty(i);
-			if(varis.getFloat(prop.getName(), 0) != prop.getPropertyValue()) {
+			if (varis.getFloat(prop.getName(), 0) != prop.getPropertyValue()) {
 				prop.setPropertyValue(varis.getFloat(prop.getName(), 0));
 			}
 		}
 		for (int i = 0; i < strings.getPropertyList().getNumProperties(); i++) {
 			Property<String> prop = (Property<String>) strings.getPropertyList().getProperty(i);
-			if(varis.getString(prop.getName(), "") != prop.getPropertyValue()) {
+			if (varis.getString(prop.getName(), "") != prop.getPropertyValue()) {
 				prop.setPropertyValue(varis.getString(prop.getName(), ""));
 			}
 		}
 	}
 	
 	private void loadVaris() {
-		if (varis == null) {
-			return;
-		}
-		
 		size_bools = varis.getNumberOfBooleans();
 		size_strings = varis.getNumberOfStrings();
 		size_ints = varis.getNumberOfInts();
@@ -320,13 +329,6 @@ public class GameVariablesEditor extends ResizableFrame {
 	}
 	
 	private void submit(String key, String value, final EditField field) {
-		System.out.println(tpane.getActiveTabIndex());
-		if (varis == null) {
-			this.key.setText("");
-			this.value.setText("");
-			field.setErrorMessage("Can create new pair because there is no GameVariables instance!");
-			return;
-		}
 		if (key.isEmpty() || value.isEmpty()) {
 			this.key.setText("");
 			this.value.setText("");
@@ -336,8 +338,6 @@ public class GameVariablesEditor extends ResizableFrame {
 			this.key.setErrorMessage(null);
 			this.value.setErrorMessage(null);
 		}
-		
-		
 		
 		if (tpane.getActiveTabIndex() == 0) {
 			submitBoolean(key, value, field);
