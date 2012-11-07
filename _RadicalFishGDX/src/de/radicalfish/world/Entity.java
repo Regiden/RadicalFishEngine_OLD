@@ -31,7 +31,6 @@ package de.radicalfish.world;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import de.radicalfish.animation.Animator;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
 import de.radicalfish.graphics.Graphics;
@@ -68,8 +67,6 @@ public abstract class Entity  {
 	
 	protected Rectangle collisionbox = new Rectangle();
 	protected Vector2 grid = new Vector2(0, 0);
-	
-	protected Animator animator = new Animator();
 	
 	protected String name = "base-entity";
 	protected int ID = -1;
@@ -123,7 +120,6 @@ public abstract class Entity  {
 		if (isActive()) {
 			old.set(position);
 			
-			animator.update(delta.getDelta());
 			updateFlashTimer(delta.getDelta());
 			doUpdate(context, world, delta);
 			
@@ -445,10 +441,6 @@ public abstract class Entity  {
 	
 	// GETTER OTHERS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	public Animator getAnimator() {
-		return animator;
-	}
-	
 	/**
 	 * @return default is the class name with lower-case characters.
 	 */

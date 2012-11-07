@@ -84,10 +84,7 @@ public class Assets extends AssetManager {
 	// OVERRIDE
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public synchronized boolean update() {
-		boolean done = false;
-		if (super.update()) {
-			done = true;
-		}
+		boolean done = super.update();
 		if (done) {
 			this.done = done;
 		}
@@ -147,6 +144,12 @@ public class Assets extends AssetManager {
 	
 	// GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * @return equal to {@link AssetManager#getLoadedAssets()} + {@link AssetManager#getQueuedAssets()}.
+	 */
+	public int getTotalAssets() {
+		return getLoadedAssets() + getQueuedAssets();
+	}
 	/**
 	 * @return the number of preferences managed by this class.
 	 */

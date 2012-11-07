@@ -43,7 +43,7 @@ import de.radicalfish.util.RadicalFishException;
  * A {@link Font} implementation which uses the {@link FontSheet}. This class supports styled fonts. Multi line texts
  * must be separated by a <code>\n</code> separator!
  * <p>
- * It uses ASCII encoding so the font file should have all characters in the ASCII order, eg like this:
+ * It uses ASCII encoding so the font file should have all characters in the ASCII order, eg. like this:
  * 
  * <pre>
  *   !"#$%&'()*+,-./
@@ -51,11 +51,12 @@ import de.radicalfish.util.RadicalFishException;
  *  &#0064;ABCDEFGHIJKLMNO
  * PQRSTUVWXYZ[\]^_
  * 
- * <pre>
- * This would only display upper case characters and the starting character would be ' '.
+ * </pre>
+ * 
+ * This would only display upper case characters and the starting character would be ' ' (space).
  * <p>
- * {@link SpriteFont} does NOT reset transformations this means you must add a {@link ResetCommand} if you want to apply a command only for 
- * some letters.
+ * {@link SpriteFont} does NOT reset transformations for each character. This means you must add a {@link ResetCommand}
+ * if you want to apply a command only for some letters.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -92,6 +93,19 @@ public class SpriteFont implements Font {
 	
 	// C'TOR
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	/**
+	 * Creates a new {@link SpriteFont}. it sets the {@link SpriteFont#lineSpace} to the height of a character.
+	 * 
+	 * @param font
+	 *            the {@link FontSheet} used to draw the characters
+	 * @param charakterSpace
+	 *            the space between two characters (can be negative)
+	 * @param startChar
+	 *            the starting char from the ASCII
+	 */
+	public SpriteFont(FontSheet font, int charakterSpace, char startChar) {
+		this(font, charakterSpace, font.getTileHeight(), startChar);
+	}
 	/**
 	 * Creates a new {@link SpriteFont}.
 	 * 
@@ -139,8 +153,8 @@ public class SpriteFont implements Font {
 		float ypos = y;
 		StyledLine line = null;
 		for (int i = 0; i < lines.length; i++) {
-			if(style != null) {
-				if(i < style.lines.size ) {
+			if (style != null) {
+				if (i < style.lines.size) {
 					line = style.lines.get(i);
 				} else {
 					line = null;

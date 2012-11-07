@@ -45,14 +45,21 @@ import de.matthiasmann.twl.model.AutoCompletionDataSource;
 import de.matthiasmann.twl.model.AutoCompletionResult;
 import de.matthiasmann.twl.model.SimpleAutoCompletionResult;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
+import de.radicalfish.debug.inputparser.InputParser;
 
 /**
- * A Console for changing values and executing methods. Every input will be logged if parsed. If not nothing will be
- * displayed. You can add {@link InputParser} to the DevConsole to parse the input and make something out of it. The
- * DevConsole itself supports some small methods too which will be always checked before anything else:
+ * A Console for changing values and executing methods. Every input will be logged if parsed. If not, nothing will be
+ * displayed. You can add {@link InputParser} to the DevConsole to parse the input and make something out of it.
+ * <p>
+ * The {@link DeveloperConsole} includes a auto completion for every possible command in all {@link InputParser}s.
+ * <p>
+ * Currently this class is a raw execute and display debug stuff type of thingi. If people like it I probably add more
+ * features (like one to get the console output as text).
+ * 
+ * TODO add up/down input for last inputs
  * 
  * @author Stefan Lange
- * @version 0.0.0
+ * @version 0.5.0
  * @since 14.05.2012
  */
 public class DeveloperConsole extends ResizableFrame {
@@ -69,7 +76,6 @@ public class DeveloperConsole extends ResizableFrame {
 	private Button submit;
 	
 	private ArrayList<InputParser> callbacks;
-	
 	
 	public DeveloperConsole() {
 		callbacks = new ArrayList<InputParser>();
@@ -109,7 +115,6 @@ public class DeveloperConsole extends ResizableFrame {
 	public void flushConsole() {
 		textAreaModel.setHtml("");
 	}
-	
 	
 	// INTERN
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -171,8 +176,6 @@ public class DeveloperConsole extends ResizableFrame {
 		l.setWidgetAlignment(submit, Alignment.RIGHT);
 		
 		add(l);
-		
-		addInputParser(new ConsoleInputParser());
 	}
 	
 	private void submit() {
@@ -240,62 +243,5 @@ public class DeveloperConsole extends ResizableFrame {
 		}
 		
 	}
-	private static class ConsoleInputParser implements InputParser {
-		
-		private ArrayList<String> keys, compList;
-		
-		private String keywords[] = new String[] { "flushlog", "gc", "print" };
-		
-		public ConsoleInputParser() {
-			keys = new ArrayList<String>();
-			compList = new ArrayList<String>();
-			for (int i = 0; i < keywords.length; i++) {
-				keys.add(keywords[i]);
-			}
-		}
-		
-		public String parseInput(String message, DeveloperConsole console) {
-			for (String key : keys) {
-				if (message.startsWith(key)) {
-					if (key.equals("gc")) {
-						return gc();
-					} else if (key.equals("flushlog")) {
-						return flushlog(console);
-					} else if (key.equals("print")) {
-						if (message.length() >= 7) {
-							return print(message);
-						}
-					}
-				}
-			}
-			return message;
-		}
-		public ArrayList<String> getAutoCompletionContent(String input) {
-			compList.clear();
-			for (String temp : keys) {
-				if (temp.regionMatches(0, input, 0, input.length())) {
-					compList.add(temp);
-				}
-			}
-			if (!compList.isEmpty()) {
-				return compList;
-			} else {
-				return null;
-			}
-		}
-		
-		private String gc() {
-			System.gc();
-			return "invoked <span style=\"font:success\" >garbage collector</span>!";
-		}
-		private String flushlog(DeveloperConsole console) {
-			console.flushConsole();
-			return "";
-		}
-		private String print(String input) {
-			return "<div style=\"word-wrap: break-word;\">" + input.substring(6)
-					+ "</div><img src=\"separator\" alt=\":)\" style=\"margin: 3px; width: 100%; height: 100%;\" />";
-		}
-		
-	}
+	
 }

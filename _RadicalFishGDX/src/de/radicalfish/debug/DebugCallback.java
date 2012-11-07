@@ -33,12 +33,12 @@ import de.radicalfish.Game;
 import de.radicalfish.GameContainer;
 
 /**
- * This callback can be used under the desktop implementation of a game to fit in the RadicalFishDebug engine. You can
+ * This callback can be used under the desktop implementation of a game to fit in the RadicalFishDebug extension. You can
  * set the callback in the {@link GameContainer#setDebugCallBack(DebugCallback)} method. Note that this will only work
  * under desktop implementations.
  * <p>
  * The callback extends the {@link Game} interface to leave you in charge of rendering and updating. The methods will
- * always be called after the {@link Game}-methods are called.
+ * always be called after the {@link Game}-methods have been called.
  * 
  * @author Stefan Lange
  * @version 1.0.0

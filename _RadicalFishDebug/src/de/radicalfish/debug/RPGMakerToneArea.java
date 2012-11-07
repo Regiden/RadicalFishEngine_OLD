@@ -48,7 +48,7 @@ public class RPGMakerToneArea extends Widget {
 	
 	private DynamicImage image;
 	private final ByteBuffer byteBuffer;
-	private final IntBuffer colorBuffer; // the byte buffer as int buffer.
+	private final IntBuffer colorBuffer; // the byte buffer as int buffer. Maybe a direct ColorBuffer class would be cool to have
 	
 	private int width, height;
 	

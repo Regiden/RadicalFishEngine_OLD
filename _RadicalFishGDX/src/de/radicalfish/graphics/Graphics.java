@@ -457,7 +457,7 @@ public class Graphics implements Disposable {
 		solveSubtractMode(mode);
 		
 		if (blendMode != BlendMode.ALPHA_MAP) {
-			spriteBatch.setBlendFunction(mode.src(), mode.dst());
+			spriteBatch.setBlendFunction(mode.src, mode.dst);
 		}
 		
 	}

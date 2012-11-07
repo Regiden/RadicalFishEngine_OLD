@@ -37,6 +37,15 @@ import de.radicalfish.util.Utils;
 /**
  * Rumble is a utility class you can use to offset your camera and make it look like the screen shakes. The class is not
  * meant to be sub-classes but if you need further customization, you a free to do it.
+ * <p>
+ * Rumble effects are executed via a {@link RumbleHandle}. a hanle holds the information about a single rumble effect
+ * (like the time or the power to shake the screen). Add them via {@link Rumble#addRumble(RumbleHandle)}. A
+ * {@link RumbleHandle} can have a name which is useful for constant effects. Nameless effects can not be continues. you
+ * can get a handle via {@link Rumble#getRumble(String)} and set values via
+ * {@link RumbleHandle#set(RUMBLE_AXIS, RUMBLE_POWER, RUMBLE_SPEED, float, boolean, boolean)}.
+ * <p>
+ * With this you can stack multiple rumble effects which is practically very useful (think of a constant rumble with
+ * small but heavy shakes in between).
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -44,7 +53,8 @@ import de.radicalfish.util.Utils;
  */
 public class Rumble {
 	
-	public Vector2 offset;
+	/** The calculated offset. */
+	public final Vector2 offset;
 	
 	protected Array<RumbleHandle> handles;
 	protected HashMap<String, RumbleHandle> namedHandles;
@@ -287,8 +297,6 @@ public class Rumble {
 		private float lerp(float target, float start, float alpha) {
 			return target * (alpha) + (1 - alpha) * start;
 		}
-		
-		
 		
 	}
 	

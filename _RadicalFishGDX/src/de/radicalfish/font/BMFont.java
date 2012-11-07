@@ -39,6 +39,8 @@ import de.radicalfish.util.Utils;
 /**
  * Implementation of the {@link BitmapFont} for this engine. Does not support styled text.
  * 
+ * TODO submit pull request for drawing characters in a protected method to provide a way to animate them in sub classes
+ * 
  * @author Stefan Lange
  * @version 1.0.0
  * @since 03.09.2012

@@ -35,7 +35,10 @@ import com.badlogic.gdx.math.Vector3;
 /**
  * An implementation of the {@link OrthographicCamera} which makes the origin the top left corner. It also supports
  * different scale values for <code>x</code>, and <code>y</code>. It's used to supply a context like GL10 does for
- * scaling, translating the whole context.
+ * scaling or translating the whole context.
+ * 
+ * TODO add rotation
+ * TODO add offsets for viewport origin
  * 
  * @author Stefan Lange
  * @version 1.0.0

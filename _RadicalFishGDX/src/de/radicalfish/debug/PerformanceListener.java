@@ -31,7 +31,9 @@ package de.radicalfish.debug;
 
 /**
  * An Interface which describes an object that can be monitored for performance. This will be used only under the
- * Desktop Implementation by the debug plug-in. you can use it for your own debugging to.
+ * desktop Implementation by the debug plug-in. You can use it for your own debugging too of course.
+ * 
+ * TODO maybe blow up with more method an rename it to DebugListener
  * 
  * @author Stefan Lange
  * @version 1.0.0

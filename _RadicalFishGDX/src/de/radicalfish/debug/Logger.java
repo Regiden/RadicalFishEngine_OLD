@@ -28,7 +28,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.debug;
-import java.util.ArrayList;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 
@@ -37,61 +36,15 @@ import com.badlogic.gdx.Gdx;
  * turn off logging. You can still use the {@link com.badlogic.gdx.utils.Logger} from libgdx.
  * 
  * @author Stefan Lange
- * @version 1.1.0
+ * @version 1.2.0
  * @since 05.10.2011
  */
 public class Logger {
 	
-	/** The types a log can have. */
-	public enum LOGTYPE {
-		NONE, LOAD, ERROR, WARN, INFO, DEBUG, INIT
-	}
-	
-	/** A log containing everything called by a {@link Logger}. */
-	public static ArrayList<String> LOG = new ArrayList<String>();
-	
-	private static ArrayList<LogListener> listerner = new ArrayList<LogListener>();
 	private static boolean logging = true;
-	private static int maxLogLines = 1000;
 	
 	// STATIC METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * Adds a listener which gets called whenever this logger logs output. an initial call to the
-	 * <code>logChanged()</code> will be made to initiate the logging for the listener. the <code>lastAdded</code>
-	 * parameter will be empty for this call!
-	 */
-	public static void addLogListener(LogListener listener) {
-		if (listener == null) {
-			throw new NullPointerException("listener is null!");
-		}
-		Logger.listerner.add(listener);
-		listener.logChanged(LOG, "", LOGTYPE.INIT);
-	}
-	/**
-	 * Removes a listener from this logger.
-	 */
-	public static void removeLogListener(LogListener listener) {
-		if (listener == null) {
-			throw new NullPointerException("listener is null!");
-		}
-		Logger.listerner.remove(listener);
-	}
-	/**
-	 * @return a String with all recorded logs with <code>maxLines</code>.
-	 */
-	public static String getLogAsString(int maxLines) {
-		StringBuilder sb = new StringBuilder();
-		
-		int min = LOG.size() - maxLines;
-		if (min < 0)
-			min = 0;
-		for (int i = min; i < LOG.size(); i++)
-			sb.append(LOG.get(i)).append("\n");
-		
-		return sb.toString();
-	}
-	
 	public static void none(String message) {
 		if (logging) {
 			if (Gdx.app == null || Gdx.app.getType() == ApplicationType.Desktop) {
@@ -99,60 +52,56 @@ public class Logger {
 			} else {
 				log("", message);
 			}
-			appendLog(LOGTYPE.NONE, message);
 		}
 	}
 	public static void load(String message) {
 		if (logging) {
 			log("LOADING: ", message);
-			appendLog(LOGTYPE.LOAD, message);
 		}
 	}
 	public static void error(String message) {
 		if (logging) {
 			logError("", message);
-			appendLog(LOGTYPE.ERROR, message);
 		}
 	}
 	public static void error(String message, Throwable e) {
 		if (logging) {
 			logError("ERROR", message, e);
-			appendLog(LOGTYPE.ERROR, message);
 		}
 	}
 	public static void warn(String message) {
 		if (logging) {
 			log("WARN", message);
-			appendLog(LOGTYPE.WARN, message);
 		}
 	}
 	public static void info(String message) {
 		if (logging) {
 			log("INFO", message);
-			appendLog(LOGTYPE.INFO, message);
 		}
 	}
 	public static void debug(String message) {
 		if (logging) {
 			log("DEBUG", message);
-			appendLog(LOGTYPE.DEBUG, message);
 		}
 	}
-	public static void log(String tag, String message) {
+	
+	// INTERN STATIC METHODS
+	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	private static void log(String tag, String message) {
 		if (Gdx.app != null) {
 			Gdx.app.log(tag, message);
 		} else {
 			System.out.println(tag + ": " + message);
 		}
 	}
-	public static void logError(String tag, String message) {
+	private static void logError(String tag, String message) {
 		if (Gdx.app != null) {
 			Gdx.app.error(tag, message);
 		} else {
 			System.err.println(tag + ": " + message);
 		}
 	}
-	public static void logError(String tag, String message, Throwable e) {
+	private static void logError(String tag, String message, Throwable e) {
 		if (Gdx.app != null) {
 			Gdx.app.error(tag, message, e);
 		} else {
@@ -161,52 +110,19 @@ public class Logger {
 		}
 	}
 	
-	// INTERN STATIC METHODS
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private static void appendLog(LOGTYPE type, String message) {
-		LOG.add(message);
-		if (LOG.size() > maxLogLines)
-			LOG.remove(0);
-		
-		for (LogListener lis : listerner) {
-			lis.logChanged(LOG, message, type);
-		}
-	}
-	
 	// SETTER & GETTER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	/**
-	 * Sets the maximum number of lines recorded. If the values is smaller then the current value the list holding the
-	 * recorded logs will be truncated.
-	 */
-	public static void setMaxLogLines(int value) {
-		maxLogLines = value;
-		if (LOG.size() > maxLogLines) {
-			int rem = LOG.size() - maxLogLines;
-			for (int i = 0; i < rem; i++) {
-				LOG.remove(maxLogLines + i);
-			}
-		}
-		
-	}
 	/**
 	 * True if we want logging or not.
 	 */
 	public static void setLogging(boolean value) {
 		logging = value;
 	}
-	
 	/**
 	 * 
 	 * @return true if we are logging.
 	 */
 	public static boolean isLogging() {
 		return logging;
-	}
-	/**
-	 * @return number of max log lines.
-	 */
-	public int getMaxLogLines() {
-		return maxLogLines;
 	}
 }

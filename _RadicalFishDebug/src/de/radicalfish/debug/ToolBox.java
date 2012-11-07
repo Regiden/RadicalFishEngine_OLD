@@ -38,17 +38,8 @@ import de.matthiasmann.twl.ResizableFrame;
 import de.matthiasmann.twl.Widget;
 
 /**
- * Small Tool bar with buttons opening some default debug tools. A call to <code>createToolBox()</code> must used to
+ * A small tool bar with buttons for opening some default debug tools. A call to <code>createToolBox()</code> must be used to
  * make all added buttons visible! The themes used for this GUI are:
- * 
- * <p>
- * <li>buttonBox: the box which display all buttons.</li>
- * <li>empty: used for the filler and should have it's maxWidth and maxHeight set to a high value</li>
- * <li>toolboxseparator: used as the vertical separator. this should have a minHeight set to a value you like and a
- * max/minWidth of 1 (or another desired value</li>
- * <li>button: I simple button</li>
- * 
- * <pre> </pre>
  * 
  * @author Stefan Lange
  * @version 1.0.0

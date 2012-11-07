@@ -607,6 +607,12 @@ public class GameContainer implements ApplicationListener {
 	}
 	
 	/**
+	 * @return true if smooth deltas are used.
+	 */
+	public boolean isSmoothDeltas() {
+		return smoothDelta;
+	}
+	/**
 	 * @return true if the screen gets cleared every frame.
 	 */
 	public boolean isClearScreen() {
@@ -701,6 +707,25 @@ public class GameContainer implements ApplicationListener {
 			return !createYUp;
 		}
 		return graphics.isYDown();
+	}
+	
+	/**
+	 * @return String which contains some information about the container in key-value paris (much like json)
+	 */
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("[GameContainer : {\n");
+		sb.append("title:" + title + ", \n");
+		sb.append("game:" + game.toString() + ", \n");
+		sb.append("fps:" + fps + ", \n");
+		sb.append("delta:" + delta + ", \n");
+		sb.append("width:" + width + ", \n");
+		sb.append("height:" + height + ", \n");
+		sb.append("ydown:" + graphics.isYDown() + ", \n");
+		sb.append("}]");
+		
+		return sb.toString();
 	}
 	
 }

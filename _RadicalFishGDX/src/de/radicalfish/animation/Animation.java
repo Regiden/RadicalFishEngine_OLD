@@ -32,13 +32,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import de.radicalfish.util.RadicalFishException;
 
-/**
- * An animation class with extends features compared to {@link Animation}.
- * 
- * @author Stefan Lange
- * @version 1.0.0
- * @since 22.11.2011
- */
+// TODO refactor to use actions from libgdx for complex animation and stuff
 public class Animation {
 	
 	private ArrayList<Frame> frames;

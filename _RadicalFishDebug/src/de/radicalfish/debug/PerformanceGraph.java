@@ -52,8 +52,8 @@ import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.utils.TintAnimator;
 
 /**
- * A graph capable of displaying the time a certain update loop take in one frame. You can add
- * {@link PerformanceListener} which can be used to visualize the update time. Use the setter for FPS and delta to
+ * A graph capable of displaying the time a certain update loop took in one frame. You can add
+ * {@link PerformanceListener}s which can be used to visualize the update time. Use the setter for FPS and delta to
  * display them on the graph.
  * 
  * @author Stefan Lange

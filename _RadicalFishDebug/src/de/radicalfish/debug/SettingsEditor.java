@@ -52,11 +52,11 @@ import de.matthiasmann.twl.model.SimplePropertyList;
 import de.radicalfish.context.Settings;
 
 /**
- * Editor for properties. It uses an Implementation of the {@link Settings} Interface. The supported type are
- * <code>boolean</code>, <code>float</code>, <code>int</code>, <code>String</code>.
+ * Editor for properties. It uses an Implementation of the {@link Settings} Interface. The supported types are
+ * <code>boolean</code>, <code>float</code>, <code>int</code>  <code>String</code>.
  * <p>
- * You can arrange you properties in sublist if they have a separator (default here is '.'). The following examples
- * shows this in detaal.
+ * You can arrange you properties in sublists if they have a separator (default is '.'). The following examples
+ * shows this in detail:
  * 
  * <pre>
  * Properties:

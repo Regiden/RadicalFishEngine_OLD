@@ -54,18 +54,20 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.NumberUtils;
+import de.radicalfish.GameContainer;
 import de.radicalfish.font.commands.StyleCommand;
 
 /**
  * This class holds the information about position, origin, scaling, rotation and color for a single character. It will
- * be used in the in the {@link StyleCommand#execute(StyleInfo)} method. The origin should be auto set to the center of
- * the current {@link TextureRegion}. That said this also means the size will be set to the size of the
+ * be used in the in the {@link StyleCommand#execute(GameContainer, StyleInfo)} method. The origin should be auto set to
+ * the center of the current {@link TextureRegion}. That said this also means the size will be set to the size of the
  * {@link TextureRegion}.
  * <p>
- * In this method you add new values to any of the fields which will be used to draw the {@link TextureRegion}.
+ * In the {@link StyleCommand#execute(GameContainer, StyleInfo)} method you add new values to any of the fields which
+ * will be used to draw the {@link TextureRegion}.
  * <p>
  * You can use the class to draw a texture too. just set the values like you want and call
- * {@link StyleInfo#createVertices(TextureRegion, float, float)} to get the vertices.
+ * {@link StyleInfo#createVertices(TextureRegion, float, float)} to get the vertices (eg. for a {@link SpriteBatch}).
  * 
  * @author Stefan Lange
  * @version 1.0.0

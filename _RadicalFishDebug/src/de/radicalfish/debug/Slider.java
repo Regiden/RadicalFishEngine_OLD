@@ -31,10 +31,7 @@ package de.radicalfish.debug;
 import de.matthiasmann.twl.Scrollbar;
 
 /**
- * A simple slider.
- * 
- * @version 1.0
- * @author Stefan Lange
+ * A simple slider wrapper. Nothing special here mover along!
  */
 public class Slider extends Scrollbar {
 	

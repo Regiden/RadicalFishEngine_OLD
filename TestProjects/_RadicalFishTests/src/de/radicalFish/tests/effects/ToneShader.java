@@ -27,46 +27,54 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.radicalfish.graphics;
-import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.GL20;
+package de.radicalfish.tests.effects;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import de.radicalfish.effects.ToneModel;
+import de.radicalfish.util.Utils;
 
 /**
- * Simple enumeration for blend modes with a 'source' and 'destination' function. Note that {@link BlendMode#SUB} only works for GL20!
+ * A simple effect which manipulates the tone of the sprite via the {@link ToneModel}. It uses an {@link ShaderProgram}
+ * so you can use it in a {@link SpriteBatch}.
+ * <p>
+ * 2 files are needed for that in your internal path in a folder named "shaders":
+ * <li>simple.vert: the vertex shader, you can fine the file in the android test project under assets!</li>
+ * <li>toner.frag: the fragment shader, you can fine the file in the android test project under assets!</li>
+ * <hr>
  * 
  * @author Stefan Lange
  * @version 1.0.0
- * @since 21.08.2012
+ * @since 07.06.2012
  */
-public enum BlendMode {
+public class ToneShader {
 	
-	/** This can be used if you want to use pre-multiplied alpha */
-	PRE_MULTIPLY(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA),
-	/** Normal drawing with alpha support. */
-	NORMAL(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA),
-	/** Draw adding the existing color to the new color. */
-	ADD(GL10.GL_SRC_ALPHA, GL10.GL_ONE),
+	private ShaderProgram shader;
+	private ToneModel tone;
+	
 	/**
-	 * Draws subtracting the existing color to the new color. Note for this the {@link GL20#glBlendEquation(int)} must be
-	 * changed (which only works when using GL20).
+	 * Creates the {@link ToneShader}. the {@link ToneModel} can't be null
 	 */
-	SUB(GL10.GL_SRC_ALPHA, GL10.GL_ONE),
-	/** Draws blending the new image into the old one by a factor of it's color. */
-	SCREEN(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_COLOR),
-	/** Draws blending the new image into the old one by a factor of it's color including the alpha of the source */
-	SCREEN_ALPHA(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_COLOR),
-	/** Draws by multiplying the source and destination color. */
-	MULTIPLY(GL10.GL_ONE_MINUS_SRC_COLOR, GL10.GL_ONE_MINUS_SRC_ALPHA),
-	/** Draws to using an alpha map, this disables blending and leaves only the alpha channel open for drawing. */
-	ALPHA_MAP(-1, -1),
-	/** Draws using alpha blending. */
-	ALPHA_BLEND(GL10.GL_DST_ALPHA, GL10.GL_ONE_MINUS_DST_ALPHA);
-	
-	public final int src, dst;
-	
-	private BlendMode(int src, int dst) {
-		this.src = src;
-		this.dst = dst;
+	public ToneShader(ToneModel tone) {
+		Utils.notNull("tone", tone);
+		shader = new ShaderProgram(Gdx.files.internal("shaders/simple.vert"), Gdx.files.internal("shaders/toner.frag"));
+		this.tone = tone;
 	}
 	
+	/**
+	 * Call this to set the uniforms on the shader.
+	 */
+	public void setUniforms() {
+		shader.setUniformf("rgbc", tone.getRed(), tone.getGreen(), tone.getBlue(), tone.getChroma());
+		shader.setUniformf("rgbcOver", tone.getRedOvershoot(), tone.getGreenOvershoot(), tone.getBlueOvershoot(), tone.getChromaOvershoot());
+	}
+	
+	/**
+	 * The shader uses for this effect.
+	 * 
+	 * @return
+	 */
+	public ShaderProgram getShader() {
+		return shader;
+	}
 }

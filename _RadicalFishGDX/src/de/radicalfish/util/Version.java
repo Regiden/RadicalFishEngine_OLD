@@ -30,5 +30,6 @@
 package de.radicalfish.util;
 
 public class Version {
-	public static String VERSION = "0.0.7";
+	public static String VERSION = "0.0.8";
+	public static String VERSION_DEBUG = "0.0.9";
 }

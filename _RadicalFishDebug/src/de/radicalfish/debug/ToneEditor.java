@@ -39,8 +39,13 @@ import de.matthiasmann.twl.Widget;
 import de.radicalfish.effects.ToneModel;
 
 /**
- * A simple color edtior which uses a {@link RPGMakerToneArea} as color area and 4 sliders for red, green, blue and
+ * A simple color editor which uses a {@link RPGMakerToneArea} as color area and 4 sliders for red, green, blue and
  * chroma.
+ * <p>
+ * The {@link ToneEditor} takes it values directly from a {@link ToneModel} to reflect changes on the GUI. It also
+ * provides a small preview panel which shows how the a color will change when changing the values. 
+ * <p>
+ * Changes on the GUI will reflect on the {@link ToneModel} too!
  * 
  * @author Stefan Lange
  * @version 1.0.0

@@ -29,13 +29,17 @@
  */
 package de.radicalfish.debug;
 import de.matthiasmann.twl.DesktopArea;
+import de.matthiasmann.twl.ResizableFrame;
 import de.matthiasmann.twl.Widget;
 
 /**
- * RootPane for a TWL game state. It forwards input events which where not handled by the UI to the game state.
+ * The {@link TWLRootPane} is used as base widget for all other widgets in the debug engine. It extends the
+ * {@link DesktopArea} which means only {@link ResizableFrame}s should be added. Other widgets must be controlled
+ * manually.
  * 
- * @author Matthias Mann
- * @author Stefan Lange (added some features)
+ * @author Stefan Lange
+ * @version 1.0.0
+ * @since 04.11.2012
  */
 public class TWLRootPane extends DesktopArea {
 	
@@ -66,6 +70,5 @@ public class TWLRootPane extends DesktopArea {
 	public Widget getCurrentFocusOwner() {
 		return currentChildInFocus;
 	}
-	
 	
 }

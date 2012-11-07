@@ -46,7 +46,7 @@ import de.radicalfish.util.Utils;
 
 /**
  * A simple text parser for styles. The format is easy to use. a text command must start with a [] container. A simple
- * examples which would color a character when parsed with this parser:
+ * example which would color a character when parsed with this parser:
  * 
  * <pre>
  * String test = "This Letter is Red: [sc:1.0,0.0,0.0,1.0]R.
@@ -86,7 +86,7 @@ import de.radicalfish.util.Utils;
  * <li>example: [rp:(fd:1.0,out), 4] fades 4 char in 1 second.</li>
  * </ul>
  * </li>
- * <li>sm: moves a character to a offset. 3 Parameters:
+ * <li>sm: moves a character to an offset. 3 Parameters:
  * <ul>
  * <li>first: the x offset to move to.</li>
  * <li>second: the y offset to move to.</li>
@@ -94,7 +94,7 @@ import de.radicalfish.util.Utils;
  * <li>example: [sm:10,10,2] moves a single character to a offset of 10,10 relative to the characters position.</li>
  * </ul>
  * </li>
- * <li>mv: moves all characters to a offset. 3 Parameters:
+ * <li>mv: moves all characters to an offset. 3 Parameters:
  * <ul>
  * <li>first: the x offset to move to.</li>
  * <li>second: the y offset to move to.</li>
@@ -103,6 +103,7 @@ import de.radicalfish.util.Utils;
  * </ul>
  * </li> </li>
  * <hr>
+ * This is merely a utility class and you should use it as a starting point to see how the styled font system works.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -110,7 +111,7 @@ import de.radicalfish.util.Utils;
  */
 public class StyleParser {
 	
-	/** A simple instance of the {@link StyleParser}. */
+	/** A non-thread-safe instance of the {@link StyleParser}. */
 	public static final StyleParser INSTANCE = new StyleParser();
 	
 	// lookahead so nested brackets should work (SHOULD not sure I suck an regex)
@@ -203,7 +204,7 @@ public class StyleParser {
 			return createMoveCommand(param.split(params), charpoint, false);
 		} else if (name.equals("sm")) {
 			return createMoveCommand(param.split(params), charpoint, true);
-		} 
+		}
 		throw new RadicalFishException("Could not parse command: " + name + " with paramaters: " + params + " at charpoint: " + charpoint);
 	}
 	private StyleCommand createColorCommand(String[] params, boolean single, int charpoint) {
