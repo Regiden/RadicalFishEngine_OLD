@@ -8,7 +8,7 @@ In the following you will learn how to build a simple game using the `Game` Inte
 [The GameContainer][1]
 -----------------
 
-The heart and soul of the engine is this little class. It extends the [ApplicationListener][2] from libgdx. The main use of the class is to handle the calls for the [Game][3] class. It provides you with a single [Graphics][4] object which gives you a Slick2D/Java2D like way of handling the matrix context of the game. You can scale and offset the matrix for all upcoming drawings and also push and pop these changes. 
+The heart and soul of the engine is this 'little' class. It extends the [ApplicationListener][2] from libgdx. The main use of the class is to handle the calls for the [Game][3] class. It provides you with a single [Graphics][4] object which gives you a Slick2D/Java2D like way of handling the matrix context of the game. You can scale and offset the matrix for all upcoming drawings and also push and pop these changes. 
 The `GameContainer` has some other neat features too:
 
 * y-down viewport be default (or y-up if you prefer it)
