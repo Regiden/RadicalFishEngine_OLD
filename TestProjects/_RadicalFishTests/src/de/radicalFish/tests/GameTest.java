@@ -28,32 +28,32 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package de.radicalfish.tests;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Array;
-import de.radicalfish.Game;
 import de.radicalfish.GameContainer;
 import de.radicalfish.GameInput;
 import de.radicalfish.assets.Assets;
 import de.radicalfish.assets.FontSheetLoader.FontSheetParameter;
 import de.radicalfish.assets.SpriteFontLoader.SpriteFontParameter;
-import de.radicalfish.assets.SpriteSheetLoader.SpriteSheetParameter;
+import de.radicalfish.context.GameWithContext;
+import de.radicalfish.context.GameContext;
+import de.radicalfish.context.defaults.DefaultGameContext;
 import de.radicalfish.font.SpriteFont;
 import de.radicalfish.font.StyleInfo;
 import de.radicalfish.font.StyleParser;
 import de.radicalfish.font.StyledText;
 import de.radicalfish.graphics.Graphics;
-import de.radicalfish.graphics.SpriteSheet;
 import de.radicalfish.tests.utils.RadicalFishTest;
 import de.radicalfish.util.RadicalFishException;
+import de.radicalfish.world.GameWorld;
 
 /**
  * My testing ground.
  */
-public class GameTest implements Game, RadicalFishTest {
+public class GameTest implements GameWithContext, InputProcessor, RadicalFishTest {
 	
 	private TextureRegion sprite;
 	private Texture part;
@@ -63,7 +63,7 @@ public class GameTest implements Game, RadicalFishTest {
 	
 	private StyledText texCom;
 	
-	private Assets assets;
+	private GameContext context;
 	
 	private String text = "[rp:(sc:1,0,0,1),4][gp:(fd:1.0,out), 0.2, 4][gp:(sm:0,10,1), 0.2, 4]FADE[x:all] [co:1,0,0,1]Te[sc:1,1,0,1]st [x:color]Bla[co:1,0,1,1]lalalala";
 	
@@ -74,8 +74,21 @@ public class GameTest implements Game, RadicalFishTest {
 	// GAME METHODS
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 	public void init(GameContainer container) throws RadicalFishException {
-		assets = new Assets();
-		part = new Texture(Gdx.files.internal("data/block.png"));
+		context = new DefaultGameContext(container, null);
+		
+		Texture.setAssetManager(context.getAssets());
+		Assets assets = context.getAssets();
+		assets.setLogging(true);
+		assets.load("data/block.png", Texture.class);
+//		assets.load("sp1", SpriteSheet.class, new SpriteSheetParameter("data/block.png", 16, 16));
+//		assets.load("sp2", SpriteSheet.class, new SpriteSheetParameter("data/block.png", 16, 16));
+		
+		FontSheetParameter fsp = new FontSheetParameter("data/font.png", widths, 11);
+		assets.load("spfont", SpriteFont.class, new SpriteFontParameter(fsp, -1, 0, ' '));
+		
+		assets.finishLoading();
+		
+		part = assets.get("data/block.png");
 		sprite = new TextureRegion(part, 16, 16);
 		sprite.flip(false, true);
 		
@@ -83,30 +96,15 @@ public class GameTest implements Game, RadicalFishTest {
 		info.size.set(16, 16);
 		info.size.mul(2);
 		
-		assets.setLogging(true);
-		assets.load("data/block.png", Texture.class);
-		assets.load("sp1", SpriteSheet.class, new SpriteSheetParameter("data/block.png", 16, 16));
-		assets.load("sp2", SpriteSheet.class, new SpriteSheetParameter("data/block.png", 16, 16));
-		
-		FontSheetParameter fsp = new FontSheetParameter("data/font.png", widths, 11);
-		assets.load("spfont", SpriteFont.class, new SpriteFontParameter(fsp, -1, 0, ' '));
-		
-		assets.finishLoading();
-		
-		Array<String> keys = assets.getKeys();
-		System.out.println(keys);
-		
-		
 		font = assets.get("spfont", SpriteFont.class);
 		texCom = new StyledText();
 		
 		StyleParser p = StyleParser.INSTANCE;
 		text = p.parseMultiLine(text, texCom);
 		
-		
 	}
 	public void update(GameContainer container, float delta) throws RadicalFishException {
-		assets.update();
+		context.getAssets().update();
 		handleInput(container.getInput(), delta);
 		
 		texCom.update(container, delta);
@@ -120,7 +118,7 @@ public class GameTest implements Game, RadicalFishTest {
 		{
 			batch.draw(sprite.getTexture(), info.createVertices(sprite, 200, 200), 0, 20);
 			
-			g.fillRect(100, 50, assets.getProgress() * 200, 20);
+			g.fillRect(100, 50, context.getAssets().getProgress() * 200, 20);
 			g.drawRect(100, 50, 200, 20);
 			
 			font.draw(batch, text.toUpperCase(), 100, 100, container, texCom);
@@ -136,8 +134,47 @@ public class GameTest implements Game, RadicalFishTest {
 		}
 	}
 	
+	private void unload() {
+		context.getAssets().unload("data/font.png");
+	}
+	private void reload() {
+		context.getAssets().load("data/font.png", Texture.class);
+	}
+	
+	
 	// OTHER
 	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	public boolean keyDown(int keycode) {
+		if(keycode == Keys.U) {
+			unload();
+		}
+		if(keycode == Keys.I) {
+			reload();
+		}
+		return false;
+	}
+	public boolean keyTyped(char character) {
+		return false;
+	}
+	public boolean keyUp(int keycode) {
+		return false;
+	}
+	public boolean mouseMoved(int screenX, int screenY) {
+		return false;
+	}
+	public boolean scrolled(int amount) {
+		return false;
+	}
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		return false;
+	}
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		return false;
+	}
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		return false;
+	}
+	
 	public void pause(GameContainer container) {}
 	public void resume(GameContainer container) {}
 	public void dispose() {}
@@ -159,6 +196,13 @@ public class GameTest implements Game, RadicalFishTest {
 	}
 	public boolean needsGL20() {
 		return true;
+	}
+	
+	public GameContext getGameContext() {
+		return context;
+	}
+	public GameWorld getWorld() {
+		return null;
 	}
 	
 }
