@@ -44,9 +44,9 @@ import de.radicalfish.util.RadicalFishException;
 import de.radicalfish.util.Utils;
 
 /**
- * This class can be used at root pane and input handler for the debugging. It automatically updates and renders the
- * debug GUI for you. you can add widgets to the root pane which is a {@link DesktopArea}. So you want to mostly want to
- * add {@link ResizableFrame}.
+ * This class can be used as a root pane and input handler for the debugging. It automatically updates and renders the
+ * debug GUI for you. You can add widgets to the root pane via {@link DebugPanel#addToRoot(Widget)}. The root pane is a
+ * {@link DesktopArea} and designed for {@link ResizableFrame}s.
  * 
  * @author Stefan Lange
  * @version 1.0.0
@@ -76,7 +76,6 @@ public class DebugPanel {
 		}
 		
 		gui.updateTime();
-		gui.handleKeyRepeat();
 		gui.handleTooltips();
 		gui.updateTimers();
 		gui.invokeRunables();
@@ -107,12 +106,11 @@ public class DebugPanel {
 			
 			renderer = new LWJGLRenderer();
 			ThemeManager theme = null;
-			if(path != null) {
+			if (path != null) {
 				theme = loadTheme(renderer, path);
 			} else {
 				theme = loadTheme(renderer, "gui/RadicalFish.xml");
 			}
-			
 			
 			gui = new GUI(root, renderer);
 			gui.setTheme("");
