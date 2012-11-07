@@ -47,35 +47,29 @@ public class ResourceLoader {
 	private static final File root = new File(".");
 	
 	/**
-	 * Use this on desktop to get a resource from the class path or file system
-	 * 
-	 * @return the url from the path
+	 * @return the resource as {@link URL} or null if the resource could not be found.
 	 */
-	public static URL getURL(String path) {
+	public static URL getResourceAsURL(String path) {
 		URL url = null;
-		
-		url = tryClassPath(path);
-		if(url != null) {
-			return url;
-		}
-		url = tryFileSystem(path);
+		try {
+			url = tryClassPath(path);
+			if (url != null) {
+				return url;
+			}
+			url = tryFileSystem(path);
+			if (url != null) {
+				return url;
+			}
+			url = getResource(path).file().toURI().toURL();
+			
+		} catch (Exception e) {}
 		return url;
-	}
-	/**
-	 * Use this on desktop to get an {@link InputStream} for a resource from the class path or file system.
-	 * equal to {@link ResourceLoader#getURL(String).openStream()};
-	 * 
-	 * @return the url from the path
-	 * @throws IOException 
-	 */
-	public static InputStream getStream(String path) throws IOException {
-		return getURL(path).openStream();
 	}
 	
 	/**
-	 * Will first try to load the resource form the internal path. If that fails it will try the external path.
+	 * Tries to load the resource form the internal path. If that fails it will try the external path.
 	 * 
-	 * @return the {@link FileHandle} associated to <code>path</code>.
+	 * @return the {@link FileHandle} associated to <code>path</code> or null if the file could not be found.
 	 */
 	public static FileHandle getResource(String path) {
 		FileHandle fh = Gdx.files.internal(path);
@@ -85,12 +79,20 @@ public class ResourceLoader {
 		return fh;
 	}
 	/**
-	 * Will first try to load the resource form the internal path. If that fails it will try the external path.
+	 * Tries to load the resource form the internal path. If that fails it will try the external path.
 	 * 
-	 * @return an InputStream to read the file from
+	 * @return an InputStream to read the file from or null if the file could not be found.
 	 */
 	public static InputStream getResourceAsStream(String path) {
-		return getResource(path).read();
+		FileHandle fh = getResource(path);
+		if (fh != null) {
+			return getResource(path).read();
+		} else {
+			try {
+				return getResourceAsURL(path).openStream();
+			} catch (IOException e) {}
+		}
+		return null;
 	}
 	
 	// INTERN
