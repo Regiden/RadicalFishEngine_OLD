@@ -31,17 +31,10 @@ package de.radicalfish.state;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.IntMap;
 import de.radicalfish.GameContainer;
-import de.radicalfish.GameInput;
-import de.radicalfish.assets.Assets;
-import de.radicalfish.context.ContextGame;
+import de.radicalfish.context.GameWithContext;
 import de.radicalfish.context.GameContext;
 import de.radicalfish.context.GameDelta;
-import de.radicalfish.context.GameVariables;
-import de.radicalfish.context.Settings;
-import de.radicalfish.context.defaults.DefaultGameDelta;
-import de.radicalfish.context.defaults.DefaultGameVariables;
-import de.radicalfish.context.defaults.DefaultSettings;
-import de.radicalfish.font.Font;
+import de.radicalfish.context.defaults.DefaultGameContext;
 import de.radicalfish.graphics.Graphics;
 import de.radicalfish.state.transitions.EmptyTransition;
 import de.radicalfish.state.transitions.Transition;
@@ -56,21 +49,37 @@ import de.radicalfish.world.GameWorld;
  * You use {@link Transition}s to switch from one state to another with a nice animation. The delta value of the update
  * methods in the {@link Transition} class will be the modified delta form the {@link GameDelta} object.
  * <p>
+ * For the {@link StateBasedGame} a {@link GameContext} will be needed. If you don't want to create one then just return
+ * null for the method {@link StateBasedGame#initGameContext(GameContainer)}.
+ * <p>
+ * Also a {@link GameWorld} object will be used. You don't need one and leave the reference null if you like. You can
+ * use the protected method {@link StateBasedGame#initWorld(GameContainer)} to create an return your own
+ * {@link GameWorld} instance.
+ * <p>
+ * Use the {@link StateBasedGame#preUpdate(GameContext, GameWorld, GameDelta)},
+ * {@link StateBasedGame#preRender(GameContext, GameWorld, Graphics)},
+ * {@link StateBasedGame#postUpdate(GameContext, GameWorld, GameDelta)} or
+ * {@link StateBasedGame#postRender(GameContext, GameWorld, Graphics)} method to hook in before or after the updates on
+ * the current {@link GameState}.
+ * <p>
+ * {@link StateBasedGame} is a {@link GameWithContext} which means you a getter for the {@link GameContext} and the
+ * {@link GameWorld}.
  * 
  * @author Stefan Lange
  * @version 1.0.0
  * @since 17.08.2012
  */
-public abstract class StateBasedGame implements ContextGame, InputProcessor {
+public abstract class StateBasedGame implements GameWithContext, InputProcessor {
 	
-	private IntMap<GameState> states = new IntMap<GameState>();
+	/** A list of all the states. */
+	protected IntMap<GameState> states = new IntMap<GameState>();
 	
-	/** the current {@link GameState} we update/render. */
-	public GameState currentState;
+	/** The current {@link GameState} we update/render. */
+	protected GameState currentState;
 	/** The {@link GameContext} we use. */
-	public GameContext context;
+	protected GameContext context;
 	/** The {@link GameWorld} we use. */
-	public GameWorld world;
+	protected GameWorld world;
 	
 	private GameContainer container;
 	private GameState nextState, previousState;
@@ -145,14 +154,17 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	 * 
 	 * @return an instance of the {@link GameContext} Interface.
 	 */
-	public abstract GameContext initGameContext(GameContainer container);
+	protected abstract GameContext initGameContext(GameContainer container);
 	/**
 	 * Gets called to initialize the {@link GameWorld}. You may return null. The class will not create a default
-	 * implementation (would be hard to guess how you want your world, also not all games need a world).
+	 * implementation (would be hard to guess how you want your world, also not all games need a world). Hence it's a
+	 * protected method you can override on need.
 	 * 
 	 * @return an instance of the {@link GameWorld} Interface (if wanted).
 	 */
-	public abstract GameWorld initWorld(GameContainer container);
+	protected GameWorld initWorld(GameContainer container) {
+		return null;
+	};
 	/**
 	 * Gets called after {@link StateBasedGame#initGameContext(GameContainer)} and
 	 * {@link StateBasedGame#initWorld(GameContainer)} to add all states.
@@ -161,7 +173,7 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 	 * <p>
 	 * Use this code to initiate your game to. After this call the game will start running.
 	 */
-	public abstract void initStates(GameContext context);
+	protected abstract void initStates(GameContext context);
 	
 	/**
 	 * Gets called before the update call to the current state.
@@ -221,7 +233,7 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 		}
 		
 		initStates(context);
-		for(GameState s : states.values()) {
+		for (GameState s : states.values()) {
 			s.init(context, world);
 		}
 		
@@ -428,74 +440,4 @@ public abstract class StateBasedGame implements ContextGame, InputProcessor {
 		return pauseRender;
 	}
 	
-	// INTERN CLASSES
-	// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-	private static class DefaultGameContext implements GameContext {
-		private GameContainer container;
-		private StateBasedGame game;
-		private GameDelta delta;
-		private Settings settings;
-		private GameVariables varis;
-		private Assets assets;
-		
-		public DefaultGameContext(GameContainer container, StateBasedGame game) {
-			this.container = container;
-			this.game = game;
-			
-			delta = new DefaultGameDelta();
-			varis = new DefaultGameVariables();
-			assets = new Assets();
-			settings = new DefaultSettings(assets.createPreferences("defaults-rfe.xml"));
-		}
-		
-		// INTERFACE
-		// ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-		public float getGameScale() {
-			return 1;
-		}
-		public int getGameWidth() {
-			return container.getWidth();
-		}
-		public int getGameHeight() {
-			return container.getHeight();
-		}
-		public int getContainerWidth() {
-			return container.getWidth();
-		}
-		public int getContainerHeight() {
-			return container.getHeight();
-		}
-		public StateBasedGame getGame() {
-			return game;
-		}
-		public GameContainer getContainer() {
-			return container;
-		}
-		public GameInput getInput() {
-			return container.getInput();
-		}
-		public Graphics getGraphics() {
-			return container.getGraphics();
-		}
-		public Settings getSettings() {
-			return settings;
-		}
-		public GameDelta getGameDelta() {
-			return delta;
-		}
-		public GameVariables getGameVariables() {
-			return varis;
-		}
-		public Font getFont() {
-			return container.getFont();
-		}
-		public Assets getAssets() {
-			return assets;
-		}
-		
-		public void dispose() {
-			assets.dispose();
-		}
-		
-	}
 }
